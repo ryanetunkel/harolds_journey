@@ -31,8 +31,6 @@ grass_top_y = 371
 ground_surf = pygame.image.load('Python Game/graphics/Grass.png').convert_alpha()
 ground_surf = pygame.transform.scale(ground_surf,window_size)
 
-
-
 harold_x_pos = 200
 harold_y_pos = grass_top_y
 harold_surf = pygame.image.load('Python Game/graphics/harold/harold1.png').convert_alpha()
@@ -46,9 +44,11 @@ enemy_surf = pygame.image.load('Python Game/graphics/enemy/evil_wizard.png')
 enemy_surf = pygame.transform.scale(enemy_surf,wizard_pixel_size)
 enemy_rect = enemy_surf.get_rect(midbottom = (enemy_x_pos,enemy_y_pos))
 
+wizard_x_pos = 80
+wizard_y_pos = grass_top_y
 wizard_surf = pygame.image.load('Python Game/graphics/wizard/wizard_idle1/sprite_00.png').convert_alpha()
 wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
-wizard_rect = wizard_surf.get_rect(midbottom = (80,grass_top_y))
+wizard_rect = wizard_surf.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
 wizard_gravity = 0
 gravity_acceleration = -20
 
@@ -96,18 +96,19 @@ while True:
         # pygame.draw.line(screen,"#FCDC4D",score_rect.bottomleft,score_rect.bottomright,3)
         # screen.blit(score_surf,score_rect)
 
-        mouse_pos = pygame.mouse.get_pos()
-        print(mouse_pos)
+        # mouse_pos = pygame.mouse.get_pos()
+        # print(mouse_pos)
 
         enemy_rect.x -= 4
         fireball_rect.x += fireball_x_speed
         if fireball_rect.left >= 800: 
             fireball_rect.centerx = fireball_x_start
             fireball_x_speed = 0
-        # if fireball_x_speed != 0 and fireball_rect.colliderect(slime_rect):
-        #     print('boom')
-        # else:
-        #     print('done boom')
+        if fireball_x_speed != 0 and fireball_rect.colliderect(enemy_rect):
+            enemy_rect.left = window_width
+            fireball_rect.centerx = fireball_x_start
+            fireball_x_speed = 0
+
         if enemy_rect.right <= 0: enemy_rect.left = window_width
         screen.blit(enemy_surf,enemy_rect)
         # print(wizard_rect.left) # can be used to get positions
@@ -125,6 +126,7 @@ while True:
 
         # if wizard_rect.colliderect(slime_rect): # returns 0 if no collision 1 if is
         # if wizard_rect.collidepoint(mouse_pos):
+        display_score()
 
     # Menu Screen
     else:
