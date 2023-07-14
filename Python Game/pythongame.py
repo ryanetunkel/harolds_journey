@@ -8,21 +8,23 @@ wizard_pixel_size = (128,128)
 
 jump_button = pygame.K_SPACE
 shoot_button = pygame.MOUSEBUTTONDOWN
+additional_score = 0
 
 def display_score():
-    current_time = pygame.time.get_ticks()
+    current_time = int(pygame.time.get_ticks() / 1000) - start_time
     # f makes it a string?
-    score_surf = test_font.render(f'{current_time}', False, "#FCDC4D")
+    score_surf = test_font.render(f'{current_time + additional_score}', False, "#FCDC4D")
     score_rect = score_surf.get_rect(center = (window_width/2,50))
     screen.blit(score_surf,score_rect)
-    print(current_time)
+    # print(current_time)
 
 pygame.init()
 screen = pygame.display.set_mode(window_size)
 pygame.display.set_caption('Python Game - PR')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('Python Game/font/Pixeltype.ttf',50)
-game_active = True
+game_active = False
+start_time = 0
 
 sky_surf = pygame.image.load('Python Game/graphics/Background.png').convert_alpha()
 sky_surf = pygame.transform.scale(sky_surf,window_size)
@@ -30,12 +32,6 @@ sky_surf = pygame.transform.scale(sky_surf,window_size)
 grass_top_y = 371
 ground_surf = pygame.image.load('Python Game/graphics/Grass.png').convert_alpha()
 ground_surf = pygame.transform.scale(ground_surf,window_size)
-
-harold_x_pos = 200
-harold_y_pos = grass_top_y
-harold_surf = pygame.image.load('Python Game/graphics/harold/harold1.png').convert_alpha()
-harold_surf = pygame.transform.flip(harold_surf, True, False)
-harold_rect = harold_surf.get_rect(midbottom = (harold_x_pos,harold_y_pos))
 
 # get dif enemy than slime cuz it's hitbox is really big compared to sprite
 enemy_x_pos = 600
@@ -52,6 +48,8 @@ wizard_rect = wizard_surf.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
 wizard_gravity = 0
 gravity_acceleration = -20
 
+
+
 # Fireball
 fireball_x_start = wizard_rect.right - 20
 fireball_y_start = wizard_rect.centery + 24
@@ -59,13 +57,49 @@ fireball_y_start = wizard_rect.centery + 24
 fireball_x_pos = fireball_x_start
 fireball_y_pos = fireball_y_start
 
-fireball_x_speed = 0
+fireball_x_start_speed = 0
 
 fireball_speed = 4
+fireball_gravity_when_held = 0
+
+fireball_cooldown_time = 60
+fireball_cooldown = 0
+fireball_hit = False
 
 fireball_surf = pygame.image.load('Python Game/graphics/fireball/fireball_move/sprite_0.png').convert_alpha()
 fireball_surf = pygame.transform.scale(fireball_surf,wizard_pixel_size)
 fireball_rect = fireball_surf.get_rect(center = (fireball_x_pos,fireball_y_pos))
+
+# class Fireball:
+#     def __init__(x_start, y_start, x_speed, surf):
+#         self.x_start = x_start
+#         self.y_start = y_start
+#         self.x_speed = x_speed
+#         self.surf = surf
+
+harold_x_pos = wizard_rect.centerx
+harold_y_pos = wizard_rect.top + 12
+harold_surf = pygame.image.load('Python Game/graphics/harold/harold1.png').convert_alpha()
+harold_surf = pygame.transform.flip(harold_surf, True, False)
+harold_rect = harold_surf.get_rect(midbottom = (harold_x_pos,harold_y_pos))
+harold_gravity = 0
+
+# Intro Screen
+wizard_title_surf = pygame.image.load('Python Game/graphics/wizard/wizard_idle1/sprite_00.png').convert_alpha()
+wizard_title_surf = pygame.transform.scale(wizard_title_surf,(192,192))
+wizard_title_rect = wizard_title_surf.get_rect(center = (400,300))
+
+harold_title_surf = pygame.image.load('Python Game/graphics/harold/harold1.png').convert_alpha()
+harold_title_surf = pygame.transform.flip(harold_title_surf, True, False)
+harold_title_surf = pygame.transform.scale_by(harold_title_surf,3/2)
+harold_title_rect = harold_title_surf.get_rect(midbottom = (wizard_title_rect.centerx,wizard_title_rect.top + 18))
+
+title_screen_surf = test_font.render('Harold\'s Journey', False, "#FCDC4D")
+title_screen_surf = pygame.transform.scale_by(title_screen_surf,3/2)
+title_screen_rect = title_screen_surf.get_rect(center = (400,100))
+
+title_screen_info_surf = test_font.render('Press any key to start', False, "#FCDC4D")
+title_screen_info_rect = title_screen_info_surf.get_rect(midtop = (title_screen_rect.centerx,title_screen_rect.centery + 20))
 
 # pygame.draw exists, can do rects, circles, lines, points, ellipses etc
 while True:
@@ -77,17 +111,26 @@ while True:
         #     if wizard_rect.collidepoint(event.pos): print ('collision')
        
         if game_active:
-            if event.type == shoot_button:
-               fireball_x_speed = fireball_speed
+            # temporarily can only have one fireball at a time thanks to first part of 
+            # the code after the and. Alternatively you get the fireball back instantly 
+            # once you hit an enemy with it
+            if event.type == shoot_button and (fireball_cooldown == 0 or fireball_hit):
+               fireball_rect.center = (wizard_rect.right - 20,wizard_rect.centery + 24)
+               fireball_x_start_speed = fireball_speed
+               fireball_cooldown = fireball_cooldown_time
+               fireball_hit = False
 
             if event.type == pygame.KEYDOWN:
                 if event.key == jump_button and wizard_rect.bottom >= grass_top_y:  
                     wizard_gravity = gravity_acceleration
+                    harold_gravity = gravity_acceleration
         
         else:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            if event.type == pygame.KEYDOWN:
                 game_active = True
                 enemy_rect.left = window_width
+                start_time = int(pygame.time.get_ticks() / 1000)
+                additional_score = 0
 
     # Active Game
     if game_active:    
@@ -100,14 +143,20 @@ while True:
         # print(mouse_pos)
 
         enemy_rect.x -= 4
-        fireball_rect.x += fireball_x_speed
+        fireball_rect.x += fireball_x_start_speed
         if fireball_rect.left >= 800: 
             fireball_rect.centerx = fireball_x_start
-            fireball_x_speed = 0
-        if fireball_x_speed != 0 and fireball_rect.colliderect(enemy_rect):
+            fireball_x_start_speed = 0
+        if fireball_cooldown != 0:
+            fireball_cooldown -= 1
+
+        # Fireball collides with enemy
+        if fireball_x_start_speed != 0 and fireball_rect.colliderect(enemy_rect):
             enemy_rect.left = window_width
             fireball_rect.centerx = fireball_x_start
-            fireball_x_speed = 0
+            fireball_x_start_speed = 0
+            fireball_hit = True
+            additional_score += 5
 
         if enemy_rect.right <= 0: enemy_rect.left = window_width
         screen.blit(enemy_surf,enemy_rect)
@@ -115,10 +164,17 @@ while True:
 
         # Wizard
         wizard_gravity += 1
+        harold_gravity += 1
         wizard_rect.y += wizard_gravity
-        if wizard_rect.bottom >= grass_top_y: wizard_rect.bottom = grass_top_y
+        harold_rect.y += harold_gravity
+
+        if wizard_rect.bottom >= grass_top_y: 
+            wizard_rect.bottom = grass_top_y
+            harold_rect.bottom = wizard_rect.top + 12
         screen.blit(wizard_surf,wizard_rect)
-        screen.blit(fireball_surf,fireball_rect)
+        if fireball_x_start_speed != 0:
+            screen.blit(fireball_surf,fireball_rect)
+        screen.blit(harold_surf,harold_rect)
 
         # Player collides with enemy
         if enemy_rect.colliderect(wizard_rect):
@@ -130,7 +186,11 @@ while True:
 
     # Menu Screen
     else:
-        screen.fill('Yellow')
+        screen.fill('#54428E')
+        screen.blit(wizard_title_surf,wizard_title_rect)
+        screen.blit(harold_title_surf,harold_title_rect)
+        screen.blit(title_screen_surf,title_screen_rect)
+        screen.blit(title_screen_info_surf,title_screen_info_rect)
 
     pygame.display.update()
     clock.tick(60)
