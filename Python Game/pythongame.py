@@ -39,10 +39,11 @@ harold_surf = pygame.image.load('Python Game/graphics/harold/harold1.png').conve
 harold_surf = pygame.transform.flip(harold_surf, True, False)
 harold_rect = harold_surf.get_rect(midbottom = (harold_x_pos,harold_y_pos))
 
+# get dif enemy than slime cuz it's hitbox is really big compared to sprite
 enemy_x_pos = 600
 enemy_y_pos = grass_top_y
 enemy_surf = pygame.image.load('Python Game/graphics/slime/slime/original_frame.png')
-enemy_surf = pygame.transform.scale(enemy_surf,wizard_pixel_size)
+enemy_surf = pygame.transform.scale(enemy_surf,(256,256))
 enemy_surf = pygame.transform.flip(enemy_surf,True, False)
 enemy_rect = enemy_surf.get_rect(midbottom = (enemy_x_pos,enemy_y_pos))
 
@@ -96,7 +97,8 @@ while True:
         # pygame.draw.line(screen,"#FCDC4D",score_rect.bottomleft,score_rect.bottomright,3)
         # screen.blit(score_surf,score_rect)
 
-        # mouse_pos = pygame.mouse.get_pos()
+        mouse_pos = pygame.mouse.get_pos()
+        print(mouse_pos)
 
         enemy_rect.x -= 4
         fireball_rect.x += fireball_x_speed
