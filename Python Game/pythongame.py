@@ -41,10 +41,9 @@ harold_rect = harold_surf.get_rect(midbottom = (harold_x_pos,harold_y_pos))
 
 # get dif enemy than slime cuz it's hitbox is really big compared to sprite
 enemy_x_pos = 600
-enemy_y_pos = grass_top_y
-enemy_surf = pygame.image.load('Python Game/graphics/slime/slime/original_frame.png')
-enemy_surf = pygame.transform.scale(enemy_surf,(256,256))
-enemy_surf = pygame.transform.flip(enemy_surf,True, False)
+enemy_y_pos = grass_top_y + 8
+enemy_surf = pygame.image.load('Python Game/graphics/enemy/evil_wizard.png')
+enemy_surf = pygame.transform.scale(enemy_surf,wizard_pixel_size)
 enemy_rect = enemy_surf.get_rect(midbottom = (enemy_x_pos,enemy_y_pos))
 
 wizard_surf = pygame.image.load('Python Game/graphics/wizard/wizard_idle1/sprite_00.png').convert_alpha()
