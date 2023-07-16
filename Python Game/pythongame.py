@@ -9,6 +9,7 @@ wizard_pixel_size = (128,128)
 jump_button = pygame.K_SPACE
 shoot_button = pygame.MOUSEBUTTONDOWN
 additional_score = 0
+score = 0
 
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
@@ -17,6 +18,7 @@ def display_score():
     score_rect = score_surf.get_rect(center = (window_width/2,50))
     screen.blit(score_surf,score_rect)
     # print(current_time)
+    return current_time + additional_score
 
 pygame.init()
 screen = pygame.display.set_mode(window_size)
@@ -78,7 +80,7 @@ fireball_rect = fireball_surf.get_rect(center = (fireball_x_pos,fireball_y_pos))
 #         self.surf = surf
 
 harold_x_pos = wizard_rect.centerx
-harold_y_pos = wizard_rect.top + 12
+harold_y_pos = wizard_rect.top + 12 # pixels at this scale based on wizard are 4 pixels each
 harold_surf = pygame.image.load('Python Game/graphics/harold/harold1.png').convert_alpha()
 harold_surf = pygame.transform.flip(harold_surf, True, False)
 harold_rect = harold_surf.get_rect(midbottom = (harold_x_pos,harold_y_pos))
@@ -87,19 +89,19 @@ harold_gravity = 0
 # Intro Screen
 wizard_title_surf = pygame.image.load('Python Game/graphics/wizard/wizard_idle1/sprite_00.png').convert_alpha()
 wizard_title_surf = pygame.transform.scale(wizard_title_surf,(192,192))
-wizard_title_rect = wizard_title_surf.get_rect(center = (400,300))
+wizard_title_rect = wizard_title_surf.get_rect(center = (400,250))
 
 harold_title_surf = pygame.image.load('Python Game/graphics/harold/harold1.png').convert_alpha()
 harold_title_surf = pygame.transform.flip(harold_title_surf, True, False)
 harold_title_surf = pygame.transform.scale_by(harold_title_surf,3/2)
 harold_title_rect = harold_title_surf.get_rect(midbottom = (wizard_title_rect.centerx,wizard_title_rect.top + 18))
 
-title_screen_surf = test_font.render('Harold\'s Journey', False, "#FCDC4D")
-title_screen_surf = pygame.transform.scale_by(title_screen_surf,3/2)
-title_screen_rect = title_screen_surf.get_rect(center = (400,100))
+title_game_name_surf = test_font.render('Harold\'s Journey',False,"#FCDC4D")
+title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,3/2)
+title_game_name_rect = title_game_name_surf.get_rect(center = (400,70))
 
-title_screen_info_surf = test_font.render('Press any key to start', False, "#FCDC4D")
-title_screen_info_rect = title_screen_info_surf.get_rect(midtop = (title_screen_rect.centerx,title_screen_rect.centery + 20))
+title_info_surf = test_font.render('Press any key or click to Start',False,"#FCDC4D")
+title_info_rect = title_info_surf.get_rect(center = (wizard_title_rect.centerx,wizard_title_rect.centery + 120))
 
 # pygame.draw exists, can do rects, circles, lines, points, ellipses etc
 while True:
@@ -126,7 +128,7 @@ while True:
                     harold_gravity = gravity_acceleration
         
         else:
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                 game_active = True
                 enemy_rect.left = window_width
                 start_time = int(pygame.time.get_ticks() / 1000)
@@ -138,6 +140,7 @@ while True:
         screen.blit(ground_surf,(0,0))
         # pygame.draw.line(screen,"#FCDC4D",score_rect.bottomleft,score_rect.bottomright,3)
         # screen.blit(score_surf,score_rect)
+        score = display_score()
 
         # mouse_pos = pygame.mouse.get_pos()
         # print(mouse_pos)
@@ -182,15 +185,23 @@ while True:
 
         # if wizard_rect.colliderect(slime_rect): # returns 0 if no collision 1 if is
         # if wizard_rect.collidepoint(mouse_pos):
-        display_score()
 
     # Menu Screen
     else:
         screen.fill('#54428E')
         screen.blit(wizard_title_surf,wizard_title_rect)
         screen.blit(harold_title_surf,harold_title_rect)
-        screen.blit(title_screen_surf,title_screen_rect)
-        screen.blit(title_screen_info_surf,title_screen_info_rect)
+        screen.blit(title_info_surf,title_info_rect)
+
+        score_message_surf = test_font.render(f'Score: {score}',False,"#FCDC4D")
+        score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
+        score_message_rect = score_message_surf.get_rect(center = (400,70))
+
+        if score == 0:
+            screen.blit(title_game_name_surf,title_game_name_rect)
+
+        else:
+            screen.blit(score_message_surf,score_message_rect)
 
     pygame.display.update()
     clock.tick(60)
