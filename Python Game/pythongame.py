@@ -9,6 +9,8 @@ wizard_pixel_size = (128,128)
 
 jump_button = pygame.K_SPACE
 shoot_button = pygame.MOUSEBUTTONDOWN
+additional_score = 0
+score = 0
 
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
@@ -49,12 +51,39 @@ def projectile_movement(projectile_list):
         return projectile_list
     else: return []
 
-def collisions(wizard,obstacles):
+def wizard_collisions(wizard,obstacles):
     if obstacles:
         for obstacle_rect in obstacles:
             if wizard.colliderect(obstacle_rect): return False
     return True
-                
+
+def projectile_collisions(projectiles,obstacles):
+    if projectiles and obstacles:
+        projectile_index = -1
+        obstacle_index = -1
+        new_projectile_list = []
+        new_obstacle_list = []
+        for projectile in projectiles:
+            new_obstacle_list = [obstacle for obstacle in obstacles if obstacle.colliderect(projectile) == False]
+        for obstacle in obstacles:
+            new_projectile_list = [projectile for projectile in projectiles if projectile.colliderect(obstacle) == False]
+        # **********Seems to not do what is supposed to which is delete both the obstacle and the fireball that collied
+
+        # for projectile in projectile_rect_list:
+        #     for obstacle in obstacle_rect_list:
+        #         if projectile.colliderect(obstacle):
+        #             fireball_x_start_speed = 0
+        #             fireball_hit = True
+        #             additional_score += obstacle_points
+        # **********For some reason it can't see these values, unsure why
+
+        projectiles = new_projectile_list
+        obstacles = new_obstacle_list
+
+    # not including checking if fireball_start_speed is 0 
+    # might make it so can still damage enemies if they 
+    # walk into you but if you die first it doesn't really 
+    # matter - could affect the score though
 
 # can't implement health and damage sources as the variables aren't attached 
 # to the individual projectiles and obstacles, they are global for all of them
@@ -70,8 +99,6 @@ pygame.display.set_caption('Python Game - PR')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('Python Game/font/Pixeltype.ttf',50)
 game_active = False
-additional_score = 0
-score = 0
 start_time = 0
 
 sky_surf = pygame.image.load('Python Game/graphics/Background.png').convert_alpha()
@@ -87,6 +114,7 @@ ground_surf = pygame.transform.scale(ground_surf,window_size)
 obstacle_speed = 5
 obstacle_spawn_frequency = 1500 # In milliseconds, 1000 = 1 sec
 obstacle_health = 1
+obstacle_points = 5
 
 enemy_x_pos = randint(window_width + 100,window_width + 300)
 enemy_y_pos = grass_top_y + 8
@@ -202,7 +230,7 @@ while True:
                 if randint(0,2): # gives values of either 0 or 1 which are false or true
                     obstacle_rect_list.append(enemy_surf.get_rect(midbottom = (enemy_x_pos,enemy_y_pos)))
                 else:
-                    obstacle_rect_list.append(enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,flying_enemy_y_pos)))
+                    obstacle_rect_list.append(flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,flying_enemy_y_pos)))
 
         else:
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
@@ -224,31 +252,22 @@ while True:
 
         # enemy_rect.x -= 4
 
-        fireball_rect.x += fireball_x_start_speed
-        if fireball_rect.left >= 800: 
-            fireball_rect.centerx = fireball_x_start
-            fireball_x_start_speed = 0
-
         if fireball_cooldown != 0:
             fireball_cooldown -= 1
 
         # Fireball collides with enemy
-        if fireball_x_start_speed != 0 and fireball_rect.colliderect(enemy_rect):
-            # deal_damage(fireball_rect,enemy_rect) 
+        # if fireball_x_start_speed != 0 and fireball_rect.colliderect(enemy_rect):
+        #     # deal_damage(fireball_rect,enemy_rect) 
 
-            # deal_damage is WIP, the two lines below were doing it but now 
-            # it would send them to the beginning instead of doing what the 
-            # movement functions do which is remove them from the list
+        #     # deal_damage is WIP, the two lines below were doing it but now 
+        #     # it would send them to the beginning instead of doing what the 
+        #     # movement functions do which is remove them from the list
 
-            # enemy_rect.left = window_width
-            # fireball_rect.centerx = fireball_x_start
-            fireball_x_start_speed = 0
-            fireball_hit = True
-            additional_score += 5
-
-        # if enemy_rect.right <= 0: enemy_rect.left = window_width
-        # screen.blit(enemy_surf,enemy_rect)
-        # print(wizard_rect.left) # can be used to get positions
+        #     # enemy_rect.left = window_width
+        #     # fireball_rect.centerx = fireball_x_start
+        #     fireball_x_start_speed = 0
+        #     fireball_hit = True
+        #     additional_score += obstacle_points
 
         # Wizard
         wizard_gravity += 1
@@ -273,15 +292,11 @@ while True:
         # Projectile Movement
         projectile_rect_list = projectile_movement(projectile_rect_list)
 
-        # Collision
-        game_active = collisions(wizard_rect,obstacle_rect_list)
+        # Collision between Wizard and Enemies
+        game_active = wizard_collisions(wizard_rect,obstacle_rect_list)
 
-        # Player collides with enemy
-        # if enemy_rect.colliderect(wizard_rect):
-        #     game_active = False
-
-        # if wizard_rect.colliderect(slime_rect): # returns 0 if no collision 1 if is
-        # if wizard_rect.collidepoint(mouse_pos):
+        # Collision between Enemies and Projectiles
+        projectile_collisions(projectile_rect_list,obstacle_rect_list)
 
     # Menu Screen
     else:
