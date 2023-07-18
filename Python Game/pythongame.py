@@ -5,9 +5,13 @@ from random import randint
 window_width = 800
 window_height = 400
 window_size = (window_width,window_height)
-wizard_pixel_size = (128,128)
+wizard_width = 128
+wizard_height = 128
+wizard_pixel_size = (wizard_height,wizard_width)
 
 jump_button = pygame.K_SPACE
+right_button = pygame.K_d
+left_button = pygame.K_a
 shoot_button = pygame.MOUSEBUTTONDOWN
 additional_score = 0
 score = 0
@@ -59,26 +63,15 @@ def wizard_collisions(wizard,obstacles):
 
 def projectile_collisions(projectiles,obstacles):
     if projectiles and obstacles:
-        projectile_index = -1
-        obstacle_index = -1
-        new_projectile_list = []
-        new_obstacle_list = []
         for projectile in projectiles:
-            new_obstacle_list = [obstacle for obstacle in obstacles if obstacle.colliderect(projectile) == False]
-        for obstacle in obstacles:
-            new_projectile_list = [projectile for projectile in projectiles if projectile.colliderect(obstacle) == False]
-        # **********Seems to not do what is supposed to which is delete both the obstacle and the fireball that collied
-
-        # for projectile in projectile_rect_list:
-        #     for obstacle in obstacle_rect_list:
-        #         if projectile.colliderect(obstacle):
-        #             fireball_x_start_speed = 0
-        #             fireball_hit = True
-        #             additional_score += obstacle_points
-        # **********For some reason it can't see these values, unsure why
-
-        projectiles = new_projectile_list
-        obstacles = new_obstacle_list
+            for obstacle in obstacles:
+                if projectile.colliderect(obstacle):
+                    projectiles.remove(projectile)
+                    obstacles.remove(obstacle)
+                    # fireball_x_start_speed = 0
+                    # fireball_hit = True
+                    # additional_score += obstacle_points
+                    # ********** For some reason it can't see these values, unsure why
 
     # not including checking if fireball_start_speed is 0 
     # might make it so can still damage enemies if they 
@@ -132,6 +125,7 @@ obstacle_rect_list = []
 
 # Player
 wizard_x_pos = 80
+wizard_x_velocity = 4
 wizard_y_pos = grass_top_y
 wizard_surf = pygame.image.load('Python Game/graphics/wizard/wizard_idle1/sprite_00.png').convert_alpha()
 wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
@@ -224,6 +218,10 @@ while True:
                 if event.key == jump_button and wizard_rect.bottom >= grass_top_y:  
                     wizard_gravity = gravity_acceleration
                     harold_gravity = gravity_acceleration
+                if event.key == right_button and wizard_rect.x + wizard_width + wizard_x_velocity < window_width:
+                    wizard_x_pos += wizard_x_velocity
+                if event.key == left_button and wizard_rect.x - wizard_x_velocity > 0:
+                    wizard_x_pos -= wizard_x_velocity
     
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
