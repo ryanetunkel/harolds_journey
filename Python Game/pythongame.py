@@ -62,16 +62,18 @@ def wizard_collisions(wizard,obstacles):
     return True
 
 def projectile_collisions(projectiles,obstacles):
+    collisions = 0
     if projectiles and obstacles:
         for projectile in projectiles:
             for obstacle in obstacles:
                 if projectile.colliderect(obstacle):
                     projectiles.remove(projectile)
                     obstacles.remove(obstacle)
-                    # fireball_x_start_speed = 0
-                    # fireball_hit = True
-                    # additional_score += obstacle_points
+                    collisions += 1
                     # ********** For some reason it can't see these values, unsure why
+                    # ********** Also the game won't restart properly after the 
+                    # first game is played while open
+    return collisions
 
     # not including checking if fireball_start_speed is 0 
     # might make it so can still damage enemies if they 
@@ -80,6 +82,7 @@ def projectile_collisions(projectiles,obstacles):
 
 # can't implement health and damage sources as the variables aren't attached 
 # to the individual projectiles and obstacles, they are global for all of them
+# need to implement classes for that I think 
 # def deal_damage(damage_source, target):
 #     target.obstacle_health -= damage_source.projectile_damage
 #     if target.obstacle_health <= 0:
@@ -294,7 +297,12 @@ while True:
         game_active = wizard_collisions(wizard_rect,obstacle_rect_list)
 
         # Collision between Enemies and Projectiles
-        projectile_collisions(projectile_rect_list,obstacle_rect_list)
+        collisions = projectile_collisions(projectile_rect_list,obstacle_rect_list)
+        additional_score += (collisions * obstacle_points)
+        if collisions:
+            fireball_x_start_speed = 0
+            fireball_hit = True
+        collisions = 0
 
     # Menu Screen
     else:
