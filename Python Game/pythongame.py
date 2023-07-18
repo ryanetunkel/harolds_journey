@@ -238,6 +238,8 @@ while True:
                 game_active = True
                 start_time = int(pygame.time.get_ticks() / 1000)
                 additional_score = 0
+                obstacle_rect_list = []
+                projectile_rect_list = []
 
 
     # Active Game
