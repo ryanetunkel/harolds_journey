@@ -181,6 +181,36 @@ wizard_walk = [wizard_walk_0, wizard_walk_1, wizard_walk_2, wizard_walk_3,
                wizard_walk_4, wizard_walk_5, wizard_walk_6, wizard_walk_7,]
 
 # Wizard Jump Animation
+wizard_jump_00 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_00.png').convert_alpha()
+wizard_jump_01 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_01.png').convert_alpha()
+wizard_jump_02 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_02.png').convert_alpha()
+wizard_jump_03 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_03.png').convert_alpha()
+wizard_jump_04 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_04.png').convert_alpha()
+wizard_jump_05 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_05.png').convert_alpha()
+wizard_jump_06 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_06.png').convert_alpha()
+wizard_jump_07 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_07.png').convert_alpha()
+wizard_jump_08 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_08.png').convert_alpha()
+wizard_jump_09 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_09.png').convert_alpha()
+wizard_jump_10 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_10.png').convert_alpha()
+wizard_jump_11 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_11.png').convert_alpha()
+wizard_jump_12 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_12.png').convert_alpha()
+wizard_jump_13 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_13.png').convert_alpha()
+wizard_jump_14 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_14.png').convert_alpha()
+wizard_jump_15 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_15.png').convert_alpha()
+wizard_jump_16 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_16.png').convert_alpha()
+wizard_jump_17 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_17.png').convert_alpha()
+wizard_jump_18 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_18.png').convert_alpha()
+wizard_jump_19 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_19.png').convert_alpha()
+wizard_jump_20 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_20.png').convert_alpha()
+wizard_jump_21 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_21.png').convert_alpha()
+wizard_jump_22 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_22.png').convert_alpha()
+wizard_jump_23 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_23.png').convert_alpha()
+wizard_jump = [wizard_jump_00, wizard_jump_01, wizard_jump_02, wizard_jump_03,
+               wizard_jump_04, wizard_jump_05, wizard_jump_06, wizard_jump_07,
+               wizard_jump_08, wizard_jump_09, wizard_jump_10, wizard_jump_11,
+               wizard_jump_12, wizard_jump_13, wizard_jump_14, wizard_jump_15,
+               wizard_jump_16, wizard_jump_17, wizard_jump_18, wizard_jump_19,
+               wizard_jump_20, wizard_jump_21, wizard_jump_22, wizard_jump_23]
 
 wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
 wizard_rect = wizard_surf.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
