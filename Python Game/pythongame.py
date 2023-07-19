@@ -127,9 +127,12 @@ flying_enemy_rect = flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,f
 obstacle_rect_list = []
 
 # Player
-wizard_x_pos = 80
-wizard_x_velocity = 4
-wizard_y_pos = grass_top_y
+wizard_start_x_pos = 80
+wizard_start_y_pos = grass_top_y
+wizard_x_pos = wizard_start_x_pos
+wizard_speed = 4
+wizard_x_velocity = 0
+wizard_y_pos = wizard_start_y_pos
 wizard_surf = pygame.image.load('Python Game/graphics/wizard/wizard_idle1/sprite_00.png').convert_alpha()
 wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
 wizard_rect = wizard_surf.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
@@ -173,8 +176,12 @@ fireball_rect = fireball_surf.get_rect(center = (fireball_x_pos,fireball_y_pos))
 projectile_rect_list = []
 
 # Harold
-harold_x_pos = wizard_rect.centerx
-harold_y_pos = wizard_rect.top + 12 # pixels at this scale based on wizard are 4 pixels each
+harold_start_x_pos = wizard_rect.centerx
+harold_start_y_pos = wizard_rect.top + 12 # pixels at this scale based on wizard are 4 pixels each
+harold_x_pos = harold_start_x_pos
+harold_speed = wizard_speed
+harold_x_velocity = 0
+harold_y_pos = harold_start_y_pos
 harold_surf = pygame.image.load('Python Game/graphics/harold/harold1.png').convert_alpha()
 harold_surf = pygame.transform.flip(harold_surf, True, False)
 harold_rect = harold_surf.get_rect(midbottom = (harold_x_pos,harold_y_pos))
@@ -222,10 +229,19 @@ while True:
                     wizard_gravity = gravity_acceleration
                     harold_gravity = gravity_acceleration
                 if event.key == right_button and wizard_rect.x + wizard_width + wizard_x_velocity < window_width:
-                    wizard_x_pos += wizard_x_velocity
+                    wizard_x_velocity = wizard_speed
+                    harold_x_velocity = harold_speed
                 if event.key == left_button and wizard_rect.x - wizard_x_velocity > 0:
-                    wizard_x_pos -= wizard_x_velocity
-    
+                    wizard_x_velocity = -wizard_speed
+                    harold_x_velocity = -harold_speed
+            if event.type == pygame.KEYUP:
+                if event.key == right_button:
+                    wizard_x_velocity = 0
+                    harold_x_velocity = 0
+                if event.key == left_button:
+                    wizard_x_velocity = 0
+                    harold_x_velocity = 0
+
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
                 if randint(0,2): # gives values of either 0 or 1 which are false or true
@@ -238,9 +254,6 @@ while True:
                 game_active = True
                 start_time = int(pygame.time.get_ticks() / 1000)
                 additional_score = 0
-                obstacle_rect_list = []
-                projectile_rect_list = []
-
 
     # Active Game
     if game_active:    
@@ -275,9 +288,11 @@ while True:
         # Wizard
         wizard_gravity += 1
         wizard_rect.y += wizard_gravity
-
+        wizard_rect.x += wizard_x_velocity
+        # Harold
         harold_gravity += 1
         harold_rect.y += harold_gravity
+        harold_rect.x += harold_x_velocity
 
         if wizard_rect.bottom >= grass_top_y: 
             wizard_rect.bottom = grass_top_y
@@ -312,6 +327,14 @@ while True:
         screen.blit(wizard_title_surf,wizard_title_rect)
         screen.blit(harold_title_surf,harold_title_rect)
         screen.blit(title_info_surf,title_info_rect)
+        obstacle_rect_list.clear()
+        projectile_rect_list.clear()
+        wizard_rect.midbottom = (wizard_start_x_pos,wizard_start_y_pos)
+        wizard_gravity = 0
+        wizard_x_velocity = 0
+        harold_rect.midbottom = (harold_start_x_pos,harold_start_y_pos)
+        harold_gravity = 0
+        harold_x_velocity = 0
 
         score_message_surf = test_font.render(f'Score: {score}',False,"#FCDC4D")
         score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
