@@ -133,11 +133,39 @@ wizard_x_pos = wizard_start_x_pos
 wizard_speed = 4
 wizard_x_velocity = 0
 wizard_y_pos = wizard_start_y_pos
-wizard_idle_0 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/sprite_00.png').convert_alpha()
-wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
-wizard_rect = wizard_surf.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
 wizard_gravity = 0
 gravity_acceleration = -20
+
+wizard_idle_00 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
+wizard_idle_01 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_01.png').convert_alpha()
+wizard_idle_02 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_02.png').convert_alpha()
+wizard_idle_03 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_03.png').convert_alpha()
+wizard_idle_04 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_04.png').convert_alpha()
+wizard_idle_05 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_05.png').convert_alpha()
+wizard_idle_06 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_06.png').convert_alpha()
+wizard_idle_07 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_07.png').convert_alpha()
+wizard_idle_08 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_08.png').convert_alpha()
+wizard_idle_09 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_09.png').convert_alpha()
+wizard_idle_10 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_10.png').convert_alpha()
+wizard_idle_11 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_11.png').convert_alpha()
+wizard_idle_12 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_12.png').convert_alpha()
+wizard_idle_13 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_13.png').convert_alpha()
+wizard_idle_14 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_14.png').convert_alpha()
+wizard_idle_15 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_15.png').convert_alpha()
+wizard_idle_16 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_16.png').convert_alpha()
+wizard_idle_17 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_17.png').convert_alpha()
+wizard_idle_18 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_18.png').convert_alpha()
+wizard_idle_19 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_19.png').convert_alpha()
+wizard_idle_20 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_20.png').convert_alpha()
+wizard_idle_21 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_21.png').convert_alpha()
+wizard_idle_22 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_22.png').convert_alpha()
+wizard_idle_23 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_23.png').convert_alpha()
+
+
+
+wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
+wizard_rect = wizard_surf.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
+
 
 # Projectiles
 # These might not all be universal, especially damage and speed, will be varied
@@ -182,10 +210,12 @@ harold_x_pos = harold_start_x_pos
 harold_speed = wizard_speed
 harold_x_velocity = 0
 harold_y_pos = harold_start_y_pos
+harold_gravity = 0
+
 harold_surf = pygame.image.load('Python Game/graphics/harold/harold1.png').convert_alpha()
 harold_surf = pygame.transform.flip(harold_surf, True, False)
 harold_rect = harold_surf.get_rect(midbottom = (harold_x_pos,harold_y_pos))
-harold_gravity = 0
+
 
 # Intro Screen
 wizard_title_surf = pygame.image.load('Python Game/graphics/wizard/wizard_idle1/sprite_00.png').convert_alpha()
