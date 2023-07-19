@@ -136,6 +136,7 @@ wizard_y_pos = wizard_start_y_pos
 wizard_gravity = 0
 gravity_acceleration = -20
 
+# Wizard Idle Animation
 wizard_idle_00 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
 wizard_idle_01 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_01.png').convert_alpha()
 wizard_idle_02 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_02.png').convert_alpha()
@@ -160,8 +161,26 @@ wizard_idle_20 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_anim
 wizard_idle_21 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_21.png').convert_alpha()
 wizard_idle_22 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_22.png').convert_alpha()
 wizard_idle_23 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_23.png').convert_alpha()
+wizard_idle = [wizard_idle_00, wizard_idle_01, wizard_idle_02, wizard_idle_03,
+               wizard_idle_04, wizard_idle_05, wizard_idle_06, wizard_idle_07,
+               wizard_idle_08, wizard_idle_09, wizard_idle_10, wizard_idle_11,
+               wizard_idle_12, wizard_idle_13, wizard_idle_14, wizard_idle_15,
+               wizard_idle_16, wizard_idle_17, wizard_idle_18, wizard_idle_19,
+               wizard_idle_20, wizard_idle_21, wizard_idle_22, wizard_idle_23]
 
+# Wizard Walk Animation
+wizard_walk_0 = pygame.image.load('Python Game/graphics/wizard/wizard_walk_animation/wizard_walk_0.png').convert_alpha()
+wizard_walk_1 = pygame.image.load('Python Game/graphics/wizard/wizard_walk_animation/wizard_walk_1.png').convert_alpha()
+wizard_walk_2 = pygame.image.load('Python Game/graphics/wizard/wizard_walk_animation/wizard_walk_2.png').convert_alpha()
+wizard_walk_3 = pygame.image.load('Python Game/graphics/wizard/wizard_walk_animation/wizard_walk_3.png').convert_alpha()
+wizard_walk_4 = pygame.image.load('Python Game/graphics/wizard/wizard_walk_animation/wizard_walk_4.png').convert_alpha()
+wizard_walk_5 = pygame.image.load('Python Game/graphics/wizard/wizard_walk_animation/wizard_walk_5.png').convert_alpha()
+wizard_walk_6 = pygame.image.load('Python Game/graphics/wizard/wizard_walk_animation/wizard_walk_6.png').convert_alpha()
+wizard_walk_7 = pygame.image.load('Python Game/graphics/wizard/wizard_walk_animation/wizard_walk_7.png').convert_alpha()
+wizard_walk = [wizard_walk_0, wizard_walk_1, wizard_walk_2, wizard_walk_3,
+               wizard_walk_4, wizard_walk_5, wizard_walk_6, wizard_walk_7,]
 
+# Wizard Jump Animation
 
 wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
 wizard_rect = wizard_surf.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
