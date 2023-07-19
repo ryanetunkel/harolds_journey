@@ -133,7 +133,7 @@ wizard_x_pos = wizard_start_x_pos
 wizard_speed = 4
 wizard_x_velocity = 0
 wizard_y_pos = wizard_start_y_pos
-wizard_surf = pygame.image.load('Python Game/graphics/wizard/wizard_idle1/sprite_00.png').convert_alpha()
+wizard_idle_0 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/sprite_00.png').convert_alpha()
 wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
 wizard_rect = wizard_surf.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
 wizard_gravity = 0
@@ -327,11 +327,14 @@ while True:
         screen.blit(wizard_title_surf,wizard_title_rect)
         screen.blit(harold_title_surf,harold_title_rect)
         screen.blit(title_info_surf,title_info_rect)
+
         obstacle_rect_list.clear()
         projectile_rect_list.clear()
+
         wizard_rect.midbottom = (wizard_start_x_pos,wizard_start_y_pos)
         wizard_gravity = 0
         wizard_x_velocity = 0
+
         harold_rect.midbottom = (harold_start_x_pos,harold_start_y_pos)
         harold_gravity = 0
         harold_x_velocity = 0
