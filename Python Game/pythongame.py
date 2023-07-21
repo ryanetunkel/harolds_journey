@@ -162,7 +162,7 @@ def harold_animation():
 
 pygame.init()
 screen = pygame.display.set_mode(window_size)
-pygame.display.set_caption('Python Game - PR')
+pygame.display.set_caption('Harold\'s Journey')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('Python Game/font/Pixeltype.ttf',50)
 game_active = False
