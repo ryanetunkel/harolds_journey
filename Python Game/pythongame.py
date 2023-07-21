@@ -165,6 +165,8 @@ screen = pygame.display.set_mode(window_size)
 pygame.display.set_caption('Harold\'s Journey')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font('Python Game/font/Pixeltype.ttf',50)
+pygame_icon = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
+pygame.display.set_icon(pygame_icon)
 game_active = False
 start_time = 0
 
