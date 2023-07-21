@@ -177,7 +177,7 @@ grass_top_y = 371
 ground_surf = pygame.image.load('Harold\'s Journey/graphics/Grass.png').convert_alpha()
 ground_surf = pygame.transform.scale(ground_surf,window_size)
 
-# get dif enemy than slime cuz it's hitbox is really big compared to sprite
+# ********Hitbox is really big compared to sprite, investigate
 # Obstacles
 # These might not all be universal, especially health and speed, will be varied
 obstacle_speed = 2
