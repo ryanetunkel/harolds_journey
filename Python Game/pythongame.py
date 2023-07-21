@@ -150,7 +150,15 @@ def fireball_animation():
     fireball_surf = fireball_move[int(fireball_index)]
     fireball_surf = pygame.transform.scale(fireball_surf,wizard_pixel_size)
 
-# def enemy_animation():
+def harold_animation(): # WIP
+    global harold_surf, harold_index
+
+    harold_index += animation_speed # speed of animation, adjust as needed
+    if harold_index >= len(harold_idle):harold_index = 0
+    harold_surf = harold_idle[int(harold_index)]
+    harold_surf = pygame.transform.scale_by(harold_surf,3/2)
+
+# def enemy_animation(): # WIP
 
 pygame.init()
 screen = pygame.display.set_mode(window_size)
@@ -177,13 +185,13 @@ obstacle_points = 5
 
 enemy_x_pos = randint(window_width + 100,window_width + 300)
 enemy_y_pos = grass_top_y + 8
-enemy_surf = pygame.image.load('Python Game/graphics/enemy/evil_wizard.png')
+enemy_surf = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_movement_animation/skeleton_move_00.png')
 enemy_surf = pygame.transform.scale(enemy_surf,wizard_pixel_size)
 enemy_rect = enemy_surf.get_rect(midbottom = (enemy_x_pos,enemy_y_pos))
 
 flying_enemy_x_pos = randint(window_width + 100,window_width + 300)
 flying_enemy_y_pos = grass_top_y - 100
-flying_enemy_surf = pygame.image.load('Python Game/graphics/enemy/evil_wizard.png')
+flying_enemy_surf = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_movement_animation/skeleton_move_00.png')
 flying_enemy_surf = pygame.transform.scale(flying_enemy_surf,wizard_pixel_size)
 flying_enemy_rect = flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,flying_enemy_y_pos))
 
@@ -337,15 +345,46 @@ projectile_rect_list = []
 
 # Harold
 harold_start_x_pos = wizard_rect.centerx
-harold_start_y_pos = wizard_rect.top + 12 # pixels at this scale based on wizard are 4 pixels each
+harold_start_y_pos = wizard_rect.top + 28 # pixels at this scale based on wizard are 4 pixels each
 harold_x_pos = harold_start_x_pos
 harold_speed = wizard_speed
 harold_x_velocity = 0
 harold_y_pos = harold_start_y_pos
 harold_gravity = 0
 
-harold_surf = pygame.image.load('Python Game/graphics/harold/harold1.png').convert_alpha()
-harold_surf = pygame.transform.flip(harold_surf, True, False)
+# Harold Idle Animation
+harold_idle_00 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
+harold_idle_01 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_01.png').convert_alpha()
+harold_idle_02 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_02.png').convert_alpha()
+harold_idle_03 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_03.png').convert_alpha()
+harold_idle_04 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_04.png').convert_alpha()
+harold_idle_05 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_05.png').convert_alpha()
+harold_idle_06 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_06.png').convert_alpha()
+harold_idle_07 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_07.png').convert_alpha()
+harold_idle_08 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_08.png').convert_alpha()
+harold_idle_09 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_09.png').convert_alpha()
+harold_idle_10 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_10.png').convert_alpha()
+harold_idle_11 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_11.png').convert_alpha()
+harold_idle_12 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
+harold_idle_13 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_13.png').convert_alpha()
+harold_idle_14 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_14.png').convert_alpha()
+harold_idle_15 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_15.png').convert_alpha()
+harold_idle_16 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_16.png').convert_alpha()
+harold_idle_17 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_17.png').convert_alpha()
+harold_idle_18 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_18.png').convert_alpha()
+harold_idle_19 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_19.png').convert_alpha()
+harold_idle_20 = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_20.png').convert_alpha()
+harold_idle = [harold_idle_00, harold_idle_01, harold_idle_02, harold_idle_03,
+               harold_idle_04, harold_idle_05, harold_idle_06, harold_idle_07,
+               harold_idle_08, harold_idle_09, harold_idle_10, harold_idle_11,
+               harold_idle_12, harold_idle_13, harold_idle_14, harold_idle_15,
+               harold_idle_16, harold_idle_17, harold_idle_18, harold_idle_19,
+               harold_idle_20]
+
+# harold_surf = pygame.transform.flip(harold_surf, True, False)
+harold_index = 0
+harold_surf = harold_idle[harold_index]
+harold_surf = pygame.transform.scale_by(harold_surf,3/2)
 harold_rect = harold_surf.get_rect(midbottom = (harold_x_pos,harold_y_pos))
 
 
@@ -354,10 +393,10 @@ wizard_title_surf = pygame.image.load('Python Game/graphics/wizard/wizard_idle_a
 wizard_title_surf = pygame.transform.scale(wizard_title_surf,(192,192))
 wizard_title_rect = wizard_title_surf.get_rect(center = (400,250))
 
-harold_title_surf = pygame.image.load('Python Game/graphics/harold/harold1.png').convert_alpha()
-harold_title_surf = pygame.transform.flip(harold_title_surf, True, False)
-harold_title_surf = pygame.transform.scale_by(harold_title_surf,3/2)
-harold_title_rect = harold_title_surf.get_rect(midbottom = (wizard_title_rect.centerx,wizard_title_rect.top + 18))
+harold_title_surf = pygame.image.load('Python Game/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
+# harold_title_surf = pygame.transform.flip(harold_title_surf, True, False)
+harold_title_surf = pygame.transform.scale_by(harold_title_surf,2.25)
+harold_title_rect = harold_title_surf.get_rect(midbottom = (wizard_title_rect.centerx,wizard_title_rect.top + 42))
 
 title_game_name_surf = test_font.render('Harold\'s Journey',False,"#FCDC4D")
 title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,3/2)
@@ -461,7 +500,7 @@ while True:
 
         if wizard_rect.bottom >= grass_top_y: 
             wizard_rect.bottom = grass_top_y
-            harold_rect.bottom = wizard_rect.top + 12
+            harold_rect.bottom = harold_start_y_pos
         wizard_animation()
         screen.blit(wizard_surf,wizard_rect)
 
@@ -469,6 +508,7 @@ while True:
         if fireball_x_start_speed != 0:
             screen.blit(fireball_surf,fireball_rect)
         
+        harold_animation()
         screen.blit(harold_surf,harold_rect)
 
         # Obstacle Movement
@@ -491,8 +531,11 @@ while True:
     # Menu Screen
     else:
         screen.fill('#54428E')
+        wizard_animation()
         screen.blit(wizard_title_surf,wizard_title_rect)
+        harold_animation()
         screen.blit(harold_title_surf,harold_title_rect)
+        
         screen.blit(title_info_surf,title_info_rect)
 
         obstacle_rect_list.clear()
