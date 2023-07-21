@@ -33,7 +33,7 @@ def obstacle_movement(obstacle_list):
         for obstacle_rect in obstacle_list:
             obstacle_rect.x -= obstacle_speed
 
-            if obstacle_rect.bottom == grass_top_y + 8: screen.blit(enemy_surf,obstacle_rect)
+            if obstacle_rect.bottom == grass_top_y + 8: screen.blit(skeleton_surf,obstacle_rect)
             else: screen.blit(flying_enemy_surf,obstacle_rect)
 
             # copies existing list if on screen
@@ -150,7 +150,7 @@ def fireball_animation():
     fireball_surf = fireball_move[int(fireball_index)]
     fireball_surf = pygame.transform.scale(fireball_surf,wizard_pixel_size)
 
-def harold_animation(): # WIP
+def harold_animation():
     global harold_surf, harold_index
 
     harold_index += animation_speed # speed of animation, adjust as needed
@@ -158,7 +158,7 @@ def harold_animation(): # WIP
     harold_surf = harold_idle[int(harold_index)]
     harold_surf = pygame.transform.scale_by(harold_surf,3/2)
 
-# def enemy_animation(): # WIP
+# def skeleton_animation(): # WIP
 
 pygame.init()
 screen = pygame.display.set_mode(window_size)
@@ -178,20 +178,43 @@ ground_surf = pygame.transform.scale(ground_surf,window_size)
 # get dif enemy than slime cuz it's hitbox is really big compared to sprite
 # Obstacles
 # These might not all be universal, especially health and speed, will be varied
-obstacle_speed = 5
+obstacle_speed = 2
 obstacle_spawn_frequency = 1500 # In milliseconds, 1000 = 1 sec
 obstacle_health = 1
 obstacle_points = 5
 
-enemy_x_pos = randint(window_width + 100,window_width + 300)
-enemy_y_pos = grass_top_y + 8
-enemy_surf = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_movement_animation/skeleton_move_00.png')
-enemy_surf = pygame.transform.scale(enemy_surf,wizard_pixel_size)
-enemy_rect = enemy_surf.get_rect(midbottom = (enemy_x_pos,enemy_y_pos))
+skeleton_x_pos = randint(window_width + 100,window_width + 300)
+skeleton_y_pos = grass_top_y + 8
 
+# Skeleton Walk Animation
+skeleton_animation_speed = 50 # milliseconds
+skeleton_walk_00 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png').convert_alpha()
+skeleton_walk_01 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_01.png').convert_alpha()
+skeleton_walk_02 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_02.png').convert_alpha()
+skeleton_walk_03 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_03.png').convert_alpha()
+skeleton_walk_04 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_04.png').convert_alpha()
+skeleton_walk_05 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_05.png').convert_alpha()
+skeleton_walk_06 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_06.png').convert_alpha()
+skeleton_walk_07 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_07.png').convert_alpha()
+skeleton_walk_08 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_08.png').convert_alpha()
+skeleton_walk_09 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_09.png').convert_alpha()
+skeleton_walk_10 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_10.png').convert_alpha()
+skeleton_walk_11 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_11.png').convert_alpha()
+skeleton_walk_12 = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_12.png').convert_alpha()
+skeleton_walk = [skeleton_walk_00, skeleton_walk_01, skeleton_walk_02, skeleton_walk_03,
+                 skeleton_walk_04, skeleton_walk_05, skeleton_walk_06, skeleton_walk_07,
+                 skeleton_walk_08, skeleton_walk_09, skeleton_walk_10, skeleton_walk_11,
+                 skeleton_walk_12]
+skeleton_index = 0
+skeleton_surf = skeleton_walk[skeleton_index]
+skeleton_surf = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
+skeleton_surf = pygame.transform.scale(skeleton_surf,wizard_pixel_size)
+skeleton_rect = skeleton_surf.get_rect(midbottom = (skeleton_x_pos,skeleton_y_pos))
+
+flying_enemy_animation_speed = 50 # milliseconds
 flying_enemy_x_pos = randint(window_width + 100,window_width + 300)
 flying_enemy_y_pos = grass_top_y - 100
-flying_enemy_surf = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_movement_animation/skeleton_move_00.png')
+flying_enemy_surf = pygame.image.load('Python Game/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
 flying_enemy_surf = pygame.transform.scale(flying_enemy_surf,wizard_pixel_size)
 flying_enemy_rect = flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,flying_enemy_y_pos))
 
@@ -250,7 +273,7 @@ wizard_walk_5 = pygame.image.load('Python Game/graphics/wizard/wizard_walk_anima
 wizard_walk_6 = pygame.image.load('Python Game/graphics/wizard/wizard_walk_animation/wizard_walk_6.png').convert_alpha()
 wizard_walk_7 = pygame.image.load('Python Game/graphics/wizard/wizard_walk_animation/wizard_walk_7.png').convert_alpha()
 wizard_walk = [wizard_walk_0, wizard_walk_1, wizard_walk_2, wizard_walk_3,
-               wizard_walk_4, wizard_walk_5, wizard_walk_6, wizard_walk_7,]
+               wizard_walk_4, wizard_walk_5, wizard_walk_6, wizard_walk_7]
 
 # Wizard Jump Animation
 # Ascending
@@ -409,6 +432,14 @@ title_info_rect = title_info_surf.get_rect(center = (wizard_title_rect.centerx,w
 obstacle_timer = pygame.USEREVENT + 1 # + 1 to avoid events taking previous numbers by default
 pygame.time.set_timer(obstacle_timer,obstacle_spawn_frequency)
 
+# Skeleton Animation Timer
+skeleton_animation_timer = pygame.USEREVENT + 2
+pygame.time.set_timer(skeleton_animation_timer,skeleton_animation_speed)
+
+# Flying Enemy Animation Timer
+flying_enemy_animation_timer = pygame.USEREVENT + 3
+pygame.time.set_timer(flying_enemy_animation_timer,flying_enemy_animation_speed)
+
 # pygame.draw exists, can do rects, circles, lines, points, ellipses etc
 while True:
     for event in pygame.event.get(): # gets all the events
@@ -449,15 +480,34 @@ while True:
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
                 if randint(0,2): # gives values of either 0 or 1 which are false or true
-                    obstacle_rect_list.append(enemy_surf.get_rect(midbottom = (enemy_x_pos,enemy_y_pos)))
+                    obstacle_rect_list.append(skeleton_surf.get_rect(midbottom = (skeleton_x_pos,skeleton_y_pos)))
                 else:
                     obstacle_rect_list.append(flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,flying_enemy_y_pos)))
+            if event.type == skeleton_animation_timer:
+                # Horrible Coding
+                if skeleton_index == 0: skeleton_index = 1
+                elif skeleton_index == 1: skeleton_index = 2
+                elif skeleton_index == 2: skeleton_index = 3
+                elif skeleton_index == 3: skeleton_index = 4
+                elif skeleton_index == 4: skeleton_index = 5
+                elif skeleton_index == 5: skeleton_index = 6
+                elif skeleton_index == 6: skeleton_index = 7
+                elif skeleton_index == 7: skeleton_index = 8
+                elif skeleton_index == 8: skeleton_index = 9
+                elif skeleton_index == 9: skeleton_index = 10
+                elif skeleton_index == 10: skeleton_index = 11
+                elif skeleton_index == 11: skeleton_index = 12
+                elif skeleton_index == 12: skeleton_index = 0
+                skeleton_surf = skeleton_walk[skeleton_index]
+            # if event.type == flying_enemy_animation_timer:
+            #     # WIP - add when have animation 
 
         else:
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                 game_active = True
                 start_time = int(pygame.time.get_ticks() / 1000)
                 additional_score = 0
+
 
     # Active Game
     if game_active:    
@@ -474,20 +524,6 @@ while True:
 
         if fireball_cooldown != 0:
             fireball_cooldown -= 1
-
-        # Fireball collides with enemy
-        # if fireball_x_start_speed != 0 and fireball_rect.colliderect(enemy_rect):
-        #     # deal_damage(fireball_rect,enemy_rect) 
-
-        #     # deal_damage is WIP, the two lines below were doing it but now 
-        #     # it would send them to the beginning instead of doing what the 
-        #     # movement functions do which is remove them from the list
-
-        #     # enemy_rect.left = window_width
-        #     # fireball_rect.centerx = fireball_x_start
-        #     fireball_x_start_speed = 0
-        #     fireball_hit = True
-        #     additional_score += obstacle_points
 
         # Wizard
         wizard_gravity += 1
