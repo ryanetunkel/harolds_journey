@@ -15,7 +15,7 @@ left_button = pygame.K_a
 shoot_button = pygame.MOUSEBUTTONDOWN
 additional_score = 0
 score = 0
-animation_speed = 0.5
+animation_speed = 0.1
 wizard_flipped = False
 wizard_jumping = False
 
@@ -91,6 +91,7 @@ def wizard_animation():
         wizard_index += animation_speed # speed of animation, adjust as needed
         if wizard_index >= len(wizard_jump):wizard_index = 0
         wizard_surf = wizard_jump[int(wizard_index)]
+        wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
         # this is it raw with no adjustment
         # below is the ideal
         # wizard_surf = wizard_jump[0,7] # can't just do this need to go through
@@ -98,17 +99,19 @@ def wizard_animation():
         # and add landing tracker this would be if landed
         # landing animation for a few frames via timer and then when ends revert to idle
         
-    elif wizard_x_velocity != 0 and event.type == pygame.KEYDOWN:
-        if event.key == right_button:
+    elif wizard_x_velocity != 0 and wizard_rect.bottom >= grass_top_y:
+        if moving_right:
             wizard_index += animation_speed # speed of animation, adjust as needed
             if wizard_index >= len(wizard_walk):wizard_index = 0
             wizard_surf = wizard_walk[int(wizard_index)]
+            wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
             # walk and point direction right (implement tracker for if flipped)
-        if event.key == left_button:
+        else:
             wizard_index += animation_speed # speed of animation, adjust as needed
             if wizard_index >= len(wizard_walk):wizard_index = 0
             wizard_surf = wizard_walk[int(wizard_index)]
-            wizard_surf = pygame.transform.flip(True,False)
+            wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
+            wizard_surf = pygame.transform.flip(wizard_surf,True,False)
             # walk and point direction left
     # elif event.type == pygame.KEYDOWN and event.key == shoot_button:
     #     # wizard fireball animation
@@ -119,6 +122,7 @@ def wizard_animation():
         wizard_index += animation_speed # speed of animation, adjust as needed
         if wizard_index >= len(wizard_idle):wizard_index = 0
         wizard_surf = wizard_idle[int(wizard_index)]
+        wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
         # idle animation
         # start timer that last for a few rounds of idle animation until would do the second
     
@@ -144,6 +148,7 @@ def fireball_animation():
     fireball_index += animation_speed # speed of animation, adjust as needed
     if fireball_index >= len(fireball_move):fireball_index = 0
     fireball_surf = fireball_move[int(fireball_index)]
+    fireball_surf = pygame.transform.scale(fireball_surf,wizard_pixel_size)
 
 # def enemy_animation():
 
@@ -193,6 +198,7 @@ wizard_x_velocity = 0
 wizard_y_pos = wizard_start_y_pos
 wizard_gravity = 0
 gravity_acceleration = -20
+moving_right = True
 
 # Wizard Idle Animation
 wizard_idle_00 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_00.png').convert_alpha()
@@ -388,9 +394,11 @@ while True:
                 if event.key == right_button and wizard_rect.x + wizard_width + wizard_x_velocity < window_width:
                     wizard_x_velocity = wizard_speed
                     harold_x_velocity = harold_speed
+                    moving_right = True
                 if event.key == left_button and wizard_rect.x - wizard_x_velocity > 0:
                     wizard_x_velocity = -wizard_speed
                     harold_x_velocity = -harold_speed
+                    moving_right = False
             if event.type == pygame.KEYUP:
                 if event.key == right_button:
                     wizard_x_velocity = 0
@@ -457,8 +465,8 @@ while True:
         wizard_animation()
         screen.blit(wizard_surf,wizard_rect)
 
+        fireball_animation()
         if fireball_x_start_speed != 0:
-            fireball_animation()
             screen.blit(fireball_surf,fireball_rect)
         
         screen.blit(harold_surf,harold_rect)
