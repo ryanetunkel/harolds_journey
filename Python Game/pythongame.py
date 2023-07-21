@@ -15,6 +15,9 @@ left_button = pygame.K_a
 shoot_button = pygame.MOUSEBUTTONDOWN
 additional_score = 0
 score = 0
+animation_speed = 0.5
+wizard_flipped = False
+wizard_jumping = False
 
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
@@ -80,6 +83,52 @@ def projectile_collisions(projectiles,obstacles):
     # walk into you but if you die first it doesn't really 
     # matter - could affect the score though
 
+def wizard_animation():
+    global wizard_surf, wizard_index, wizard_jumping
+
+    if wizard_rect.bottom < grass_top_y and wizard_jumping: # and add landing tracker this would be if it is off
+        # jump (first half)
+        wizard_index += animation_speed # speed of animation, adjust as needed
+        if wizard_index >= len(wizard_jump):wizard_index = 0
+        wizard_surf = wizard_jump[int(wizard_index)]
+        # this is it raw with no adjustment
+        # below is the ideal
+        # wizard_surf = wizard_jump[0,7] # can't just do this need to go through
+        # 8 - 14 need to be when reach peak, prob cut and edit which goes where
+        # and add landing tracker this would be if landed
+        # landing animation for a few frames via timer and then when ends revert to idle
+        
+    elif wizard_x_velocity != 0 and event.type == pygame.KEYDOWN:
+        if event.key == right_button:
+            wizard_index += animation_speed # speed of animation, adjust as needed
+            if wizard_index >= len(wizard_walk):wizard_index = 0
+            wizard_surf = wizard_walk[int(wizard_index)]
+            # walk and point direction right (implement tracker for if flipped)
+        if event.key == left_button:
+            wizard_index += animation_speed # speed of animation, adjust as needed
+            if wizard_index >= len(wizard_walk):wizard_index = 0
+            wizard_surf = wizard_walk[int(wizard_index)]
+            wizard_surf = pygame.transform.flip(True,False)
+            # walk and point direction left
+    # elif event.type == pygame.KEYDOWN and event.key == shoot_button:
+    #     # wizard fireball animation
+    #     wizard_index += animation_speed # speed of animation, adjust as needed
+    #     if wizard_index >= len(wizard_fireball):wizard_index = 0
+    #     wizard_surf = wizard_idle[int(wizard_index)]
+    elif wizard_x_velocity == 0:
+        wizard_index += animation_speed # speed of animation, adjust as needed
+        if wizard_index >= len(wizard_idle):wizard_index = 0
+        wizard_surf = wizard_idle[int(wizard_index)]
+        # idle animation
+        # start timer that last for a few rounds of idle animation until would do the second
+    
+    # Walking animation if on floor and moving side to side
+    # Idle animation if not moving or attacking
+    # Jumping animation if not on the floor
+    # Fireball animation if attacking
+    # Death animation if game was ended - rn game ends instantly so can't be implemented
+    # Damage animation if hit and not killed - rn can't do cuz no health
+
 # can't implement health and damage sources as the variables aren't attached 
 # to the individual projectiles and obstacles, they are global for all of them
 # need to implement classes for that I think 
@@ -88,6 +137,15 @@ def projectile_collisions(projectiles,obstacles):
 #     if target.obstacle_health <= 0:
 #         obstacle_list = [obstacle for obstacle in obstacle_list if obstacle.obstacle_health > 0]
 #         projectile_list = [projectile for projectile in projectile_list if (projectile.x > 0 and projectile.x < 800)]
+
+def fireball_animation():
+    global fireball_surf, fireball_index
+    
+    fireball_index += animation_speed # speed of animation, adjust as needed
+    if fireball_index >= len(fireball_move):fireball_index = 0
+    fireball_surf = fireball_move[int(fireball_index)]
+
+# def enemy_animation():
 
 pygame.init()
 screen = pygame.display.set_mode(window_size)
@@ -137,30 +195,30 @@ wizard_gravity = 0
 gravity_acceleration = -20
 
 # Wizard Idle Animation
-wizard_idle_00 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
-wizard_idle_01 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_01.png').convert_alpha()
-wizard_idle_02 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_02.png').convert_alpha()
-wizard_idle_03 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_03.png').convert_alpha()
-wizard_idle_04 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_04.png').convert_alpha()
-wizard_idle_05 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_05.png').convert_alpha()
-wizard_idle_06 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_06.png').convert_alpha()
-wizard_idle_07 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_07.png').convert_alpha()
-wizard_idle_08 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_08.png').convert_alpha()
-wizard_idle_09 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_09.png').convert_alpha()
-wizard_idle_10 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_10.png').convert_alpha()
-wizard_idle_11 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_11.png').convert_alpha()
-wizard_idle_12 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_12.png').convert_alpha()
-wizard_idle_13 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_13.png').convert_alpha()
-wizard_idle_14 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_14.png').convert_alpha()
-wizard_idle_15 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_15.png').convert_alpha()
-wizard_idle_16 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_16.png').convert_alpha()
-wizard_idle_17 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_17.png').convert_alpha()
-wizard_idle_18 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_18.png').convert_alpha()
-wizard_idle_19 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_19.png').convert_alpha()
-wizard_idle_20 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_20.png').convert_alpha()
-wizard_idle_21 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_21.png').convert_alpha()
-wizard_idle_22 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_22.png').convert_alpha()
-wizard_idle_23 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation/wizard_idle_23.png').convert_alpha()
+wizard_idle_00 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_00.png').convert_alpha()
+wizard_idle_01 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_01.png').convert_alpha()
+wizard_idle_02 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_02.png').convert_alpha()
+wizard_idle_03 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_03.png').convert_alpha()
+wizard_idle_04 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_04.png').convert_alpha()
+wizard_idle_05 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_05.png').convert_alpha()
+wizard_idle_06 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_06.png').convert_alpha()
+wizard_idle_07 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_07.png').convert_alpha()
+wizard_idle_08 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_08.png').convert_alpha()
+wizard_idle_09 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_09.png').convert_alpha()
+wizard_idle_10 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_10.png').convert_alpha()
+wizard_idle_11 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_11.png').convert_alpha()
+wizard_idle_12 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_12.png').convert_alpha()
+wizard_idle_13 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_13.png').convert_alpha()
+wizard_idle_14 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_14.png').convert_alpha()
+wizard_idle_15 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_15.png').convert_alpha()
+wizard_idle_16 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_16.png').convert_alpha()
+wizard_idle_17 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_17.png').convert_alpha()
+wizard_idle_18 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_18.png').convert_alpha()
+wizard_idle_19 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_19.png').convert_alpha()
+wizard_idle_20 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_20.png').convert_alpha()
+wizard_idle_21 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_21.png').convert_alpha()
+wizard_idle_22 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_22.png').convert_alpha()
+wizard_idle_23 = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_23.png').convert_alpha()
 wizard_idle = [wizard_idle_00, wizard_idle_01, wizard_idle_02, wizard_idle_03,
                wizard_idle_04, wizard_idle_05, wizard_idle_06, wizard_idle_07,
                wizard_idle_08, wizard_idle_09, wizard_idle_10, wizard_idle_11,
@@ -181,6 +239,7 @@ wizard_walk = [wizard_walk_0, wizard_walk_1, wizard_walk_2, wizard_walk_3,
                wizard_walk_4, wizard_walk_5, wizard_walk_6, wizard_walk_7,]
 
 # Wizard Jump Animation
+# Ascending
 wizard_jump_00 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_00.png').convert_alpha()
 wizard_jump_01 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_01.png').convert_alpha()
 wizard_jump_02 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_02.png').convert_alpha()
@@ -189,6 +248,7 @@ wizard_jump_04 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_anim
 wizard_jump_05 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_05.png').convert_alpha()
 wizard_jump_06 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_06.png').convert_alpha()
 wizard_jump_07 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_07.png').convert_alpha()
+# Top of Jump
 wizard_jump_08 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_08.png').convert_alpha()
 wizard_jump_09 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_09.png').convert_alpha()
 wizard_jump_10 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_10.png').convert_alpha()
@@ -196,6 +256,7 @@ wizard_jump_11 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_anim
 wizard_jump_12 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_12.png').convert_alpha()
 wizard_jump_13 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_13.png').convert_alpha()
 wizard_jump_14 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_14.png').convert_alpha()
+# Descending
 wizard_jump_15 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_15.png').convert_alpha()
 wizard_jump_16 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_16.png').convert_alpha()
 wizard_jump_17 = pygame.image.load('Python Game/graphics/wizard/wizard_jump_animation/wizard_jump_17.png').convert_alpha()
@@ -211,7 +272,8 @@ wizard_jump = [wizard_jump_00, wizard_jump_01, wizard_jump_02, wizard_jump_03,
                wizard_jump_12, wizard_jump_13, wizard_jump_14, wizard_jump_15,
                wizard_jump_16, wizard_jump_17, wizard_jump_18, wizard_jump_19,
                wizard_jump_20, wizard_jump_21, wizard_jump_22, wizard_jump_23]
-
+wizard_index = 0
+wizard_surf = wizard_walk[wizard_index]
 wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
 wizard_rect = wizard_surf.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
 
@@ -239,7 +301,22 @@ fireball_hit = False
 
 fireball_damage = 1
 
-fireball_surf = pygame.image.load('Python Game/graphics/fireball/fireball_move/sprite_0.png').convert_alpha()
+# Fireball Transition Animation
+fireball_trans_0 = pygame.image.load('Python Game/graphics/fireball/fireball_transition_animation/fireball_trans_0.png').convert_alpha()
+fireball_trans_1 = pygame.image.load('Python Game/graphics/fireball/fireball_transition_animation/fireball_trans_1.png').convert_alpha()
+fireball_trans_2 = pygame.image.load('Python Game/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
+fireball_trans_3 = pygame.image.load('Python Game/graphics/fireball/fireball_transition_animation/fireball_trans_3.png').convert_alpha()
+fireball_trans = [fireball_trans_0, fireball_trans_1, fireball_trans_2, fireball_trans_3]
+
+# Fireball Movement Animation
+fireball_move_0 = pygame.image.load('Python Game/graphics/fireball/fireball_movement_animation/fireball_move_0.png').convert_alpha()
+fireball_move_1 = pygame.image.load('Python Game/graphics/fireball/fireball_movement_animation/fireball_move_1.png').convert_alpha()
+fireball_move_2 = pygame.image.load('Python Game/graphics/fireball/fireball_movement_animation/fireball_move_2.png').convert_alpha()
+fireball_move_3 = pygame.image.load('Python Game/graphics/fireball/fireball_movement_animation/fireball_move_3.png').convert_alpha()
+fireball_move = [fireball_move_0, fireball_move_1, fireball_move_2, fireball_move_3]
+
+fireball_index = 0
+fireball_surf = fireball_move[fireball_index]
 fireball_surf = pygame.transform.scale(fireball_surf,wizard_pixel_size)
 fireball_rect = fireball_surf.get_rect(center = (fireball_x_pos,fireball_y_pos))
 
@@ -267,7 +344,7 @@ harold_rect = harold_surf.get_rect(midbottom = (harold_x_pos,harold_y_pos))
 
 
 # Intro Screen
-wizard_title_surf = pygame.image.load('Python Game/graphics/wizard/wizard_idle1/sprite_00.png').convert_alpha()
+wizard_title_surf = pygame.image.load('Python Game/graphics/wizard/wizard_idle_animation_1/wizard_idle_00.png').convert_alpha()
 wizard_title_surf = pygame.transform.scale(wizard_title_surf,(192,192))
 wizard_title_rect = wizard_title_surf.get_rect(center = (400,250))
 
@@ -305,6 +382,7 @@ while True:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == jump_button and wizard_rect.bottom >= grass_top_y:  
+                    wizard_jumping = True
                     wizard_gravity = gravity_acceleration
                     harold_gravity = gravity_acceleration
                 if event.key == right_button and wizard_rect.x + wizard_width + wizard_x_velocity < window_width:
@@ -376,9 +454,11 @@ while True:
         if wizard_rect.bottom >= grass_top_y: 
             wizard_rect.bottom = grass_top_y
             harold_rect.bottom = wizard_rect.top + 12
+        wizard_animation()
         screen.blit(wizard_surf,wizard_rect)
 
         if fireball_x_start_speed != 0:
+            fireball_animation()
             screen.blit(fireball_surf,fireball_rect)
         
         screen.blit(harold_surf,harold_rect)
