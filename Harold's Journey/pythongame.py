@@ -2,6 +2,12 @@ import pygame
 from sys import exit
 from random import randint
 
+# class Player(pygame.sprite.Sprite):
+#     def __init__(self):
+#         super().__init__()
+#         self.image = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
+#         self.rect = self.image.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
+
 window_width = 800
 window_height = 400
 window_size = (window_width,window_height)
@@ -15,13 +21,24 @@ left_button = pygame.K_a
 shoot_button = pygame.MOUSEBUTTONDOWN
 additional_score = 0
 score = 0
-animation_speed = 0.1
-wizard_flipped = False
-wizard_jumping = False
+
+# seconds per frame
+wizard_walk_animation_speed = 0.1
+wizard_jump_animation_speed = 0.075
+wizard_idle_animation_speed = 0.1
+wizard_secret_idle_animation_speed = 0.1
+wizard_fireball_animation_speed = 0.4
+harold_idle_animation_speed = 0.1
+fireball_move_animation_speed = 0.1
+fireball_transition_animation_speed = 0.1
+# milliseconds per frame
+skeleton_walk_animation_speed = 50 
+flying_enemy_fly_animation_speed = 50
+
+# wizard = Player()
 
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
-    # f makes it a string?
     score_surf = test_font.render(str(current_time + additional_score), False, '#FCDC4D')
     score_rect = score_surf.get_rect(center = (window_width/2,50))
     screen.blit(score_surf,score_rect)
@@ -84,14 +101,14 @@ def projectile_collisions(projectiles,obstacles):
     # matter - could affect the score though
 
 def wizard_animation():
-    global wizard_surf, wizard_index, wizard_jumping
+    global wizard_surf, wizard_index, wizard_jumping, wizard_secret_animation_timer, wizard_secret_animation_limit
 
     if wizard_rect.bottom < grass_top_y and wizard_jumping: # and add landing tracker this would be if it is off
         # jump (first half)
-        wizard_index += animation_speed # speed of animation, adjust as needed
+        wizard_secret_animation_timer = wizard_secret_animation_limit
+        wizard_index += wizard_jump_animation_speed # speed of animation, adjust as needed
         if wizard_index >= len(wizard_jump):wizard_index = 0
         wizard_surf = wizard_jump[int(wizard_index)]
-        wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
         # this is it raw with no adjustment
         # below is the ideal
         # wizard_surf = wizard_jump[0,7] # can't just do this need to go through
@@ -100,23 +117,31 @@ def wizard_animation():
         # landing animation for a few frames via timer and then when ends revert to idle
         
     elif wizard_x_velocity != 0 and wizard_rect.bottom >= grass_top_y:
-        wizard_index += animation_speed # speed of animation, adjust as needed
+        wizard_secret_animation_timer = wizard_secret_animation_limit
+        wizard_index += wizard_walk_animation_speed # speed of animation, adjust as needed
         if wizard_index >= len(wizard_walk):wizard_index = 0
         wizard_surf = wizard_walk[int(wizard_index)]
-        wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
-    # elif event.type == pygame.KEYDOWN and event.key == shoot_button:
-    #     # wizard fireball animation
-    #     wizard_index += animation_speed # speed of animation, adjust as needed
-    #     if wizard_index >= len(wizard_fireball):wizard_index = 0
-    #     wizard_surf = wizard_idle[int(wizard_index)]
+    elif fireball_cooldown < 60 and fireball_cooldown >= 30:
+        # wizard fireball animation
+        wizard_secret_animation_timer = wizard_secret_animation_limit
+        wizard_index += wizard_fireball_animation_speed # speed of animation, adjust as needed
+        if wizard_index >= len(wizard_fireball):wizard_index = 0
+        wizard_surf = wizard_fireball[int(wizard_index)]
     elif wizard_x_velocity == 0:
-        wizard_index += animation_speed # speed of animation, adjust as needed
-        if wizard_index >= len(wizard_idle):wizard_index = 0
-        wizard_surf = wizard_idle[int(wizard_index)]
-        wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
-        # idle animation
-        # start timer that last for a few rounds of idle animation until would do the second
-    if not moving_right:
+        if wizard_secret_animation_timer != 0:
+            wizard_index += wizard_idle_animation_speed # speed of animation, adjust as needed
+            if wizard_index >= len(wizard_idle):wizard_index = 0
+            wizard_surf = wizard_idle[int(wizard_index)]
+            # idle animation
+            # start timer that last for a few rounds of idle animation until would do the second
+            wizard_secret_animation_timer -= 1
+        else:
+            wizard_index += wizard_secret_idle_animation_speed # speed of animation, adjust as needed
+            if wizard_index >= len(wizard_secret_idle):wizard_index = 0
+            wizard_surf = wizard_secret_idle[int(wizard_index)]
+
+    wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
+    if not looking_right:
         wizard_surf = pygame.transform.flip(wizard_surf,True,False)
     # Walking animation if on floor and moving side to side
     # Idle animation if not moving or attacking
@@ -137,23 +162,23 @@ def wizard_animation():
 def fireball_animation():
     global fireball_surf, fireball_index
     
-    fireball_index += animation_speed # speed of animation, adjust as needed
+    fireball_index += fireball_move_animation_speed # speed of animation, adjust as needed
     if fireball_index >= len(fireball_move):fireball_index = 0
     fireball_surf = fireball_move[int(fireball_index)]
     fireball_surf = pygame.transform.scale(fireball_surf,wizard_pixel_size)
+    # if not looking_right: # Can only be done once can track dif directions for fireballs to go in
+    #     fireball_surf = pygame.transform.flip(fireball_surf,True,False)
 
 def harold_animation():
     global harold_surf, harold_index
     
-    harold_index += animation_speed # speed of animation, adjust as needed
+    harold_index += harold_idle_animation_speed # speed of animation, adjust as needed
     if harold_index >= len(harold_idle):harold_index = 0
     harold_surf = harold_idle[int(harold_index)]
     harold_surf = pygame.transform.scale_by(harold_surf,3/2)
 
-    if not moving_right:
+    if not looking_right:
         harold_surf = pygame.transform.flip(harold_surf,True,False)
-
-# def skeleton_animation(): # WIP
 
 pygame.init()
 screen = pygame.display.set_mode(window_size)
@@ -184,7 +209,6 @@ skeleton_x_pos = randint(window_width + 100,window_width + 300)
 skeleton_y_pos = grass_top_y + 8
 
 # Skeleton Walk Animation
-skeleton_animation_speed = 50 # milliseconds
 skeleton_walk_00 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png').convert_alpha()
 skeleton_walk_01 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_01.png').convert_alpha()
 skeleton_walk_02 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_02.png').convert_alpha()
@@ -204,11 +228,10 @@ skeleton_walk = [skeleton_walk_00, skeleton_walk_01, skeleton_walk_02, skeleton_
                  skeleton_walk_12]
 skeleton_index = 0
 skeleton_surf = skeleton_walk[skeleton_index]
-skeleton_surf = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
+# skeleton_surf = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
 skeleton_surf = pygame.transform.scale(skeleton_surf,wizard_pixel_size)
 skeleton_rect = skeleton_surf.get_rect(midbottom = (skeleton_x_pos,skeleton_y_pos))
 
-flying_enemy_animation_speed = 50 # milliseconds
 flying_enemy_x_pos = randint(window_width + 100,window_width + 300)
 flying_enemy_y_pos = grass_top_y - 100
 flying_enemy_surf = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
@@ -225,8 +248,11 @@ wizard_speed = 4
 wizard_x_velocity = 0
 wizard_y_pos = wizard_start_y_pos
 wizard_gravity = 0
+wizard_secret_animation_limit = 240
+wizard_secret_animation_timer = wizard_secret_animation_limit
 gravity_acceleration = -20
-moving_right = True
+looking_right = True
+wizard_jumping = False
 
 # Wizard Idle Animation
 wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
@@ -259,6 +285,39 @@ wizard_idle = [wizard_idle_00, wizard_idle_01, wizard_idle_02, wizard_idle_03,
                wizard_idle_12, wizard_idle_13, wizard_idle_14, wizard_idle_15,
                wizard_idle_16, wizard_idle_17, wizard_idle_18, wizard_idle_19,
                wizard_idle_20, wizard_idle_21, wizard_idle_22, wizard_idle_23]
+
+# Wizard Secret Idle Animation
+wizard_secret_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_00.png').convert_alpha()
+wizard_secret_idle_01 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_01.png').convert_alpha()
+wizard_secret_idle_02 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_02.png').convert_alpha()
+wizard_secret_idle_03 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_03.png').convert_alpha()
+wizard_secret_idle_04 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_04.png').convert_alpha()
+wizard_secret_idle_05 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_05.png').convert_alpha()
+wizard_secret_idle_06 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_06.png').convert_alpha()
+wizard_secret_idle_07 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_07.png').convert_alpha()
+wizard_secret_idle_08 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_08.png').convert_alpha()
+wizard_secret_idle_09 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_09.png').convert_alpha()
+wizard_secret_idle_10 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_10.png').convert_alpha()
+wizard_secret_idle_11 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_11.png').convert_alpha()
+wizard_secret_idle_12 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_12.png').convert_alpha()
+wizard_secret_idle_13 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_13.png').convert_alpha()
+wizard_secret_idle_14 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_14.png').convert_alpha()
+wizard_secret_idle_15 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_15.png').convert_alpha()
+wizard_secret_idle_16 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_16.png').convert_alpha()
+wizard_secret_idle_17 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_17.png').convert_alpha()
+wizard_secret_idle_18 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_18.png').convert_alpha()
+wizard_secret_idle_19 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_19.png').convert_alpha()
+wizard_secret_idle_20 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_20.png').convert_alpha()
+wizard_secret_idle_21 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_21.png').convert_alpha()
+wizard_secret_idle_22 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_22.png').convert_alpha()
+wizard_secret_idle_23 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_23.png').convert_alpha()
+wizard_secret_idle = [wizard_secret_idle_00, wizard_secret_idle_01, wizard_secret_idle_02, wizard_secret_idle_03,
+                      wizard_secret_idle_04, wizard_secret_idle_05, wizard_secret_idle_06, wizard_secret_idle_07,
+                      wizard_secret_idle_08, wizard_secret_idle_09, wizard_secret_idle_10, wizard_secret_idle_11,
+                      wizard_secret_idle_12, wizard_secret_idle_13, wizard_secret_idle_14, wizard_secret_idle_15,
+                      wizard_secret_idle_16, wizard_secret_idle_17, wizard_secret_idle_18, wizard_secret_idle_19,
+                      wizard_secret_idle_20, wizard_secret_idle_21, wizard_secret_idle_22, wizard_secret_idle_23]
+
 
 # Wizard Walk Animation
 wizard_walk_0 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_walk_animation/wizard_walk_0.png').convert_alpha()
@@ -306,6 +365,24 @@ wizard_jump = [wizard_jump_00, wizard_jump_01, wizard_jump_02, wizard_jump_03,
                wizard_jump_12, wizard_jump_13, wizard_jump_14, wizard_jump_15,
                wizard_jump_16, wizard_jump_17, wizard_jump_18, wizard_jump_19,
                wizard_jump_20, wizard_jump_21, wizard_jump_22, wizard_jump_23]
+
+# Wizard Fireball Animation
+wizard_fireball_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_00.png').convert_alpha()
+wizard_fireball_01 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_01.png').convert_alpha()
+wizard_fireball_02 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_02.png').convert_alpha()
+wizard_fireball_03 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_03.png').convert_alpha()
+wizard_fireball_04 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_04.png').convert_alpha()
+wizard_fireball_05 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_05.png').convert_alpha()
+wizard_fireball_06 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_06.png').convert_alpha()
+wizard_fireball_07 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_07.png').convert_alpha()
+wizard_fireball_08 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_08.png').convert_alpha()
+wizard_fireball_09 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_09.png').convert_alpha()
+wizard_fireball_10 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_10.png').convert_alpha()
+wizard_fireball_11 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_11.png').convert_alpha()
+wizard_fireball = [wizard_fireball_00, wizard_fireball_01, wizard_fireball_02, wizard_fireball_03,
+                   wizard_fireball_04, wizard_fireball_05, wizard_fireball_06, wizard_fireball_07,
+                   wizard_fireball_08, wizard_fireball_09, wizard_fireball_10, wizard_fireball_11]
+
 wizard_index = 0
 wizard_surf = wizard_walk[wizard_index]
 wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
@@ -431,11 +508,11 @@ pygame.time.set_timer(obstacle_timer,obstacle_spawn_frequency)
 
 # Skeleton Animation Timer
 skeleton_animation_timer = pygame.USEREVENT + 2
-pygame.time.set_timer(skeleton_animation_timer,skeleton_animation_speed)
+pygame.time.set_timer(skeleton_animation_timer,skeleton_walk_animation_speed)
 
 # Flying Enemy Animation Timer
 flying_enemy_animation_timer = pygame.USEREVENT + 3
-pygame.time.set_timer(flying_enemy_animation_timer,flying_enemy_animation_speed)
+pygame.time.set_timer(flying_enemy_animation_timer,flying_enemy_fly_animation_speed)
 
 # pygame.draw exists, can do rects, circles, lines, points, ellipses etc
 while True:
@@ -448,10 +525,14 @@ while True:
        
         if game_active:
             # Fireballs come off cooldown or instantly cooldown if you hit an enemy with one
+            (mouse_x,mouse_y) = pygame.mouse.get_pos()
+
             if event.type == shoot_button and (fireball_cooldown == 0 or fireball_hit):
                 fireball_cooldown = fireball_cooldown_time
                 fireball_hit = False
                 projectile_rect_list.append(fireball_surf.get_rect(center = (wizard_rect.right - 20,wizard_rect.centery + 24)))
+
+            looking_right = mouse_x >= wizard_rect.centerx
 
             if event.type == pygame.KEYDOWN:
                 if event.key == jump_button and wizard_rect.bottom >= grass_top_y:  
@@ -461,11 +542,11 @@ while True:
                 if event.key == right_button and wizard_rect.x + wizard_width + wizard_x_velocity < window_width:
                     wizard_x_velocity = wizard_speed
                     harold_x_velocity = harold_speed
-                    moving_right = True
+                    # looking_right = True
                 if event.key == left_button and wizard_rect.x - wizard_x_velocity > 0:
                     wizard_x_velocity = -wizard_speed
                     harold_x_velocity = -harold_speed
-                    moving_right = False
+                    # looking_right = False
             if event.type == pygame.KEYUP:
                 if event.key == right_button:
                     wizard_x_velocity = 0
@@ -488,20 +569,9 @@ while True:
             # if event.type == flying_enemy_animation_timer:
             #     # WIP - add when have animation 
             #     # Horrible Coding
-            #     if flying_enemy_index == 0: flying_enemy_index = 1
-            #     elif flying_enemy_index == 1: flying_enemy_index = 2
-            #     elif flying_enemy_index == 2: flying_enemy_index = 3
-            #     elif flying_enemy_index == 3: flying_enemy_index = 4
-            #     elif flying_enemy_index == 4: flying_enemy_index = 5
-            #     elif flying_enemy_index == 5: flying_enemy_index = 6
-            #     elif flying_enemy_index == 6: flying_enemy_index = 7
-            #     elif flying_enemy_index == 7: flying_enemy_index = 8
-            #     elif flying_enemy_index == 8: flying_enemy_index = 9
-            #     elif flying_enemy_index == 9: flying_enemy_index = 10
-            #     elif flying_enemy_index == 10: flying_enemy_index = 11
-            #     elif flying_enemy_index == 11: flying_enemy_index = 12
-            #     elif flying_enemy_index == 12: flying_enemy_index = 0
-            #     flying_enemy_surf = flying_enemy_fly[flying_enemy_index]
+            #     if flying_enemy_index != 12: flying_enemy_index += 1
+            #     else: flying_enemy_index = 0
+            #     flying_enemy_surf = flying_enemy_walk[flying_enemy_index]
 
         else:
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
@@ -517,9 +587,6 @@ while True:
         # pygame.draw.line(screen,"#FCDC4D",score_rect.bottomleft,score_rect.bottomright,3)
         # screen.blit(score_surf,score_rect)
         score = display_score()
-
-        # mouse_pos = pygame.mouse.get_pos()
-        # print(mouse_pos)
 
         # enemy_rect.x -= 4
 
