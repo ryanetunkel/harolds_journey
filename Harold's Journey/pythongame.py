@@ -47,6 +47,8 @@ class Player(pygame.sprite.Sprite):
 window_width = 800
 window_height = 400
 window_size = (window_width,window_height)
+wizard_width = 128
+wizard_height = 128
 wizard_pixel_size = (wizard_height,wizard_width)
 
 jump_button = pygame.K_SPACE
@@ -271,8 +273,6 @@ flying_enemy_rect = flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,f
 obstacle_rect_list = []
 
 # Player
-wizard_width = 128
-wizard_height = 128
 wizard_start_x_pos = 80
 wizard_start_y_pos = grass_top_y
 wizard_x_pos = wizard_start_x_pos
