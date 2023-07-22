@@ -100,19 +100,10 @@ def wizard_animation():
         # landing animation for a few frames via timer and then when ends revert to idle
         
     elif wizard_x_velocity != 0 and wizard_rect.bottom >= grass_top_y:
-        if moving_right:
-            wizard_index += animation_speed # speed of animation, adjust as needed
-            if wizard_index >= len(wizard_walk):wizard_index = 0
-            wizard_surf = wizard_walk[int(wizard_index)]
-            wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
-            # walk and point direction right (implement tracker for if flipped)
-        else:
-            wizard_index += animation_speed # speed of animation, adjust as needed
-            if wizard_index >= len(wizard_walk):wizard_index = 0
-            wizard_surf = wizard_walk[int(wizard_index)]
-            wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
-            wizard_surf = pygame.transform.flip(wizard_surf,True,False)
-            # walk and point direction left
+        wizard_index += animation_speed # speed of animation, adjust as needed
+        if wizard_index >= len(wizard_walk):wizard_index = 0
+        wizard_surf = wizard_walk[int(wizard_index)]
+        wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
     # elif event.type == pygame.KEYDOWN and event.key == shoot_button:
     #     # wizard fireball animation
     #     wizard_index += animation_speed # speed of animation, adjust as needed
@@ -125,7 +116,8 @@ def wizard_animation():
         wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
         # idle animation
         # start timer that last for a few rounds of idle animation until would do the second
-    
+    if not moving_right:
+        wizard_surf = pygame.transform.flip(wizard_surf,True,False)
     # Walking animation if on floor and moving side to side
     # Idle animation if not moving or attacking
     # Jumping animation if not on the floor
@@ -152,11 +144,14 @@ def fireball_animation():
 
 def harold_animation():
     global harold_surf, harold_index
-
+    
     harold_index += animation_speed # speed of animation, adjust as needed
     if harold_index >= len(harold_idle):harold_index = 0
     harold_surf = harold_idle[int(harold_index)]
     harold_surf = pygame.transform.scale_by(harold_surf,3/2)
+
+    if not moving_right:
+        harold_surf = pygame.transform.flip(harold_surf,True,False)
 
 # def skeleton_animation(): # WIP
 
@@ -234,30 +229,30 @@ gravity_acceleration = -20
 moving_right = True
 
 # Wizard Idle Animation
-wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_00.png').convert_alpha()
-wizard_idle_01 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_01.png').convert_alpha()
-wizard_idle_02 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_02.png').convert_alpha()
-wizard_idle_03 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_03.png').convert_alpha()
-wizard_idle_04 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_04.png').convert_alpha()
-wizard_idle_05 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_05.png').convert_alpha()
-wizard_idle_06 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_06.png').convert_alpha()
-wizard_idle_07 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_07.png').convert_alpha()
-wizard_idle_08 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_08.png').convert_alpha()
-wizard_idle_09 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_09.png').convert_alpha()
-wizard_idle_10 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_10.png').convert_alpha()
-wizard_idle_11 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_11.png').convert_alpha()
-wizard_idle_12 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_12.png').convert_alpha()
-wizard_idle_13 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_13.png').convert_alpha()
-wizard_idle_14 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_14.png').convert_alpha()
-wizard_idle_15 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_15.png').convert_alpha()
-wizard_idle_16 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_16.png').convert_alpha()
-wizard_idle_17 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_17.png').convert_alpha()
-wizard_idle_18 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_18.png').convert_alpha()
-wizard_idle_19 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_19.png').convert_alpha()
-wizard_idle_20 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_20.png').convert_alpha()
-wizard_idle_21 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_21.png').convert_alpha()
-wizard_idle_22 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_22.png').convert_alpha()
-wizard_idle_23 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_23.png').convert_alpha()
+wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
+wizard_idle_01 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_01.png').convert_alpha()
+wizard_idle_02 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_02.png').convert_alpha()
+wizard_idle_03 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_03.png').convert_alpha()
+wizard_idle_04 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_04.png').convert_alpha()
+wizard_idle_05 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_05.png').convert_alpha()
+wizard_idle_06 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_06.png').convert_alpha()
+wizard_idle_07 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_07.png').convert_alpha()
+wizard_idle_08 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_08.png').convert_alpha()
+wizard_idle_09 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_09.png').convert_alpha()
+wizard_idle_10 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_10.png').convert_alpha()
+wizard_idle_11 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_11.png').convert_alpha()
+wizard_idle_12 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_12.png').convert_alpha()
+wizard_idle_13 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_13.png').convert_alpha()
+wizard_idle_14 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_14.png').convert_alpha()
+wizard_idle_15 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_15.png').convert_alpha()
+wizard_idle_16 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_16.png').convert_alpha()
+wizard_idle_17 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_17.png').convert_alpha()
+wizard_idle_18 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_18.png').convert_alpha()
+wizard_idle_19 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_19.png').convert_alpha()
+wizard_idle_20 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_20.png').convert_alpha()
+wizard_idle_21 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_21.png').convert_alpha()
+wizard_idle_22 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_22.png').convert_alpha()
+wizard_idle_23 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_23.png').convert_alpha()
 wizard_idle = [wizard_idle_00, wizard_idle_01, wizard_idle_02, wizard_idle_03,
                wizard_idle_04, wizard_idle_05, wizard_idle_06, wizard_idle_07,
                wizard_idle_08, wizard_idle_09, wizard_idle_10, wizard_idle_11,
@@ -414,7 +409,7 @@ harold_rect = harold_surf.get_rect(midbottom = (harold_x_pos,harold_y_pos))
 
 
 # Intro Screen
-wizard_title_surf = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation_1/wizard_idle_00.png').convert_alpha()
+wizard_title_surf = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
 wizard_title_surf = pygame.transform.scale(wizard_title_surf,(192,192))
 wizard_title_rect = wizard_title_surf.get_rect(center = (400,250))
 
@@ -591,7 +586,7 @@ while True:
         harold_gravity = 0
         harold_x_velocity = 0
 
-        score_message_surf = test_font.render(str('Score: ' + score),False,"#FCDC4D")
+        score_message_surf = test_font.render('Score: ' + str(score),False,"#FCDC4D")
         score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
         score_message_rect = score_message_surf.get_rect(center = (400,70))
 
