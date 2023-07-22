@@ -22,7 +22,7 @@ wizard_jumping = False
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
     # f makes it a string?
-    score_surf = test_font.render(f'{current_time + additional_score}', False, "#FCDC4D")
+    score_surf = test_font.render(str(current_time + additional_score), False, '#FCDC4D')
     score_rect = score_surf.get_rect(center = (window_width/2,50))
     screen.blit(score_surf,score_rect)
     # print(current_time)
@@ -487,22 +487,26 @@ while True:
                     obstacle_rect_list.append(flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,flying_enemy_y_pos)))
             if event.type == skeleton_animation_timer:
                 # Horrible Coding
-                if skeleton_index == 0: skeleton_index = 1
-                elif skeleton_index == 1: skeleton_index = 2
-                elif skeleton_index == 2: skeleton_index = 3
-                elif skeleton_index == 3: skeleton_index = 4
-                elif skeleton_index == 4: skeleton_index = 5
-                elif skeleton_index == 5: skeleton_index = 6
-                elif skeleton_index == 6: skeleton_index = 7
-                elif skeleton_index == 7: skeleton_index = 8
-                elif skeleton_index == 8: skeleton_index = 9
-                elif skeleton_index == 9: skeleton_index = 10
-                elif skeleton_index == 10: skeleton_index = 11
-                elif skeleton_index == 11: skeleton_index = 12
-                elif skeleton_index == 12: skeleton_index = 0
+                if skeleton_index != 12: skeleton_index += 1
+                else: skeleton_index = 0
                 skeleton_surf = skeleton_walk[skeleton_index]
             # if event.type == flying_enemy_animation_timer:
             #     # WIP - add when have animation 
+            #     # Horrible Coding
+            #     if flying_enemy_index == 0: flying_enemy_index = 1
+            #     elif flying_enemy_index == 1: flying_enemy_index = 2
+            #     elif flying_enemy_index == 2: flying_enemy_index = 3
+            #     elif flying_enemy_index == 3: flying_enemy_index = 4
+            #     elif flying_enemy_index == 4: flying_enemy_index = 5
+            #     elif flying_enemy_index == 5: flying_enemy_index = 6
+            #     elif flying_enemy_index == 6: flying_enemy_index = 7
+            #     elif flying_enemy_index == 7: flying_enemy_index = 8
+            #     elif flying_enemy_index == 8: flying_enemy_index = 9
+            #     elif flying_enemy_index == 9: flying_enemy_index = 10
+            #     elif flying_enemy_index == 10: flying_enemy_index = 11
+            #     elif flying_enemy_index == 11: flying_enemy_index = 12
+            #     elif flying_enemy_index == 12: flying_enemy_index = 0
+            #     flying_enemy_surf = flying_enemy_fly[flying_enemy_index]
 
         else:
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
@@ -587,7 +591,7 @@ while True:
         harold_gravity = 0
         harold_x_velocity = 0
 
-        score_message_surf = test_font.render(f'Score: {score}',False,"#FCDC4D")
+        score_message_surf = test_font.render(str('Score: ' + score),False,"#FCDC4D")
         score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
         score_message_rect = score_message_surf.get_rect(center = (400,70))
 
