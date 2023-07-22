@@ -103,7 +103,13 @@ def projectile_collisions(projectiles,obstacles):
 def wizard_animation():
     global wizard_surf, wizard_index, wizard_jumping, wizard_secret_animation_timer, wizard_secret_animation_limit
 
-    if wizard_rect.bottom < grass_top_y and wizard_jumping: # and add landing tracker this would be if it is off
+    if fireball_cooldown < 60 and fireball_cooldown >= 30:
+        # wizard fireball animation
+        wizard_secret_animation_timer = wizard_secret_animation_limit
+        wizard_index += wizard_fireball_animation_speed # speed of animation, adjust as needed
+        if wizard_index >= len(wizard_fireball):wizard_index = 0
+        wizard_surf = wizard_fireball[int(wizard_index)]
+    elif wizard_rect.bottom < grass_top_y and wizard_jumping: # and add landing tracker this would be if it is off
         # jump (first half)
         wizard_secret_animation_timer = wizard_secret_animation_limit
         wizard_index += wizard_jump_animation_speed # speed of animation, adjust as needed
@@ -115,18 +121,11 @@ def wizard_animation():
         # 8 - 14 need to be when reach peak, prob cut and edit which goes where
         # and add landing tracker this would be if landed
         # landing animation for a few frames via timer and then when ends revert to idle
-        
     elif wizard_x_velocity != 0 and wizard_rect.bottom >= grass_top_y:
         wizard_secret_animation_timer = wizard_secret_animation_limit
         wizard_index += wizard_walk_animation_speed # speed of animation, adjust as needed
         if wizard_index >= len(wizard_walk):wizard_index = 0
         wizard_surf = wizard_walk[int(wizard_index)]
-    elif fireball_cooldown < 60 and fireball_cooldown >= 30:
-        # wizard fireball animation
-        wizard_secret_animation_timer = wizard_secret_animation_limit
-        wizard_index += wizard_fireball_animation_speed # speed of animation, adjust as needed
-        if wizard_index >= len(wizard_fireball):wizard_index = 0
-        wizard_surf = wizard_fireball[int(wizard_index)]
     elif wizard_x_velocity == 0:
         if wizard_secret_animation_timer != 0:
             wizard_index += wizard_idle_animation_speed # speed of animation, adjust as needed
@@ -318,7 +317,6 @@ wizard_secret_idle = [wizard_secret_idle_00, wizard_secret_idle_01, wizard_secre
                       wizard_secret_idle_16, wizard_secret_idle_17, wizard_secret_idle_18, wizard_secret_idle_19,
                       wizard_secret_idle_20, wizard_secret_idle_21, wizard_secret_idle_22, wizard_secret_idle_23]
 
-
 # Wizard Walk Animation
 wizard_walk_0 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_walk_animation/wizard_walk_0.png').convert_alpha()
 wizard_walk_1 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_walk_animation/wizard_walk_1.png').convert_alpha()
@@ -440,6 +438,7 @@ fireball_rect = fireball_surf.get_rect(center = (fireball_x_pos,fireball_y_pos))
 
 projectile_rect_list = []
 
+
 # Harold
 harold_start_x_pos = wizard_rect.centerx
 harold_start_y_pos = wizard_rect.top + 28 # pixels at this scale based on wizard are 4 pixels each
@@ -491,7 +490,6 @@ wizard_title_surf = pygame.transform.scale(wizard_title_surf,(192,192))
 wizard_title_rect = wizard_title_surf.get_rect(center = (400,250))
 
 harold_title_surf = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
-# harold_title_surf = pygame.transform.flip(harold_title_surf, True, False)
 harold_title_surf = pygame.transform.scale_by(harold_title_surf,2.25)
 harold_title_rect = harold_title_surf.get_rect(midbottom = (wizard_title_rect.centerx,wizard_title_rect.top + 42))
 
