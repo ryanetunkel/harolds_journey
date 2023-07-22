@@ -2,17 +2,51 @@ import pygame
 from sys import exit
 from random import randint
 
-# class Player(pygame.sprite.Sprite):
-#     def __init__(self):
-#         super().__init__()
-#         self.image = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
-#         self.rect = self.image.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
+# Just put in the Player class, haven't removed any old code it replaces
+# Also Harold needs either his own class or to also be a player
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
+        self.rect = self.image.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
+        self.grass_top_y = 371
+        self.wizard_width = 128
+        self.wizard_height = 128
+        self.wizard_start_x_pos = 80
+        self.wizard_start_y_pos = self.grass_top_y
+        self.wizard_x_pos = self.wizard_start_x_pos
+        self.wizard_speed = 4
+        self.wizard_y_pos = self.wizard_start_y_pos
+        self.wizard_gravity = 0
+        self.wizard_secret_animation_limit = 240
+        self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+        self.gravity_acceleration = -20
+        self.looking_right = True
+        self.wizard_jumping = False
+    
+    def player_input(self):
+        keys = pygame.key.get_pressed()
+        if keys[jump_button] and self.rect.bottom >= grass_top_y:
+            self.wizard_jumping = True
+            self.wizard_gravity = gravity_acceleration
+            self.harold_gravity = gravity_acceleration
+        if keys[right_button] and self.rect.x + self.wizard_width + self.wizard_x_velocity < window_width:
+            self.wizard_x_pos += self.wizard_speed
+            self.harold_x_pos += self.harold_speed
+        if keys[left_button] and self.rect.x - self.wizard_x_velocity > 0:
+            self.wizard_x_pos -= self.wizard_speed
+            self.harold_x_pos -= self.harold_speed
+    
+    def apply_gravity(self):
+        self.wizard_gravity += gravity_acceleration
+        self.rect.y += self.wizard_gravity
+        if self.rect.bottom >= grass_top_y: self.rect.bottom = grass_top_y
+
+# Might need to make a Harold Class or have him inherit the Player class
 
 window_width = 800
 window_height = 400
 window_size = (window_width,window_height)
-wizard_width = 128
-wizard_height = 128
 wizard_pixel_size = (wizard_height,wizard_width)
 
 jump_button = pygame.K_SPACE
@@ -26,16 +60,17 @@ score = 0
 wizard_walk_animation_speed = 0.1
 wizard_jump_animation_speed = 0.075
 wizard_idle_animation_speed = 0.1
-wizard_secret_idle_animation_speed = 0.1
+wizard_secret_idle_animation_speed = wizard_idle_animation_speed
 wizard_fireball_animation_speed = 0.4
+fireball_move_animation_speed = wizard_fireball_animation_speed
+fireball_transition_animation_speed = wizard_fireball_animation_speed
 harold_idle_animation_speed = 0.1
-fireball_move_animation_speed = 0.1
-fireball_transition_animation_speed = 0.1
 # milliseconds per frame
 skeleton_walk_animation_speed = 50 
 flying_enemy_fly_animation_speed = 50
 
-# wizard = Player()
+wizard = pygame.sprite.GroupSingle()
+wizard.add(Player())
 
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
@@ -142,10 +177,6 @@ def wizard_animation():
     wizard_surf = pygame.transform.scale(wizard_surf,wizard_pixel_size)
     if not looking_right:
         wizard_surf = pygame.transform.flip(wizard_surf,True,False)
-    # Walking animation if on floor and moving side to side
-    # Idle animation if not moving or attacking
-    # Jumping animation if not on the floor
-    # Fireball animation if attacking
     # Death animation if game was ended - rn game ends instantly so can't be implemented
     # Damage animation if hit and not killed - rn can't do cuz no health
 
@@ -240,6 +271,8 @@ flying_enemy_rect = flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,f
 obstacle_rect_list = []
 
 # Player
+wizard_width = 128
+wizard_height = 128
 wizard_start_x_pos = 80
 wizard_start_y_pos = grass_top_y
 wizard_x_pos = wizard_start_x_pos
@@ -540,11 +573,9 @@ while True:
                 if event.key == right_button and wizard_rect.x + wizard_width + wizard_x_velocity < window_width:
                     wizard_x_velocity = wizard_speed
                     harold_x_velocity = harold_speed
-                    # looking_right = True
                 if event.key == left_button and wizard_rect.x - wizard_x_velocity > 0:
                     wizard_x_velocity = -wizard_speed
                     harold_x_velocity = -harold_speed
-                    # looking_right = False
             if event.type == pygame.KEYUP:
                 if event.key == right_button:
                     wizard_x_velocity = 0
@@ -605,6 +636,7 @@ while True:
             harold_rect.bottom = harold_start_y_pos
         wizard_animation()
         screen.blit(wizard_surf,wizard_rect)
+        wizard.draw(screen)
 
         fireball_animation()
         if fireball_x_start_speed != 0:
