@@ -162,12 +162,10 @@ class Player(pygame.sprite.Sprite):
             self.wizard_jumping = True
             self.wizard_gravity = gravity_acceleration
             self.harold_gravity = gravity_acceleration
-        if keys[right_button] and self.rect.x + self.wizard_width + self.wizard_x_velocity < window_width:
+        if keys[right_button] and self.rect.x + self.wizard_width + wizard_x_velocity < window_width:
             self.wizard_x_pos += self.wizard_speed
-            self.harold_x_pos += self.harold_speed
-        if keys[left_button] and self.rect.x - self.wizard_x_velocity > 0:
+        if keys[left_button] and self.rect.x - wizard_x_velocity > 0:
             self.wizard_x_pos -= self.wizard_speed
-            self.harold_x_pos -= self.harold_speed
     
     def apply_gravity(self):
         self.wizard_gravity += gravity_acceleration
@@ -193,21 +191,21 @@ class Player(pygame.sprite.Sprite):
             # 8 - 14 need to be when reach peak, prob cut and edit which goes where
             # and add landing tracker this would be if landed
             # landing animation for a few frames via timer and then when ends revert to idle
-        elif self.wizard_x_velocity != 0 and self.rect.bottom >= grass_top_y:
+        elif wizard_x_velocity != 0 and self.rect.bottom >= grass_top_y:
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
             self.wizard_index += wizard_walk_animation_speed # speed of animation, adjust as needed
             if self.wizard_index >= len(self.wizard_walk):self.wizard_index = 0
             self.image = wizard_walk[int(wizard_index)]
         elif wizard_x_velocity == 0:
             if self.wizard_secret_animation_timer != 0:
-                self.wizard_index += self.wizard_idle_animation_speed # speed of animation, adjust as needed
+                self.wizard_index += wizard_idle_animation_speed # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_idle):self.wizard_index = 0
                 self.image = self.wizard_idle[int(self.wizard_index)]
                 # idle animation
                 # start timer that last for a few rounds of idle animation until would do the second
                 self.wizard_secret_animation_timer -= 1
             else:
-                self.wizard_index += self.wizard_secret_idle_animation_speed # speed of animation, adjust as needed
+                self.wizard_index += wizard_secret_idle_animation_speed # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_secret_idle):self.wizard_index = 0
                 self.image = self.wizard_secret_idle[int(self.wizard_index)]
 
@@ -227,14 +225,23 @@ class Player(pygame.sprite.Sprite):
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, type):
         super().__init__()
-        self.obstacle_speed = 2
+
         self.obstacle_spawn_frequency = 1500 # In milliseconds, 1000 = 1 sec
         self.obstacle_health = 1
         self.obstacle_points = 5
-        self.x_pos = randint(window_width + 100,window_width + 300)
+        self.enemy_looking_right = False
+
+        if randint(0,2) == 1:
+            self.x_pos = randint(window_width + 100,window_width + 300)
+            self.enemy_looking_right = False
+        else:
+            self.x_pos = randint(-300,-100)
+            self.enemy_looking_right = True
 
         if type == 'skeleton':
             self.y_pos = grass_top_y + 8
+            self.obstacle_speed = skeleton_speed
+            self.obstacle_animation_speed = skeleton_walk_animation_speed
 
             # Skeleton Walk Animation
             skeleton_walk_00 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png').convert_alpha()
@@ -260,6 +267,8 @@ class Obstacle(pygame.sprite.Sprite):
 
         else:
             self.y_pos = grass_top_y - 100
+            self.obstacle_speed = flying_enemy_speed
+            self.obstacle_animation_speed = flying_enemy_fly_animation_speed
             # Placeholders
             flying_enemy_fly_1 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
             flying_enemy_fly_2 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
@@ -268,10 +277,19 @@ class Obstacle(pygame.sprite.Sprite):
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
         self.image = pygame.transform.scale(self.image,wizard_pixel_size)
+        if self.enemy_looking_right:
+            self.image = pygame.transform.flip(self.image,True,False)
         self.rect = self.image.get_rect(midbottom = (self.x_pos,self.y_pos))
     
     def animation_state(self):
-        
+        if type == 'skeleton':
+            self.animation_index += obstacle_animation_speed
+        if self.animation_index >= len(self.frames): self.animation_index = 0
+        self.image = self.frames[int(self.animation_index)]
+
+    def update(self):
+        self.animation_state()
+        self.rect.x -= obstacle_speed
 
 window_width = 800
 window_height = 400
@@ -296,12 +314,19 @@ wizard_fireball_animation_speed = 0.4
 fireball_move_animation_speed = wizard_fireball_animation_speed
 fireball_transition_animation_speed = wizard_fireball_animation_speed
 harold_idle_animation_speed = 0.1
-# milliseconds per frame
-skeleton_walk_animation_speed = 50 
-flying_enemy_fly_animation_speed = 50
+obstacle_animation_speed = 0.1
+
+skeleton_walk_animation_speed = 0.1 # Changed, won't work in current implementation but will in new ones 
+flying_enemy_fly_animation_speed = 0.1
+
+skeleton_speed = 2
+flying_enemy_speed = 2
 
 wizard = pygame.sprite.GroupSingle()
 wizard.add(Player())
+
+obstacle_group = pygame.sprite.Group()
+
 
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
@@ -815,6 +840,7 @@ while True:
 
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
+                obstacle_group.add(Obstacle('flying_enemy'))
                 if randint(0,2): # gives values of either 0 or 1 which are false or true
                     obstacle_rect_list.append(skeleton_surf.get_rect(midbottom = (skeleton_x_pos,skeleton_y_pos)))
                 else:
@@ -867,6 +893,9 @@ while True:
         screen.blit(wizard_surf,wizard_rect)
         wizard.draw(screen) # draws sprites
         wizard.update() # updates sprites
+
+        obstacle_group.draw(screen)
+
 
         fireball_animation()
         if fireball_x_start_speed != 0:
