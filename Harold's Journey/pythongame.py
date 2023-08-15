@@ -1,15 +1,27 @@
 import pygame
 from sys import exit
-from random import randint
-
-from pygame.sprite import _Group
+from random import randint, choice
 
 # Just put in the Player class, haven't removed any old code it replaces
 # Also Harold needs either his own class or to also be a player
+# 3 33 20
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        # Wizard Idle Animation
+
+        self.wizard_start_x_pos = 80
+        self.wizard_start_y_pos = GRASS_TOP_Y
+        self.wizard_x_pos = self.wizard_start_x_pos
+        self.wizard_speed = 4
+        self.wizard_y_pos = self.wizard_start_y_pos
+        self.wizard_gravity = 0
+        self.wizard_secret_animation_limit = 240
+        self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+        self.gravity_acceleration = -20
+        self.looking_right = True
+        self.wizard_jumping = False
+
+        # Wizard Idle Animation  
         wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
         wizard_idle_01 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_01.png').convert_alpha()
         wizard_idle_02 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_02.png').convert_alpha()
@@ -139,30 +151,15 @@ class Player(pygame.sprite.Sprite):
 
         self.wizard_index = 0
         self.image = self.wizard_walk[self.wizard_index]
-        self.rect = self.image.get_rect(midbottom = (wizard_x_pos,wizard_y_pos))
-        
-        self.grass_top_y = 371
-        self.wizard_width = 128
-        self.wizard_height = 128
-        self.wizard_start_x_pos = 80
-        self.wizard_start_y_pos = self.grass_top_y
-        self.wizard_x_pos = self.wizard_start_x_pos
-        self.wizard_speed = 4
-        self.wizard_y_pos = self.wizard_start_y_pos
-        self.wizard_gravity = 0
-        self.wizard_secret_animation_limit = 240
-        self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
-        self.gravity_acceleration = -20
-        self.looking_right = True
-        self.wizard_jumping = False
+        self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
     
     def wizard_input(self):
         keys = pygame.key.get_pressed()
-        if keys[jump_button] and self.rect.bottom >= grass_top_y:
+        if keys[jump_button] and self.rect.bottom >= GRASS_TOP_Y:
             self.wizard_jumping = True
             self.wizard_gravity = gravity_acceleration
             self.harold_gravity = gravity_acceleration
-        if keys[right_button] and self.rect.x + self.wizard_width + wizard_x_velocity < window_width:
+        if keys[right_button] and self.rect.x + WIZARD_WIDTH + wizard_x_velocity < WINDOW_WIDTH:
             self.wizard_x_pos += self.wizard_speed
         if keys[left_button] and self.rect.x - wizard_x_velocity > 0:
             self.wizard_x_pos -= self.wizard_speed
@@ -170,7 +167,7 @@ class Player(pygame.sprite.Sprite):
     def apply_gravity(self):
         self.wizard_gravity += gravity_acceleration
         self.rect.y += self.wizard_gravity
-        if self.rect.bottom >= grass_top_y: self.rect.bottom = grass_top_y
+        if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
 
     def animation_state(self):
         if fireball_cooldown < 60 and fireball_cooldown >= 30:
@@ -179,7 +176,7 @@ class Player(pygame.sprite.Sprite):
             self.wizard_index += wizard_fireball_animation_speed # speed of animation, adjust as needed
             if self.wizard_index >= len(self.wizard_fireball):self.wizard_index = 0
             self.image = self.wizard_fireball[int(self.wizard_index)]
-        elif self.rect.bottom < grass_top_y and wizard_jumping: # and add landing tracker this would be if it is off
+        elif self.rect.bottom < GRASS_TOP_Y and wizard_jumping: # and add landing tracker this would be if it is off
             # jump (first half)
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
             self.wizard_index += wizard_jump_animation_speed # speed of animation, adjust as needed
@@ -191,7 +188,7 @@ class Player(pygame.sprite.Sprite):
             # 8 - 14 need to be when reach peak, prob cut and edit which goes where
             # and add landing tracker this would be if landed
             # landing animation for a few frames via timer and then when ends revert to idle
-        elif wizard_x_velocity != 0 and self.rect.bottom >= grass_top_y:
+        elif wizard_x_velocity != 0 and self.rect.bottom >= GRASS_TOP_Y:
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
             self.wizard_index += wizard_walk_animation_speed # speed of animation, adjust as needed
             if self.wizard_index >= len(self.wizard_walk):self.wizard_index = 0
@@ -209,7 +206,7 @@ class Player(pygame.sprite.Sprite):
                 if self.wizard_index >= len(self.wizard_secret_idle):self.wizard_index = 0
                 self.image = self.wizard_secret_idle[int(self.wizard_index)]
 
-        self.image = pygame.transform.scale(self.image,self.wizard_pixel_size)
+        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
         if not looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
         # Death animation if game was ended - rn game ends instantly so can't be implemented
@@ -232,16 +229,16 @@ class Obstacle(pygame.sprite.Sprite):
         self.enemy_looking_right = False
 
         if randint(0,2) == 1:
-            self.x_pos = randint(window_width + 100,window_width + 300)
+            self.x_pos = randint(WINDOW_WIDTH + 100,WINDOW_WIDTH + 300)
             self.enemy_looking_right = False
         else:
             self.x_pos = randint(-300,-100)
             self.enemy_looking_right = True
 
         if type == 'skeleton':
-            self.y_pos = grass_top_y + 8
+            self.y_pos = GRASS_TOP_Y + 8
             self.obstacle_speed = skeleton_speed
-            self.obstacle_animation_speed = skeleton_walk_animation_speed
+            self.obstacle_animation_speed = skeleton_walk_animation_speed_decimal
 
             # Skeleton Walk Animation
             skeleton_walk_00 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png').convert_alpha()
@@ -262,13 +259,11 @@ class Obstacle(pygame.sprite.Sprite):
                             skeleton_walk_08, skeleton_walk_09, skeleton_walk_10, skeleton_walk_11,
                             skeleton_walk_12]
             # skeleton_surf = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
-            self.skeleton_surf = pygame.transform.scale(self.skeleton_surf,wizard_pixel_size)
-            self.skeleton_rect = self.skeleton_surf.get_rect(midbottom = (self.x_pos,self.y_pos))
 
         else:
-            self.y_pos = grass_top_y - 100
+            self.y_pos = GRASS_TOP_Y - 100
             self.obstacle_speed = flying_enemy_speed
-            self.obstacle_animation_speed = flying_enemy_fly_animation_speed
+            self.obstacle_animation_speed = flying_enemy_fly_animation_speed_decimal
             # Placeholders
             flying_enemy_fly_1 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
             flying_enemy_fly_2 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
@@ -290,13 +285,21 @@ class Obstacle(pygame.sprite.Sprite):
     def update(self):
         self.animation_state()
         self.rect.x -= obstacle_speed
+        self.destroy()
+    
+    def destroy(self):
+        if self.rect.x <= -100 and not self.enemy_looking_right:
+            self.kill()
+        if self.rect.x >= WINDOW_WIDTH + 100 and not self.enemy_looking_right:
+            self.kill()
 
-window_width = 800
-window_height = 400
-window_size = (window_width,window_height)
-wizard_width = 128
-wizard_height = 128
-wizard_pixel_size = (wizard_height,wizard_width)
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 400
+window_size = (WINDOW_WIDTH,WINDOW_HEIGHT)
+WIZARD_WIDTH = 128
+WIZARD_HEIGHT = 128
+wizard_pixel_size = (WIZARD_HEIGHT,WIZARD_WIDTH)
+GRASS_TOP_Y = 371
 
 jump_button = pygame.K_SPACE
 right_button = pygame.K_d
@@ -316,22 +319,19 @@ fireball_transition_animation_speed = wizard_fireball_animation_speed
 harold_idle_animation_speed = 0.1
 obstacle_animation_speed = 0.1
 
-skeleton_walk_animation_speed = 0.1 # Changed, won't work in current implementation but will in new ones 
-flying_enemy_fly_animation_speed = 0.1
+skeleton_walk_animation_speed_decimal = 0.1 # Changed, won't work in current implementation but will in new ones 
+flying_enemy_fly_animation_speed_decimal = 0.1
+skeleton_walk_animation_speed = 50
+flying_enemy_fly_animation_speed = 50
 
 skeleton_speed = 2
 flying_enemy_speed = 2
-
-wizard = pygame.sprite.GroupSingle()
-wizard.add(Player())
-
-obstacle_group = pygame.sprite.Group()
 
 
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
     score_surf = test_font.render(str(current_time + additional_score), False, '#FCDC4D')
-    score_rect = score_surf.get_rect(center = (window_width/2,50))
+    score_rect = score_surf.get_rect(center = (WINDOW_WIDTH/2,50))
     screen.blit(score_surf,score_rect)
     # print(current_time)
     return current_time + additional_score
@@ -341,7 +341,7 @@ def obstacle_movement(obstacle_list):
         for obstacle_rect in obstacle_list:
             obstacle_rect.x -= obstacle_speed
 
-            if obstacle_rect.bottom == grass_top_y + 8: screen.blit(skeleton_surf,obstacle_rect)
+            if obstacle_rect.bottom == GRASS_TOP_Y + 8: screen.blit(skeleton_surf,obstacle_rect)
             else: screen.blit(flying_enemy_surf,obstacle_rect)
 
             # copies existing list if on screen
@@ -372,6 +372,11 @@ def wizard_collisions(wizard,obstacles):
             if wizard.colliderect(obstacle_rect): return False
     return True
 
+def collision_sprite():
+    if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
+        return False
+    else: return True
+
 def projectile_collisions(projectiles,obstacles):
     collisions = 0
     if projectiles and obstacles:
@@ -400,7 +405,7 @@ def wizard_animation():
         wizard_index += wizard_fireball_animation_speed # speed of animation, adjust as needed
         if wizard_index >= len(wizard_fireball):wizard_index = 0
         wizard_surf = wizard_fireball[int(wizard_index)]
-    elif wizard_rect.bottom < grass_top_y and wizard_jumping: # and add landing tracker this would be if it is off
+    elif wizard_rect.bottom < GRASS_TOP_Y and wizard_jumping: # and add landing tracker this would be if it is off
         # jump (first half)
         wizard_secret_animation_timer = wizard_secret_animation_limit
         wizard_index += wizard_jump_animation_speed # speed of animation, adjust as needed
@@ -412,7 +417,7 @@ def wizard_animation():
         # 8 - 14 need to be when reach peak, prob cut and edit which goes where
         # and add landing tracker this would be if landed
         # landing animation for a few frames via timer and then when ends revert to idle
-    elif wizard_x_velocity != 0 and wizard_rect.bottom >= grass_top_y:
+    elif wizard_x_velocity != 0 and wizard_rect.bottom >= GRASS_TOP_Y:
         wizard_secret_animation_timer = wizard_secret_animation_limit
         wizard_index += wizard_walk_animation_speed # speed of animation, adjust as needed
         if wizard_index >= len(wizard_walk):wizard_index = 0
@@ -476,10 +481,14 @@ pygame.display.set_icon(pygame_icon)
 game_active = False
 start_time = 0
 
+wizard = pygame.sprite.GroupSingle()
+wizard.add(Player())
+
+obstacle_group = pygame.sprite.Group()
+
 sky_surf = pygame.image.load('Harold\'s Journey/graphics/Background.png').convert_alpha()
 sky_surf = pygame.transform.scale(sky_surf,window_size)
 
-grass_top_y = 371
 ground_surf = pygame.image.load('Harold\'s Journey/graphics/Grass.png').convert_alpha()
 ground_surf = pygame.transform.scale(ground_surf,window_size)
 
@@ -491,8 +500,8 @@ obstacle_spawn_frequency = 1500 # In milliseconds, 1000 = 1 sec
 obstacle_health = 1
 obstacle_points = 5
 
-skeleton_x_pos = randint(window_width + 100,window_width + 300)
-skeleton_y_pos = grass_top_y + 8
+skeleton_x_pos = randint(WINDOW_WIDTH + 100,WINDOW_WIDTH + 300)
+skeleton_y_pos = GRASS_TOP_Y + 8
 
 # Skeleton Walk Animation
 skeleton_walk_00 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png').convert_alpha()
@@ -518,8 +527,8 @@ skeleton_surf = skeleton_walk[skeleton_index]
 skeleton_surf = pygame.transform.scale(skeleton_surf,wizard_pixel_size)
 skeleton_rect = skeleton_surf.get_rect(midbottom = (skeleton_x_pos,skeleton_y_pos))
 
-flying_enemy_x_pos = randint(window_width + 100,window_width + 300)
-flying_enemy_y_pos = grass_top_y - 100
+flying_enemy_x_pos = randint(WINDOW_WIDTH + 100,WINDOW_WIDTH + 300)
+flying_enemy_y_pos = GRASS_TOP_Y - 100
 flying_enemy_surf = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
 flying_enemy_surf = pygame.transform.scale(flying_enemy_surf,wizard_pixel_size)
 flying_enemy_rect = flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,flying_enemy_y_pos))
@@ -528,7 +537,7 @@ obstacle_rect_list = []
 
 # Player
 wizard_start_x_pos = 80
-wizard_start_y_pos = grass_top_y
+wizard_start_y_pos = GRASS_TOP_Y
 wizard_x_pos = wizard_start_x_pos
 wizard_speed = 4
 wizard_x_velocity = 0
@@ -820,11 +829,11 @@ while True:
             looking_right = mouse_x >= wizard_rect.centerx
 
             if event.type == pygame.KEYDOWN:
-                if event.key == jump_button and wizard_rect.bottom >= grass_top_y:  
+                if event.key == jump_button and wizard_rect.bottom >= GRASS_TOP_Y:  
                     wizard_jumping = True
                     wizard_gravity = gravity_acceleration
                     harold_gravity = gravity_acceleration
-                if event.key == right_button and wizard_rect.x + wizard_width + wizard_x_velocity < window_width:
+                if event.key == right_button and wizard_rect.x + WIZARD_WIDTH + wizard_x_velocity < WINDOW_WIDTH:
                     wizard_x_velocity = wizard_speed
                     harold_x_velocity = harold_speed
                 if event.key == left_button and wizard_rect.x - wizard_x_velocity > 0:
@@ -840,11 +849,11 @@ while True:
 
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
-                obstacle_group.add(Obstacle('flying_enemy'))
-                if randint(0,2): # gives values of either 0 or 1 which are false or true
-                    obstacle_rect_list.append(skeleton_surf.get_rect(midbottom = (skeleton_x_pos,skeleton_y_pos)))
-                else:
-                    obstacle_rect_list.append(flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,flying_enemy_y_pos)))
+                obstacle_group.add(Obstacle(choice(['flying_enemy','skeleton','skeleton','skeleton'])))
+                # if randint(0,2): # gives values of either 0 or 1 which are false or true
+                #     obstacle_rect_list.append(skeleton_surf.get_rect(midbottom = (skeleton_x_pos,skeleton_y_pos)))
+                # else:
+                #     obstacle_rect_list.append(flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,flying_enemy_y_pos)))
             if event.type == skeleton_animation_timer:
                 # Horrible Coding
                 if skeleton_index != 12: skeleton_index += 1
@@ -863,7 +872,6 @@ while True:
                 start_time = int(pygame.time.get_ticks() / 1000)
                 additional_score = 0
 
-
     # Active Game
     if game_active:    
         screen.blit(sky_surf,(0,0))
@@ -878,23 +886,24 @@ while True:
             fireball_cooldown -= 1
 
         # Wizard
-        wizard_gravity += 1
-        wizard_rect.y += wizard_gravity
-        wizard_rect.x += wizard_x_velocity
-        # Harold
-        harold_gravity += 1
-        harold_rect.y += harold_gravity
-        harold_rect.x += harold_x_velocity
+        # wizard_gravity += 1
+        # wizard_rect.y += wizard_gravity
+        # wizard_rect.x += wizard_x_velocity
+        # # Harold
+        # harold_gravity += 1
+        # harold_rect.y += harold_gravity
+        # harold_rect.x += harold_x_velocity
 
-        if wizard_rect.bottom >= grass_top_y: 
-            wizard_rect.bottom = grass_top_y
-            harold_rect.bottom = harold_start_y_pos
-        wizard_animation()
-        screen.blit(wizard_surf,wizard_rect)
+        # if wizard_rect.bottom >= grass_top_y: 
+        #     wizard_rect.bottom = grass_top_y
+        #     harold_rect.bottom = harold_start_y_pos
+        # wizard_animation()
+        # screen.blit(wizard_surf,wizard_rect)
         wizard.draw(screen) # draws sprites
         wizard.update() # updates sprites
 
         obstacle_group.draw(screen)
+        obstacle_group.update()
 
 
         fireball_animation()
@@ -905,21 +914,21 @@ while True:
         screen.blit(harold_surf,harold_rect)
 
         # Obstacle Movement
-        obstacle_rect_list = obstacle_movement(obstacle_rect_list)
+        # obstacle_rect_list = obstacle_movement(obstacle_rect_list)
 
         # Projectile Movement
-        projectile_rect_list = projectile_movement(projectile_rect_list)
+        # projectile_rect_list = projectile_movement(projectile_rect_list)
 
         # Collision between Wizard and Enemies
-        game_active = wizard_collisions(wizard_rect,obstacle_rect_list)
+        # game_active = wizard_collisions(wizard_rect,obstacle_rect_list)
 
         # Collision between Enemies and Projectiles
-        collisions = projectile_collisions(projectile_rect_list,obstacle_rect_list)
-        additional_score += (collisions * obstacle_points)
-        if collisions:
-            fireball_x_start_speed = 0
-            fireball_hit = True
-        collisions = 0
+        # collisions = projectile_collisions(projectile_rect_list,obstacle_rect_list)
+        # additional_score += (collisions * obstacle_points)
+        # if collisions:
+        #     fireball_x_start_speed = 0
+        #     fireball_hit = True
+        # collisions = 0
 
     # Menu Screen
     else:
