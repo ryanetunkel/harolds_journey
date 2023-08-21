@@ -19,6 +19,9 @@ class Player(pygame.sprite.Sprite):
         self.wizard_secret_animation_limit = 240
         self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
         self.wizard_jumping = False
+        self.looking_right = True
+        self.fireball_cooldown_time = 60
+        self.fireball_cooldown = 0
 
         # Wizard Idle Animation  
         wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
@@ -153,65 +156,32 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
         self.wizard_gravity = 0
 
-        self.looking_right = mouse_x >= self.rect.centerx
-
         # self.jump_sound = pygame.mixer.Sound(...)
         # self.jump_sound.set_volume(0.5)
 
-        # Harold
-        self.harold_start_x_pos = self.rect.centerx
-        self.harold_start_y_pos = self.rect.top + 28 # pixels at this scale based on wizard are 4 pixels each
-        self.harold_x_pos = self.harold_start_x_pos
-        self.harold_speed = self.wizard_speed
-        self.harold_x_velocity = 0
-        self.harold_y_pos = self.harold_start_y_pos
-        self.harold_gravity = 0
-
-        # Harold Idle Animation
-        harold_idle_00 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
-        harold_idle_01 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_01.png').convert_alpha()
-        harold_idle_02 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_02.png').convert_alpha()
-        harold_idle_03 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_03.png').convert_alpha()
-        harold_idle_04 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_04.png').convert_alpha()
-        harold_idle_05 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_05.png').convert_alpha()
-        harold_idle_06 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_06.png').convert_alpha()
-        harold_idle_07 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_07.png').convert_alpha()
-        harold_idle_08 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_08.png').convert_alpha()
-        harold_idle_09 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_09.png').convert_alpha()
-        harold_idle_10 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_10.png').convert_alpha()
-        harold_idle_11 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_11.png').convert_alpha()
-        harold_idle_12 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
-        harold_idle_13 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_13.png').convert_alpha()
-        harold_idle_14 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_14.png').convert_alpha()
-        harold_idle_15 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_15.png').convert_alpha()
-        harold_idle_16 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_16.png').convert_alpha()
-        harold_idle_17 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_17.png').convert_alpha()
-        harold_idle_18 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_18.png').convert_alpha()
-        harold_idle_19 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_19.png').convert_alpha()
-        harold_idle_20 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_20.png').convert_alpha()
-        self.harold_idle = [harold_idle_00, harold_idle_01, harold_idle_02, harold_idle_03,
-                    harold_idle_04, harold_idle_05, harold_idle_06, harold_idle_07,
-                    harold_idle_08, harold_idle_09, harold_idle_10, harold_idle_11,
-                    harold_idle_12, harold_idle_13, harold_idle_14, harold_idle_15,
-                    harold_idle_16, harold_idle_17, harold_idle_18, harold_idle_19,
-                    harold_idle_20]
-
-        # harold_surf = pygame.transform.flip(harold_surf, True, False)
-        self.harold_index = 0
-        self.harold_surf = self.harold_idle[self.harold_index]
-        self.harold_surf = pygame.transform.scale_by(self.harold_surf,3/2)
-        self.harold_rect = self.harold_surf.get_rect(midbottom = (self.harold_x_pos,self.harold_y_pos))
+    def get_wizard_pos(self):
+        return (self.wizard_x_pos,self.wizard_y_pos)
 
     def get_wizard_rect(self):
-        return (self.rect)
+        return self.rect
+    
+    def get_wizard_speed(self):
+        return self.wizard_speed
 
     def get_looking_right(self):
         return self.looking_right
 
+    def set_fireball_cooldown(self,new_fireball_cooldown):
+        self.fireball_cooldown = new_fireball_cooldown
+    
+    def get_fireball_cooldown(self):
+        return self.fireball_cooldown
+
     def wizard_input(self):
         keys = pygame.key.get_pressed()
-        if keys[shoot_button] and (fireball_cooldown == 0 or fireball_hit):
-            fireball_cooldown = fireball_cooldown_time
+        temp_harold_x_pos = harold.get_harold_x_pos()
+        if keys[shoot_button] and (self.fireball_cooldown == 0 or fireball_hit):
+            self.fireball_cooldown = self.fireball_cooldown_time
             fireball_hit = False
             projectile_group.add(Projectile())
         if keys[jump_button] and self.rect.bottom >= GRASS_TOP_Y:
@@ -221,10 +191,12 @@ class Player(pygame.sprite.Sprite):
             self.harold_gravity = self.gravity_acceleration
         if keys[right_button] and self.rect.x + WIZARD_WIDTH + wizard_x_velocity < WINDOW_WIDTH:
             self.wizard_x_pos += self.wizard_speed
-            self.harold_x_pos += self.harold_speed
+            temp_harold_x_pos += self.wizard_speed
+            harold.set_harold_x_pos(temp_harold_x_pos)
         if keys[left_button] and self.rect.x - wizard_x_velocity > 0:
             self.wizard_x_pos -= self.wizard_speed
-            self.harold_x_pos -= self.harold_speed
+            temp_harold_x_pos -= self.wizard_speed
+            harold.set_harold_x_pos(temp_harold_x_pos)
     
     def apply_gravity(self):
         self.wizard_gravity += 1
@@ -232,7 +204,9 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
 
     def animation_state(self):
-        if fireball_cooldown < 60 and fireball_cooldown >= 30:
+        (mouse_x,mouse_y) = pygame.mouse.get_pos()
+        self.looking_right = mouse_x >= self.rect.centerx
+        if self.fireball_cooldown < self.fireball_cooldown_time and self.fireball_cooldown >= 30:
             # wizard fireball animation
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
             self.wizard_index += wizard_fireball_animation_speed # speed of animation, adjust as needed
@@ -274,22 +248,75 @@ class Player(pygame.sprite.Sprite):
         # Death animation if game was ended - rn game ends instantly so can't be implemented
         # Damage animation if hit and not killed - rn can't do cuz no health
 
+    def update(self):
+        self.wizard_input()
+        self.apply_gravity()
+        self.animation_state()
+
+# Might need to make a Harold Class or have him inherit the Player class
+class Harold(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        # Harold
+        temp_wizard_rect = wizard.get_wizard_rect()
+        self.harold_start_x_pos = temp_wizard_rect.centerx
+        self.harold_start_y_pos = temp_wizard_rect.top + 28 # pixels at this scale based on wizard are 4 pixels each
+        self.harold_x_pos = self.harold_start_x_pos
+        self.harold_speed = wizard.get_wizard_speed()
+        self.harold_x_velocity = 0
+        self.harold_y_pos = self.harold_start_y_pos
+        self.harold_gravity = 0
+
+        # Harold Idle Animation
+        harold_idle_00 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
+        harold_idle_01 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_01.png').convert_alpha()
+        harold_idle_02 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_02.png').convert_alpha()
+        harold_idle_03 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_03.png').convert_alpha()
+        harold_idle_04 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_04.png').convert_alpha()
+        harold_idle_05 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_05.png').convert_alpha()
+        harold_idle_06 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_06.png').convert_alpha()
+        harold_idle_07 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_07.png').convert_alpha()
+        harold_idle_08 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_08.png').convert_alpha()
+        harold_idle_09 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_09.png').convert_alpha()
+        harold_idle_10 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_10.png').convert_alpha()
+        harold_idle_11 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_11.png').convert_alpha()
+        harold_idle_12 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
+        harold_idle_13 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_13.png').convert_alpha()
+        harold_idle_14 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_14.png').convert_alpha()
+        harold_idle_15 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_15.png').convert_alpha()
+        harold_idle_16 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_16.png').convert_alpha()
+        harold_idle_17 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_17.png').convert_alpha()
+        harold_idle_18 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_18.png').convert_alpha()
+        harold_idle_19 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_19.png').convert_alpha()
+        harold_idle_20 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_20.png').convert_alpha()
+        self.harold_idle = [harold_idle_00, harold_idle_01, harold_idle_02, harold_idle_03,
+                    harold_idle_04, harold_idle_05, harold_idle_06, harold_idle_07,
+                    harold_idle_08, harold_idle_09, harold_idle_10, harold_idle_11,
+                    harold_idle_12, harold_idle_13, harold_idle_14, harold_idle_15,
+                    harold_idle_16, harold_idle_17, harold_idle_18, harold_idle_19,
+                    harold_idle_20]
+
+        # harold_surf = pygame.transform.flip(harold_surf, True, False)
+        self.harold_index = 0
+        self.harold_surf = self.harold_idle[self.harold_index]
+        self.harold_surf = pygame.transform.scale_by(self.harold_surf,3/2)
+        self.harold_rect = self.harold_surf.get_rect(midbottom = (self.harold_x_pos,self.harold_y_pos))
+
+    def get_harold_x_pos(self):
+        return self.harold_x_pos
+
+    def set_harold_x_pos(self,new_harold_x_pos):
+        self.harold_x_pos = new_harold_x_pos
+    
     def harold_animation_state(self):    
         self.harold_index += harold_idle_animation_speed # speed of animation, adjust as needed
         if self.harold_index >= len(self.harold_idle):self.harold_index = 0
         self.harold_surf = self.harold_idle[int(self.harold_index)]
         self.harold_surf = pygame.transform.scale_by(self.harold_surf,3/2)
 
-        if not self.looking_right:
+        if not self.get_looking_right():
             self.harold_surf = pygame.transform.flip(self.harold_surf,True,False)
 
-    def update(self):
-        self.wizard_input()
-        self.apply_gravity()
-        self.animation_state()
-        self.harold_animation_state()
-
-# Might need to make a Harold Class or have him inherit the Player class
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, type):
@@ -406,25 +433,25 @@ class Projectile(pygame.sprite.Sprite):
 
         self.fireball_index = 0
         self.image = self.fireball_move[self.fireball_index]
-        self.image = pygame.transform.scale(fireball_surf,wizard_pixel_size)
+        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
         if self.wizard_was_looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
         self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos))
     
     def animation_state(self):
-        global fireball_surf, fireball_index
-
-        fireball_index += fireball_move_animation_speed # speed of animation, adjust as needed
-        if fireball_index >= len(self.fireball_move):fireball_index = 0
-        fireball_surf = self.fireball_move[int(fireball_index)]
-        fireball_surf = pygame.transform.scale(fireball_surf,wizard_pixel_size)
+        self.fireball_index += fireball_move_animation_speed # speed of animation, adjust as needed
+        if self.fireball_index >= len(self.fireball_move):self.fireball_index = 0
+        self.image = self.fireball_move[int(self.fireball_index)]
+        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
         # if not looking_right: # Can only be done once can track dif directions for fireballs to go in
         #     fireball_surf = pygame.transform.flip(fireball_surf,True,False)
     
     def update(self):
         self.animation_state()
         self.rect.x += (self.projectile_speed * self.direction_multiplier)
-        if self.fireball_cooldown != 0: self.fireball_cooldown -= 1
+        temp_fireball_cooldown = wizard.get_fireball_cooldown()
+        temp_fireball_cooldown -= 1
+        if wizard.get_fireball_cooldown() != 0: wizard.set_fireball_cooldown(temp_fireball_cooldown)
         self.destroy()
     
     def destroy(self):
@@ -448,10 +475,7 @@ left_button = pygame.K_a
 shoot_button = pygame.MOUSEBUTTONDOWN
 additional_score = 0
 score = 0
-fireball_cooldown_time = 60
-fireball_cooldown = 0
 fireball_hit = False
-(mouse_x,mouse_y) = (0,0)
 
 # seconds per frame
 wizard_walk_animation_speed = 0.1
@@ -479,44 +503,7 @@ def display_score():
     score_surf = test_font.render(str(current_time + additional_score), False, '#FCDC4D')
     score_rect = score_surf.get_rect(center = (WINDOW_WIDTH/2,50))
     screen.blit(score_surf,score_rect)
-    # print(current_time)
     return current_time + additional_score
-
-# def obstacle_movement(obstacle_list):
-#     if obstacle_list: # will only run if obstacle_list is not empty
-#         for obstacle_rect in obstacle_list:
-#             obstacle_rect.x -= obstacle_speed
-
-#             if obstacle_rect.bottom == GRASS_TOP_Y + 8: screen.blit(skeleton_surf,obstacle_rect)
-#             else: screen.blit(flying_enemy_surf,obstacle_rect)
-
-#             # copies existing list if on screen
-#             obstacle_list = [obstacle for obstacle in obstacle_list if obstacle.x > 0]
-
-#         return obstacle_list
-#     else: return []
-
-# def projectile_movement(projectile_list):
-#     if projectile_list: # will only run if projectile_list is not empty
-#         for projectile_rect in projectile_list:
-#             projectile_rect.x += projectile_speed 
-#             # The += will need to vary if player starts facing dif directions, 
-#             # each projectile will need to have a speed associated with it 
-#             # and it needs to be negative or positive depending
-
-#             # can add in ifs associated with position to make different projectiles appear
-#             screen.blit(fireball_surf,projectile_rect)
-
-#             projectile_list = [projectile for projectile in projectile_list if (projectile.x > 0 and projectile.x < 800)]
-
-#         return projectile_list
-#     else: return []
-
-# def wizard_collisions(wizard,obstacles):
-#     if obstacles:
-#         for obstacle_rect in obstacles:
-#             if wizard.colliderect(obstacle_rect): return False
-#     return True
 
 def collision_sprite(): # Basically game over condition
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
@@ -535,20 +522,6 @@ def projectile_collision():
                     additional_score += 1
                     fireball_hit = True
 
-# def projectile_collisions(projectiles,obstacles):
-#     collisions = 0
-#     if projectiles and obstacles:
-#         for projectile in projectiles:
-#             for obstacle in obstacles:
-#                 if projectile.colliderect(obstacle):
-#                     projectiles.remove(projectile)
-#                     obstacles.remove(obstacle)
-#                     collisions += 1
-#                     # ********** For some reason it can't see these values, unsure why
-#                     # ********** Also the game won't restart properly after the 
-#                     # first game is played while open
-#     return collisions
-
     # not including checking if fireball_start_speed is 0 
     # might make it so can still damage enemies if they 
     # walk into you but if you die first it doesn't really 
@@ -562,27 +535,6 @@ def projectile_collision():
 #     if target.obstacle_health <= 0:
 #         obstacle_list = [obstacle for obstacle in obstacle_list if obstacle.obstacle_health > 0]
 #         projectile_list = [projectile for projectile in projectile_list if (projectile.x > 0 and projectile.x < 800)]
-
-# def fireball_animation():
-#     global fireball_surf, fireball_index
-    
-#     fireball_index += fireball_move_animation_speed # speed of animation, adjust as needed
-#     if fireball_index >= len(fireball_move):fireball_index = 0
-#     fireball_surf = fireball_move[int(fireball_index)]
-#     fireball_surf = pygame.transform.scale(fireball_surf,wizard_pixel_size)
-#     # if not looking_right: # Can only be done once can track dif directions for fireballs to go in
-#     #     fireball_surf = pygame.transform.flip(fireball_surf,True,False)
-
-# def harold_animation():
-#     global harold_surf, harold_index
-    
-#     harold_index += harold_idle_animation_speed # speed of animation, adjust as needed
-#     if harold_index >= len(harold_idle):harold_index = 0
-#     harold_surf = harold_idle[int(harold_index)]
-#     harold_surf = pygame.transform.scale_by(harold_surf,3/2)
-
-#     if not looking_right:
-#         harold_surf = pygame.transform.flip(harold_surf,True,False)
 
 pygame.init()
 screen = pygame.display.set_mode(window_size)
@@ -599,6 +551,9 @@ start_time = 0
 
 wizard = pygame.sprite.GroupSingle()
 wizard.add(Player())
+
+harold = pygame.sprite.GroupSingle()
+harold.add(Harold())
 
 obstacle_group = pygame.sprite.Group()
 
@@ -637,72 +592,18 @@ title_info_rect = title_info_surf.get_rect(center = (title_info_start_pos))
 obstacle_timer = pygame.USEREVENT + 1 # + 1 to avoid events taking previous numbers by default
 pygame.time.set_timer(obstacle_timer,obstacle_spawn_frequency)
 
-# # Won't need animation timers once done with classes
-# # Skeleton Animation Timer
-# skeleton_animation_timer = pygame.USEREVENT + 2
-# pygame.time.set_timer(skeleton_animation_timer,skeleton_walk_animation_speed)
-
-# # Flying Enemy Animation Timer
-# flying_enemy_animation_timer = pygame.USEREVENT + 3
-# pygame.time.set_timer(flying_enemy_animation_timer,flying_enemy_fly_animation_speed)
-
 # pygame.draw exists, can do rects, circles, lines, points, ellipses etc
 while True:
     for event in pygame.event.get(): # gets all the events
         if event.type == pygame.QUIT:
             pygame.quit() # opposite of pygame.init()
             exit() # breaks out of the while True loop
-        # if event.type == pygame.MOUSEMOTION: # MOUSEMOTION, MOUSEBUTTONDOWN, MOUSEBUTTONUP
-        #     if wizard_rect.collidepoint(event.pos): print ('collision')
        
         if game_active:
-            (mouse_x,mouse_y) = pygame.mouse.get_pos()
-            # Fireballs come off cooldown or instantly cooldown if you hit an enemy with one
-
-            # if event.type == shoot_button and (fireball_cooldown == 0 or fireball_hit):
-            #     fireball_cooldown = fireball_cooldown_time
-            #     fireball_hit = False
-            #     projectile_group.add(Projectile()) # fireball_surf.get_rect(center = (wizard_rect.right - 20,wizard_rect.centery + 24)))
-
-            # looking_right = mouse_x >= wizard_rect.centerx
-
-            # if event.type == pygame.KEYDOWN:
-            #     if event.key == jump_button and wizard_rect.bottom >= GRASS_TOP_Y:  
-            #         wizard_jumping = True
-            #         wizard_gravity = gravity_acceleration
-            #         harold_gravity = gravity_acceleration
-            #     if event.key == right_button and wizard_rect.x + WIZARD_WIDTH + wizard_x_velocity < WINDOW_WIDTH:
-            #         wizard_x_velocity = wizard_speed
-            #         harold_x_velocity = harold_speed
-            #     if event.key == left_button and wizard_rect.x - wizard_x_velocity > 0:
-            #         wizard_x_velocity = -wizard_speed
-            #         harold_x_velocity = -harold_speed
-            # if event.type == pygame.KEYUP:
-            #     if event.key == right_button:
-            #         wizard_x_velocity = 0
-            #         harold_x_velocity = 0
-            #     if event.key == left_button:
-            #         wizard_x_velocity = 0
-            #         harold_x_velocity = 0
 
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
                 obstacle_group.add(Obstacle(choice(['flying_enemy','skeleton','skeleton','skeleton'])))
-                # if randint(0,2): # gives values of either 0 or 1 which are false or true
-                #     obstacle_rect_list.append(skeleton_surf.get_rect(midbottom = (skeleton_x_pos,skeleton_y_pos)))
-                # else:
-                #     obstacle_rect_list.append(flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,flying_enemy_y_pos)))
-            # if event.type == skeleton_animation_timer:
-            #     # Horrible Coding
-            #     if skeleton_index != 12: skeleton_index += 1
-            #     else: skeleton_index = 0
-            #     skeleton_surf = skeleton_walk[skeleton_index]
-            # if event.type == flying_enemy_animation_timer:
-            #     # WIP - add when have animation 
-            #     # Horrible Coding
-            #     if flying_enemy_index != 12: flying_enemy_index += 1
-            #     else: flying_enemy_index = 0
-            #     flying_enemy_surf = flying_enemy_walk[flying_enemy_index]
 
         else:
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
@@ -715,56 +616,19 @@ while True:
         screen.blit(sky_surf,(0,0))
         screen.blit(ground_surf,(0,0))
         score = display_score()
+        (mouse_x,mouse_y) = pygame.mouse.get_pos()
 
-        # enemy_rect.x -= 4
-
-        # Wizard
-        # wizard_gravity += 1
-        # wizard_rect.y += wizard_gravity
-        # wizard_rect.x += wizard_x_velocity
-        # # Harold
-        # harold_gravity += 1
-        # harold_rect.y += harold_gravity
-        # harold_rect.x += harold_x_velocity
-
-        # if wizard_rect.bottom >= grass_top_y: 
-        #     wizard_rect.bottom = grass_top_y
-        #     harold_rect.bottom = harold_start_y_pos
-        # wizard_animation()
-        # screen.blit(wizard_surf,wizard_rect)
         wizard.draw(screen) # draws sprites
         wizard.update() # updates sprites
+
+        harold.draw(screen)
+        harold.update()
 
         obstacle_group.draw(screen)
         obstacle_group.update()
 
         projectile_group.draw(screen)
         projectile_group.update()
-
-        # Will be changed to be sprites
-        # fireball_animation()
-        # if fireball_x_start_speed != 0:
-        #     screen.blit(fireball_surf,fireball_rect)
-        
-        # harold_animation()
-        # screen.blit(harold_surf,harold_rect)
-
-        # Obstacle Movement
-        # obstacle_rect_list = obstacle_movement(obstacle_rect_list)
-
-        # Projectile Movement
-        # projectile_rect_list = projectile_movement(projectile_rect_list)
-
-        # Collision between Wizard and Enemies
-        # game_active = wizard_collisions(wizard_rect,obstacle_rect_list)
-
-        # Collision between Enemies and Projectiles
-        # collisions = projectile_collisions(projectile_rect_list,obstacle_rect_list)
-        # additional_score += (collisions * obstacle_points)
-        # if collisions:
-        #     fireball_x_start_speed = 0
-        #     fireball_hit = True
-        # collisions = 0
 
         game_active = collision_sprite()
 
@@ -775,9 +639,6 @@ while True:
         screen.blit(wizard_title_surf,wizard_title_rect)
         screen.blit(harold_title_surf,harold_title_rect)
         screen.blit(title_info_surf,title_info_rect)
-
-        # obstacle_rect_list.clear()
-        # projectile_rect_list.clear()
 
         wizard_title_rect.midbottom = (wizard_title_start_x_pos,wizard_title_start_y_pos)
         wizard_gravity = 0
