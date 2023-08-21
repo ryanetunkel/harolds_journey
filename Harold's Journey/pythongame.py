@@ -374,6 +374,7 @@ def wizard_collisions(wizard,obstacles):
 
 def collision_sprite():
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
+        obstacle_group.empty()
         return False
     else: return True
 
@@ -480,6 +481,9 @@ pygame_icon = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_a
 pygame.display.set_icon(pygame_icon)
 game_active = False
 start_time = 0
+# Music
+# bg_music = pygame.mixer.Sound()
+# bg_music.play(loops = -1)
 
 wizard = pygame.sprite.GroupSingle()
 wizard.add(Player())
@@ -734,7 +738,6 @@ fireball_rect = fireball_surf.get_rect(center = (fireball_x_pos,fireball_y_pos))
 
 projectile_rect_list = []
 
-
 # Harold
 harold_start_x_pos = wizard_rect.centerx
 harold_start_y_pos = wizard_rect.top + 28 # pixels at this scale based on wizard are 4 pixels each
@@ -800,13 +803,14 @@ title_info_rect = title_info_surf.get_rect(center = (wizard_title_rect.centerx,w
 obstacle_timer = pygame.USEREVENT + 1 # + 1 to avoid events taking previous numbers by default
 pygame.time.set_timer(obstacle_timer,obstacle_spawn_frequency)
 
-# Skeleton Animation Timer
-skeleton_animation_timer = pygame.USEREVENT + 2
-pygame.time.set_timer(skeleton_animation_timer,skeleton_walk_animation_speed)
+# # Won't need animation timers once done with classes
+# # Skeleton Animation Timer
+# skeleton_animation_timer = pygame.USEREVENT + 2
+# pygame.time.set_timer(skeleton_animation_timer,skeleton_walk_animation_speed)
 
-# Flying Enemy Animation Timer
-flying_enemy_animation_timer = pygame.USEREVENT + 3
-pygame.time.set_timer(flying_enemy_animation_timer,flying_enemy_fly_animation_speed)
+# # Flying Enemy Animation Timer
+# flying_enemy_animation_timer = pygame.USEREVENT + 3
+# pygame.time.set_timer(flying_enemy_animation_timer,flying_enemy_fly_animation_speed)
 
 # pygame.draw exists, can do rects, circles, lines, points, ellipses etc
 while True:
@@ -828,24 +832,24 @@ while True:
 
             looking_right = mouse_x >= wizard_rect.centerx
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == jump_button and wizard_rect.bottom >= GRASS_TOP_Y:  
-                    wizard_jumping = True
-                    wizard_gravity = gravity_acceleration
-                    harold_gravity = gravity_acceleration
-                if event.key == right_button and wizard_rect.x + WIZARD_WIDTH + wizard_x_velocity < WINDOW_WIDTH:
-                    wizard_x_velocity = wizard_speed
-                    harold_x_velocity = harold_speed
-                if event.key == left_button and wizard_rect.x - wizard_x_velocity > 0:
-                    wizard_x_velocity = -wizard_speed
-                    harold_x_velocity = -harold_speed
-            if event.type == pygame.KEYUP:
-                if event.key == right_button:
-                    wizard_x_velocity = 0
-                    harold_x_velocity = 0
-                if event.key == left_button:
-                    wizard_x_velocity = 0
-                    harold_x_velocity = 0
+            # if event.type == pygame.KEYDOWN:
+            #     if event.key == jump_button and wizard_rect.bottom >= GRASS_TOP_Y:  
+            #         wizard_jumping = True
+            #         wizard_gravity = gravity_acceleration
+            #         harold_gravity = gravity_acceleration
+            #     if event.key == right_button and wizard_rect.x + WIZARD_WIDTH + wizard_x_velocity < WINDOW_WIDTH:
+            #         wizard_x_velocity = wizard_speed
+            #         harold_x_velocity = harold_speed
+            #     if event.key == left_button and wizard_rect.x - wizard_x_velocity > 0:
+            #         wizard_x_velocity = -wizard_speed
+            #         harold_x_velocity = -harold_speed
+            # if event.type == pygame.KEYUP:
+            #     if event.key == right_button:
+            #         wizard_x_velocity = 0
+            #         harold_x_velocity = 0
+            #     if event.key == left_button:
+            #         wizard_x_velocity = 0
+            #         harold_x_velocity = 0
 
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
@@ -854,11 +858,11 @@ while True:
                 #     obstacle_rect_list.append(skeleton_surf.get_rect(midbottom = (skeleton_x_pos,skeleton_y_pos)))
                 # else:
                 #     obstacle_rect_list.append(flying_enemy_surf.get_rect(midbottom = (flying_enemy_x_pos,flying_enemy_y_pos)))
-            if event.type == skeleton_animation_timer:
-                # Horrible Coding
-                if skeleton_index != 12: skeleton_index += 1
-                else: skeleton_index = 0
-                skeleton_surf = skeleton_walk[skeleton_index]
+            # if event.type == skeleton_animation_timer:
+            #     # Horrible Coding
+            #     if skeleton_index != 12: skeleton_index += 1
+            #     else: skeleton_index = 0
+            #     skeleton_surf = skeleton_walk[skeleton_index]
             # if event.type == flying_enemy_animation_timer:
             #     # WIP - add when have animation 
             #     # Horrible Coding
@@ -906,6 +910,7 @@ while True:
         obstacle_group.update()
 
 
+        # Will be changed to be sprites
         fireball_animation()
         if fireball_x_start_speed != 0:
             screen.blit(fireball_surf,fireball_rect)
@@ -930,10 +935,12 @@ while True:
         #     fireball_hit = True
         # collisions = 0
 
+        game_active = collision_sprite()
+
     # Menu Screen
     else:
         screen.fill('#54428E')
-        wizard_animation()
+        # wizard_animation()
         screen.blit(wizard_title_surf,wizard_title_rect)
         harold_animation()
         screen.blit(harold_title_surf,harold_title_rect)
