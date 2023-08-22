@@ -179,7 +179,6 @@ class Player(pygame.sprite.Sprite):
 
     def wizard_input(self):
         keys = pygame.key.get_pressed()
-        temp_harold_x_pos = harold.get_harold_x_pos()
         if keys[shoot_button] and (self.fireball_cooldown == 0 or fireball_hit):
             self.fireball_cooldown = self.fireball_cooldown_time
             fireball_hit = False
@@ -188,15 +187,10 @@ class Player(pygame.sprite.Sprite):
             self.wizard_jumping = True
             self.wizard_gravity = self.gravity_acceleration
             # self.jump_sound.play()
-            self.harold_gravity = self.gravity_acceleration
         if keys[right_button] and self.rect.x + WIZARD_WIDTH + wizard_x_velocity < WINDOW_WIDTH:
-            self.wizard_x_pos += self.wizard_speed
-            temp_harold_x_pos += self.wizard_speed
-            harold.set_harold_x_pos(temp_harold_x_pos)
+            self.rect.x += self.wizard_speed
         if keys[left_button] and self.rect.x - wizard_x_velocity > 0:
-            self.wizard_x_pos -= self.wizard_speed
-            temp_harold_x_pos -= self.wizard_speed
-            harold.set_harold_x_pos(temp_harold_x_pos)
+            self.rect.x -= self.wizard_speed
     
     def apply_gravity(self):
         self.wizard_gravity += 1
@@ -254,15 +248,15 @@ class Player(pygame.sprite.Sprite):
         self.animation_state()
 
 # Might need to make a Harold Class or have him inherit the Player class
-class Harold(pygame.sprite.Sprite):
+class Harold(Player):
     def __init__(self):
         super().__init__()
         # Harold
-        temp_wizard_rect = wizard.get_wizard_rect()
+        temp_wizard_rect = self.get_wizard_rect()
         self.harold_start_x_pos = temp_wizard_rect.centerx
         self.harold_start_y_pos = temp_wizard_rect.top + 28 # pixels at this scale based on wizard are 4 pixels each
         self.harold_x_pos = self.harold_start_x_pos
-        self.harold_speed = wizard.get_wizard_speed()
+        self.harold_speed = self.get_wizard_speed()
         self.harold_x_velocity = 0
         self.harold_y_pos = self.harold_start_y_pos
         self.harold_gravity = 0
@@ -307,8 +301,50 @@ class Harold(pygame.sprite.Sprite):
 
     def set_harold_x_pos(self,new_harold_x_pos):
         self.harold_x_pos = new_harold_x_pos
+
+    def get_harold_start_x_pos(self):
+        return self.harold_start_x_pos
+
+    def set_harold_start_x_pos(self,new_harold_start_x_pos):
+        self.harold_start_x_pos = new_harold_start_x_pos
+
+    def get_harold_start_y_pos(self):
+        return self.harold_start_y_pos
+
+    def set_harold_start_y_pos(self,new_harold_start_y_pos):
+        self.harold_start_y_pos = new_harold_start_y_pos
+
+    def get_harold_speed(self):
+        return self.harold_speed
     
-    def harold_animation_state(self):    
+    def set_harold_speed(self,new_harold_speed):
+        self.harold_speed = new_harold_speed
+
+    def get_harold_gravity(self):
+        return self.harold_gravity
+    
+    def set_harold_gravity(self,new_harold_gravity):
+        self.harold_gravity = new_harold_gravity
+
+    def wizard_input(self):
+        keys = pygame.key.get_pressed()
+        temp_harold_x_pos = self.get_harold_x_pos()
+        if keys[jump_button] and self.rect.bottom >= GRASS_TOP_Y:
+            # self.jump_sound.play()
+            self.set_harold_gravity(self.gravity_acceleration)
+        if keys[right_button] and self.rect.x + WIZARD_WIDTH + wizard_x_velocity < WINDOW_WIDTH:
+            temp_harold_x_pos += self.wizard_speed
+            self.set_harold_x_pos(temp_harold_x_pos)
+        if keys[left_button] and self.rect.x - wizard_x_velocity > 0:
+            temp_harold_x_pos -= self.wizard_speed
+            self.set_harold_x_pos(temp_harold_x_pos)
+    
+    def apply_gravity(self):
+        self.harold_gravity += 1
+        self.harold_rect.y += self.harold_gravity
+        if self.harold_rect.bottom >= GRASS_TOP_Y: self.harold_rect.bottom = GRASS_TOP_Y
+
+    def animation_state(self):    
         self.harold_index += harold_idle_animation_speed # speed of animation, adjust as needed
         if self.harold_index >= len(self.harold_idle):self.harold_index = 0
         self.harold_surf = self.harold_idle[int(self.harold_index)]
@@ -316,6 +352,11 @@ class Harold(pygame.sprite.Sprite):
 
         if not self.get_looking_right():
             self.harold_surf = pygame.transform.flip(self.harold_surf,True,False)
+    
+    def update(self):
+        self.wizard_input()
+        self.apply_gravity()
+        self.animation_state()
 
 
 class Obstacle(pygame.sprite.Sprite):
@@ -467,7 +508,7 @@ window_size = (WINDOW_WIDTH,WINDOW_HEIGHT)
 WIZARD_WIDTH = 128
 WIZARD_HEIGHT = 128
 wizard_pixel_size = (WIZARD_HEIGHT,WIZARD_WIDTH)
-GRASS_TOP_Y = 371
+GRASS_TOP_Y = 271
 
 jump_button = pygame.K_SPACE
 right_button = pygame.K_d
@@ -496,7 +537,6 @@ flying_enemy_fly_animation_speed = 50
 
 skeleton_speed = 2
 flying_enemy_speed = 2
-
 
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
