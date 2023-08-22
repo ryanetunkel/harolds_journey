@@ -176,6 +176,12 @@ class Player(pygame.sprite.Sprite):
     
     def get_fireball_cooldown(self):
         return self.fireball_cooldown
+    
+    def get_wizard_x_velocity(self):
+        return self.wizard_x_velocity
+    
+    def set_wizard_x_velocity(self,new_wizard_x_velocity):
+        self.wizard_x_velocity = new_wizard_x_velocity
 
     def wizard_input(self):
         keys = pygame.key.get_pressed()
@@ -188,9 +194,11 @@ class Player(pygame.sprite.Sprite):
             self.wizard_gravity = self.gravity_acceleration
             # self.jump_sound.play()
         if keys[right_button] and self.rect.x + WIZARD_WIDTH + wizard_x_velocity < WINDOW_WIDTH:
-            self.rect.x += self.wizard_speed
+            self.wizard_x_velocity = self.wizard_speed
+            self.rect.x += self.wizard_x_velocity
         if keys[left_button] and self.rect.x - wizard_x_velocity > 0:
-            self.rect.x -= self.wizard_speed
+            self.wizard_x_velocity = self.wizard_speed
+            self.rect.x -= self.wizard_x_velocity
     
     def apply_gravity(self):
         self.wizard_gravity += 1
@@ -326,7 +334,7 @@ class Harold(Player):
     def set_harold_gravity(self,new_harold_gravity):
         self.harold_gravity = new_harold_gravity
 
-    def wizard_input(self):
+    def harold_input(self):
         keys = pygame.key.get_pressed()
         temp_harold_x_pos = self.get_harold_x_pos()
         if keys[jump_button] and self.rect.bottom >= GRASS_TOP_Y:
@@ -339,12 +347,12 @@ class Harold(Player):
             temp_harold_x_pos -= self.wizard_speed
             self.set_harold_x_pos(temp_harold_x_pos)
     
-    def apply_gravity(self):
+    def apply_harold_gravity(self):
         self.harold_gravity += 1
         self.harold_rect.y += self.harold_gravity
         if self.harold_rect.bottom >= GRASS_TOP_Y: self.harold_rect.bottom = GRASS_TOP_Y
 
-    def animation_state(self):    
+    def harold_animation_state(self):    
         self.harold_index += harold_idle_animation_speed # speed of animation, adjust as needed
         if self.harold_index >= len(self.harold_idle):self.harold_index = 0
         self.harold_surf = self.harold_idle[int(self.harold_index)]
@@ -354,9 +362,9 @@ class Harold(Player):
             self.harold_surf = pygame.transform.flip(self.harold_surf,True,False)
     
     def update(self):
-        self.wizard_input()
-        self.apply_gravity()
-        self.animation_state()
+        self.harold_input()
+        self.apply_harold_gravity()
+        self.harold_animation_state()
 
 
 class Obstacle(pygame.sprite.Sprite):
@@ -640,6 +648,9 @@ while True:
             exit() # breaks out of the while True loop
        
         if game_active:
+            if event.type == pygame.KEYUP: # Just added, might break stuff
+                if event.type == right_button or event.type == left_button:
+                    wizard.set_x_velocity(0)
 
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
