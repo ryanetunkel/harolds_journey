@@ -2,9 +2,6 @@ import pygame
 from sys import exit
 from random import randint, choice
 
-# Just put in the Player class, haven't removed any old code it replaces
-# Also Harold needs either his own class or to also be a player
-# 3 33 20
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
