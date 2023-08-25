@@ -300,7 +300,6 @@ class Player(pygame.sprite.Sprite):
         self.apply_gravity()
         self.animation_state()
 
-# Might need to make a Harold Class or have him inherit the Player class
 class Harold(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -386,9 +385,11 @@ class Harold(pygame.sprite.Sprite):
             # self.jump_sound.play()
             self.harold_gravity = self.gravity_acceleration
         if keys[right_button] and wizard.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < WINDOW_WIDTH:
-            self.harold_x_pos += self.harold_speed
+            self.harold_x_velocity = self.harold_speed
+            self.harold_x_pos += self.harold_x_velocity
         if keys[left_button] and wizard.sprite.get_wizard_rect().x - self.harold_speed > 0:
-            self.harold_x_pos -= self.harold_speed
+            self.harold_x_velocity = self.harold_speed
+            self.harold_x_pos -= self.harold_x_velocity
     
     def apply_gravity(self):
         self.harold_gravity += 1
