@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_secret_animation_limit = 240
         self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
         self.wizard_jumping = False
+        self.fireball_hit = False
         self.looking_right = True
         self.fireball_cooldown_time = 60
         self.current_fireball_cooldown = 0
@@ -213,19 +214,19 @@ class Player(pygame.sprite.Sprite):
 
     def set_wizard_moving(self,new_wizard_moving):
         self.wizard_moving = new_wizard_moving
+    
+    def set_fireball_hit(self,new_fireball_hit):
+        self.fireball_hit = new_fireball_hit
 
-    def wizard_input(self):
+    def wizard_movement_input(self):
         for event in pygame.event.get():
-            if event.type == pygame.KEYUP: # Just added, might break stuff
-                if event.type == right_button or event.type == left_button:
-                    self.wizard_x_velocity = 0 # Might break movement
-                    self.wizard_moving = False
+            if event.type == shoot_button:
+                if self.current_fireball_cooldown == 0 or self.fireball_hit:
+                    self.current_fireball_cooldown = self.fireball_cooldown_time
+                    self.fireball_hit = False
+                    projectile_group.add(Projectile('fireball'))
+                    print("Fireball!")
         keys = pygame.key.get_pressed()
-        if keys[shoot_button] and (self.current_fireball_cooldown == 0 or fireball_hit):
-            self.current_fireball_cooldown = self.fireball_cooldown_time
-            fireball_hit = False
-            projectile_group.add(Projectile())
-            print("Fireball!")
         if keys[jump_button] and self.rect.bottom >= GRASS_TOP_Y:
             self.wizard_jumping = True
             self.wizard_gravity = self.gravity_acceleration
@@ -238,6 +239,11 @@ class Player(pygame.sprite.Sprite):
             self.wizard_x_velocity = self.wizard_speed
             self.rect.x -= self.wizard_x_velocity
             self.wizard_moving = True
+        elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]):
+            self.wizard_x_velocity = 0
+            self.wizard_moving = False
+    
+    # def wizard_attack_input(self):
     
     def apply_gravity(self):
         self.wizard_gravity += 1
@@ -247,7 +253,6 @@ class Player(pygame.sprite.Sprite):
     def animation_state(self):
         (mouse_x,mouse_y) = pygame.mouse.get_pos()
         self.looking_right = mouse_x >= self.rect.centerx
-        print("Current:" + self.current_fireball_cooldown)
         if self.current_fireball_cooldown < self.fireball_cooldown_time and self.current_fireball_cooldown >= 12:
             # wizard fireball animation
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
@@ -291,7 +296,7 @@ class Player(pygame.sprite.Sprite):
         # Damage animation if hit and not killed - rn can't do cuz no health
 
     def update(self):
-        self.wizard_input()
+        self.wizard_movement_input()
         self.apply_gravity()
         self.animation_state()
 
@@ -491,46 +496,48 @@ class Projectile(pygame.sprite.Sprite):
 
         # Projectiles
         # These might not all be universal, especially damage and speed, will be varied
+
         self.projectile_speed = 5
         self.projectile_damage = 1
 
-        # Fireball
-        self.fireball_x_start = wizard.sprite.get_wizard_rect().right - 20
-        self.fireball_y_start = wizard.sprite.get_wizard_rect().centery + 24
+        if type == 'fireball':
+            # Fireball
+            self.fireball_x_start = wizard.sprite.get_wizard_rect().right - 20
+            self.fireball_y_start = wizard.sprite.get_wizard_rect().centery + 24
 
-        self.fireball_x_pos = self.fireball_x_start
-        self.fireball_y_pos = self.fireball_y_start
+            self.fireball_x_pos = self.fireball_x_start
+            self.fireball_y_pos = self.fireball_y_start
 
-        self.fireball_x_start_speed = 0
+            self.fireball_x_start_speed = 0
 
-        self.fireball_speed = 5
-        self.fireball_gravity_when_held = 0
+            self.fireball_speed = 5
+            self.fireball_gravity_when_held = 0
 
-        self.fireball_damage = 1
+            self.fireball_damage = 1
 
-        self.wizard_was_looking_right = wizard.sprite.get_looking_right()
-        self.direction_multiplier = 1 if self.wizard_was_looking_right else -1
+            self.wizard_was_looking_right = wizard.sprite.get_looking_right()
+            self.direction_multiplier = 1 if self.wizard_was_looking_right else -1
 
-        # Fireball Transition Animation
-        fireball_trans_0 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_0.png').convert_alpha()
-        fireball_trans_1 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_1.png').convert_alpha()
-        fireball_trans_2 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
-        fireball_trans_3 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_3.png').convert_alpha()
-        self.fireball_trans = [fireball_trans_0, fireball_trans_1, fireball_trans_2, fireball_trans_3]
+            # Fireball Transition Animation
+            fireball_trans_0 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_0.png').convert_alpha()
+            fireball_trans_1 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_1.png').convert_alpha()
+            fireball_trans_2 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
+            fireball_trans_3 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_3.png').convert_alpha()
+            self.fireball_trans = [fireball_trans_0, fireball_trans_1, fireball_trans_2, fireball_trans_3]
 
-        # Fireball Movement Animation
-        fireball_move_0 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_0.png').convert_alpha()
-        fireball_move_1 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_1.png').convert_alpha()
-        fireball_move_2 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_2.png').convert_alpha()
-        fireball_move_3 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_3.png').convert_alpha()
-        self.fireball_move = [fireball_move_0, fireball_move_1, fireball_move_2, fireball_move_3]
+            # Fireball Movement Animation
+            fireball_move_0 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_0.png').convert_alpha()
+            fireball_move_1 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_1.png').convert_alpha()
+            fireball_move_2 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_2.png').convert_alpha()
+            fireball_move_3 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_3.png').convert_alpha()
+            self.fireball_move = [fireball_move_0, fireball_move_1, fireball_move_2, fireball_move_3]
 
-        self.fireball_index = 0
-        self.image = self.fireball_move[self.fireball_index]
-        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
-        if self.wizard_was_looking_right:
-            self.image = pygame.transform.flip(self.image,True,False)
-        self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos))
+            self.fireball_index = 0
+            self.image = self.fireball_move[self.fireball_index]
+            self.image = pygame.transform.scale_by(self.image,4)
+            if self.wizard_was_looking_right:
+                self.image = pygame.transform.flip(self.image,True,False)
+            self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos))
     
     def animation_state(self):
         self.fireball_index += fireball_move_animation_speed # speed of animation, adjust as needed
@@ -563,7 +570,6 @@ left_button = pygame.K_a
 shoot_button = pygame.MOUSEBUTTONDOWN
 additional_score = 0
 score = 0
-fireball_hit = False
 
 # seconds per frame
 wizard_walk_animation_speed = 0.1
@@ -599,7 +605,7 @@ def projectile_collision():
                     projectile_group.remove(projectile)
                     obstacle_group.remove(obstacle)
                     additional_score += 1
-                    fireball_hit = True
+                    wizard.sprite.set_fireball_hit(True)
 
     # not including checking if fireball_start_speed is 0 
     # might make it so can still damage enemies if they 
@@ -683,9 +689,9 @@ while True:
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
                 obstacle_group.add(Obstacle(choice(['flying_enemy','skeleton','skeleton','skeleton'])))
                 
-            temp_fireball_cooldown = wizard.sprite.get_fireball_cooldown()
+            temp_fireball_cooldown = wizard.sprite.get_current_fireball_cooldown()
             temp_fireball_cooldown -= 1
-            if wizard.sprite.get_fireball_cooldown() != 0: wizard.sprite.set_fireball_cooldown(temp_fireball_cooldown)
+            if wizard.sprite.get_current_fireball_cooldown() != 0: wizard.sprite.set_current_fireball_cooldown(temp_fireball_cooldown)
 
         else:
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
@@ -698,7 +704,7 @@ while True:
         screen.blit(sky_surf,(0,0))
         screen.blit(ground_surf,(0,0))
         score = display_score()
-        (mouse_x,mouse_y) = pygame.mouse.get_pos()
+        # (mouse_x,mouse_y) = pygame.mouse.get_pos()
 
         wizard.draw(screen) # draws sprites
         wizard.update() # updates sprites
