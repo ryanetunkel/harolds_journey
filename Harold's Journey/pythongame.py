@@ -8,7 +8,7 @@ window_size = (WINDOW_WIDTH,WINDOW_HEIGHT)
 WIZARD_WIDTH = 128
 WIZARD_HEIGHT = 128
 wizard_pixel_size = (WIZARD_HEIGHT,WIZARD_WIDTH)
-GRASS_TOP_Y = 271
+GRASS_TOP_Y = 371
 
 jump_button = pygame.K_SPACE
 right_button = pygame.K_d
@@ -170,6 +170,7 @@ class Player(pygame.sprite.Sprite):
 
         self.wizard_index = 0
         self.image = self.wizard_walk[self.wizard_index]
+        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
         self.wizard_gravity = 0
 
@@ -412,10 +413,10 @@ class Harold(pygame.sprite.Sprite):
             self.harold_gravity = self.gravity_acceleration
         if keys[right_button] and wizard.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < WINDOW_WIDTH:
             self.harold_x_velocity = self.harold_speed
-            self.harold_x_pos += self.harold_x_velocity
+            self.rect.x += self.harold_x_velocity
         if keys[left_button] and wizard.sprite.get_wizard_rect().x - self.harold_speed > 0:
             self.harold_x_velocity = self.harold_speed
-            self.harold_x_pos -= self.harold_x_velocity
+            self.rect.x -= self.harold_x_velocity
     
     def apply_gravity(self):
         self.harold_gravity += 1
@@ -461,7 +462,7 @@ class Obstacle(pygame.sprite.Sprite):
             self.enemy_looking_right = True
 
         if type == 'skeleton':
-            self.y_pos = GRASS_TOP_Y + 100
+            self.y_pos = GRASS_TOP_Y
             self.obstacle_speed = self.skeleton_speed
             self.obstacle_animation_speed = self.skeleton_walk_animation_speed_decimal
 
@@ -485,7 +486,7 @@ class Obstacle(pygame.sprite.Sprite):
                             skeleton_walk_12]
             # skeleton_surf = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
         else:
-            self.y_pos = GRASS_TOP_Y - 100
+            self.y_pos = GRASS_TOP_Y - 140
             self.obstacle_speed = self.flying_enemy_speed
             self.obstacle_animation_speed = self.flying_enemy_fly_animation_speed_decimal
             
@@ -497,8 +498,6 @@ class Obstacle(pygame.sprite.Sprite):
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
         self.image = pygame.transform.scale(self.image,wizard_pixel_size)
-        if self.enemy_looking_right:
-            self.image = pygame.transform.flip(self.image,True,False) # Doesn't seem to work
         self.rect = self.image.get_rect(midbottom = (self.x_pos,self.y_pos))
         self.direction_multiplier = 1 if self.enemy_looking_right else -1
     
@@ -506,6 +505,9 @@ class Obstacle(pygame.sprite.Sprite):
         self.animation_index += self.obstacle_animation_speed
         if self.animation_index >= len(self.frames): self.animation_index = 0
         self.image = self.frames[int(self.animation_index)]
+        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
+        if self.enemy_looking_right:
+            self.image = pygame.transform.flip(self.image,True,False)
 
     def update(self):
         self.animation_state()
@@ -530,7 +532,7 @@ class Projectile(pygame.sprite.Sprite):
 
         if type == 'fireball':
             # Fireball
-            self.fireball_move_animation_speed = 0.4
+            self.fireball_move_animation_speed = 0.2
             self.fireball_transition_animation_speed = 0.4
             
             self.fireball_x_start = wizard.sprite.get_wizard_rect().right - 20
@@ -565,15 +567,17 @@ class Projectile(pygame.sprite.Sprite):
 
             self.fireball_index = 0
             self.image = self.fireball_move[self.fireball_index]
-            self.image = pygame.transform.scale_by(self.image,0.5) # Doesn't seem to work
-            if not self.wizard_was_looking_right:
-                self.image = pygame.transform.flip(self.image,True,False) # Doesn't seem to work
+            self.image = pygame.transform.scale(self.image,wizard_pixel_size)
             self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos))
     
     def animation_state(self):
         self.fireball_index += self.fireball_move_animation_speed # speed of animation, adjust as needed
         if self.fireball_index >= len(self.fireball_move): self.fireball_index = 0
         self.image = self.fireball_move[int(self.fireball_index)]
+        
+        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
+        if not self.wizard_was_looking_right:
+            self.image = pygame.transform.flip(self.image,True,False)
     
     def update(self):
         self.animation_state()
@@ -693,9 +697,10 @@ while True:
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
                 obstacle_group.add(Obstacle(choice(['flying_enemy','skeleton','skeleton','skeleton'])))
                 
-            temp_fireball_cooldown = wizard.sprite.get_current_fireball_cooldown()
-            temp_fireball_cooldown -= 1
-            if wizard.sprite.get_current_fireball_cooldown() != 0: wizard.sprite.set_current_fireball_cooldown(temp_fireball_cooldown)
+            if wizard.sprite.get_current_fireball_cooldown() != 0:
+                temp_fireball_cooldown = wizard.sprite.get_current_fireball_cooldown()
+                temp_fireball_cooldown -= 1
+                wizard.sprite.set_current_fireball_cooldown(temp_fireball_cooldown)
 
         else:
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
@@ -711,9 +716,9 @@ while True:
         # (mouse_x,mouse_y) = pygame.mouse.get_pos()
 
         wizard.draw(screen) # draws sprites
-        wizard.update() # updates sprites
-
         harold.draw(screen)
+        
+        wizard.update() # updates sprites
         harold.update()
 
         obstacle_group.draw(screen)
