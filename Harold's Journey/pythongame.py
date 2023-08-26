@@ -2,11 +2,29 @@ import pygame
 from sys import exit
 from random import randint, choice
 
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 400
+window_size = (WINDOW_WIDTH,WINDOW_HEIGHT)
+WIZARD_WIDTH = 128
+WIZARD_HEIGHT = 128
+wizard_pixel_size = (WIZARD_HEIGHT,WIZARD_WIDTH)
+GRASS_TOP_Y = 271
+
+jump_button = pygame.K_SPACE
+right_button = pygame.K_d
+left_button = pygame.K_a
+shoot_button = pygame.MOUSEBUTTONDOWN
+additional_score = 0
+score = 0
+
+obstacle_spawn_frequency = 1500 # In milliseconds, 1000 = 1 sec
+
+# Classes
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
-        self.wizard_start_x_pos = 80
+        self.wizard_start_x_pos = 400
         self.wizard_start_y_pos = GRASS_TOP_Y
         self.wizard_x_pos = self.wizard_start_x_pos
         self.wizard_speed = 4
@@ -18,7 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_jumping = False
         self.fireball_hit = False
         self.looking_right = True
-        self.fireball_cooldown_time = 60
+        self.fireball_cooldown_time = 1
         self.current_fireball_cooldown = 0
         self.wizard_moving = False
 
@@ -155,6 +173,12 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
         self.wizard_gravity = 0
 
+        self.wizard_walk_animation_speed = 0.1
+        self.wizard_jump_animation_speed = 0.075
+        self.wizard_idle_animation_speed = 0.1
+        self.wizard_secret_idle_animation_speed = self.wizard_idle_animation_speed
+        self.wizard_fireball_animation_speed = 0.4
+
         # self.jump_sound = pygame.mixer.Sound(...)
         # self.jump_sound.set_volume(0.5)
 
@@ -253,16 +277,16 @@ class Player(pygame.sprite.Sprite):
     def animation_state(self):
         (mouse_x,mouse_y) = pygame.mouse.get_pos()
         self.looking_right = mouse_x >= self.rect.centerx
-        if self.current_fireball_cooldown < self.fireball_cooldown_time and self.current_fireball_cooldown >= 12:
+        if self.current_fireball_cooldown < self.fireball_cooldown_time and self.current_fireball_cooldown >= 0.2:
             # wizard fireball animation
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
-            self.wizard_index += wizard_fireball_animation_speed # speed of animation, adjust as needed
+            self.wizard_index += self.wizard_fireball_animation_speed # speed of animation, adjust as needed
             if self.wizard_index >= len(self.wizard_fireball): self.wizard_index = 0
             self.image = self.wizard_fireball[int(self.wizard_index)]
         elif self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping: # and add landing tracker this would be if it is off
             # jump (first half)
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
-            self.wizard_index += wizard_jump_animation_speed # speed of animation, adjust as needed
+            self.wizard_index += self.wizard_jump_animation_speed # speed of animation, adjust as needed
             if self.wizard_index >= len(self.wizard_jump): self.wizard_index = 0
             self.image = self.wizard_jump[int(self.wizard_index)]
             # this is it raw with no adjustment
@@ -273,19 +297,19 @@ class Player(pygame.sprite.Sprite):
             # landing animation for a few frames via timer and then when ends revert to idle
         elif self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
-            self.wizard_index += wizard_walk_animation_speed # speed of animation, adjust as needed
+            self.wizard_index += self.wizard_walk_animation_speed # speed of animation, adjust as needed
             if self.wizard_index >= len(self.wizard_walk): self.wizard_index = 0
             self.image = self.wizard_walk[int(self.wizard_index)]
         elif not self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
             if self.wizard_secret_animation_timer != 0:
-                self.wizard_index += wizard_idle_animation_speed # speed of animation, adjust as needed
+                self.wizard_index += self.wizard_idle_animation_speed # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_idle): self.wizard_index = 0
                 self.image = self.wizard_idle[int(self.wizard_index)]
                 # idle animation
                 # start timer that last for a few rounds of idle animation until would do the second
                 self.wizard_secret_animation_timer -= 1
             else:
-                self.wizard_index += wizard_secret_idle_animation_speed # speed of animation, adjust as needed
+                self.wizard_index += self.wizard_secret_idle_animation_speed # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_secret_idle): self.wizard_index = 0
                 self.image = self.wizard_secret_idle[int(self.wizard_index)]
 
@@ -304,6 +328,8 @@ class Harold(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         # Harold
+        self.harold_idle_animation_speed = 0.1
+        
         temp_wizard_rect = wizard.sprite.get_wizard_rect()
         self.harold_start_x_pos = temp_wizard_rect.centerx
         self.harold_start_y_pos = temp_wizard_rect.top + 28 # pixels at this scale based on wizard are 4 pixels each
@@ -397,7 +423,7 @@ class Harold(pygame.sprite.Sprite):
         if self.rect.bottom >= self.harold_start_y_pos: self.rect.bottom = self.harold_start_y_pos
 
     def animation_state(self):    
-        self.harold_index += harold_idle_animation_speed # speed of animation, adjust as needed
+        self.harold_index += self.harold_idle_animation_speed # speed of animation, adjust as needed
         if self.harold_index >= len(self.harold_idle):self.harold_index = 0
         self.image = self.harold_idle[int(self.harold_index)]
         self.image = pygame.transform.scale_by(self.image,3/2)
@@ -427,7 +453,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.skeleton_speed = 2
         self.flying_enemy_speed = 2
 
-        if randint(0,2) == 1:
+        if randint(0,1) == 1:
             self.x_pos = randint(WINDOW_WIDTH + 100,WINDOW_WIDTH + 300)
             self.enemy_looking_right = False
         else:
@@ -472,8 +498,9 @@ class Obstacle(pygame.sprite.Sprite):
         self.image = self.frames[self.animation_index]
         self.image = pygame.transform.scale(self.image,wizard_pixel_size)
         if self.enemy_looking_right:
-            self.image = pygame.transform.flip(self.image,True,False)
+            self.image = pygame.transform.flip(self.image,True,False) # Doesn't seem to work
         self.rect = self.image.get_rect(midbottom = (self.x_pos,self.y_pos))
+        self.direction_multiplier = 1 if self.enemy_looking_right else -1
     
     def animation_state(self):
         self.animation_index += self.obstacle_animation_speed
@@ -482,7 +509,7 @@ class Obstacle(pygame.sprite.Sprite):
 
     def update(self):
         self.animation_state()
-        self.rect.x -= self.obstacle_speed
+        self.rect.x += (self.obstacle_speed * self.direction_multiplier)
         self.destroy()
     
     def destroy(self):
@@ -503,6 +530,9 @@ class Projectile(pygame.sprite.Sprite):
 
         if type == 'fireball':
             # Fireball
+            self.fireball_move_animation_speed = 0.4
+            self.fireball_transition_animation_speed = 0.4
+            
             self.fireball_x_start = wizard.sprite.get_wizard_rect().right - 20
             self.fireball_y_start = wizard.sprite.get_wizard_rect().centery + 24
 
@@ -535,13 +565,13 @@ class Projectile(pygame.sprite.Sprite):
 
             self.fireball_index = 0
             self.image = self.fireball_move[self.fireball_index]
-            self.image = pygame.transform.scale_by(self.image,4)
-            if self.wizard_was_looking_right:
-                self.image = pygame.transform.flip(self.image,True,False)
+            self.image = pygame.transform.scale_by(self.image,0.5) # Doesn't seem to work
+            if not self.wizard_was_looking_right:
+                self.image = pygame.transform.flip(self.image,True,False) # Doesn't seem to work
             self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos))
     
     def animation_state(self):
-        self.fireball_index += fireball_move_animation_speed # speed of animation, adjust as needed
+        self.fireball_index += self.fireball_move_animation_speed # speed of animation, adjust as needed
         if self.fireball_index >= len(self.fireball_move): self.fireball_index = 0
         self.image = self.fireball_move[int(self.fireball_index)]
     
@@ -553,37 +583,10 @@ class Projectile(pygame.sprite.Sprite):
     def destroy(self):
         if self.rect.x <= -100 and not self.wizard_was_looking_right:
             self.kill()
-        elif self.rect.x >= WINDOW_WIDTH + 100 and not self.wizard_was_looking_right:
+        elif self.rect.x >= WINDOW_WIDTH + 100 and self.wizard_was_looking_right:
             self.kill()
 
-
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 400
-window_size = (WINDOW_WIDTH,WINDOW_HEIGHT)
-WIZARD_WIDTH = 128
-WIZARD_HEIGHT = 128
-wizard_pixel_size = (WIZARD_HEIGHT,WIZARD_WIDTH)
-GRASS_TOP_Y = 271
-
-jump_button = pygame.K_SPACE
-right_button = pygame.K_d
-left_button = pygame.K_a
-shoot_button = pygame.MOUSEBUTTONDOWN
-additional_score = 0
-score = 0
-
-# seconds per frame
-wizard_walk_animation_speed = 0.1
-wizard_jump_animation_speed = 0.075
-wizard_idle_animation_speed = 0.1
-wizard_secret_idle_animation_speed = wizard_idle_animation_speed
-wizard_fireball_animation_speed = 0.4
-fireball_move_animation_speed = wizard_fireball_animation_speed
-fireball_transition_animation_speed = wizard_fireball_animation_speed
-harold_idle_animation_speed = 0.1
-
-obstacle_spawn_frequency = 1500 # In milliseconds, 1000 = 1 sec
-
+# Functions
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
     score_surf = test_font.render(str(current_time + additional_score), False, '#FCDC4D')
@@ -605,7 +608,7 @@ def projectile_collision():
                 if projectile.colliderect(obstacle):
                     projectile_group.remove(projectile)
                     obstacle_group.remove(obstacle)
-                    additional_score += 1
+                    additional_score += 5
                     wizard.sprite.set_fireball_hit(True)
 
     # not including checking if fireball_start_speed is 0 
