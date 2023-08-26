@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 from random import randint, choice
 
+# Working on features being scalable to window size, need to adjust positions for the menu screen
 WINDOW_WIDTH = 800 * 3/2
 WINDOW_HEIGHT = 400 * 3/2
 PIXEL_SIZE = 4
