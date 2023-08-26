@@ -2,8 +2,8 @@ import pygame
 from sys import exit
 from random import randint, choice
 
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 400
+WINDOW_WIDTH = 800 * 3/2
+WINDOW_HEIGHT = 400 * 3/2
 PIXEL_SIZE = 4
 WINDOW_SIZE = (WINDOW_WIDTH,WINDOW_HEIGHT)
 WIZARD_WIDTH = 32 * PIXEL_SIZE
@@ -596,7 +596,7 @@ class Projectile(pygame.sprite.Sprite):
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
     score_surf = test_font.render(str(current_time + additional_score), False, '#FCDC4D')
-    score_rect = score_surf.get_rect(center = (WINDOW_WIDTH/2,50))
+    score_rect = score_surf.get_rect(center = (WINDOW_WIDTH/2,WINDOW_HEIGHT/8))
     screen.blit(score_surf,score_rect)
     return current_time + additional_score
 
@@ -661,10 +661,10 @@ ground_surf = pygame.image.load('Harold\'s Journey/graphics/Grass.png').convert_
 ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 
 # Intro Screen
-wizard_title_start_x_pos = 400
-wizard_title_start_y_pos = 320
+wizard_title_start_x_pos = WINDOW_WIDTH / 2
+wizard_title_start_y_pos = (320 / 800) * WINDOW_HEIGHT
 wizard_title_surf = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
-wizard_title_surf = pygame.transform.scale(wizard_title_surf,(192,192))
+wizard_title_surf = pygame.transform.scale(wizard_title_surf,(WIZARD_WIDTH * 3/2, WIZARD_HEIGHT * 3/2))
 wizard_title_rect = wizard_title_surf.get_rect(center = (wizard_title_start_x_pos,wizard_title_start_y_pos))
 
 harold_title_start_x_pos = wizard_title_rect.centerx
@@ -675,7 +675,7 @@ harold_title_rect = harold_title_surf.get_rect(midbottom = (harold_title_start_x
 
 title_game_name_surf = test_font.render('Harold\'s Journey',False,"#FCDC4D")
 title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,3/2)
-title_game_name_rect = title_game_name_surf.get_rect(center = (400,70))
+title_game_name_rect = title_game_name_surf.get_rect(center = (WINDOW_WIDTH/2,((70/400) * WINDOW_HEIGHT)))
 
 title_info_start_x_pos = wizard_title_rect.centerx
 title_info_start_y_pos = wizard_title_rect.centery + 40
@@ -752,7 +752,7 @@ while True:
 
         score_message_surf = test_font.render('Score: ' + str(score),False,"#FCDC4D")
         score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
-        score_message_rect = score_message_surf.get_rect(center = (400,70))
+        score_message_rect = score_message_surf.get_rect(center = (WINDOW_WIDTH/2,(70/800 * WINDOW_WIDTH)))
 
         if score == 0: screen.blit(title_game_name_surf,title_game_name_rect)
         else: screen.blit(score_message_surf,score_message_rect)
