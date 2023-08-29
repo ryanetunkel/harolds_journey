@@ -11,6 +11,7 @@ WIZARD_WIDTH = 32 * PIXEL_SIZE
 WIZARD_HEIGHT = 32 * PIXEL_SIZE
 WIZARD_PIXEL_SIZE = (WIZARD_HEIGHT,WIZARD_WIDTH)
 GRASS_TOP_Y = (371 / 400) * WINDOW_HEIGHT
+GLOBAL_GRAVITY = -20
 
 jump_button = pygame.K_SPACE
 right_button = pygame.K_d
@@ -32,7 +33,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_speed = 4
         self.wizard_x_velocity = 0
         self.wizard_y_pos = self.wizard_start_y_pos
-        self.gravity_acceleration = -20
+        self.gravity_acceleration = GLOBAL_GRAVITY
         self.gravity_intensity = 1 # How quickly gravity accelerates the player
         self.wizard_secret_animation_limit = 240
         self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
@@ -245,8 +246,14 @@ class Player(pygame.sprite.Sprite):
     
     def set_fireball_hit(self,new_fireball_hit):
         self.fireball_hit = new_fireball_hit
+                
+    def get_wizard_jumping(self):
+        return self.wizard_jumping
+    
+    def set_wizard_jumping(self,new_wizard_jumping):
+        self.wizard_jumping = new_wizard_jumping
 
-    def wizard_movement_input(self):
+    def wizard_input(self):
         for event in pygame.event.get():
             if event.type == shoot_button:
                 if self.current_fireball_cooldown == 0 or self.fireball_hit:
@@ -277,7 +284,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_gravity += self.gravity_intensity
         self.rect.y += self.wizard_gravity
         if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
-
+        
     def animation_state(self):
         (mouse_x,mouse_y) = pygame.mouse.get_pos()
         self.looking_right = mouse_x >= self.rect.centerx
@@ -324,7 +331,7 @@ class Player(pygame.sprite.Sprite):
         # Damage animation if hit and not killed - rn can't do cuz no health
 
     def update(self):
-        self.wizard_movement_input()
+        self.wizard_input()
         self.apply_gravity()
         self.animation_state()
 
@@ -336,13 +343,13 @@ class Harold(pygame.sprite.Sprite):
         
         temp_wizard_rect = wizard.sprite.get_wizard_rect()
         self.harold_start_x_pos = temp_wizard_rect.centerx
-        self.harold_start_y_pos = temp_wizard_rect.top + ((28 / 400) * WINDOW_HEIGHT) # pixels at this scale based on wizard are 4 pixels each
+        self.harold_start_y_pos = temp_wizard_rect.top + 28 # pixels at this scale based on wizard are 4 pixels each
         self.harold_x_pos = self.harold_start_x_pos
         self.harold_speed = wizard.sprite.get_wizard_speed()
         self.harold_x_velocity = 0
         self.harold_y_pos = self.harold_start_y_pos
         self.harold_gravity = 0
-        self.gravity_acceleration = wizard.sprite.get_wizard_gravity_acceleration()
+        self.gravity_acceleration = GLOBAL_GRAVITY
 
         # Harold Idle Animation
         harold_idle_00 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
@@ -411,7 +418,7 @@ class Harold(pygame.sprite.Sprite):
 
     def harold_input(self):
         keys = pygame.key.get_pressed()
-        if keys[jump_button] and wizard.sprite.get_wizard_rect().bottom >= GRASS_TOP_Y:
+        if keys[jump_button] and self.rect.bottom >= self.harold_start_y_pos:
             # self.jump_sound.play()
             self.harold_gravity = self.gravity_acceleration
         if keys[right_button] and wizard.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < WINDOW_WIDTH:
@@ -489,7 +496,7 @@ class Obstacle(pygame.sprite.Sprite):
                             skeleton_walk_12]
             # skeleton_surf = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
         else:
-            self.y_pos = GRASS_TOP_Y - WIZARD_HEIGHT + (WIZARD_HEIGHT / 8)
+            self.y_pos = GRASS_TOP_Y - (WIZARD_HEIGHT + (WIZARD_HEIGHT / 4))
             self.obstacle_speed = self.flying_enemy_speed
             self.obstacle_animation_speed = self.flying_enemy_fly_animation_speed_decimal
             
@@ -663,13 +670,13 @@ ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 
 # Intro Screen
 wizard_title_start_x_pos = WINDOW_WIDTH / 2
-wizard_title_start_y_pos = (320 / 800) * WINDOW_HEIGHT
+wizard_title_start_y_pos = (300 / 400) * WINDOW_HEIGHT
 wizard_title_surf = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
 wizard_title_surf = pygame.transform.scale(wizard_title_surf,(WIZARD_WIDTH * 3/2, WIZARD_HEIGHT * 3/2))
 wizard_title_rect = wizard_title_surf.get_rect(center = (wizard_title_start_x_pos,wizard_title_start_y_pos))
 
 harold_title_start_x_pos = wizard_title_rect.centerx
-harold_title_start_y_pos = wizard_title_rect.top - 46
+harold_title_start_y_pos = wizard_title_rect.top - 52
 harold_title_surf = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
 harold_title_surf = pygame.transform.scale_by(harold_title_surf,2.25)
 harold_title_rect = harold_title_surf.get_rect(midbottom = (harold_title_start_x_pos,harold_title_start_y_pos))
@@ -679,7 +686,7 @@ title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,3/2)
 title_game_name_rect = title_game_name_surf.get_rect(center = (WINDOW_WIDTH/2,((70/400) * WINDOW_HEIGHT)))
 
 title_info_start_x_pos = wizard_title_rect.centerx
-title_info_start_y_pos = wizard_title_rect.centery + 40
+title_info_start_y_pos = wizard_title_rect.centery + ((40/400) * WINDOW_HEIGHT)
 title_info_start_pos = (title_info_start_x_pos,title_info_start_y_pos)
 title_info_surf = test_font.render('Press any key or click to Start',False,"#FCDC4D")
 title_info_rect = title_info_surf.get_rect(center = (title_info_start_pos))
@@ -753,7 +760,7 @@ while True:
 
         score_message_surf = test_font.render('Score: ' + str(score),False,"#FCDC4D")
         score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
-        score_message_rect = score_message_surf.get_rect(center = (WINDOW_WIDTH/2,(70/800 * WINDOW_WIDTH)))
+        score_message_rect = score_message_surf.get_rect(center = (WINDOW_WIDTH/2,(100/800 * WINDOW_HEIGHT)))
 
         if score == 0: screen.blit(title_game_name_surf,title_game_name_rect)
         else: screen.blit(score_message_surf,score_message_rect)
