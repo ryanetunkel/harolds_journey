@@ -27,22 +27,28 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
+        # Start
         self.wizard_start_x_pos = WINDOW_WIDTH / 2
         self.wizard_start_y_pos = GRASS_TOP_Y
+        
+        # X Directions
         self.wizard_x_pos = self.wizard_start_x_pos
         self.wizard_speed = 4
         self.wizard_x_velocity = 0
+        self.looking_right = True
+        self.wizard_moving = False
+        
+        # Y Directions
         self.wizard_y_pos = self.wizard_start_y_pos
         self.gravity_acceleration = GLOBAL_GRAVITY
         self.gravity_intensity = 1 # How quickly gravity accelerates the player
-        self.wizard_secret_animation_limit = 240
-        self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
         self.wizard_jumping = False
+
+        # Fireball
         self.fireball_hit = False
-        self.looking_right = True
         self.fireball_cooldown_time = 60
         self.current_fireball_cooldown = 0
-        self.wizard_moving = False
+        self.fireball_shot = False
 
         # Wizard Idle Animation  
         wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
@@ -178,12 +184,18 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
         self.wizard_gravity = 0
 
+        # Animation Speeds
         self.wizard_walk_animation_speed = 0.1
         self.wizard_jump_animation_speed = 0.075
         self.wizard_idle_animation_speed = 0.1
+        self.wizard_fireball_animation_speed = 0.25
+        
+        # Secret Animation
         self.wizard_secret_idle_animation_speed = self.wizard_idle_animation_speed
-        self.wizard_fireball_animation_speed = 0.4
+        self.wizard_secret_animation_limit = 240
+        self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
 
+        # Sounds
         # self.jump_sound = pygame.mixer.Sound(...)
         # self.jump_sound.set_volume(0.5)
 
@@ -259,6 +271,7 @@ class Player(pygame.sprite.Sprite):
                 if self.current_fireball_cooldown == 0 or self.fireball_hit:
                     self.current_fireball_cooldown = self.fireball_cooldown_time
                     self.fireball_hit = False
+                    self.fireball_shot = True
                     projectile_group.add(Projectile('fireball'))
                     print("Fireball!")
         keys = pygame.key.get_pressed()
@@ -288,11 +301,13 @@ class Player(pygame.sprite.Sprite):
     def animation_state(self):
         (mouse_x,mouse_y) = pygame.mouse.get_pos()
         self.looking_right = mouse_x >= self.rect.centerx
-        if self.current_fireball_cooldown < self.fireball_cooldown_time and self.current_fireball_cooldown >= 30:
+        if self.fireball_shot:
             # wizard fireball animation
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
             self.wizard_index += self.wizard_fireball_animation_speed # speed of animation, adjust as needed
-            if self.wizard_index >= len(self.wizard_fireball): self.wizard_index = 0
+            if self.wizard_index >= len(self.wizard_fireball): 
+                self.wizard_index = 0
+                self.fireball_shot = False
             self.image = self.wizard_fireball[int(self.wizard_index)]
         elif self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping: # and add landing tracker this would be if it is off
             # jump (first half)
@@ -545,8 +560,9 @@ class Projectile(pygame.sprite.Sprite):
             self.fireball_move_animation_speed = 0.2
             self.fireball_transition_animation_speed = 0.4
             
-            self.fireball_x_start = wizard.sprite.get_wizard_rect().right - 20
-            self.fireball_y_start = wizard.sprite.get_wizard_rect().centery + 24
+            temp_wizard_rect = wizard.sprite.get_wizard_rect()
+            self.fireball_x_start = temp_wizard_rect.right - 20
+            self.fireball_y_start = temp_wizard_rect.centery + 24
 
             self.fireball_x_pos = self.fireball_x_start
             self.fireball_y_pos = self.fireball_y_start
