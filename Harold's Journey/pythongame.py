@@ -13,14 +13,13 @@ WIZARD_PIXEL_SIZE = (WIZARD_HEIGHT,WIZARD_WIDTH)
 GRASS_TOP_Y = (371 / 400) * WINDOW_HEIGHT
 GLOBAL_GRAVITY = -20
 
+OBSTACLE_SPAWN_FREQUENCY = 1500 # In milliseconds, 1000 = 1 sec
+
 jump_button = pygame.K_SPACE
 right_button = pygame.K_d
 left_button = pygame.K_a
 shoot_button = pygame.MOUSEBUTTONDOWN
-additional_score = 0
 score = 0
-
-obstacle_spawn_frequency = 1500 # In milliseconds, 1000 = 1 sec
 
 # Classes
 class Player(pygame.sprite.Sprite):
@@ -49,6 +48,9 @@ class Player(pygame.sprite.Sprite):
         self.fireball_cooldown_time = 60
         self.current_fireball_cooldown = 0
         self.fireball_shot = False
+        
+        # Additional Score
+        self.additional_score = 0
 
         # Wizard Idle Animation  
         wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
@@ -291,15 +293,14 @@ class Player(pygame.sprite.Sprite):
 
     def set_fireball_shot(self,new_fireball_shot):
         self.fireball_shot = new_fireball_shot
+        
+    def get_additional_score(self):
+        return self.additional_score
+
+    def set_additional_score(self,new_additional_score):
+        self.additional_score = new_additional_score
 
     def wizard_input(self):
-        # for event in pygame.event.get():
-        #     if event.type == shoot_button:
-        #         if self.current_fireball_cooldown == 0 or self.fireball_hit:
-        #             self.fireball_shot = True
-        #             self.current_fireball_cooldown = self.fireball_cooldown_time
-        #             self.fireball_hit = False
-        #             projectile_group.add(Projectile('fireball'))
         keys = pygame.key.get_pressed()
         if keys[jump_button] and self.rect.bottom >= GRASS_TOP_Y:
             self.wizard_jumping = True
@@ -364,6 +365,7 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.wizard_secret_idle[int(self.wizard_index)]
 
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
+        
         if not self.looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
         # Death animation if game was ended - rn game ends instantly so can't be implemented
@@ -480,6 +482,7 @@ class Harold(pygame.sprite.Sprite):
     def animation_state(self):    
         self.harold_index += self.harold_idle_animation_speed # speed of animation, adjust as needed
         if self.harold_index >= len(self.harold_idle):self.harold_index = 0
+        
         self.image = self.harold_idle[int(self.harold_index)]
         self.image = pygame.transform.scale_by(self.image,3/2)
 
@@ -558,8 +561,10 @@ class Obstacle(pygame.sprite.Sprite):
     def animation_state(self):
         self.animation_index += self.obstacle_animation_speed
         if self.animation_index >= len(self.frames): self.animation_index = 0
+        
         self.image = self.frames[int(self.animation_index)]
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
+        
         if self.enemy_looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
 
@@ -630,9 +635,10 @@ class Projectile(pygame.sprite.Sprite):
     def animation_state(self):
         self.fireball_index += self.fireball_move_animation_speed # speed of animation, adjust as needed
         if self.fireball_index >= len(self.fireball_move): self.fireball_index = 0
-        self.image = self.fireball_move[int(self.fireball_index)]
         
+        self.image = self.fireball_move[int(self.fireball_index)]
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
+        
         if not self.wizard_was_looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
     
@@ -649,11 +655,12 @@ class Projectile(pygame.sprite.Sprite):
 
 # Functions
 def display_score():
+    temp_additional_score = wizard.sprite.get_additional_score()
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
-    score_surf = test_font.render(str(current_time + additional_score), False, '#FCDC4D')
+    score_surf = test_font.render(str(current_time + temp_additional_score), False, '#FCDC4D')
     score_rect = score_surf.get_rect(center = (WINDOW_WIDTH/2,WINDOW_HEIGHT/8))
     screen.blit(score_surf,score_rect)
-    return current_time + additional_score
+    return current_time + temp_additional_score
 
 def collision_sprite(): # Basically game over condition
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
@@ -663,11 +670,13 @@ def collision_sprite(): # Basically game over condition
     else: return True
 
 def projectile_collision():
+    temp_additional_score = wizard.sprite.get_additional_score()
     for projectile in projectile_group:
-        if projectile.spritecollide(projectile, obstacle_group, True):
+        if pygame.sprite.spritecollide(projectile,obstacle_group,True):
             print("HI!")
             projectile_group.remove(projectile)
-            additional_score += 5
+            temp_additional_score += 5
+            wizard.sprite.set_additional_score(temp_additional_score)
             wizard.sprite.set_fireball_hit(True)
 
     # not including checking if fireball_start_speed is 0 
@@ -738,7 +747,7 @@ title_info_rect = title_info_surf.get_rect(center = (title_info_start_pos))
 
 # Timer
 obstacle_timer = pygame.USEREVENT + 1 # + 1 to avoid events taking previous numbers by default
-pygame.time.set_timer(obstacle_timer,obstacle_spawn_frequency)
+pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
 
 # pygame.draw exists, can do rects, circles, lines, points, ellipses etc
 while True:
@@ -783,6 +792,8 @@ while True:
 
         projectile_group.draw(screen)
         projectile_group.update()
+        
+        projectile_collision()
 
         game_active = collision_sprite()
 
