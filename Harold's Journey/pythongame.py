@@ -48,6 +48,7 @@ class Player(pygame.sprite.Sprite):
         self.fireball_cooldown_time = 60
         self.current_fireball_cooldown = 0
         self.fireball_shot = False
+        self.start_fireball_animation = False
         
         # Additional Score
         self.additional_score = 0
@@ -190,7 +191,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_walk_animation_speed = 0.1
         self.wizard_jump_animation_speed = 0.075
         self.wizard_idle_animation_speed = 0.1
-        self.wizard_fireball_animation_speed = 0.25
+        self.wizard_fireball_animation_speed = 0.4
         
         # Secret Animation
         self.wizard_secret_idle_animation_speed = self.wizard_idle_animation_speed
@@ -328,10 +329,14 @@ class Player(pygame.sprite.Sprite):
         self.looking_right = mouse_x >= self.rect.centerx
         if self.fireball_shot:
             # wizard fireball animation
+            if self.start_fireball_animation:
+                self.wizard_index = 0
+                self.start_fireball_animation = False
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
             self.wizard_index += self.wizard_fireball_animation_speed # speed of animation, adjust as needed
             if self.wizard_index >= len(self.wizard_fireball): 
                 self.wizard_index = 0
+                self.start_fireball_animation = True
                 self.fireball_shot = False
             self.image = self.wizard_fireball[int(self.wizard_index)]
         elif self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping: # and add landing tracker this would be if it is off
@@ -380,6 +385,37 @@ class Player(pygame.sprite.Sprite):
         self.apply_gravity()
         self.animation_state()
         self.fireball_timer_tick()
+    
+    def reset(self):
+         # Start
+        self.wizard_start_x_pos = WINDOW_WIDTH / 2
+        self.wizard_start_y_pos = GRASS_TOP_Y
+        
+        # X Directions
+        self.wizard_x_pos = self.wizard_start_x_pos
+        self.wizard_speed = 4
+        self.wizard_x_velocity = 0
+        self.looking_right = True
+        self.wizard_moving = False
+        
+        # Y Directions
+        self.wizard_y_pos = self.wizard_start_y_pos
+        self.gravity_acceleration = GLOBAL_GRAVITY
+        self.gravity_intensity = 1 # How quickly gravity accelerates the player
+        self.wizard_jumping = False
+
+        # Fireball
+        self.fireball_hit = False
+        self.fireball_cooldown_time = 60
+        self.current_fireball_cooldown = 0
+        self.fireball_shot = False
+        self.start_fireball_animation = False
+        
+        # Additional Score
+        self.additional_score = 0
+        
+        # Secret Animation
+        self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
 
 class Harold(pygame.sprite.Sprite):
     def __init__(self):
@@ -590,28 +626,35 @@ class Projectile(pygame.sprite.Sprite):
         self.projectile_damage = 1
 
         if type == 'fireball':
-            # Fireball
-            self.fireball_move_animation_speed = 0.2
+            # Fireball - Mess with these values and the wizard's casting aniamtion to get good looking animation
+            self.fireball_move_animation_speed = 0.4
             self.fireball_transition_animation_speed = 0.4
             
+            # Wizard related 
             temp_wizard_rect = wizard.sprite.get_wizard_rect()
-            
             self.wizard_was_looking_right = wizard.sprite.get_looking_right()
             self.direction_multiplier = 1 if self.wizard_was_looking_right else -1
             
-            self.fireball_x_start = temp_wizard_rect.centerx + ((10 + WIZARD_WIDTH/2) * self.direction_multiplier)
+            # Start position
+            self.fireball_x_start = temp_wizard_rect.centerx + (16 + (WIZARD_WIDTH/2) * self.direction_multiplier)
             self.fireball_y_start = temp_wizard_rect.centery + 24
 
+            # Position
             self.fireball_x_pos = self.fireball_x_start
             self.fireball_y_pos = self.fireball_y_start
 
+            # Speed
             self.fireball_x_start_speed = 0
-
             self.fireball_speed = 5
+            
+            # Gravity
             self.fireball_gravity_when_held = 0
 
+            # Damage - To Be Implemented
             self.fireball_damage = 1
-
+            
+            # Fireball Creation
+            self.created = 0
 
             # Fireball Transition Animation
             fireball_trans_0 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_0.png').convert_alpha()
@@ -628,15 +671,24 @@ class Projectile(pygame.sprite.Sprite):
             self.fireball_move = [fireball_move_0, fireball_move_1, fireball_move_2, fireball_move_3]
 
             self.fireball_index = 0
-            self.image = self.fireball_move[self.fireball_index]
+            self.image = self.fireball_trans[self.fireball_index]
             self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
-            self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos))
+            self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos)) 
+            # If could move rect and replace later references with a method maybe would get rid of glitchy first frame at start of animation
+            # But also risks making the process slower
     
     def animation_state(self):
-        self.fireball_index += self.fireball_move_animation_speed # speed of animation, adjust as needed
-        if self.fireball_index >= len(self.fireball_move): self.fireball_index = 0
-        
-        self.image = self.fireball_move[int(self.fireball_index)]
+        if self.created < 4:
+            self.created += self.fireball_transition_animation_speed
+            self.fireball_index += self.fireball_transition_animation_speed
+            
+            if self.fireball_index >= len(self.fireball_trans): self.fireball_index = 0
+            self.image = self.fireball_trans[int(self.fireball_index)]
+        else:
+            self.fireball_index += self.fireball_move_animation_speed # speed of animation, adjust as needed
+            if self.fireball_index >= len(self.fireball_move): self.fireball_index = 0
+            
+            self.image = self.fireball_move[int(self.fireball_index)]
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
         
         if not self.wizard_was_looking_right:
@@ -644,7 +696,8 @@ class Projectile(pygame.sprite.Sprite):
     
     def update(self):
         self.animation_state()
-        self.rect.x += (self.projectile_speed * self.direction_multiplier)
+        if self.created >= 4:
+            self.rect.x += (self.projectile_speed * self.direction_multiplier)
         self.destroy()
     
     def destroy(self):
@@ -673,7 +726,6 @@ def projectile_collision():
     temp_additional_score = wizard.sprite.get_additional_score()
     for projectile in projectile_group:
         if pygame.sprite.spritecollide(projectile,obstacle_group,True):
-            print("HI!")
             projectile_group.remove(projectile)
             temp_additional_score += 5
             wizard.sprite.set_additional_score(temp_additional_score)
@@ -779,7 +831,6 @@ while True:
         screen.blit(sky_surf,(0,0))
         screen.blit(ground_surf,(0,0))
         score = display_score()
-        # (mouse_x,mouse_y) = pygame.mouse.get_pos()
 
         wizard.draw(screen) # draws sprites
         harold.draw(screen)
@@ -799,22 +850,23 @@ while True:
 
     # Menu Screen
     else:
+        wizard.sprite.reset()
         screen.fill('#54428E')
         screen.blit(wizard_title_surf,wizard_title_rect)
         screen.blit(harold_title_surf,harold_title_rect)
         screen.blit(title_info_surf,title_info_rect)
 
         wizard_title_rect.midbottom = (wizard_title_start_x_pos,wizard_title_start_y_pos)
-        wizard.sprite.set_wizard_gravity(0)
-        wizard.sprite.set_wizard_x_velocity(0)
-        temp_wizard_x_pos = wizard.sprite.get_wizard_start_x_pos()
-        temp_wizard_y_pos = wizard.sprite.get_wizard_start_y_pos()
-        wizard.sprite.set_wizard_x_pos(temp_wizard_x_pos)
-        wizard.sprite.set_wizard_y_pos(temp_wizard_y_pos)
+        # wizard.sprite.set_wizard_gravity(0)
+        # wizard.sprite.set_wizard_x_velocity(0)
+        # temp_wizard_x_pos = wizard.sprite.get_wizard_start_x_pos()
+        # temp_wizard_y_pos = wizard.sprite.get_wizard_start_y_pos()
+        # wizard.sprite.set_wizard_x_pos(temp_wizard_x_pos)
+        # wizard.sprite.set_wizard_y_pos(temp_wizard_y_pos)
 
         harold_title_rect.midbottom = (harold_title_start_x_pos,harold_title_start_y_pos)
-        harold_gravity = 0
-        harold_x_velocity = 0
+        # harold_gravity = 0
+        # harold_x_velocity = 0
 
         score_message_surf = test_font.render('Score: ' + str(score),False,"#FCDC4D")
         score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
