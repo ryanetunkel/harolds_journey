@@ -2,7 +2,6 @@ import pygame
 from sys import exit
 from random import randint, choice
 
-# Make fireball work in air
 WINDOW_WIDTH = 800 * 3/2
 WINDOW_HEIGHT = 400 * 3/2
 PIXEL_SIZE = 4
@@ -673,6 +672,8 @@ class Projectile(pygame.sprite.Sprite):
             self.fireball_index = 0
             self.image = self.fireball_trans[self.fireball_index]
             self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
+            if not self.wizard_was_looking_right:
+                self.image = pygame.transform.flip(self.image,True,False)
             self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos)) 
             # If could move rect and replace later references with a method maybe would get rid of glitchy first frame at start of animation
             # But also risks making the process slower
