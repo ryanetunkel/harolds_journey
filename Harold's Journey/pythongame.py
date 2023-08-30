@@ -51,6 +51,9 @@ class Player(pygame.sprite.Sprite):
         
         # Additional Score
         self.additional_score = 0
+        
+        # Death
+        self.wizard_dead = False
 
         # Wizard Idle Animation  
         wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
@@ -180,6 +183,43 @@ class Player(pygame.sprite.Sprite):
                         wizard_fireball_04, wizard_fireball_05, wizard_fireball_06, wizard_fireball_07,
                         wizard_fireball_08, wizard_fireball_09, wizard_fireball_10, wizard_fireball_11]
 
+        # Wizard Death Animation
+        wizard_death_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_00.png').convert_alpha()
+        wizard_death_01 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_01.png').convert_alpha()
+        wizard_death_02 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_02.png').convert_alpha()
+        wizard_death_03 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_03.png').convert_alpha()
+        wizard_death_04 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_04.png').convert_alpha()
+        wizard_death_05 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_05.png').convert_alpha()
+        wizard_death_06 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_06.png').convert_alpha()
+        wizard_death_07 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_07.png').convert_alpha()
+        wizard_death_08 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_08.png').convert_alpha()
+        wizard_death_09 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_09.png').convert_alpha()
+        wizard_death_10 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_10.png').convert_alpha()
+        wizard_death_11 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_11.png').convert_alpha()
+        wizard_death_12 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_12.png').convert_alpha()
+        wizard_death_13 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_13.png').convert_alpha()
+        wizard_death_14 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_14.png').convert_alpha()
+        wizard_death_15 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_15.png').convert_alpha()
+        wizard_death_16 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_16.png').convert_alpha()
+        wizard_death_17 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_17.png').convert_alpha()
+        wizard_death_18 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_18.png').convert_alpha()
+        wizard_death_19 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_19.png').convert_alpha()
+        wizard_death_20 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_20.png').convert_alpha()
+        wizard_death_21 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_21.png').convert_alpha()
+        wizard_death_22 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_22.png').convert_alpha()
+        wizard_death_23 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_23.png').convert_alpha()
+        wizard_death_24 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_24.png').convert_alpha()
+        wizard_death_25 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_25.png').convert_alpha()
+        wizard_death_26 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_26.png').convert_alpha()
+        wizard_death_27 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_27.png').convert_alpha()
+        self.wizard_death = [wizard_death_00, wizard_death_01, wizard_death_02, wizard_death_03,
+                    wizard_death_04, wizard_death_05, wizard_death_06, wizard_death_07,
+                    wizard_death_08, wizard_death_09, wizard_death_10, wizard_death_11,
+                    wizard_death_12, wizard_death_13, wizard_death_14, wizard_death_15,
+                    wizard_death_16, wizard_death_17, wizard_death_18, wizard_death_19,
+                    wizard_death_20, wizard_death_21, wizard_death_22, wizard_death_23,
+                    wizard_death_24, wizard_death_25, wizard_death_26, wizard_death_27]
+
         self.wizard_index = 0
         self.image = self.wizard_walk[self.wizard_index]
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
@@ -191,6 +231,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_jump_animation_speed = 0.075
         self.wizard_idle_animation_speed = 0.1
         self.wizard_fireball_animation_speed = 0.4
+        self.wizard_death_animation_speed = 0.1
         
         # Secret Animation
         self.wizard_secret_idle_animation_speed = self.wizard_idle_animation_speed
@@ -300,6 +341,12 @@ class Player(pygame.sprite.Sprite):
     def set_additional_score(self,new_additional_score):
         self.additional_score = new_additional_score
 
+    def get_wizard_dead(self):
+        return self.wizard_dead
+    
+    def set_wizard_dead(self,new_wizard_dead):
+        self.wizard_dead = new_wizard_dead
+
     def wizard_input(self):
         keys = pygame.key.get_pressed()
         if keys[jump_button] and self.rect.bottom >= GRASS_TOP_Y:
@@ -314,7 +361,7 @@ class Player(pygame.sprite.Sprite):
             self.wizard_x_velocity = self.wizard_speed
             self.rect.x -= self.wizard_x_velocity
             self.wizard_moving = True
-        elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]):
+        elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]): 
             self.wizard_x_velocity = 0
             self.wizard_moving = False
         
@@ -324,50 +371,56 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
         
     def animation_state(self):
-        (mouse_x,mouse_y) = pygame.mouse.get_pos()
-        self.looking_right = mouse_x >= self.rect.centerx
-        if self.fireball_shot:
-            # wizard fireball animation
-            if self.start_fireball_animation:
-                self.wizard_index = 0
-                self.start_fireball_animation = False
+        if not self.wizard_dead:
+            (mouse_x,mouse_y) = pygame.mouse.get_pos()
+            self.looking_right = mouse_x >= self.rect.centerx
+            if self.fireball_shot:
+                # wizard fireball animation
+                if self.start_fireball_animation:
+                    self.wizard_index = 0
+                    self.start_fireball_animation = False
+                self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+                self.wizard_index += self.wizard_fireball_animation_speed # speed of animation, adjust as needed
+                if self.wizard_index >= len(self.wizard_fireball): 
+                    self.wizard_index = 0
+                    self.start_fireball_animation = True
+                    self.fireball_shot = False
+                self.image = self.wizard_fireball[int(self.wizard_index)]
+            elif self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping: # and add landing tracker this would be if it is off
+                # jump (first half)
+                self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+                self.wizard_index += self.wizard_jump_animation_speed # speed of animation, adjust as needed
+                if self.wizard_index >= len(self.wizard_jump): self.wizard_index = 0
+                self.image = self.wizard_jump[int(self.wizard_index)]
+                # this is it raw with no adjustment
+                # below is the ideal
+                # wizard_surf = wizard_jump[0,7] # can't just do this need to go through
+                # 8 - 14 need to be when reach peak, prob cut and edit which goes where
+                # and add landing tracker this would be if landed
+                # landing animation for a few frames via timer and then when ends revert to idle
+            elif self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
+                self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+                self.wizard_index += self.wizard_walk_animation_speed # speed of animation, adjust as needed
+                if self.wizard_index >= len(self.wizard_walk): self.wizard_index = 0
+                self.image = self.wizard_walk[int(self.wizard_index)]
+            elif not self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
+                if self.wizard_secret_animation_timer != 0:
+                    self.wizard_index += self.wizard_idle_animation_speed # speed of animation, adjust as needed
+                    if self.wizard_index >= len(self.wizard_idle): self.wizard_index = 0
+                    self.image = self.wizard_idle[int(self.wizard_index)]
+                    # idle animation
+                    # start timer that last for a few rounds of idle animation until would do the second
+                    self.wizard_secret_animation_timer -= 1
+                else:
+                    self.wizard_index += self.wizard_secret_idle_animation_speed # speed of animation, adjust as needed
+                    if self.wizard_index >= len(self.wizard_secret_idle): self.wizard_index = 0
+                    self.image = self.wizard_secret_idle[int(self.wizard_index)]
+        else:
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
-            self.wizard_index += self.wizard_fireball_animation_speed # speed of animation, adjust as needed
-            if self.wizard_index >= len(self.wizard_fireball): 
-                self.wizard_index = 0
-                self.start_fireball_animation = True
-                self.fireball_shot = False
-            self.image = self.wizard_fireball[int(self.wizard_index)]
-        elif self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping: # and add landing tracker this would be if it is off
-            # jump (first half)
-            self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
-            self.wizard_index += self.wizard_jump_animation_speed # speed of animation, adjust as needed
-            if self.wizard_index >= len(self.wizard_jump): self.wizard_index = 0
-            self.image = self.wizard_jump[int(self.wizard_index)]
-            # this is it raw with no adjustment
-            # below is the ideal
-            # wizard_surf = wizard_jump[0,7] # can't just do this need to go through
-            # 8 - 14 need to be when reach peak, prob cut and edit which goes where
-            # and add landing tracker this would be if landed
-            # landing animation for a few frames via timer and then when ends revert to idle
-        elif self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
-            self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
-            self.wizard_index += self.wizard_walk_animation_speed # speed of animation, adjust as needed
-            if self.wizard_index >= len(self.wizard_walk): self.wizard_index = 0
-            self.image = self.wizard_walk[int(self.wizard_index)]
-        elif not self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
-            if self.wizard_secret_animation_timer != 0:
-                self.wizard_index += self.wizard_idle_animation_speed # speed of animation, adjust as needed
-                if self.wizard_index >= len(self.wizard_idle): self.wizard_index = 0
-                self.image = self.wizard_idle[int(self.wizard_index)]
-                # idle animation
-                # start timer that last for a few rounds of idle animation until would do the second
-                self.wizard_secret_animation_timer -= 1
-            else:
-                self.wizard_index += self.wizard_secret_idle_animation_speed # speed of animation, adjust as needed
-                if self.wizard_index >= len(self.wizard_secret_idle): self.wizard_index = 0
-                self.image = self.wizard_secret_idle[int(self.wizard_index)]
-
+            self.wizard_index += self.wizard_death_animation_speed
+            if self.wizard_index >= len(self.wizard_death): self.wizard_dead = False
+            self.image = self.wizard_death[int(self.wizard_index)]
+        
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
         
         if not self.looking_right:
@@ -412,6 +465,9 @@ class Player(pygame.sprite.Sprite):
         
         # Additional Score
         self.additional_score = 0
+        
+        # Wizard Death
+        self.wizard_dead = False
         
         # Secret Animation
         self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
@@ -749,6 +805,7 @@ test_font = pygame.font.Font('Harold\'s Journey/font/Pixeltype.ttf',50)
 pygame_icon = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
 pygame.display.set_icon(pygame_icon)
 game_active = False
+wizard_alive = False
 start_time = 0
 # Music
 # bg_music = pygame.mixer.Sound()
@@ -819,33 +876,49 @@ while True:
         else:
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                 game_active = True
+                wizard_alive = True
                 start_time = int(pygame.time.get_ticks() / 1000)
                 additional_score = 0
 
     # Active Game
-    if game_active:    
-        screen.blit(sky_surf,(0,0))
-        screen.blit(ground_surf,(0,0))
-        score = display_score()
+    if game_active:
+        death_counter = 0
+        if wizard_alive: 
+            screen.blit(sky_surf,(0,0))
+            screen.blit(ground_surf,(0,0))
+            score = display_score()
 
-        wizard.draw(screen) # draws sprites
-        harold.draw(screen)
-        
-        wizard.update() # updates sprites
-        harold.update()
+            wizard.draw(screen) # draws sprites
+            harold.draw(screen)
+            
+            wizard.update() # updates sprites
+            harold.update()
 
-        obstacle_group.draw(screen)
-        obstacle_group.update()
+            obstacle_group.draw(screen)
+            obstacle_group.update()
 
-        projectile_group.draw(screen)
-        projectile_group.update()
-        
-        projectile_collision()
+            projectile_group.draw(screen)
+            projectile_group.update()
+            
+            projectile_collision()
 
-        game_active = collision_sprite()
+            wizard_alive = collision_sprite()
 
+        else: # Work on death animation
+            screen.blit(sky_surf,(0,0))
+            screen.blit(ground_surf,(0,0))
+            # Need to move harold
+            wizard.draw(screen) # draws sprites
+            harold.draw(screen)
+            
+            wizard.update() # updates sprites
+            harold.update()
+            death_counter += 1
+            if death_counter < 120:
+                game_active = False
+            
     # Menu Screen
-    else:
+    else:         
         wizard.sprite.reset()
         screen.fill('#54428E')
         screen.blit(wizard_title_surf,wizard_title_rect)
