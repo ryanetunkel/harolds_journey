@@ -2,7 +2,7 @@ import pygame
 from sys import exit
 from random import randint, choice
 
-# Working on features being scalable to window size, need to adjust positions for the menu screen
+# Make fireball work in air
 WINDOW_WIDTH = 800 * 3/2
 WINDOW_HEIGHT = 400 * 3/2
 PIXEL_SIZE = 4
@@ -730,11 +730,6 @@ def projectile_collision():
             temp_additional_score += 5
             wizard.sprite.set_additional_score(temp_additional_score)
             wizard.sprite.set_fireball_hit(True)
-
-    # not including checking if fireball_start_speed is 0 
-    # might make it so can still damage enemies if they 
-    # walk into you but if you die first it doesn't really 
-    # matter - could affect the score though
 
 # can't implement health and damage sources as the variables aren't attached 
 # to the individual projectiles and obstacles, they are global for all of them
