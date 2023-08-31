@@ -231,7 +231,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_jump_animation_speed = 0.075
         self.wizard_idle_animation_speed = 0.1
         self.wizard_fireball_animation_speed = 0.4
-        self.wizard_death_animation_speed = 0.1
+        self.wizard_death_animation_speed = 0.2
         
         # Secret Animation
         self.wizard_secret_idle_animation_speed = self.wizard_idle_animation_speed
@@ -268,6 +268,15 @@ class Player(pygame.sprite.Sprite):
 
     def get_wizard_rect(self):
         return self.rect
+    
+    def set_wizard_rect(self,new_rect):
+        self.rect = new_rect
+    
+    def get_wizard_image(self):
+        return self.image
+    
+    def set_wizard_image(self,new_image):
+        self.image = new_image
     
     def get_wizard_speed(self):
         return self.wizard_speed
@@ -349,21 +358,22 @@ class Player(pygame.sprite.Sprite):
 
     def wizard_input(self):
         keys = pygame.key.get_pressed()
-        if keys[jump_button] and self.rect.bottom >= GRASS_TOP_Y:
-            self.wizard_jumping = True
-            self.wizard_gravity = self.gravity_acceleration
-            # self.jump_sound.play()
-        if keys[right_button] and self.rect.x + WIZARD_WIDTH + self.wizard_speed < WINDOW_WIDTH:
-            self.wizard_x_velocity = self.wizard_speed
-            self.rect.x += self.wizard_x_velocity
-            self.wizard_moving = True
-        if keys[left_button] and self.rect.x - self.wizard_speed > 0:
-            self.wizard_x_velocity = self.wizard_speed
-            self.rect.x -= self.wizard_x_velocity
-            self.wizard_moving = True
-        elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]): 
-            self.wizard_x_velocity = 0
-            self.wizard_moving = False
+        if not self.wizard_dead:
+            if keys[jump_button] and self.rect.bottom >= GRASS_TOP_Y:
+                self.wizard_jumping = True
+                self.wizard_gravity = self.gravity_acceleration
+                # self.jump_sound.play()
+            if keys[right_button] and self.rect.x + WIZARD_WIDTH + self.wizard_speed < WINDOW_WIDTH:
+                self.wizard_x_velocity = self.wizard_speed
+                self.rect.x += self.wizard_x_velocity
+                self.wizard_moving = True
+            if keys[left_button] and self.rect.x - self.wizard_speed > 0:
+                self.wizard_x_velocity = self.wizard_speed
+                self.rect.x -= self.wizard_x_velocity
+                self.wizard_moving = True
+            elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]): 
+                self.wizard_x_velocity = 0
+                self.wizard_moving = False
         
     def apply_gravity(self):
         self.wizard_gravity += self.gravity_intensity
@@ -417,8 +427,8 @@ class Player(pygame.sprite.Sprite):
                     self.image = self.wizard_secret_idle[int(self.wizard_index)]
         else:
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
-            self.wizard_index += self.wizard_death_animation_speed
-            if self.wizard_index >= len(self.wizard_death): self.wizard_dead = False
+            if self.wizard_index + self.wizard_death_animation_speed < len(self.wizard_death):
+                self.wizard_index += self.wizard_death_animation_speed
             self.image = self.wizard_death[int(self.wizard_index)]
         
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
@@ -471,22 +481,36 @@ class Player(pygame.sprite.Sprite):
         
         # Secret Animation
         self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+        
+        # Wizard Index
+        self.wizard_index = 0
+        self.image = self.wizard_walk[self.wizard_index]
+        self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
+        self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
 
 class Harold(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        # Harold
-        self.harold_idle_animation_speed = 0.1
         
+        # Temp Wizard Attribute
         temp_wizard_rect = wizard.sprite.get_wizard_rect()
+        
+        # Harold Start
         self.harold_start_x_pos = temp_wizard_rect.centerx
         self.harold_start_y_pos = temp_wizard_rect.top + 28 # pixels at this scale based on wizard are 4 pixels each
+        
+        # Harold X Values
         self.harold_x_pos = self.harold_start_x_pos
         self.harold_speed = wizard.sprite.get_wizard_speed()
         self.harold_x_velocity = 0
+        
+        # Harold Y Values
         self.harold_y_pos = self.harold_start_y_pos
         self.harold_gravity = 0
         self.gravity_acceleration = GLOBAL_GRAVITY
+        
+        # Harold Animation Speed
+        self.harold_idle_animation_speed = 0.1
 
         # Harold Idle Animation
         harold_idle_00 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
@@ -517,7 +541,6 @@ class Harold(pygame.sprite.Sprite):
                     harold_idle_16, harold_idle_17, harold_idle_18, harold_idle_19,
                     harold_idle_20]
 
-        # harold_surf = pygame.transform.flip(harold_surf, True, False)
         self.harold_index = 0
         self.image = self.harold_idle[self.harold_index]
         self.image = pygame.transform.scale_by(self.image,3/2)
@@ -555,20 +578,30 @@ class Harold(pygame.sprite.Sprite):
 
     def harold_input(self):
         keys = pygame.key.get_pressed()
-        if keys[jump_button] and self.rect.bottom >= self.harold_start_y_pos:
-            # self.jump_sound.play()
-            self.harold_gravity = self.gravity_acceleration
-        if keys[right_button] and wizard.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < WINDOW_WIDTH:
-            self.harold_x_velocity = self.harold_speed
-            self.rect.x += self.harold_x_velocity
-        if keys[left_button] and wizard.sprite.get_wizard_rect().x - self.harold_speed > 0:
-            self.harold_x_velocity = self.harold_speed
-            self.rect.x -= self.harold_x_velocity
+        if not wizard.sprite.get_wizard_dead():
+            if keys[jump_button] and self.rect.bottom >= self.harold_start_y_pos:
+                # self.jump_sound.play()
+                self.harold_gravity = self.gravity_acceleration
+            if keys[right_button] and wizard.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < WINDOW_WIDTH:
+                self.harold_x_velocity = self.harold_speed
+                self.rect.x += self.harold_x_velocity
+            if keys[left_button] and wizard.sprite.get_wizard_rect().x - self.harold_speed > 0:
+                self.harold_x_velocity = self.harold_speed
+                self.rect.x -= self.harold_x_velocity
     
     def apply_gravity(self):
-        self.harold_gravity += 1
-        self.rect.y += self.harold_gravity
-        if self.rect.bottom >= self.harold_start_y_pos: self.rect.bottom = self.harold_start_y_pos
+        if not wizard.sprite.get_wizard_dead():
+            self.harold_gravity += 1
+            self.rect.y += self.harold_gravity
+            if self.rect.bottom >= self.harold_start_y_pos: self.rect.bottom = self.harold_start_y_pos
+        else:
+            if wizard.sprite.get_wizard_jumping():
+                self.harold_gravity += 0.4
+                self.rect.y += self.harold_gravity
+                if self.rect.bottom >= GRASS_TOP_Y - 20 : self.rect.bottom = GRASS_TOP_Y - 20
+            else:
+                self.rect.y += 0.5
+                if self.rect.bottom >= GRASS_TOP_Y - 20: self.rect.bottom = GRASS_TOP_Y - 20
 
     def animation_state(self):    
         self.harold_index += self.harold_idle_animation_speed # speed of animation, adjust as needed
@@ -584,7 +617,32 @@ class Harold(pygame.sprite.Sprite):
         self.harold_input()
         self.apply_gravity()
         self.animation_state()
+        
+    def reset(self):
+        # Temp Wizard Attribute
+        temp_wizard_rect = wizard.sprite.get_wizard_rect()
+        
+        # Harold Start
+        self.harold_start_x_pos = temp_wizard_rect.centerx
+        self.harold_start_y_pos = temp_wizard_rect.top + 28 # pixels at this scale based on wizard are 4 pixels each
+        
+        # Harold X Values
+        self.harold_x_pos = self.harold_start_x_pos
+        self.harold_speed = wizard.sprite.get_wizard_speed()
+        self.harold_x_velocity = 0
+        
+        # Harold Y Values
+        self.harold_y_pos = self.harold_start_y_pos
+        self.harold_gravity = 0
+        self.gravity_acceleration = GLOBAL_GRAVITY
+        
+        # Harold Animation Speed
+        self.harold_idle_animation_speed = 0.1
 
+        self.harold_index = 0
+        self.image = self.harold_idle[self.harold_index]
+        self.image = pygame.transform.scale_by(self.image,3/2)
+        self.rect = self.image.get_rect(midbottom = (self.harold_x_pos,self.harold_y_pos))
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, type):
@@ -807,6 +865,7 @@ pygame.display.set_icon(pygame_icon)
 game_active = False
 wizard_alive = False
 start_time = 0
+death_counter = 0
 # Music
 # bg_music = pygame.mixer.Sound()
 # bg_music.play(loops = -1)
@@ -882,7 +941,6 @@ while True:
 
     # Active Game
     if game_active:
-        death_counter = 0
         if wizard_alive: 
             screen.blit(sky_surf,(0,0))
             screen.blit(ground_surf,(0,0))
@@ -905,6 +963,7 @@ while True:
             wizard_alive = collision_sprite()
 
         else: # Work on death animation
+            wizard.sprite.set_wizard_dead(True)
             screen.blit(sky_surf,(0,0))
             screen.blit(ground_surf,(0,0))
             # Need to move harold
@@ -914,12 +973,14 @@ while True:
             wizard.update() # updates sprites
             harold.update()
             death_counter += 1
-            if death_counter < 120:
+            if death_counter > 120:
                 game_active = False
             
     # Menu Screen
     else:         
         wizard.sprite.reset()
+        harold.sprite.reset()
+        death_counter = 0
         screen.fill('#54428E')
         screen.blit(wizard_title_surf,wizard_title_rect)
         screen.blit(harold_title_surf,harold_title_rect)
