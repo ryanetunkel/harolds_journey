@@ -21,9 +21,18 @@ left_button = pygame.K_a
 shoot_button = pygame.MOUSEBUTTONDOWN
 
 # Sounds
-JUMP_SOUND_VOLUME = 0.2
+JUMP_SOUND_VOLUME = 0.3
 FIREBALL_SOUND_VOLUME = 0.2
-BG_MUSIC_VOLUME = 0.2
+WALK_SOUND_VOLUME = 0.8
+SKELETON_DEATH_VOLUME = 0.2
+BG_MUSIC_VOLUME = 0 # 0.4
+
+# Channels
+BG_MUSIC_CHANNEL = 0
+FIREBALL_SOUND_CHANNEL = 1
+WALK_SOUND_CHANNEL = 2
+JUMP_SOUND_CHANNEL = 3
+SKELETON_DEATH_CHANNEL = 4
 
 # Score
 score = 0
@@ -251,6 +260,10 @@ class Player(pygame.sprite.Sprite):
         self.jump_sound.set_volume(JUMP_SOUND_VOLUME)
         self.fireball_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Blops/Retro Blop 07.wav')
         self.fireball_sound.set_volume(FIREBALL_SOUND_VOLUME)
+        self.walk_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/FootStep/Retro FootStep Grass 01.wav')
+        self.walk_sound.set_volume(WALK_SOUND_VOLUME)
+        self.walk_sound_timer = 0
+        self.walk_sound_length = 1 * 40
 
     def get_wizard_pos(self):
         return (self.wizard_x_pos,self.wizard_y_pos)
@@ -367,7 +380,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_dead = new_wizard_dead
     
     def play_fireball_sound(self):
-        pygame.mixer.Channel(1).play(self.fireball_sound)
+        pygame.mixer.Channel(FIREBALL_SOUND_CHANNEL).play(self.fireball_sound)
 
     def wizard_input(self):
         keys = pygame.key.get_pressed()
@@ -376,7 +389,7 @@ class Player(pygame.sprite.Sprite):
                 self.wizard_jumping = True
                 self.wizard_gravity = self.gravity_acceleration
                 # Jump Sound
-                pygame.mixer.Channel(2).play(self.jump_sound)
+                pygame.mixer.Channel(JUMP_SOUND_CHANNEL).play(self.jump_sound)
             if keys[right_button] and self.rect.x + WIZARD_WIDTH + self.wizard_speed < WINDOW_WIDTH:
                 self.wizard_x_velocity = self.wizard_speed
                 self.rect.x += self.wizard_x_velocity
@@ -388,6 +401,12 @@ class Player(pygame.sprite.Sprite):
             elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]): 
                 self.wizard_x_velocity = 0
                 self.wizard_moving = False
+            if self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y and self.walk_sound_timer >= self.walk_sound_length:
+                # Walk Sound
+                pygame.mixer.Channel(WALK_SOUND_CHANNEL).play(self.walk_sound)
+                self.walk_sound_timer = 0
+            if self.walk_sound_timer < self.walk_sound_length:
+                 self.walk_sound_timer += 1
         
     def apply_gravity(self):
         self.wizard_gravity += self.gravity_intensity
@@ -854,6 +873,7 @@ def projectile_collision():
     temp_additional_score = wizard.sprite.get_additional_score()
     for projectile in projectile_group:
         if pygame.sprite.spritecollide(projectile,obstacle_group,True):
+            pygame.mixer.Channel(SKELETON_DEATH_CHANNEL).play(skeleton_death_sound)
             projectile_group.remove(projectile)
             temp_additional_score += 5
             wizard.sprite.set_additional_score(temp_additional_score)
@@ -882,6 +902,10 @@ death_counter = 0
 # Music
 bg_music = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Ambience/Retro Ambience Short 09.wav')
 bg_music.set_volume(BG_MUSIC_VOLUME)
+bg_music_timer = 0
+# Gobal Sounds
+skeleton_death_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Explosion/Retro Explosion Short 01.wav')
+skeleton_death_sound.set_volume(SKELETON_DEATH_VOLUME)
 
 wizard = pygame.sprite.GroupSingle()
 wizard.add(Player())
@@ -955,8 +979,12 @@ while True:
 
     # Active Game
     if game_active:
-        pygame.mixer.Channel(0).play(bg_music)
+        if bg_music_timer == 0:
+            pygame.mixer.Channel(BG_MUSIC_CHANNEL).play(bg_music)
+        elif bg_music_timer >= (25 * 60):
+            bg_music_timer = -1
         if wizard_alive: 
+            bg_music_timer += 1
             screen.blit(sky_surf,(0,0))
             screen.blit(ground_surf,(0,0))
             score = display_score()
@@ -996,6 +1024,7 @@ while True:
         wizard.sprite.reset()
         harold.sprite.reset()
         death_counter = 0
+        bg_music_timer = 0
         screen.fill('#54428E')
         screen.blit(wizard_title_surf,wizard_title_rect)
         screen.blit(harold_title_surf,harold_title_rect)
