@@ -23,9 +23,10 @@ shoot_button = pygame.MOUSEBUTTONDOWN
 # Sounds
 JUMP_SOUND_VOLUME = 0.3
 FIREBALL_SOUND_VOLUME = 0.2
-WALK_SOUND_VOLUME = 0.8
+WALK_SOUND_VOLUME = 0.3
 SKELETON_DEATH_VOLUME = 0.2
-BG_MUSIC_VOLUME = 0 # 0.4
+BG_MUSIC_VOLUME = 0.4
+SECRET_SOUND_VOLUME = 0.6
 
 # Channels
 BG_MUSIC_CHANNEL = 0
@@ -33,6 +34,7 @@ FIREBALL_SOUND_CHANNEL = 1
 WALK_SOUND_CHANNEL = 2
 JUMP_SOUND_CHANNEL = 3
 SKELETON_DEATH_CHANNEL = 4
+SECRET_SOUND_CHANNEL = 7
 
 # Score
 score = 0
@@ -262,8 +264,12 @@ class Player(pygame.sprite.Sprite):
         self.fireball_sound.set_volume(FIREBALL_SOUND_VOLUME)
         self.walk_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/FootStep/Retro FootStep Grass 01.wav')
         self.walk_sound.set_volume(WALK_SOUND_VOLUME)
-        self.walk_sound_timer = 0
         self.walk_sound_length = 1 * 40
+        self.walk_sound_timer = self.walk_sound_length
+        self.secret_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/PowerUp/Retro PowerUP 09.wav')
+        self.secret_sound.set_volume(SECRET_SOUND_VOLUME)
+        self.secret_sound_timer = 0
+        self.secret_sound_length = (len(self.wizard_secret_idle) / self.wizard_secret_idle_animation_speed) / 60 # gives exact time for animation to play once
 
     def get_wizard_pos(self):
         return (self.wizard_x_pos,self.wizard_y_pos)
@@ -406,7 +412,7 @@ class Player(pygame.sprite.Sprite):
                 pygame.mixer.Channel(WALK_SOUND_CHANNEL).play(self.walk_sound)
                 self.walk_sound_timer = 0
             if self.walk_sound_timer < self.walk_sound_length:
-                 self.walk_sound_timer += 1
+                self.walk_sound_timer += 1
         
     def apply_gravity(self):
         self.wizard_gravity += self.gravity_intensity
@@ -423,6 +429,7 @@ class Player(pygame.sprite.Sprite):
                     self.wizard_index = 0
                     self.start_fireball_animation = False
                 self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+                self.secret_sound_timer = 0
                 self.wizard_index += self.wizard_fireball_animation_speed # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_fireball): 
                     self.wizard_index = 0
@@ -432,6 +439,7 @@ class Player(pygame.sprite.Sprite):
             elif self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping: # and add landing tracker this would be if it is off
                 # jump (first half)
                 self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+                self.secret_sound_timer = 0
                 self.wizard_index += self.wizard_jump_animation_speed # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_jump): self.wizard_index = 0
                 self.image = self.wizard_jump[int(self.wizard_index)]
@@ -443,6 +451,7 @@ class Player(pygame.sprite.Sprite):
                 # landing animation for a few frames via timer and then when ends revert to idle
             elif self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
                 self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+                self.secret_sound_timer = 0
                 self.wizard_index += self.wizard_walk_animation_speed # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_walk): self.wizard_index = 0
                 self.image = self.wizard_walk[int(self.wizard_index)]
@@ -458,6 +467,13 @@ class Player(pygame.sprite.Sprite):
                     self.wizard_index += self.wizard_secret_idle_animation_speed # speed of animation, adjust as needed
                     if self.wizard_index >= len(self.wizard_secret_idle): self.wizard_index = 0
                     self.image = self.wizard_secret_idle[int(self.wizard_index)]
+                    
+                    if self.secret_sound_timer >= self.secret_sound_length:
+                        # Secret Sound
+                        pygame.mixer.Channel(SECRET_SOUND_CHANNEL).play(self.secret_sound)
+                        self.secret_sound_timer = 0
+                    if self.secret_sound_timer < self.secret_sound_length:
+                        self.secret_sound_timer += 1
         else:
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
             if self.wizard_index + self.wizard_death_animation_speed < len(self.wizard_death):
