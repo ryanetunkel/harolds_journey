@@ -14,10 +14,18 @@ GLOBAL_GRAVITY = -20
 
 OBSTACLE_SPAWN_FREQUENCY = 1500 # In milliseconds, 1000 = 1 sec
 
+# Controls
 jump_button = pygame.K_SPACE
 right_button = pygame.K_d
 left_button = pygame.K_a
 shoot_button = pygame.MOUSEBUTTONDOWN
+
+# Sounds
+JUMP_SOUND_VOLUME = 0.2
+FIREBALL_SOUND_VOLUME = 0.2
+BG_MUSIC_VOLUME = 0.2
+
+# Score
 score = 0
 
 # Classes
@@ -239,8 +247,10 @@ class Player(pygame.sprite.Sprite):
         self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
 
         # Sounds
-        # self.jump_sound = pygame.mixer.Sound(...)
-        # self.jump_sound.set_volume(0.5)
+        self.jump_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Bounce Jump/Retro Jump Classic 08.wav')
+        self.jump_sound.set_volume(JUMP_SOUND_VOLUME)
+        self.fireball_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Blops/Retro Blop 07.wav')
+        self.fireball_sound.set_volume(FIREBALL_SOUND_VOLUME)
 
     def get_wizard_pos(self):
         return (self.wizard_x_pos,self.wizard_y_pos)
@@ -355,6 +365,9 @@ class Player(pygame.sprite.Sprite):
     
     def set_wizard_dead(self,new_wizard_dead):
         self.wizard_dead = new_wizard_dead
+    
+    def play_fireball_sound(self):
+        pygame.mixer.Channel(1).play(self.fireball_sound)
 
     def wizard_input(self):
         keys = pygame.key.get_pressed()
@@ -362,7 +375,8 @@ class Player(pygame.sprite.Sprite):
             if keys[jump_button] and self.rect.bottom >= GRASS_TOP_Y:
                 self.wizard_jumping = True
                 self.wizard_gravity = self.gravity_acceleration
-                # self.jump_sound.play()
+                # Jump Sound
+                pygame.mixer.Channel(2).play(self.jump_sound)
             if keys[right_button] and self.rect.x + WIZARD_WIDTH + self.wizard_speed < WINDOW_WIDTH:
                 self.wizard_x_velocity = self.wizard_speed
                 self.rect.x += self.wizard_x_velocity
@@ -580,7 +594,6 @@ class Harold(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if not wizard.sprite.get_wizard_dead():
             if keys[jump_button] and self.rect.bottom >= self.harold_start_y_pos:
-                # self.jump_sound.play()
                 self.harold_gravity = self.gravity_acceleration
             if keys[right_button] and wizard.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < WINDOW_WIDTH:
                 self.harold_x_velocity = self.harold_speed
@@ -867,8 +880,8 @@ wizard_alive = False
 start_time = 0
 death_counter = 0
 # Music
-# bg_music = pygame.mixer.Sound()
-# bg_music.play(loops = -1)
+bg_music = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Ambience/Retro Ambience Short 09.wav')
+bg_music.set_volume(BG_MUSIC_VOLUME)
 
 wizard = pygame.sprite.GroupSingle()
 wizard.add(Player())
@@ -926,6 +939,7 @@ while True:
                 obstacle_group.add(Obstacle(choice(['flying_enemy','skeleton','skeleton','skeleton'])))
             if event.type == shoot_button:
                 if wizard.sprite.get_current_fireball_cooldown() == 0 or wizard.sprite.get_fireball_hit():
+                    wizard.sprite.play_fireball_sound()
                     wizard.sprite.set_fireball_shot(True)
                     temp_fireball_cooldown_time = wizard.sprite.get_fireball_cooldown_time()
                     wizard.sprite.set_current_fireball_cooldown(temp_fireball_cooldown_time)
@@ -941,6 +955,7 @@ while True:
 
     # Active Game
     if game_active:
+        pygame.mixer.Channel(0).play(bg_music)
         if wizard_alive: 
             screen.blit(sky_surf,(0,0))
             screen.blit(ground_surf,(0,0))
