@@ -469,7 +469,9 @@ class Player(pygame.sprite.Sprite):
                     self.image = self.wizard_secret_idle[int(self.wizard_index)]
                     
                     if self.secret_sound_timer >= self.secret_sound_length:
-                        # Secret Sound
+                        # Secret Sound - Plays too much, look at how secret_sound_timer and secret_sound_limit work together
+                        # Should work as timer counts up to limit, plays song, resets to 0, begins counting up again
+                        # Want the sound to play at the end of the animation, seems to play from beginning to end every frame-ish
                         pygame.mixer.Channel(SECRET_SOUND_CHANNEL).play(self.secret_sound)
                         self.secret_sound_timer = 0
                     if self.secret_sound_timer < self.secret_sound_length:
