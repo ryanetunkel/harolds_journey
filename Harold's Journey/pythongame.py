@@ -21,11 +21,12 @@ left_button = pygame.K_a
 shoot_button = pygame.MOUSEBUTTONDOWN
 
 # Sounds
-JUMP_SOUND_VOLUME = 0.3
+BG_MUSIC_VOLUME = 0.4
 FIREBALL_SOUND_VOLUME = 0.2
 WALK_SOUND_VOLUME = 0.3
+JUMP_SOUND_VOLUME = 0.3
 SKELETON_DEATH_VOLUME = 0.2
-BG_MUSIC_VOLUME = 0.4
+SKELETON_WALK_VOLUME = 0.4
 SECRET_SOUND_VOLUME = 0.6
 
 # Channels
@@ -34,6 +35,7 @@ FIREBALL_SOUND_CHANNEL = 1
 WALK_SOUND_CHANNEL = 2
 JUMP_SOUND_CHANNEL = 3
 SKELETON_DEATH_CHANNEL = 4
+SKELETON_WALK_CHANNEL = 5
 SECRET_SOUND_CHANNEL = 7
 
 # Score
@@ -270,7 +272,6 @@ class Player(pygame.sprite.Sprite):
         self.secret_sound.set_volume(SECRET_SOUND_VOLUME)
         self.secret_sound_timer = 0
         self.secret_sound_length = self.wizard_secret_animation_limit # gives exact time for animation to play once
-        print(self.secret_sound_length)
 
     def get_wizard_pos(self):
         return (self.wizard_x_pos,self.wizard_y_pos)
@@ -741,7 +742,11 @@ class Obstacle(pygame.sprite.Sprite):
                             skeleton_walk_04, skeleton_walk_05, skeleton_walk_06, skeleton_walk_07,
                             skeleton_walk_08, skeleton_walk_09, skeleton_walk_10, skeleton_walk_11,
                             skeleton_walk_12]
-            # skeleton_surf = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
+            # Sounds
+            self.skeleton_walk_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/FootStep/Retro FootStep Gravel 01.wav')
+            self.skeleton_walk_sound.set_volume(JUMP_SOUND_VOLUME)
+            self.skeleton_walk_limit = 240
+            self.skeleton_walk_timer = self.skeleton_walk_limit
         else:
             self.y_pos = GRASS_TOP_Y - (WIZARD_HEIGHT + (WIZARD_HEIGHT / 4))
             self.obstacle_speed = self.flying_enemy_speed
@@ -767,6 +772,12 @@ class Obstacle(pygame.sprite.Sprite):
         
         if self.enemy_looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
+        
+        if type == 'skeleton':
+            if self.skeleton_walk_timer >= self.skeleton_walk_limit:
+                pygame.mixer.Channel(SKELETON_WALK_CHANNEL).play(self.skeleton_walk_sound)
+                self.skeleton_walk_timer = 0
+            self.skeleton_walk_timer += 1
 
     def update(self):
         self.animation_state()
