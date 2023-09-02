@@ -47,18 +47,18 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
 
         # Start
-        self.wizard_start_x_pos = WINDOW_WIDTH / 2
-        self.wizard_start_y_pos = GRASS_TOP_Y
+        self.WIZARD_START_X_POS = WINDOW_WIDTH / 2
+        self.WIZARD_START_Y_POS = GRASS_TOP_Y
         
         # X Directions
-        self.wizard_x_pos = self.wizard_start_x_pos
+        self.wizard_x_pos = self.WIZARD_START_X_POS
         self.wizard_speed = 4
         self.wizard_x_velocity = 0
         self.looking_right = True
         self.wizard_moving = False
         
         # Y Directions
-        self.wizard_y_pos = self.wizard_start_y_pos
+        self.wizard_y_pos = self.WIZARD_START_Y_POS
         self.gravity_acceleration = GLOBAL_GRAVITY
         self.gravity_intensity = 1 # How quickly gravity accelerates the player
         self.wizard_jumping = False
@@ -272,7 +272,7 @@ class Player(pygame.sprite.Sprite):
         self.secret_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/PowerUp/Retro PowerUP 09.wav')
         self.secret_sound.set_volume(SECRET_SOUND_VOLUME)
         self.secret_sound_timer = 0
-        self.secret_sound_length = self.wizard_secret_animation_limit # gives exact time for animation to play once
+        self.secret_sound_length = self.wizard_secret_animation_limit
 
     def get_wizard_pos(self):
         return (self.wizard_x_pos,self.wizard_y_pos)
@@ -287,16 +287,16 @@ class Player(pygame.sprite.Sprite):
         self.wizard_y_pos = new_wizard_y_pos
 
     def get_wizard_start_x_pos(self):
-        return self.wizard_start_x_pos
+        return self.WIZARD_START_X_POS
     
     def set_wizard_start_x_pos(self,new_wizard_start_x_pos):
-        self.wizard_start_x_pos = new_wizard_start_x_pos
+        self.WIZARD_START_X_POS = new_wizard_start_x_pos
     
     def get_wizard_start_y_pos(self):
-        return self.wizard_start_y_pos
+        return self.WIZARD_START_Y_POS
     
     def set_wizard_start_y_pos(self,new_wizard_start_y_pos):
-        self.wizard_start_y_pos = new_wizard_start_y_pos
+        self.WIZARD_START_Y_POS = new_wizard_start_y_pos
 
     def get_wizard_rect(self):
         return self.rect
@@ -509,19 +509,15 @@ class Player(pygame.sprite.Sprite):
         self.fireball_timer_tick()
     
     def reset(self):
-         # Start
-        self.wizard_start_x_pos = WINDOW_WIDTH / 2
-        self.wizard_start_y_pos = GRASS_TOP_Y
-        
         # X Directions
-        self.wizard_x_pos = self.wizard_start_x_pos
+        self.wizard_x_pos = self.WIZARD_START_X_POS
         self.wizard_speed = 4
         self.wizard_x_velocity = 0
         self.looking_right = True
         self.wizard_moving = False
         
         # Y Directions
-        self.wizard_y_pos = self.wizard_start_y_pos
+        self.wizard_y_pos = self.WIZARD_START_Y_POS
         self.gravity_acceleration = GLOBAL_GRAVITY
         self.gravity_intensity = 1 # How quickly gravity accelerates the player
         self.wizard_jumping = False
@@ -536,8 +532,9 @@ class Player(pygame.sprite.Sprite):
         # Additional Score
         self.additional_score = 0
         
-        # Wizard Death
+        # Death
         self.wizard_dead = False
+        self.wizard_start_death = False
         
         # Secret Animation
         self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
@@ -547,6 +544,12 @@ class Player(pygame.sprite.Sprite):
         self.image = self.wizard_walk[self.wizard_index]
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
+        
+        # Sounds
+        self.walk_sound_length = 1 * 40
+        self.walk_sound_timer = self.walk_sound_length
+        self.secret_sound_timer = 0
+        self.secret_sound_length = self.wizard_secret_animation_limit # gives exact time for animation to play once
 
 class Harold(pygame.sprite.Sprite):
     def __init__(self):
