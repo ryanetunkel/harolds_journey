@@ -409,6 +409,7 @@ class Player(pygame.sprite.Sprite):
             elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]): 
                 self.wizard_x_velocity = 0
                 self.wizard_moving = False
+                self.wizard_jumping = False
             if self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y and self.walk_sound_timer >= self.walk_sound_length:
                 # Walk Sound
                 pygame.mixer.Channel(WALK_SOUND_CHANNEL).play(self.walk_sound)
