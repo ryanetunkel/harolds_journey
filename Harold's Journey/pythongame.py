@@ -75,6 +75,7 @@ class Player(pygame.sprite.Sprite):
         
         # Death
         self.wizard_dead = False
+        self.wizard_start_death = False
 
         # Wizard Idle Animation  
         wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
@@ -480,6 +481,9 @@ class Player(pygame.sprite.Sprite):
                     if self.secret_sound_timer < self.secret_sound_length:
                         self.secret_sound_timer += 1
         else:
+            if not self.wizard_start_death:
+                self.wizard_index = 0
+                self.wizard_start_death = True
             self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
             if self.wizard_index + self.wizard_death_animation_speed < len(self.wizard_death):
                 self.wizard_index += self.wizard_death_animation_speed
