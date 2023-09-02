@@ -455,11 +455,13 @@ class Player(pygame.sprite.Sprite):
                 # landing animation for a few frames via timer and then when ends revert to idle
             elif self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
                 self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+                self.wizard_jumping = False
                 self.secret_sound_timer = 0
                 self.wizard_index += self.wizard_walk_animation_speed # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_walk): self.wizard_index = 0
                 self.image = self.wizard_walk[int(self.wizard_index)]
             elif not self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
+                self.wizard_jumping = False
                 if self.wizard_secret_animation_timer != 0:
                     self.wizard_index += self.wizard_idle_animation_speed # speed of animation, adjust as needed
                     if self.wizard_index >= len(self.wizard_idle): self.wizard_index = 0
