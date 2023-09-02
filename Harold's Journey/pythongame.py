@@ -269,7 +269,8 @@ class Player(pygame.sprite.Sprite):
         self.secret_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/PowerUp/Retro PowerUP 09.wav')
         self.secret_sound.set_volume(SECRET_SOUND_VOLUME)
         self.secret_sound_timer = 0
-        self.secret_sound_length = (len(self.wizard_secret_idle) / self.wizard_secret_idle_animation_speed) / 60 # gives exact time for animation to play once
+        self.secret_sound_length = self.wizard_secret_animation_limit # gives exact time for animation to play once
+        print(self.secret_sound_length)
 
     def get_wizard_pos(self):
         return (self.wizard_x_pos,self.wizard_y_pos)
