@@ -1076,8 +1076,8 @@ def projectile_collision():
                         temp_additional_score += obstacle.get_points()
                         wizard.sprite.set_additional_score(temp_additional_score)
                     else:
+                        obstacle.set_health(temp_obstacle_health - temp_projectile_damage)
                         if (temp_projectile_piercing > 1):
-                            obstacle.set_health(temp_obstacle_health - temp_projectile_damage)
                             obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
                     wizard.sprite.set_fireball_hit(True)
                     temp_projectile_piercing -= 1
