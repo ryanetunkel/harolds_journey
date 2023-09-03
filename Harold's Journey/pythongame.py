@@ -25,7 +25,7 @@ BG_MUSIC_VOLUME = 0.4
 FIREBALL_SOUND_VOLUME = 0.2
 WALK_SOUND_VOLUME = 0.3
 JUMP_SOUND_VOLUME = 0.3
-SKELETON_DEATH_VOLUME = 0.2
+OBSTACLE_DEATH_VOLUME = 0.2
 OBSTACLE_MOVE_VOLUME = 0.3
 SECRET_SOUND_VOLUME = 0.6
 
@@ -34,7 +34,7 @@ BG_MUSIC_CHANNEL = 0
 FIREBALL_SOUND_CHANNEL = 1
 WALK_SOUND_CHANNEL = 2
 JUMP_SOUND_CHANNEL = 3
-SKELETON_DEATH_CHANNEL = 4
+OBSTACLE_DEATH_CHANNEL = 4
 OBSTACLE_MOVE_CHANNEL = 5
 SECRET_SOUND_CHANNEL = 7
 
@@ -775,18 +775,21 @@ class Obstacle(pygame.sprite.Sprite):
         self.skeleton_walk_animation_speed =  0.32 # Changed, won't work in current implementation but will in new ones 
         self.flying_enemy_fly_animation_speed = 0.1
         
+        # Skeleton Base Stats
         self.skeleton_value = 2
         self.skeleton_health = 1
         self.skeleton_speed = 2
         self.skeleton_damage = 1
         
+        # Flying Enemy Base Stats
         self.flying_enemy_value = 5
         self.flying_enemy_health = 1
         self.flying_enemy_speed = 2
         self.flying_enemy_damage = 1
         
-        self.immune = False
-        self.immunity_timer = 30 # will need to eventually track what fireball id hit it 
+        self.immunity = False
+        self.IMMUNITY_LIMIT = 30
+        self.immunity_timer = self.IMMUNITY_LIMIT # will need to eventually track what fireball id hit it 
 
         if randint(0,1) == 1:
             self.x_pos = randint(WINDOW_WIDTH + 100,WINDOW_WIDTH + 300)
@@ -861,11 +864,14 @@ class Obstacle(pygame.sprite.Sprite):
     def get_points(self):
         return self.points
     
-    def get_immune(self):
-        return self.immune
+    def get_immunity(self):
+        return self.immunity
     
-    def set_immune(self,new_immune):
-        self.immune = new_immune
+    def set_immunity(self,new_immunity):
+        self.immunity = new_immunity
+    
+    def get_immunity_limit(self):
+        return self.IMMUNITY_LIMIT
     
     def get_immunity_timer(self):
         return self.immunity_timer
@@ -876,10 +882,16 @@ class Obstacle(pygame.sprite.Sprite):
     def calculate_immunity(self):
         temp_immunity_timer = self.get_immunity_timer()
         if temp_immunity_timer != 0:
-            self.set_immune(True)
+            self.set_immunity(True)
             self.set_immunity_timer(temp_immunity_timer - 1)
         else:
-            self.set_immune(False)
+            self.set_immunity(False)
+            
+    def get_points(self):
+        return self.points
+    
+    def set_points(self,new_points):
+        self.points = new_points
     
     def animation_state(self):
         self.animation_index += self.obstacle_animation_speed
@@ -918,7 +930,7 @@ class Projectile(pygame.sprite.Sprite):
         self.projectile_speed = 5
         self.projectile_damage = 1
 
-        if type == 'fireball':
+        if type == 'fireball': # Can't currently handle any projectile other than 'fireball'
             # Fireball - Mess with these values and the wizard's casting aniamtion to get good looking animation
             self.fireball_move_animation_speed = 0.4
             self.fireball_transition_animation_speed = 0.4
@@ -973,7 +985,10 @@ class Projectile(pygame.sprite.Sprite):
             # If could move rect and replace later references with a method maybe would get rid of glitchy first frame at start of animation
             # But also risks making the process slower
     
-    def get_damage(self):
+    def get_fireball_damage(self):
+        return self.fireball_damage
+    
+    def set_fireball_damage(self):
         return self.fireball_damage
     
     def get_fireball_piercing(self):
@@ -1031,11 +1046,25 @@ def projectile_collision():
     temp_additional_score = wizard.sprite.get_additional_score()
     for projectile in projectile_group:
         if pygame.sprite.spritecollide(projectile,obstacle_group,True):
-            pygame.mixer.Channel(SKELETON_DEATH_CHANNEL).play(skeleton_death_sound)
-            projectile_group.remove(projectile)
-            temp_additional_score += 5
-            wizard.sprite.set_additional_score(temp_additional_score)
-            wizard.sprite.set_fireball_hit(True)
+            for obstacle in obstacle_group:
+                temp_obstacle_health = obstacle.get_health()
+                temp_obstacle_immunity_limit = obstacle.get_immunity_limit()
+                temp_projectile_damage = projectile.get_fireball_damage()
+                temp_projectile_piercing = projectile.get_fireball_piercing()
+                if obstacle.get_immunity_timer() <= 0:
+                    if temp_obstacle_health - temp_projectile_damage <= 0:
+                        pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
+                        temp_additional_score += obstacle.get_points()
+                        wizard.sprite.set_additional_score(temp_additional_score)
+                    else:
+                        obstacle.set_health(temp_obstacle_health - temp_projectile_damage)
+                        obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
+                    wizard.sprite.set_fireball_hit(True)
+                    temp_projectile_piercing -= 1
+                    if temp_projectile_piercing <= 0:
+                        projectile_group.remove(projectile)
+                    else:
+                        projectile.set_fireball_piercing(temp_projectile_piercing)
 
 # can't implement health and damage sources as the variables aren't attached 
 # to the individual projectiles and obstacles, they are global for all of them
@@ -1062,8 +1091,8 @@ bg_music = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Ambience/
 bg_music.set_volume(BG_MUSIC_VOLUME)
 bg_music_timer = 0
 # Gobal Sounds
-skeleton_death_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Explosion/Retro Explosion Short 01.wav')
-skeleton_death_sound.set_volume(SKELETON_DEATH_VOLUME)
+obstacle_death_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Explosion/Retro Explosion Short 01.wav')
+obstacle_death_sound.set_volume(OBSTACLE_DEATH_VOLUME)
 
 wizard = pygame.sprite.GroupSingle()
 wizard.add(Player())
