@@ -245,16 +245,16 @@ class Player(pygame.sprite.Sprite):
         self.wizard_gravity = 0
 
         # Animation Speeds
-        self.wizard_walk_animation_speed = 0.1
-        self.wizard_jump_animation_speed = 0.075
-        self.wizard_idle_animation_speed = 0.1
-        self.wizard_fireball_animation_speed = 0.4
-        self.wizard_death_animation_speed = 0.2
+        self.WIZARD_WALK_ANIMATION_SPEED = 0.1
+        self.WIZARD_JUMP_ANIMATION_SPEED = 0.075
+        self.WIZARD_IDLE_ANIMATION_SPEED = 0.1
+        self.WIZARD_FIREBALL_ANIMATION_SPEED = 0.4
+        self.WIZARD_DEATH_ANIMATION_SPEED = 0.2
         
         # Secret Animation
-        self.wizard_secret_idle_animation_speed = self.wizard_idle_animation_speed
-        self.wizard_secret_animation_limit = 240
-        self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+        self.wizard_secret_idle_animation_speed = self.WIZARD_IDLE_ANIMATION_SPEED
+        self.WIZARD_SECRET_ANIMATION_LIMIT = 240
+        self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
 
         # Sounds
         self.jump_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Bounce Jump/Retro Jump Classic 08.wav')
@@ -268,9 +268,10 @@ class Player(pygame.sprite.Sprite):
         self.secret_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/PowerUp/Retro PowerUP 09.wav')
         self.secret_sound.set_volume(SECRET_SOUND_VOLUME)
         self.secret_sound_timer = 0
-        self.secret_sound_length = self.wizard_secret_animation_limit
+        self.secret_sound_length = self.WIZARD_SECRET_ANIMATION_LIMIT
         # self.death_sound = pygame.mixer.Sound('placeholder') # Find Death Sound
 
+    # Positions
     def get_wizard_pos(self):
         return (self.wizard_x_pos,self.wizard_y_pos)
     
@@ -295,6 +296,7 @@ class Player(pygame.sprite.Sprite):
     def set_wizard_start_y_pos(self,new_wizard_start_y_pos):
         self.WIZARD_START_Y_POS = new_wizard_start_y_pos
 
+    # Rects and Images
     def get_wizard_rect(self):
         return self.rect
     
@@ -307,15 +309,18 @@ class Player(pygame.sprite.Sprite):
     def set_wizard_image(self,new_image):
         self.image = new_image
     
+    # Speed
     def get_wizard_speed(self):
         return self.wizard_speed
 
     def set_wizard_speed(self,new_wizard_speed):
         self.wizard_speed = new_wizard_speed
 
+    # Looking Right
     def get_looking_right(self):
         return self.looking_right
     
+    # Fireball Stats
     def get_current_fireball_cooldown(self):
         return self.current_fireball_cooldown
 
@@ -328,12 +333,14 @@ class Player(pygame.sprite.Sprite):
     def set_fireball_cooldown_time(self,new_fireball_cooldown_time):
         self.fireball_cooldown_time = new_fireball_cooldown_time
     
+    # X Velocity
     def get_wizard_x_velocity(self):
         return self.wizard_x_velocity
     
     def set_wizard_x_velocity(self,new_wizard_x_velocity):
         self.wizard_x_velocity = new_wizard_x_velocity
 
+    # Gravity Stats
     def get_wizard_gravity(self):
         return self.wizard_gravity
     
@@ -346,45 +353,51 @@ class Player(pygame.sprite.Sprite):
     def set_gravity_acceleration(self,new_gravity_acceleration):
         self.gravity_acceleration = new_gravity_acceleration
 
+    def get_fireball_hit(self):
+        return self.fireball_hit
+    
+    def set_fireball_hit(self,new_fireball_hit):
+        self.fireball_hit = new_fireball_hit
+        
+    def get_fireball_shot(self):
+        return self.fireball_shot
+
+    def set_fireball_shot(self,new_fireball_shot):
+        self.fireball_shot = new_fireball_shot
+    
+    def play_fireball_sound(self):
+        pygame.mixer.Channel(FIREBALL_SOUND_CHANNEL).play(self.fireball_sound)
+    
+    # Wizard Moving
     def get_wizard_moving(self):
         return self.wizard_moving
 
     def set_wizard_moving(self,new_wizard_moving):
         self.wizard_moving = new_wizard_moving
     
-    def get_fireball_hit(self):
-        return self.fireball_hit
-    
-    def set_fireball_hit(self,new_fireball_hit):
-        self.fireball_hit = new_fireball_hit
-                
+    # Wizard Jumping
     def get_wizard_jumping(self):
         return self.wizard_jumping
     
     def set_wizard_jumping(self,new_wizard_jumping):
         self.wizard_jumping = new_wizard_jumping
-
-    def get_fireball_shot(self):
-        return self.fireball_shot
-
-    def set_fireball_shot(self,new_fireball_shot):
-        self.fireball_shot = new_fireball_shot
-        
+    
+    # Score
     def get_additional_score(self):
         return self.additional_score
 
     def set_additional_score(self,new_additional_score):
         self.additional_score = new_additional_score
 
+    # Death
     def get_wizard_dead(self):
         return self.wizard_dead
     
     def set_wizard_dead(self,new_wizard_dead):
         self.wizard_dead = new_wizard_dead
     
-    def play_fireball_sound(self):
-        pygame.mixer.Channel(FIREBALL_SOUND_CHANNEL).play(self.fireball_sound)
-        
+    # Wizard Game Stats
+    # Damage    
     def get_wizard_damage_percent(self):
         return self.wizard_damage_percent
     
@@ -401,7 +414,7 @@ class Player(pygame.sprite.Sprite):
         temp_percent = self.get_wizard_damage_percent()
         temp_total = self.WIZARD_STARTING_DAMAGE * temp_percent
         self.set_wizard_damage_total(temp_total)
-        
+    # Piercing    
     def get_wizard_piercing_increase(self):
         return self.wizard_piercing_increase
     
@@ -464,9 +477,9 @@ class Player(pygame.sprite.Sprite):
                 if self.start_fireball_animation:
                     self.wizard_index = 0
                     self.start_fireball_animation = False
-                self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+                self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
                 self.secret_sound_timer = 0
-                self.wizard_index += self.wizard_fireball_animation_speed # speed of animation, adjust as needed
+                self.wizard_index += self.WIZARD_FIREBALL_ANIMATION_SPEED # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_fireball): 
                     self.wizard_index = 0
                     self.start_fireball_animation = True
@@ -474,9 +487,9 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.wizard_fireball[int(self.wizard_index)]
             elif self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping: # and add landing tracker this would be if it is off
                 # jump (first half)
-                self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+                self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
                 self.secret_sound_timer = 0
-                self.wizard_index += self.wizard_jump_animation_speed # speed of animation, adjust as needed
+                self.wizard_index += self.WIZARD_JUMP_ANIMATION_SPEED # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_jump): self.wizard_index = 0
                 self.image = self.wizard_jump[int(self.wizard_index)]
                 # this is it raw with no adjustment
@@ -486,16 +499,16 @@ class Player(pygame.sprite.Sprite):
                 # and add landing tracker this would be if landed
                 # landing animation for a few frames via timer and then when ends revert to idle
             elif self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
-                self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+                self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
                 self.wizard_jumping = False
                 self.secret_sound_timer = 0
-                self.wizard_index += self.wizard_walk_animation_speed # speed of animation, adjust as needed
+                self.wizard_index += self.WIZARD_WALK_ANIMATION_SPEED # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_walk): self.wizard_index = 0
                 self.image = self.wizard_walk[int(self.wizard_index)]
             elif not self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
                 self.wizard_jumping = False
                 if self.wizard_secret_animation_timer != 0:
-                    self.wizard_index += self.wizard_idle_animation_speed # speed of animation, adjust as needed
+                    self.wizard_index += self.WIZARD_IDLE_ANIMATION_SPEED # speed of animation, adjust as needed
                     if self.wizard_index >= len(self.wizard_idle): self.wizard_index = 0
                     self.image = self.wizard_idle[int(self.wizard_index)]
                     # idle animation
@@ -518,9 +531,9 @@ class Player(pygame.sprite.Sprite):
             if not self.wizard_start_death:
                 self.wizard_index = 0
                 self.wizard_start_death = True
-            self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
-            if self.wizard_index + self.wizard_death_animation_speed < len(self.wizard_death):
-                self.wizard_index += self.wizard_death_animation_speed
+            self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
+            if self.wizard_index + self.WIZARD_DEATH_ANIMATION_SPEED < len(self.wizard_death):
+                self.wizard_index += self.WIZARD_DEATH_ANIMATION_SPEED
             self.image = self.wizard_death[int(self.wizard_index)]
         
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
@@ -578,7 +591,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_piercing = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
         
         # Secret Animation
-        self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
+        self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
         
         # Wizard Index
         self.wizard_index = 0
@@ -590,7 +603,7 @@ class Player(pygame.sprite.Sprite):
         self.walk_sound_length = 1 * 40
         self.walk_sound_timer = self.walk_sound_length
         self.secret_sound_timer = 0
-        self.secret_sound_length = self.wizard_secret_animation_limit # gives exact time for animation to play once
+        self.secret_sound_length = self.WIZARD_SECRET_ANIMATION_LIMIT # gives exact time for animation to play once
 
 class Harold(pygame.sprite.Sprite):
     def __init__(self):
@@ -840,16 +853,11 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = (self.x_pos,self.y_pos))
         self.direction_multiplier = 1 if self.enemy_looking_right else -1
     
-        # Checking stats
-        print('Type: ')
-        print(type)
-        print('Points: ')
-        print(self.points)
-        print('Health: ')
-        print(self.health)
-        print('Damage: ')
-        print(self.damage)
-        print('\n')
+    def get_x_pos(self):
+        return self.x_pos
+    
+    def get_y_pos(self):
+        return self.y_pos
     
     def get_health(self):
         return self.health
@@ -979,8 +987,6 @@ class Projectile(pygame.sprite.Sprite):
             if not self.wizard_was_looking_right:
                 self.image = pygame.transform.flip(self.image,True,False)
             self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos)) 
-            # If could move rect and replace later references with a method maybe would get rid of glitchy first frame at start of animation
-            # But also risks making the process slower
     
     def get_fireball_damage(self):
         return self.fireball_damage
@@ -1023,6 +1029,61 @@ class Projectile(pygame.sprite.Sprite):
         elif self.rect.x >= WINDOW_WIDTH + 100 and self.wizard_was_looking_right:
             self.kill()
 
+class Pickup(pygame.sprite.Sprite):
+    def __init__(self, type, x_pos, y_pos):
+        super().__init__()
+                
+        self.gravity = 0
+        self.gravity_intensity = GLOBAL_GRAVITY
+        self.PICKUP_ANIMATION_SPEED = 0.2
+        self.LIFETIME_LIMIT = 10 * 60
+        self.lifetime = self.LIFETIME_LIMIT
+        
+        if type == 'damage': # Percentages
+            self.bonus = 0.5
+            harold_idle_12 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
+            harold_idle_13 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_13.png').convert_alpha()
+            self.frames = [harold_idle_12, harold_idle_13]
+
+        if type == 'piercing': # Flat increases
+            self.bonus = 1
+            fireball_trans_1 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_1.png').convert_alpha()
+            fireball_trans_2 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
+            self.frames = [fireball_trans_1, fireball_trans_2]
+
+        self.animation_index = 0
+        self.image = self.frames[self.animation_index]
+        self.image = pygame.transform.scale_by(self.image,0.5)
+        self.rect = self.image.get_rect(center = (x_pos,y_pos)) 
+
+    def get_bonus(self):
+        return self.bonus
+    
+    def apply_gravity(self):
+        self.gravity += self.gravity_intensity
+        self.rect.y += self.gravity
+        if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
+    
+    # Will change a lot when have art
+    def animation_state(self):   
+        self.animation_index += self.PICKUP_ANIMATION_SPEED
+        if self.animation_index >= len(self.frames): self.animation_index = 0
+        
+        self.image = self.frames[int(self.animation_index)]
+        self.image = pygame.transform.scale_by(self.image,0.5)
+        print("I'm Here")
+    
+    def update(self):
+        self.apply_gravity()
+        self.animation_state()
+        self.destroy()
+        
+    def destroy(self):
+        if self.lifetime <= 0:
+            self.kill()
+        else:
+            self.lifetime -= 1
+
 # Functions
 def display_score():
     temp_additional_score = wizard.sprite.get_additional_score()
@@ -1038,6 +1099,7 @@ def collision_sprite(): # Basically game over condition
         wizard.sprite.set_current_fireball_cooldown(temp_wizard_fireball_cooldown_time)
         obstacle_group.empty()
         projectile_group.empty()
+        pickup_group.empty()
         return False
     else: return True
 
@@ -1056,6 +1118,10 @@ def projectile_collision():
                     if (temp_obstacle_health - temp_projectile_damage) <= 0:
                         pygame.sprite.spritecollide(projectile,obstacle_group,True)
                         pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
+                        temp_obstacle_x_pos = obstacle.get_x_pos()
+                        temp_obstacle_y_pos = obstacle.get_y_pos()
+                        if randint(0,10) >= 0: # Chance to drop pickup - change to > 6
+                            pickup_group.add(Pickup(choice(['piercing','damage','damage','damage']),temp_obstacle_x_pos,temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
                         wizard.sprite.set_additional_score(temp_additional_score)
                     else:
@@ -1069,14 +1135,18 @@ def projectile_collision():
                     else:
                         projectile.set_fireball_piercing(temp_projectile_piercing)
 
-# can't implement health and damage sources as the variables aren't attached 
-# to the individual projectiles and obstacles, they are global for all of them
-# need to implement classes for that I think 
-# def deal_damage(damage_source, target):
-#     target.obstacle_health -= damage_source.projectile_damage
-#     if target.obstacle_health <= 0:
-#         obstacle_list = [obstacle for obstacle in obstacle_list if obstacle.obstacle_health > 0]
-#         projectile_list = [projectile for projectile in projectile_list if (projectile.x > 0 and projectile.x < 800)]
+def pickup_collision():
+    if pygame.sprite.spritecollide(wizard.sprite,pickup_group,False):
+        pickups_overlapping = pygame.sprite.spritecollide(wizard.sprite,pickup_group,False)
+        for pickup in pickups_overlapping:
+            temp_bonus = pickup.get_bonus()
+            temp_damage = wizard.sprite.get_wizard_damage_percent()
+            temp_piercing = wizard.sprite.get_wizard_piercing_increase()
+            if pickup.type == 'damage':
+                wizard.sprite.set_wizard_damage_percent(temp_damage + temp_bonus)
+            if pickup.type == 'piercing':
+                wizard.sprite.set_wizard_piercing_increase(temp_piercing + temp_bonus)
+            pygame.sprite.spritecollide(wizard.sprite,pickup_group,True)
 
 pygame.init()
 # Experimental - works though if do this, take out other WINDOW_WIDTH and HEIGHT, and take out other screen
@@ -1126,6 +1196,8 @@ harold.add(Harold())
 obstacle_group = pygame.sprite.Group()
 
 projectile_group = pygame.sprite.Group()
+
+pickup_group = pygame.sprite.Group()
 
 sky_surf = pygame.image.load('Harold\'s Journey/graphics/Background.png').convert_alpha()
 sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
@@ -1212,7 +1284,12 @@ while True:
             projectile_group.draw(screen)
             projectile_group.update()
             
+            pickup_group.draw(screen)
+            pickup_group.update()
+            
             projectile_collision()
+            
+            pickup_collision()
 
             wizard_alive = collision_sprite()
 
