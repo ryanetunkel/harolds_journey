@@ -768,7 +768,7 @@ class Obstacle(pygame.sprite.Sprite):
         
         self.ROUND_DIFFICULTY_INCREASE_INCREMENT = 20 # frequency in seconds the difficulty increases
         self.time_at_spawn = int(pygame.time.get_ticks() / 1000) - start_time
-        self.time_scalar = int(self.time_at_spawn / self.ROUND_DIFFICULTY_INCREASE_INCREMENT) # Should mean every 20 seconds goes up by 1 
+        self.time_scalar = int(self.time_at_spawn / self.ROUND_DIFFICULTY_INCREASE_INCREMENT) + 1# Should mean every 20 seconds goes up by 1 
         
         self.enemy_looking_right = False
 
@@ -788,8 +788,8 @@ class Obstacle(pygame.sprite.Sprite):
         self.flying_enemy_damage = 1
         
         self.immunity = False
-        self.IMMUNITY_LIMIT = 30
-        self.immunity_timer = self.IMMUNITY_LIMIT # will need to eventually track what fireball id hit it 
+        self.IMMUNITY_LIMIT = 50
+        self.immunity_timer = 0 # will need to eventually track what fireball id hit it 
 
         if randint(0,1) == 1:
             self.x_pos = randint(WINDOW_WIDTH + 100,WINDOW_WIDTH + 300)
@@ -855,6 +855,17 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = (self.x_pos,self.y_pos))
         self.direction_multiplier = 1 if self.enemy_looking_right else -1
     
+        # Checking stats
+        print('Type: ')
+        print(type)
+        print('Points: ')
+        print(self.points)
+        print('Health: ')
+        print(self.health)
+        print('Damage: ')
+        print(self.damage)
+        print('\n')
+    
     def get_health(self):
         return self.health
     
@@ -881,7 +892,7 @@ class Obstacle(pygame.sprite.Sprite):
     
     def calculate_immunity(self):
         temp_immunity_timer = self.get_immunity_timer()
-        if temp_immunity_timer != 0:
+        if temp_immunity_timer > 0:
             self.set_immunity(True)
             self.set_immunity_timer(temp_immunity_timer - 1)
         else:
@@ -927,6 +938,7 @@ class Projectile(pygame.sprite.Sprite):
         # Projectiles
         # These might not all be universal, especially damage and speed, will be varied
 
+        # Unused
         self.projectile_speed = 5
         self.projectile_damage = 1
 
@@ -1045,20 +1057,28 @@ def collision_sprite(): # Basically game over condition
 def projectile_collision():
     temp_additional_score = wizard.sprite.get_additional_score()
     for projectile in projectile_group:
-        if pygame.sprite.spritecollide(projectile,obstacle_group,True):
-            for obstacle in obstacle_group:
+        if pygame.sprite.spritecollide(projectile,obstacle_group,False):
+            obstacles_overlapping = pygame.sprite.spritecollide(projectile,obstacle_group,False)
+            for obstacle in obstacles_overlapping:
                 temp_obstacle_health = obstacle.get_health()
                 temp_obstacle_immunity_limit = obstacle.get_immunity_limit()
+                temp_obstacle_immunity_timer = obstacle.get_immunity_timer()
+                print('Immunity: ')
+                print(temp_obstacle_immunity_timer)
                 temp_projectile_damage = projectile.get_fireball_damage()
                 temp_projectile_piercing = projectile.get_fireball_piercing()
-                if obstacle.get_immunity_timer() <= 0:
-                    if temp_obstacle_health - temp_projectile_damage <= 0:
+                if temp_obstacle_immunity_timer <= 0:
+                    # print('Health/Damage Difference: ')
+                    # print(temp_obstacle_health - temp_projectile_damage)
+                    if (temp_obstacle_health - temp_projectile_damage) <= 0:
+                        pygame.sprite.spritecollide(projectile,obstacle_group,True)
                         pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
                         temp_additional_score += obstacle.get_points()
                         wizard.sprite.set_additional_score(temp_additional_score)
                     else:
-                        obstacle.set_health(temp_obstacle_health - temp_projectile_damage)
-                        obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
+                        if (temp_projectile_piercing > 1):
+                            obstacle.set_health(temp_obstacle_health - temp_projectile_damage)
+                            obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
                     wizard.sprite.set_fireball_hit(True)
                     temp_projectile_piercing -= 1
                     if temp_projectile_piercing <= 0:
