@@ -327,15 +327,12 @@ class Player(pygame.sprite.Sprite):
 
     def get_looking_right(self):
         return self.looking_right
-
-    def set_current_fireball_cooldown(self,new_fireball_cooldown):
-        self.current_fireball_cooldown = new_fireball_cooldown
     
     def get_current_fireball_cooldown(self):
         return self.current_fireball_cooldown
-    
-    def set_current_fireball_cooldown(self,new_current_fireball_cooldown):
-        self.current_fireball_cooldown = new_current_fireball_cooldown
+
+    def set_current_fireball_cooldown(self,new_fireball_cooldown):
+        self.current_fireball_cooldown = new_fireball_cooldown
     
     def get_fireball_cooldown_time(self):
         return self.fireball_cooldown_time
@@ -1049,6 +1046,8 @@ def display_score():
 
 def collision_sprite(): # Basically game over condition
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
+        temp_wizard_fireball_cooldown_time = wizard.sprite.get_fireball_cooldown_time()
+        wizard.sprite.set_current_fireball_cooldown(temp_wizard_fireball_cooldown_time)
         obstacle_group.empty()
         projectile_group.empty()
         return False
@@ -1063,13 +1062,9 @@ def projectile_collision():
                 temp_obstacle_health = obstacle.get_health()
                 temp_obstacle_immunity_limit = obstacle.get_immunity_limit()
                 temp_obstacle_immunity_timer = obstacle.get_immunity_timer()
-                print('Immunity: ')
-                print(temp_obstacle_immunity_timer)
                 temp_projectile_damage = projectile.get_fireball_damage()
                 temp_projectile_piercing = projectile.get_fireball_piercing()
                 if temp_obstacle_immunity_timer <= 0:
-                    # print('Health/Damage Difference: ')
-                    # print(temp_obstacle_health - temp_projectile_damage)
                     if (temp_obstacle_health - temp_projectile_damage) <= 0:
                         pygame.sprite.spritecollide(projectile,obstacle_group,True)
                         pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
@@ -1168,7 +1163,7 @@ while True:
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
                 obstacle_group.add(Obstacle(choice(['flying_enemy','skeleton','skeleton','skeleton'])))
-            if event.type == shoot_button:
+            if wizard.sprite.get_wizard_dead() == False and event.type == shoot_button:
                 if wizard.sprite.get_current_fireball_cooldown() == 0 or wizard.sprite.get_fireball_hit():
                     wizard.sprite.play_fireball_sound()
                     wizard.sprite.set_fireball_shot(True)
@@ -1230,6 +1225,7 @@ while True:
     else:         
         wizard.sprite.reset()
         harold.sprite.reset()
+        pygame.event.clear()
         death_counter = 0
         bg_music_timer = 0
         screen.fill('#54428E')
