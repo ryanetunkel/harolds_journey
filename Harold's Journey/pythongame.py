@@ -83,7 +83,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_damage_total = self.WIZARD_STARTING_DAMAGE * self.wizard_damage_percent
         self.WIZARD_STARTING_PIERCING = 1
         self.wizard_piercing_increase = 0
-        self.wizard_piercing = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
+        self.wizard_piercing_total = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
 
         # Wizard Idle Animation  
         wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
@@ -399,6 +399,44 @@ class Player(pygame.sprite.Sprite):
     
     def play_fireball_sound(self):
         pygame.mixer.Channel(FIREBALL_SOUND_CHANNEL).play(self.fireball_sound)
+        
+    def get_wizard_damage_percent(self):
+        return self.wizard_damage_percent
+    
+    def set_wizard_damage_percent(self,new_wizard_damage_percent):
+        self.wizard_damage_percent = new_wizard_damage_percent
+        
+    def get_wizard_damage_total(self):
+        return self.wizard_damage_total
+    
+    def set_wizard_damage_total(self,new_wizard_damage_total):
+        self.wizard_damage_total = new_wizard_damage_total
+    
+    def calculate_wizard_damage(self):
+        temp_percent = self.get_wizard_damage_percent()
+        temp_total = self.WIZARD_STARTING_DAMAGE * temp_percent
+        self.set_wizard_damage_total(temp_total)
+        
+    def get_wizard_piercing_increase(self):
+        return self.wizard_piercing_increase
+    
+    def set_wizard_piercing_increase(self,new_wizard_piercing_increase):
+        self.wizard_piercing_increase = new_wizard_piercing_increase
+        
+    def get_wizard_piercing_total(self):
+        return self.wizard_piercing_total
+    
+    def set_wizard_piercing_total(self,new_wizard_piercing_total):
+        self.wizard_piercing_total = new_wizard_piercing_total
+    
+    def calculate_wizard_piercing(self):
+        temp_increase = self.get_wizard_piercing_increase()
+        temp_total = self.WIZARD_STARTING_PIERCING * temp_increase
+        self.set_wizard_piercing_total(temp_total)
+    
+    def calculate_wizard_stats(self):
+        self.calculate_wizard_damage()
+        self.calculate_wizard_piercing()
 
     def wizard_input(self):
         keys = pygame.key.get_pressed()
@@ -516,6 +554,7 @@ class Player(pygame.sprite.Sprite):
         self.apply_gravity()
         self.animation_state()
         self.fireball_timer_tick()
+        self.calculate_wizard_stats()
     
     def reset(self):
         # X Directions
@@ -737,10 +776,17 @@ class Obstacle(pygame.sprite.Sprite):
         self.flying_enemy_fly_animation_speed = 0.1
         
         self.skeleton_value = 2
-        self.flying_enemy_value = 5
-
+        self.skeleton_health = 1
         self.skeleton_speed = 2
+        self.skeleton_damage = 1
+        
+        self.flying_enemy_value = 5
+        self.flying_enemy_health = 1
         self.flying_enemy_speed = 2
+        self.flying_enemy_damage = 1
+        
+        self.immune = False
+        self.immunity_timer = 30 # will need to eventually track what fireball id hit it 
 
         if randint(0,1) == 1:
             self.x_pos = randint(WINDOW_WIDTH + 100,WINDOW_WIDTH + 300)
@@ -750,8 +796,9 @@ class Obstacle(pygame.sprite.Sprite):
             self.enemy_looking_right = True
 
         if type == 'skeleton':
-            self.points = self.skeleton_value * self.time_scalar
-            self.health = self.points
+            self.points = self.skeleton_value
+            self.health = self.skeleton_health * self.time_scalar
+            self.damage = self.skeleton_damage * self.time_scalar
             self.y_pos = GRASS_TOP_Y
             self.obstacle_speed = self.skeleton_speed
             self.obstacle_animation_speed = self.skeleton_walk_animation_speed
@@ -780,8 +827,9 @@ class Obstacle(pygame.sprite.Sprite):
             self.move_limit = 60
             self.move_timer = self.move_limit
         else:
-            self.points = self.flying_enemy_value * self.time_scalar
-            self.health = self.points
+            self.points = self.flying_enemy_value 
+            self.health = self.flying_enemy_health * self.time_scalar
+            self.damage = self.skeleton_damage * self.time_scalar
             
             self.y_pos = GRASS_TOP_Y - (WIZARD_HEIGHT + (WIZARD_HEIGHT / 4))
             self.obstacle_speed = self.flying_enemy_speed
@@ -813,6 +861,26 @@ class Obstacle(pygame.sprite.Sprite):
     def get_points(self):
         return self.points
     
+    def get_immune(self):
+        return self.immune
+    
+    def set_immune(self,new_immune):
+        self.immune = new_immune
+    
+    def get_immunity_timer(self):
+        return self.immunity_timer
+
+    def set_immunity_timer(self,new_immunity_timer):
+        self.immunity_timer = new_immunity_timer
+    
+    def calculate_immunity(self):
+        temp_immunity_timer = self.get_immunity_timer()
+        if temp_immunity_timer != 0:
+            self.set_immune(True)
+            self.set_immunity_timer(temp_immunity_timer - 1)
+        else:
+            self.set_immune(False)
+    
     def animation_state(self):
         self.animation_index += self.obstacle_animation_speed
         if self.animation_index >= len(self.frames): self.animation_index = 0
@@ -831,6 +899,7 @@ class Obstacle(pygame.sprite.Sprite):
     def update(self):
         self.animation_state()
         self.rect.x += (self.obstacle_speed * self.direction_multiplier)
+        self.calculate_immunity()
         self.destroy()
     
     def destroy(self):
@@ -874,8 +943,9 @@ class Projectile(pygame.sprite.Sprite):
             # Gravity
             self.fireball_gravity_when_held = 0
 
-            # Damage - To Be Implemented
-            self.fireball_damage = 1
+            # Statistics - To Be Implemented
+            self.fireball_damage = wizard.sprite.get_wizard_damage_total()
+            self.fireball_piercing = wizard.sprite.get_wizard_piercing_total()
             
             # Fireball Creation
             self.created = 0
@@ -902,6 +972,15 @@ class Projectile(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos)) 
             # If could move rect and replace later references with a method maybe would get rid of glitchy first frame at start of animation
             # But also risks making the process slower
+    
+    def get_damage(self):
+        return self.fireball_damage
+    
+    def get_fireball_piercing(self):
+        return self.fireball_piercing
+
+    def set_fireball_piercing(self,new_fireball_piercing):
+        self.fireball_piercing = new_fireball_piercing
     
     def animation_state(self):
         if self.created < 4:
