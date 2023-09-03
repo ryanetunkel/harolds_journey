@@ -26,7 +26,7 @@ FIREBALL_SOUND_VOLUME = 0.2
 WALK_SOUND_VOLUME = 0.3
 JUMP_SOUND_VOLUME = 0.3
 SKELETON_DEATH_VOLUME = 0.2
-SKELETON_WALK_VOLUME = 0.4
+OBSTACLE_MOVE_VOLUME = 0.3
 SECRET_SOUND_VOLUME = 0.6
 
 # Channels
@@ -35,7 +35,7 @@ FIREBALL_SOUND_CHANNEL = 1
 WALK_SOUND_CHANNEL = 2
 JUMP_SOUND_CHANNEL = 3
 SKELETON_DEATH_CHANNEL = 4
-SKELETON_WALK_CHANNEL = 5
+OBSTACLE_MOVE_CHANNEL = 5
 SECRET_SOUND_CHANNEL = 7
 
 # Score
@@ -273,6 +273,7 @@ class Player(pygame.sprite.Sprite):
         self.secret_sound.set_volume(SECRET_SOUND_VOLUME)
         self.secret_sound_timer = 0
         self.secret_sound_length = self.wizard_secret_animation_limit
+        # self.death_sound = pygame.mixer.Sound('placeholder') # Find Death Sound
 
     def get_wizard_pos(self):
         return (self.wizard_x_pos,self.wizard_y_pos)
@@ -753,10 +754,10 @@ class Obstacle(pygame.sprite.Sprite):
                             skeleton_walk_08, skeleton_walk_09, skeleton_walk_10, skeleton_walk_11,
                             skeleton_walk_12]
             # Sounds
-            self.skeleton_walk_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/FootStep/Retro FootStep Gravel 01.wav')
-            self.skeleton_walk_sound.set_volume(JUMP_SOUND_VOLUME)
-            self.skeleton_walk_limit = 240
-            self.skeleton_walk_timer = self.skeleton_walk_limit
+            self.move_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/FootStep/Retro FootStep Gravel 01.wav')
+            self.move_sound.set_volume(OBSTACLE_MOVE_VOLUME)
+            self.move_limit = 60
+            self.move_timer = self.move_limit
         else:
             self.y_pos = GRASS_TOP_Y - (WIZARD_HEIGHT + (WIZARD_HEIGHT / 4))
             self.obstacle_speed = self.flying_enemy_speed
@@ -766,6 +767,12 @@ class Obstacle(pygame.sprite.Sprite):
             flying_enemy_fly_1 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
             flying_enemy_fly_2 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_01.png')
             self.frames = [flying_enemy_fly_1,flying_enemy_fly_2]
+            
+            # Sounds
+            self.move_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Swoosh/Retro Swooosh 07.wav')
+            self.move_sound.set_volume(OBSTACLE_MOVE_VOLUME)
+            self.move_limit = 60
+            self.move_timer = self.move_limit
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
@@ -783,11 +790,10 @@ class Obstacle(pygame.sprite.Sprite):
         if self.enemy_looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
         
-        if type == 'skeleton':
-            if self.skeleton_walk_timer >= self.skeleton_walk_limit:
-                pygame.mixer.Channel(SKELETON_WALK_CHANNEL).play(self.skeleton_walk_sound)
-                self.skeleton_walk_timer = 0
-            self.skeleton_walk_timer += 1
+        if self.move_timer >= self.move_limit:
+            pygame.mixer.Channel(OBSTACLE_MOVE_CHANNEL).play(self.move_sound)
+            self.move_timer = 0
+        self.move_timer += 1
 
     def update(self):
         self.animation_state()
