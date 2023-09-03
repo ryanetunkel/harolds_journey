@@ -1071,7 +1071,7 @@ class Pickup(pygame.sprite.Sprite):
         
         self.image = self.frames[int(self.animation_index)]
         self.image = pygame.transform.scale_by(self.image,0.5)
-        print("I'm Here")
+        print("I'm Here") # this triggers so they exist but won't show
     
     def update(self):
         self.apply_gravity()
