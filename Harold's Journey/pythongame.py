@@ -2,18 +2,6 @@ import pygame
 from sys import exit
 from random import randint, choice
 
-WINDOW_WIDTH = 800 * 3/2
-WINDOW_HEIGHT = 400 * 3/2
-PIXEL_SIZE = 4
-WINDOW_SIZE = (WINDOW_WIDTH,WINDOW_HEIGHT)
-WIZARD_WIDTH = 32 * PIXEL_SIZE
-WIZARD_HEIGHT = 32 * PIXEL_SIZE
-WIZARD_PIXEL_SIZE = (WIZARD_HEIGHT,WIZARD_WIDTH)
-GRASS_TOP_Y = (371 / 400) * WINDOW_HEIGHT
-GLOBAL_GRAVITY = -20
-
-OBSTACLE_SPAWN_FREQUENCY = 1500 # In milliseconds, 1000 = 1 sec
-
 # Controls
 jump_button = pygame.K_SPACE
 right_button = pygame.K_d
@@ -1091,12 +1079,32 @@ def projectile_collision():
 #         projectile_list = [projectile for projectile in projectile_list if (projectile.x > 0 and projectile.x < 800)]
 
 pygame.init()
+# Experimental - works though if do this, take out other WINDOW_WIDTH and HEIGHT, and take out other screen
+# screenInfo = pygame.display.Info()
+# screen = pygame.display.set_mode((screenInfo.current_w, screenInfo.current_h))
+# WINDOW_WIDTH = screenInfo.current_w
+# WINDOW_HEIGHT = screenInfo.current_h
+
+WINDOW_WIDTH = 800 * 3/2
+WINDOW_HEIGHT = 400 * 3/2
+PIXEL_SIZE = 4
+WINDOW_SIZE = (WINDOW_WIDTH,WINDOW_HEIGHT)
+WIZARD_WIDTH = 32 * PIXEL_SIZE
+WIZARD_HEIGHT = 32 * PIXEL_SIZE
+WIZARD_PIXEL_SIZE = (WIZARD_HEIGHT,WIZARD_WIDTH)
+GRASS_TOP_Y = int((371 / 400) * WINDOW_HEIGHT)
+GLOBAL_GRAVITY = -20
+OBSTACLE_SPAWN_FREQUENCY = 1500 # In milliseconds, 1000 = 1 sec
+
+# Shows default sizes
+# pygame.display.list_modes()
+
 screen = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption('Harold\'s Journey')
-clock = pygame.time.Clock()
-test_font = pygame.font.Font('Harold\'s Journey/font/Pixeltype.ttf',50)
 pygame_icon = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
 pygame.display.set_icon(pygame_icon)
+clock = pygame.time.Clock()
+test_font = pygame.font.Font('Harold\'s Journey/font/Pixeltype.ttf',50)
 game_active = False
 wizard_alive = False
 start_time = 0
@@ -1127,25 +1135,26 @@ ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 
 # Intro Screen
 wizard_title_start_x_pos = WINDOW_WIDTH / 2
-wizard_title_start_y_pos = (300 / 400) * WINDOW_HEIGHT
+wizard_title_start_y_pos = WINDOW_HEIGHT  * 3/4
 wizard_title_surf = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
-wizard_title_surf = pygame.transform.scale(wizard_title_surf,(WIZARD_WIDTH * 3/2, WIZARD_HEIGHT * 3/2))
+wizard_title_surf = pygame.transform.scale(wizard_title_surf,(WIZARD_WIDTH * (WINDOW_WIDTH/WINDOW_HEIGHT), WIZARD_HEIGHT * (WINDOW_WIDTH/WINDOW_HEIGHT)))
 wizard_title_rect = wizard_title_surf.get_rect(center = (wizard_title_start_x_pos,wizard_title_start_y_pos))
 
 harold_title_start_x_pos = wizard_title_rect.centerx
-harold_title_start_y_pos = wizard_title_rect.top - 52
+harold_title_start_y_pos = wizard_title_rect.top - (52/4 * PIXEL_SIZE)
 harold_title_surf = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
-harold_title_surf = pygame.transform.scale_by(harold_title_surf,2.25)
+harold_title_surf = pygame.transform.scale_by(harold_title_surf,(2.25 * (WINDOW_WIDTH/WINDOW_HEIGHT)))
 harold_title_rect = harold_title_surf.get_rect(midbottom = (harold_title_start_x_pos,harold_title_start_y_pos))
 
 title_game_name_surf = test_font.render('Harold\'s Journey',False,"#FCDC4D")
-title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,3/2)
+title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,(WINDOW_WIDTH/WINDOW_HEIGHT))
 title_game_name_rect = title_game_name_surf.get_rect(center = (WINDOW_WIDTH/2,((70/400) * WINDOW_HEIGHT)))
 
 title_info_start_x_pos = wizard_title_rect.centerx
 title_info_start_y_pos = wizard_title_rect.centery + ((40/400) * WINDOW_HEIGHT)
 title_info_start_pos = (title_info_start_x_pos,title_info_start_y_pos)
 title_info_surf = test_font.render('Press any key or click to Start',False,"#FCDC4D")
+title_info_surf = pygame.transform.scale_by(title_info_surf,(WINDOW_WIDTH/WINDOW_HEIGHT))
 title_info_rect = title_info_surf.get_rect(center = (title_info_start_pos))
 
 # Timer
@@ -1228,7 +1237,8 @@ while True:
         pygame.event.clear()
         death_counter = 0
         bg_music_timer = 0
-        screen.fill('#54428E')
+        screen.blit(sky_surf,(0,0))
+        screen.blit(ground_surf,(0,0))
         screen.blit(wizard_title_surf,wizard_title_rect)
         screen.blit(harold_title_surf,harold_title_rect)
         screen.blit(title_info_surf,title_info_rect)
