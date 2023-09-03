@@ -76,6 +76,14 @@ class Player(pygame.sprite.Sprite):
         # Death
         self.wizard_dead = False
         self.wizard_start_death = False
+        
+        # Damage Statistics
+        self.WIZARD_STARTING_DAMAGE = 1
+        self.wizard_damage_percent = 1
+        self.wizard_damage_total = self.WIZARD_STARTING_DAMAGE * self.wizard_damage_percent
+        self.WIZARD_STARTING_PIERCING = 1
+        self.wizard_piercing_increase = 0
+        self.wizard_piercing = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
 
         # Wizard Idle Animation  
         wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
@@ -537,6 +545,14 @@ class Player(pygame.sprite.Sprite):
         self.wizard_dead = False
         self.wizard_start_death = False
         
+        # Damage Statistics
+        self.WIZARD_STARTING_DAMAGE = 1
+        self.wizard_damage_percent = 1
+        self.wizard_damage_total = self.WIZARD_STARTING_DAMAGE * self.wizard_damage_percent
+        self.WIZARD_STARTING_PIERCING = 1
+        self.wizard_piercing_increase = 0
+        self.wizard_piercing = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
+        
         # Secret Animation
         self.wizard_secret_animation_timer = self.wizard_secret_animation_limit
         
@@ -710,15 +726,18 @@ class Harold(pygame.sprite.Sprite):
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, type):
         super().__init__()
-
-        self.obstacle_health = 1
-        self.obstacle_points = 5
+        
+        self.ROUND_DIFFICULTY_INCREASE_INCREMENT = 20 # frequency in seconds the difficulty increases
+        self.time_at_spawn = int(pygame.time.get_ticks() / 1000) - start_time
+        self.time_scalar = int(self.time_at_spawn / self.ROUND_DIFFICULTY_INCREASE_INCREMENT) # Should mean every 20 seconds goes up by 1 
+        
         self.enemy_looking_right = False
 
-        self.skeleton_walk_animation_speed_decimal =  0.32 # Changed, won't work in current implementation but will in new ones 
-        self.flying_enemy_fly_animation_speed_decimal = 0.1
-        self.skeleton_walk_animation_speed = 50
-        self.flying_enemy_fly_animation_speed = 50
+        self.skeleton_walk_animation_speed =  0.32 # Changed, won't work in current implementation but will in new ones 
+        self.flying_enemy_fly_animation_speed = 0.1
+        
+        self.skeleton_value = 2
+        self.flying_enemy_value = 5
 
         self.skeleton_speed = 2
         self.flying_enemy_speed = 2
@@ -731,9 +750,11 @@ class Obstacle(pygame.sprite.Sprite):
             self.enemy_looking_right = True
 
         if type == 'skeleton':
+            self.points = self.skeleton_value * self.time_scalar
+            self.health = self.points
             self.y_pos = GRASS_TOP_Y
             self.obstacle_speed = self.skeleton_speed
-            self.obstacle_animation_speed = self.skeleton_walk_animation_speed_decimal
+            self.obstacle_animation_speed = self.skeleton_walk_animation_speed
 
             # Skeleton Walk Animation
             skeleton_walk_00 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png').convert_alpha()
@@ -759,9 +780,12 @@ class Obstacle(pygame.sprite.Sprite):
             self.move_limit = 60
             self.move_timer = self.move_limit
         else:
+            self.points = self.flying_enemy_value * self.time_scalar
+            self.health = self.points
+            
             self.y_pos = GRASS_TOP_Y - (WIZARD_HEIGHT + (WIZARD_HEIGHT / 4))
             self.obstacle_speed = self.flying_enemy_speed
-            self.obstacle_animation_speed = self.flying_enemy_fly_animation_speed_decimal
+            self.obstacle_animation_speed = self.flying_enemy_fly_animation_speed
             
             # Placeholders
             flying_enemy_fly_1 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
@@ -779,6 +803,15 @@ class Obstacle(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
         self.rect = self.image.get_rect(midbottom = (self.x_pos,self.y_pos))
         self.direction_multiplier = 1 if self.enemy_looking_right else -1
+    
+    def get_health(self):
+        return self.health
+    
+    def set_health(self, new_health):
+        self.health = new_health
+        
+    def get_points(self):
+        return self.points
     
     def animation_state(self):
         self.animation_index += self.obstacle_animation_speed
@@ -827,8 +860,8 @@ class Projectile(pygame.sprite.Sprite):
             self.direction_multiplier = 1 if self.wizard_was_looking_right else -1
             
             # Start position
-            self.fireball_x_start = temp_wizard_rect.centerx + (16 + (WIZARD_WIDTH/2) * self.direction_multiplier)
-            self.fireball_y_start = temp_wizard_rect.centery + 24
+            self.fireball_x_start = temp_wizard_rect.centerx + ((4 * PIXEL_SIZE) + (WIZARD_WIDTH/2) * self.direction_multiplier)
+            self.fireball_y_start = temp_wizard_rect.centery + (6 * PIXEL_SIZE)
 
             # Position
             self.fireball_x_pos = self.fireball_x_start
