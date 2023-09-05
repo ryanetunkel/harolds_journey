@@ -627,7 +627,7 @@ class Harold(pygame.sprite.Sprite):
         self.gravity_acceleration = GLOBAL_GRAVITY
         
         # Harold Animation Speed
-        self.harold_idle_animation_speed = 0.1
+        self.HAROLD_IDLE_ANIMATION_SPEED = 0.1
 
         # Harold Idle Animation
         harold_idle_00 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
@@ -720,7 +720,7 @@ class Harold(pygame.sprite.Sprite):
                 if self.rect.bottom >= GRASS_TOP_Y - 20: self.rect.bottom = GRASS_TOP_Y - 20
 
     def animation_state(self):    
-        self.harold_index += self.harold_idle_animation_speed # speed of animation, adjust as needed
+        self.harold_index += self.HAROLD_IDLE_ANIMATION_SPEED # speed of animation, adjust as needed
         if self.harold_index >= len(self.harold_idle):self.harold_index = 0
         
         self.image = self.harold_idle[int(self.harold_index)]
@@ -753,7 +753,7 @@ class Harold(pygame.sprite.Sprite):
         self.gravity_acceleration = GLOBAL_GRAVITY
         
         # Harold Animation Speed
-        self.harold_idle_animation_speed = 0.1
+        self.HAROLD_IDLE_ANIMATION_SPEED = 0.1
 
         self.harold_index = 0
         self.image = self.harold_idle[self.harold_index]
@@ -858,6 +858,9 @@ class Obstacle(pygame.sprite.Sprite):
     
     def get_y_pos(self):
         return self.y_pos
+    
+    def get_obstacle_rect(self):
+        return self.rect
     
     def get_health(self):
         return self.health
@@ -1039,6 +1042,8 @@ class Pickup(pygame.sprite.Sprite):
         self.LIFETIME_LIMIT = 10 * 60
         self.lifetime = self.LIFETIME_LIMIT
         
+        # Pickups are always piercing even when its not an option fsr, pickups don't show up and that might be why
+        # they also don't go away when walked over - just a lot of issues with them
         if type == 'damage': # Percentages
             self.bonus = 0.5
             harold_idle_12 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
@@ -1054,7 +1059,7 @@ class Pickup(pygame.sprite.Sprite):
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
         self.image = pygame.transform.scale_by(self.image,0.5)
-        self.rect = self.image.get_rect(center = (x_pos,y_pos)) 
+        self.rect = self.image.get_rect(midbottom = (x_pos,y_pos)) 
 
     def get_bonus(self):
         return self.bonus
@@ -1064,14 +1069,15 @@ class Pickup(pygame.sprite.Sprite):
         self.rect.y += self.gravity
         if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
     
-    # Will change a lot when have art
     def animation_state(self):   
         self.animation_index += self.PICKUP_ANIMATION_SPEED
         if self.animation_index >= len(self.frames): self.animation_index = 0
         
         self.image = self.frames[int(self.animation_index)]
         self.image = pygame.transform.scale_by(self.image,0.5)
-        print("I'm Here") # this triggers so they exist but won't show
+        print("I'm ") # this triggers so they exist but won't show
+        if type == 'damage': print('damage')
+        else: print('piercing')
     
     def update(self):
         self.apply_gravity()
