@@ -1035,22 +1035,23 @@ class Projectile(pygame.sprite.Sprite):
 class Pickup(pygame.sprite.Sprite):
     def __init__(self, type, x_pos, y_pos):
         super().__init__()
-                
+        
+        self.x_pos = x_pos
+        self.y_pos = y_pos
         self.gravity = 0
         self.gravity_intensity = GLOBAL_GRAVITY
         self.PICKUP_ANIMATION_SPEED = 0.2
         self.LIFETIME_LIMIT = 10 * 60
         self.lifetime = self.LIFETIME_LIMIT
         
-        # Pickups are always piercing even when its not an option fsr, pickups don't show up and that might be why
-        # they also don't go away when walked over - just a lot of issues with them
+        # Pickups don't show up and don't go away when walked over
         if type == 'damage': # Percentages
             self.bonus = 0.5
             harold_idle_12 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
             harold_idle_13 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_13.png').convert_alpha()
             self.frames = [harold_idle_12, harold_idle_13]
 
-        if type == 'piercing': # Flat increases
+        elif type == 'piercing': # Flat increases
             self.bonus = 1
             fireball_trans_1 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_1.png').convert_alpha()
             fireball_trans_2 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
@@ -1058,8 +1059,11 @@ class Pickup(pygame.sprite.Sprite):
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
-        self.image = pygame.transform.scale_by(self.image,0.5)
-        self.rect = self.image.get_rect(midbottom = (x_pos,y_pos)) 
+        self.image = pygame.transform.scale(self.image,(32,32))
+        self.rect = self.image.get_rect(midbottom = (self.x_pos,self.y_pos)) 
+        print("I'm ") # this triggers so they exist but won't show
+        if type == 'damage': print('damage')
+        else: print('piercing')
 
     def get_bonus(self):
         return self.bonus
@@ -1075,9 +1079,6 @@ class Pickup(pygame.sprite.Sprite):
         
         self.image = self.frames[int(self.animation_index)]
         self.image = pygame.transform.scale_by(self.image,0.5)
-        print("I'm ") # this triggers so they exist but won't show
-        if type == 'damage': print('damage')
-        else: print('piercing')
     
     def update(self):
         self.apply_gravity()
@@ -1122,11 +1123,11 @@ def projectile_collision():
                 temp_projectile_piercing = projectile.get_fireball_piercing()
                 if temp_obstacle_immunity_timer <= 0:
                     if (temp_obstacle_health - temp_projectile_damage) <= 0:
-                        pygame.sprite.spritecollide(projectile,obstacle_group,True)
-                        pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
                         temp_obstacle_x_pos = obstacle.get_x_pos()
                         temp_obstacle_y_pos = obstacle.get_y_pos()
-                        if randint(0,10) >= 0: # Chance to drop pickup - change to > 6
+                        pygame.sprite.spritecollide(projectile,obstacle_group,True)
+                        pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
+                        if randint(0,10) >= 6: # Chance to drop pickup
                             pickup_group.add(Pickup(choice(['piercing','damage','damage','damage']),temp_obstacle_x_pos,temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
                         wizard.sprite.set_additional_score(temp_additional_score)
