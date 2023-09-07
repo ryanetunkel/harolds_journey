@@ -1062,7 +1062,7 @@ class Pickup(pygame.sprite.Sprite):
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
-        self.image = pygame.transform.scale_by(self.image,0.5)
+        self.image = pygame.transform.scale_by(self.image,1)
         self.rect = self.image.get_rect(center = (self.x_pos,self.y_pos)) 
         print("I'm ") # this triggers so they exist but won't show
         if type == 'damage': print('damage')
@@ -1084,7 +1084,7 @@ class Pickup(pygame.sprite.Sprite):
         if self.animation_index >= len(self.frames): self.animation_index = 0
         
         self.image = self.frames[int(self.animation_index)]
-        self.image = pygame.transform.scale_by(self.image,0.5)
+        self.image = pygame.transform.scale_by(self.image,1)
     
     def update(self):
         self.apply_gravity()
@@ -1131,7 +1131,7 @@ def projectile_collision():
                 temp_obstacle_y_pos = int(obstacle.get_y_pos())
                 if temp_obstacle_immunity_timer <= 0:
                     if (temp_obstacle_health - temp_projectile_damage) <= 0:
-                        if randint(1,10) == 10: # Chance to drop pickup
+                        if randint(1,5) == 5: # Chance to drop pickup
                             pickup_group.add(Pickup(choice(['piercing','damage','damage','damage']),temp_obstacle_x_pos,temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
                         pygame.sprite.spritecollide(projectile,obstacle_group,True)
