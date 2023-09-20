@@ -14,7 +14,7 @@ FIREBALL_SOUND_VOLUME = 0.2
 WALK_SOUND_VOLUME = 0.3
 JUMP_SOUND_VOLUME = 0.3
 OBSTACLE_DEATH_VOLUME = 0.2
-OBSTACLE_MOVE_VOLUME = 0.3
+OBSTACLE_MOVE_VOLUME = 0.2
 SECRET_SOUND_VOLUME = 0.6
 
 # Channels
@@ -771,7 +771,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.enemy_looking_right = False
 
         self.skeleton_walk_animation_speed =  0.32 # Changed, won't work in current implementation but will in new ones 
-        self.flying_enemy_fly_animation_speed = 0.1
+        self.bird_fly_animation_speed = 0.2
         
         # Skeleton Base Stats
         self.skeleton_value = 2
@@ -780,10 +780,10 @@ class Obstacle(pygame.sprite.Sprite):
         self.skeleton_damage = 1
         
         # Flying Enemy Base Stats
-        self.flying_enemy_value = 5
-        self.flying_enemy_health = 1
-        self.flying_enemy_speed = 2
-        self.flying_enemy_damage = 1
+        self.bird_value = 5
+        self.bird_health = 1
+        self.bird_speed = 2
+        self.bird_damage = 1
         
         self.immunity = False
         self.IMMUNITY_LIMIT = 50
@@ -827,19 +827,31 @@ class Obstacle(pygame.sprite.Sprite):
             self.move_sound.set_volume(OBSTACLE_MOVE_VOLUME)
             self.move_limit = 60
             self.move_timer = self.move_limit
-        else:
-            self.points = self.flying_enemy_value 
-            self.health = self.flying_enemy_health * self.time_scalar
+        elif type == 'bird':
+            self.points = self.bird_value 
+            self.health = self.bird_health * self.time_scalar
             self.damage = self.skeleton_damage * self.time_scalar
             
             self.y_pos = GRASS_TOP_Y - (WIZARD_HEIGHT + (WIZARD_HEIGHT / 4))
-            self.obstacle_speed = self.flying_enemy_speed
-            self.obstacle_animation_speed = self.flying_enemy_fly_animation_speed
+            self.obstacle_speed = self.bird_speed
+            self.obstacle_animation_speed = self.bird_fly_animation_speed
             
             # Placeholders
-            flying_enemy_fly_1 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png')
-            flying_enemy_fly_2 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_01.png')
-            self.frames = [flying_enemy_fly_1,flying_enemy_fly_2]
+            bird_fly_00 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_00.png')
+            bird_fly_01 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_01.png')
+            bird_fly_02 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_02.png')
+            bird_fly_03 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_03.png')
+            bird_fly_04 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_04.png')
+            bird_fly_05 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_05.png')
+            bird_fly_06 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_06.png')
+            bird_fly_07 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_07.png')
+            bird_fly_08 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_08.png')
+            bird_fly_09 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_09.png')
+            bird_fly_10 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_10.png')
+            bird_fly_11 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_11.png')
+            self.frames = [bird_fly_00, bird_fly_01, bird_fly_02, bird_fly_03,
+                           bird_fly_04, bird_fly_05, bird_fly_06, bird_fly_07,
+                           bird_fly_08, bird_fly_09, bird_fly_10, bird_fly_11]
             
             # Sounds
             self.move_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Swoosh/Retro Swooosh 07.wav')
@@ -1257,7 +1269,7 @@ while True:
         if game_active:
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: # moved from bottom compared to video for better format
-                obstacle_group.add(Obstacle(choice(['flying_enemy','skeleton','skeleton','skeleton'])))
+                obstacle_group.add(Obstacle(choice(['bird','skeleton','skeleton','skeleton'])))
             if wizard.sprite.get_wizard_dead() == False and event.type == shoot_button:
                 if wizard.sprite.get_current_fireball_cooldown() == 0 or wizard.sprite.get_fireball_hit():
                     wizard.sprite.play_fireball_sound()
