@@ -22,10 +22,10 @@ def display_score():
     return current_time + temp_additional_score
 
 def display_stats():
-    damage_stat_surf = test_font.render('Damage:' + str(wizard.sprite.get_wizard_damage_total()), False, '#FCDC4D')
-    damage_stat_rect = damage_stat_surf.get_rect(center = (WINDOW_WIDTH*5/4,WINDOW_HEIGHT/8))
-    piercing_stat_surf = test_font.render('Piercing:' + str(wizard.sprite.get_wizard_piercing_total()), False, '#FCDC4D')
-    piercing_stat_rect = piercing_stat_surf.get_rect(center = (WINDOW_WIDTH*3/2,WINDOW_HEIGHT/8))
+    damage_stat_surf = test_font.render('Damage: ' + str(wizard.sprite.get_wizard_damage_total()), False, '#FCDC4D')
+    damage_stat_rect = damage_stat_surf.get_rect(center = (WINDOW_WIDTH*3/4,WINDOW_HEIGHT/8))
+    piercing_stat_surf = test_font.render('Piercing: ' + str(wizard.sprite.get_wizard_piercing_total()), False, '#FCDC4D')
+    piercing_stat_rect = piercing_stat_surf.get_rect(center = (WINDOW_WIDTH*3/4,WINDOW_HEIGHT*7/32))
     screen.blit(damage_stat_surf,damage_stat_rect)
     screen.blit(piercing_stat_surf,piercing_stat_rect)
 
@@ -103,11 +103,13 @@ sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
 ground_surf = pygame.image.load('Harold\'s Journey/graphics/Grass.png').convert_alpha()
 ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 
-# Stat Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
+# Stat image Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
 damage_stat_image_surf = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
-damage_stat_image_surf = pygame.transform.scale(damage_stat_image_surf,WINDOW_SIZE)
-piercing_stat_image_surf = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_1.png').convert_alpha()
-piercing_stat_image_surf = pygame.transform.scale(piercing_stat_image_surf,WINDOW_SIZE)
+damage_stat_image_surf = pygame.transform.scale_by(damage_stat_image_surf,1)
+damage_stat_image_rect = damage_stat_image_surf.get_rect(center = (WINDOW_WIDTH*21/32,WINDOW_HEIGHT/8))
+piercing_stat_image_surf = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
+piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,1)
+piercing_stat_image_rect = piercing_stat_image_surf.get_rect(center = (WINDOW_WIDTH*21/32,WINDOW_HEIGHT*7/32))
 
 # Intro Screen
 wizard_title_start_x_pos = WINDOW_WIDTH / 2
@@ -146,8 +148,8 @@ while True:
        
         if game_active:
             # Obstacle Timer Event Detection
-            if event.type == obstacle_timer:
-                obstacle_group.add(Obstacle(choice(['bird','skeleton','skeleton','skeleton'])))
+            if event.type == obstacle_timer: # After first playthrough, health of enemies does not reset, trying to fix with passing in time as that is what is responsible for the scalar
+                obstacle_group.add(Obstacle(choice(['bird','skeleton','skeleton','skeleton']),int(pygame.time.get_ticks() / 1000)))
             if wizard.sprite.get_wizard_dead() == False and event.type == shoot_button:
                 if wizard.sprite.get_current_fireball_cooldown() == 0 or wizard.sprite.get_fireball_hit():
                     wizard.sprite.play_fireball_sound()
@@ -174,8 +176,9 @@ while True:
             bg_music_timer += 1
             screen.blit(sky_surf,(0,0))
             screen.blit(ground_surf,(0,0))
-            screen.blit(damage_stat_image_surf,(WINDOW_WIDTH*5/4,WINDOW_HEIGHT/8))
-            screen.blit(piercing_stat_image_surf,(WINDOW_WIDTH*3/2,WINDOW_HEIGHT/8))
+            # Stat Image Postions
+            screen.blit(damage_stat_image_surf,damage_stat_image_rect)
+            screen.blit(piercing_stat_image_surf,piercing_stat_image_rect)
             score = display_score()
             display_stats() # updating stats - won't display
 
