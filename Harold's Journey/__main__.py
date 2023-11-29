@@ -21,6 +21,14 @@ def display_score():
     screen.blit(score_surf,score_rect)
     return current_time + temp_additional_score
 
+def display_stats():
+    damage_stat_surf = test_font.render('Damage:' + str(wizard.sprite.get_wizard_damage_total()), False, '#FCDC4D')
+    damage_stat_rect = damage_stat_surf.get_rect(center = (WINDOW_WIDTH*5/4,WINDOW_HEIGHT/8))
+    piercing_stat_surf = test_font.render('Piercing:' + str(wizard.sprite.get_wizard_piercing_total()), False, '#FCDC4D')
+    piercing_stat_rect = piercing_stat_surf.get_rect(center = (WINDOW_WIDTH*3/2,WINDOW_HEIGHT/8))
+    screen.blit(damage_stat_surf,damage_stat_rect)
+    screen.blit(piercing_stat_surf,piercing_stat_rect)
+
 def collision_sprite(): # Basically game over condition
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
         temp_wizard_fireball_cooldown_time = wizard.sprite.get_fireball_cooldown_time()
@@ -95,6 +103,12 @@ sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
 ground_surf = pygame.image.load('Harold\'s Journey/graphics/Grass.png').convert_alpha()
 ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 
+# Stat Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
+damage_stat_image_surf = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
+damage_stat_image_surf = pygame.transform.scale(damage_stat_image_surf,WINDOW_SIZE)
+piercing_stat_image_surf = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_1.png').convert_alpha()
+piercing_stat_image_surf = pygame.transform.scale(piercing_stat_image_surf,WINDOW_SIZE)
+
 # Intro Screen
 wizard_title_start_x_pos = WINDOW_WIDTH / 2
 wizard_title_start_y_pos = WINDOW_HEIGHT  * 3/4
@@ -160,7 +174,10 @@ while True:
             bg_music_timer += 1
             screen.blit(sky_surf,(0,0))
             screen.blit(ground_surf,(0,0))
+            screen.blit(damage_stat_image_surf,(WINDOW_WIDTH*5/4,WINDOW_HEIGHT/8))
+            screen.blit(piercing_stat_image_surf,(WINDOW_WIDTH*3/2,WINDOW_HEIGHT/8))
             score = display_score()
+            display_stats() # updating stats - won't display
 
             wizard.draw(screen) # draws sprites
             harold.draw(screen)
