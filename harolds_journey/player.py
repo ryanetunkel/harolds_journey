@@ -3,7 +3,6 @@ from random import randint, choice
 
 from global_vars import *
 
-
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
