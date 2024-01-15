@@ -2,7 +2,8 @@
 from random import randint, choice
 
 from global_vars import *
-
+from harolds_journey.graphics.enemies.bird.bird_animation_holder import *
+from harolds_journey.graphics.enemies.skeleton.skeleton_animation_holder import *
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, type, time_at_spawn):
@@ -48,25 +49,9 @@ class Obstacle(pygame.sprite.Sprite):
             self.obstacle_animation_speed = self.skeleton_walk_animation_speed
 
             # Skeleton Walk Animation
-            skeleton_walk_00 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_00.png').convert_alpha()
-            skeleton_walk_01 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_01.png').convert_alpha()
-            skeleton_walk_02 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_02.png').convert_alpha()
-            skeleton_walk_03 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_03.png').convert_alpha()
-            skeleton_walk_04 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_04.png').convert_alpha()
-            skeleton_walk_05 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_05.png').convert_alpha()
-            skeleton_walk_06 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_06.png').convert_alpha()
-            skeleton_walk_07 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_07.png').convert_alpha()
-            skeleton_walk_08 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_08.png').convert_alpha()
-            skeleton_walk_09 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_09.png').convert_alpha()
-            skeleton_walk_10 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_10.png').convert_alpha()
-            skeleton_walk_11 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_11.png').convert_alpha()
-            skeleton_walk_12 = pygame.image.load('Harold\'s Journey/graphics/enemies/skeleton/skeleton_walk_animation/skeleton_walk_12.png').convert_alpha()
-            self.frames = [skeleton_walk_00, skeleton_walk_01, skeleton_walk_02, skeleton_walk_03,
-                            skeleton_walk_04, skeleton_walk_05, skeleton_walk_06, skeleton_walk_07,
-                            skeleton_walk_08, skeleton_walk_09, skeleton_walk_10, skeleton_walk_11,
-                            skeleton_walk_12]
+            self.frames = get_skeleton_walk_arr()
             # Sounds
-            self.move_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/FootStep/Retro FootStep Gravel 01.wav')
+            self.move_sound = pygame.mixer.Sound('harolds_journey/audio/FreeSFX/GameSFX/FootStep/Retro FootStep Gravel 01.wav')
             self.move_sound.set_volume(OBSTACLE_MOVE_VOLUME)
             self.move_limit = 60
             self.move_timer = self.move_limit
@@ -80,24 +65,10 @@ class Obstacle(pygame.sprite.Sprite):
             self.obstacle_animation_speed = self.bird_fly_animation_speed
             
             # Placeholders
-            bird_fly_00 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_00.png')
-            bird_fly_01 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_01.png')
-            bird_fly_02 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_02.png')
-            bird_fly_03 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_03.png')
-            bird_fly_04 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_04.png')
-            bird_fly_05 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_05.png')
-            bird_fly_06 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_06.png')
-            bird_fly_07 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_07.png')
-            bird_fly_08 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_08.png')
-            bird_fly_09 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_09.png')
-            bird_fly_10 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_10.png')
-            bird_fly_11 = pygame.image.load('Harold\'s Journey/graphics/enemies/bird/bird_fly_animation/bird_fly_11.png')
-            self.frames = [bird_fly_00, bird_fly_01, bird_fly_02, bird_fly_03,
-                           bird_fly_04, bird_fly_05, bird_fly_06, bird_fly_07,
-                           bird_fly_08, bird_fly_09, bird_fly_10, bird_fly_11]
+            self.frames = get_bird_fly_arr()
             
             # Sounds
-            self.move_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Swoosh/Retro Swooosh 07.wav')
+            self.move_sound = pygame.mixer.Sound('harolds_journey/audio/FreeSFX/GameSFX/Swoosh/Retro Swooosh 07.wav')
             self.move_sound.set_volume(OBSTACLE_MOVE_VOLUME)
             self.move_limit = 60
             self.move_timer = self.move_limit

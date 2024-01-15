@@ -97,34 +97,34 @@ projectile_group = pygame.sprite.Group()
 
 pickup_group = pygame.sprite.Group()
 
-sky_surf = pygame.image.load('Harold\'s Journey/graphics/Background.png').convert_alpha()
+sky_surf = pygame.image.load('harolds_journey/graphics/Background.png').convert_alpha()
 sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
 
-ground_surf = pygame.image.load('Harold\'s Journey/graphics/Grass.png').convert_alpha()
+ground_surf = pygame.image.load('harolds_journey/graphics/Grass.png').convert_alpha()
 ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 
 # Stat image Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
-damage_stat_image_surf = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
+damage_stat_image_surf = pygame.image.load('harolds_journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
 damage_stat_image_surf = pygame.transform.scale_by(damage_stat_image_surf,1)
 damage_stat_image_rect = damage_stat_image_surf.get_rect(center = (WINDOW_WIDTH*21/32,WINDOW_HEIGHT/8))
-piercing_stat_image_surf = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
+piercing_stat_image_surf = pygame.image.load('harolds_journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
 piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,1)
 piercing_stat_image_rect = piercing_stat_image_surf.get_rect(center = (WINDOW_WIDTH*21/32,WINDOW_HEIGHT*7/32))
 
 # Intro Screen
 wizard_title_start_x_pos = WINDOW_WIDTH / 2
 wizard_title_start_y_pos = WINDOW_HEIGHT  * 3/4
-wizard_title_surf = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
+wizard_title_surf = pygame.image.load('harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
 wizard_title_surf = pygame.transform.scale(wizard_title_surf,(WIZARD_WIDTH * (WINDOW_WIDTH/WINDOW_HEIGHT), WIZARD_HEIGHT * (WINDOW_WIDTH/WINDOW_HEIGHT)))
 wizard_title_rect = wizard_title_surf.get_rect(center = (wizard_title_start_x_pos,wizard_title_start_y_pos))
 
 harold_title_start_x_pos = wizard_title_rect.centerx
 harold_title_start_y_pos = wizard_title_rect.top - (52/4 * PIXEL_SIZE)
-harold_title_surf = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
+harold_title_surf = pygame.image.load('harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
 harold_title_surf = pygame.transform.scale_by(harold_title_surf,(2.25 * (WINDOW_WIDTH/WINDOW_HEIGHT)))
 harold_title_rect = harold_title_surf.get_rect(midbottom = (harold_title_start_x_pos,harold_title_start_y_pos))
 
-title_game_name_surf = test_font.render('Harold\'s Journey',False,"#FCDC4D")
+title_game_name_surf = test_font.render('harolds_journey',False,"#FCDC4D")
 title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,(WINDOW_WIDTH/WINDOW_HEIGHT))
 title_game_name_rect = title_game_name_surf.get_rect(center = (WINDOW_WIDTH/2,((70/400) * WINDOW_HEIGHT)))
 
@@ -180,7 +180,7 @@ while True:
             screen.blit(damage_stat_image_surf,damage_stat_image_rect)
             screen.blit(piercing_stat_image_surf,piercing_stat_image_rect)
             score = display_score()
-            display_stats() # updating stats - won't display
+            display_stats() # updating stats
 
             wizard.draw(screen) # draws sprites
             harold.draw(screen)

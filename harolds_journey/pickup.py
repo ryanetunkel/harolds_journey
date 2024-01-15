@@ -21,15 +21,15 @@ class Pickup(pygame.sprite.Sprite):
         if type == 'damage': # Percentages
             self.type = 'damage'
             self.bonus = 0.5
-            harold_idle_12 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
-            harold_idle_13 = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_13.png').convert_alpha()
+            harold_idle_12 = pygame.image.load('harolds_journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
+            harold_idle_13 = pygame.image.load('harolds_journey/graphics/harold/harold_idle_animation/harold_idle_13.png').convert_alpha()
             self.frames = [harold_idle_12, harold_idle_13]
 
         elif type == 'piercing': # Flat increases
             self.type = 'piercing'
             self.bonus = 1
-            fireball_trans_1 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_1.png').convert_alpha()
-            fireball_trans_2 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
+            fireball_trans_1 = pygame.image.load('harolds_journey/graphics/fireball/fireball_transition_animation/fireball_trans_1.png').convert_alpha()
+            fireball_trans_2 = pygame.image.load('harolds_journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
             self.frames = [fireball_trans_1, fireball_trans_2]
 
         self.animation_index = 0

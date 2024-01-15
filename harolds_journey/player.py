@@ -2,6 +2,7 @@
 from random import randint, choice
 
 from global_vars import *
+from graphics.wizard.wizard_animation_holder import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -47,169 +48,25 @@ class Player(pygame.sprite.Sprite):
         self.wizard_piercing_total = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
 
         # Wizard Idle Animation  
-        wizard_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
-        wizard_idle_01 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_01.png').convert_alpha()
-        wizard_idle_02 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_02.png').convert_alpha()
-        wizard_idle_03 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_03.png').convert_alpha()
-        wizard_idle_04 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_04.png').convert_alpha()
-        wizard_idle_05 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_05.png').convert_alpha()
-        wizard_idle_06 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_06.png').convert_alpha()
-        wizard_idle_07 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_07.png').convert_alpha()
-        wizard_idle_08 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_08.png').convert_alpha()
-        wizard_idle_09 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_09.png').convert_alpha()
-        wizard_idle_10 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_10.png').convert_alpha()
-        wizard_idle_11 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_11.png').convert_alpha()
-        wizard_idle_12 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_12.png').convert_alpha()
-        wizard_idle_13 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_13.png').convert_alpha()
-        wizard_idle_14 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_14.png').convert_alpha()
-        wizard_idle_15 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_15.png').convert_alpha()
-        wizard_idle_16 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_16.png').convert_alpha()
-        wizard_idle_17 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_17.png').convert_alpha()
-        wizard_idle_18 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_18.png').convert_alpha()
-        wizard_idle_19 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_19.png').convert_alpha()
-        wizard_idle_20 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_20.png').convert_alpha()
-        wizard_idle_21 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_21.png').convert_alpha()
-        wizard_idle_22 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_22.png').convert_alpha()
-        wizard_idle_23 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_idle_animation/wizard_idle_23.png').convert_alpha()
-        self.wizard_idle = [wizard_idle_00, wizard_idle_01, wizard_idle_02, wizard_idle_03,
-                    wizard_idle_04, wizard_idle_05, wizard_idle_06, wizard_idle_07,
-                    wizard_idle_08, wizard_idle_09, wizard_idle_10, wizard_idle_11,
-                    wizard_idle_12, wizard_idle_13, wizard_idle_14, wizard_idle_15,
-                    wizard_idle_16, wizard_idle_17, wizard_idle_18, wizard_idle_19,
-                    wizard_idle_20, wizard_idle_21, wizard_idle_22, wizard_idle_23]
+        self.wizard_idle = get_wizard_idle_arr()
 
         # Wizard Secret Idle Animation
-        wizard_secret_idle_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_00.png').convert_alpha()
-        wizard_secret_idle_01 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_01.png').convert_alpha()
-        wizard_secret_idle_02 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_02.png').convert_alpha()
-        wizard_secret_idle_03 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_03.png').convert_alpha()
-        wizard_secret_idle_04 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_04.png').convert_alpha()
-        wizard_secret_idle_05 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_05.png').convert_alpha()
-        wizard_secret_idle_06 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_06.png').convert_alpha()
-        wizard_secret_idle_07 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_07.png').convert_alpha()
-        wizard_secret_idle_08 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_08.png').convert_alpha()
-        wizard_secret_idle_09 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_09.png').convert_alpha()
-        wizard_secret_idle_10 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_10.png').convert_alpha()
-        wizard_secret_idle_11 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_11.png').convert_alpha()
-        wizard_secret_idle_12 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_12.png').convert_alpha()
-        wizard_secret_idle_13 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_13.png').convert_alpha()
-        wizard_secret_idle_14 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_14.png').convert_alpha()
-        wizard_secret_idle_15 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_15.png').convert_alpha()
-        wizard_secret_idle_16 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_16.png').convert_alpha()
-        wizard_secret_idle_17 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_17.png').convert_alpha()
-        wizard_secret_idle_18 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_18.png').convert_alpha()
-        wizard_secret_idle_19 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_19.png').convert_alpha()
-        wizard_secret_idle_20 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_20.png').convert_alpha()
-        wizard_secret_idle_21 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_21.png').convert_alpha()
-        wizard_secret_idle_22 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_22.png').convert_alpha()
-        wizard_secret_idle_23 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_secret_idle_animation/wizard_secret_idle_23.png').convert_alpha()
-        self.wizard_secret_idle = [wizard_secret_idle_00, wizard_secret_idle_01, wizard_secret_idle_02, wizard_secret_idle_03,
-                            wizard_secret_idle_04, wizard_secret_idle_05, wizard_secret_idle_06, wizard_secret_idle_07,
-                            wizard_secret_idle_08, wizard_secret_idle_09, wizard_secret_idle_10, wizard_secret_idle_11,
-                            wizard_secret_idle_12, wizard_secret_idle_13, wizard_secret_idle_14, wizard_secret_idle_15,
-                            wizard_secret_idle_16, wizard_secret_idle_17, wizard_secret_idle_18, wizard_secret_idle_19,
-                            wizard_secret_idle_20, wizard_secret_idle_21, wizard_secret_idle_22, wizard_secret_idle_23]
+        self.wizard_secret_idle = get_wizard_secret_idle_arr()
 
         # Wizard Walk Animation
-        wizard_walk_0 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_walk_animation/wizard_walk_0.png').convert_alpha()
-        wizard_walk_1 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_walk_animation/wizard_walk_1.png').convert_alpha()
-        wizard_walk_2 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_walk_animation/wizard_walk_2.png').convert_alpha()
-        wizard_walk_3 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_walk_animation/wizard_walk_3.png').convert_alpha()
-        wizard_walk_4 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_walk_animation/wizard_walk_4.png').convert_alpha()
-        wizard_walk_5 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_walk_animation/wizard_walk_5.png').convert_alpha()
-        wizard_walk_6 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_walk_animation/wizard_walk_6.png').convert_alpha()
-        wizard_walk_7 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_walk_animation/wizard_walk_7.png').convert_alpha()
-        self.wizard_walk = [wizard_walk_0, wizard_walk_1, wizard_walk_2, wizard_walk_3,
-                    wizard_walk_4, wizard_walk_5, wizard_walk_6, wizard_walk_7]
+        self.wizard_walk = get_wizard_walk_arr()
 
         # Wizard Jump Animation
-        # Ascending
-        wizard_jump_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_00.png').convert_alpha()
-        wizard_jump_01 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_01.png').convert_alpha()
-        wizard_jump_02 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_02.png').convert_alpha()
-        wizard_jump_03 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_03.png').convert_alpha()
-        wizard_jump_04 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_04.png').convert_alpha()
-        wizard_jump_05 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_05.png').convert_alpha()
-        wizard_jump_06 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_06.png').convert_alpha()
-        wizard_jump_07 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_07.png').convert_alpha()
-        # Top of Jump
-        wizard_jump_08 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_08.png').convert_alpha()
-        wizard_jump_09 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_09.png').convert_alpha()
-        wizard_jump_10 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_10.png').convert_alpha()
-        wizard_jump_11 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_11.png').convert_alpha()
-        wizard_jump_12 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_12.png').convert_alpha()
-        wizard_jump_13 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_13.png').convert_alpha()
-        wizard_jump_14 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_14.png').convert_alpha()
-        # Descending
-        wizard_jump_15 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_15.png').convert_alpha()
-        wizard_jump_16 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_16.png').convert_alpha()
-        wizard_jump_17 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_17.png').convert_alpha()
-        wizard_jump_18 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_18.png').convert_alpha()
-        wizard_jump_19 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_19.png').convert_alpha()
-        wizard_jump_20 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_20.png').convert_alpha()
-        wizard_jump_21 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_21.png').convert_alpha()
-        wizard_jump_22 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_22.png').convert_alpha()
-        wizard_jump_23 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_jump_animation/wizard_jump_23.png').convert_alpha()
-        self.wizard_jump = [wizard_jump_00, wizard_jump_01, wizard_jump_02, wizard_jump_03,
-                    wizard_jump_04, wizard_jump_05, wizard_jump_06, wizard_jump_07,
-                    wizard_jump_08, wizard_jump_09, wizard_jump_10, wizard_jump_11,
-                    wizard_jump_12, wizard_jump_13, wizard_jump_14, wizard_jump_15,
-                    wizard_jump_16, wizard_jump_17, wizard_jump_18, wizard_jump_19,
-                    wizard_jump_20, wizard_jump_21, wizard_jump_22, wizard_jump_23]
+        # Ascending - Frames 0-7
+        # Top of Jump - Frames 8-14
+        # Descending - Frames 15-23
+        self.wizard_jump = get_wizard_jump_arr()
 
         # Wizard Fireball Animation
-        wizard_fireball_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_00.png').convert_alpha()
-        wizard_fireball_01 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_01.png').convert_alpha()
-        wizard_fireball_02 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_02.png').convert_alpha()
-        wizard_fireball_03 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_03.png').convert_alpha()
-        wizard_fireball_04 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_04.png').convert_alpha()
-        wizard_fireball_05 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_05.png').convert_alpha()
-        wizard_fireball_06 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_06.png').convert_alpha()
-        wizard_fireball_07 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_07.png').convert_alpha()
-        wizard_fireball_08 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_08.png').convert_alpha()
-        wizard_fireball_09 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_09.png').convert_alpha()
-        wizard_fireball_10 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_10.png').convert_alpha()
-        wizard_fireball_11 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_fireball_animation/wizard_fireball_11.png').convert_alpha()
-        self.wizard_fireball = [wizard_fireball_00, wizard_fireball_01, wizard_fireball_02, wizard_fireball_03,
-                        wizard_fireball_04, wizard_fireball_05, wizard_fireball_06, wizard_fireball_07,
-                        wizard_fireball_08, wizard_fireball_09, wizard_fireball_10, wizard_fireball_11]
+        self.wizard_fireball = get_wizard_fireball_arr()
 
         # Wizard Death Animation
-        wizard_death_00 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_00.png').convert_alpha()
-        wizard_death_01 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_01.png').convert_alpha()
-        wizard_death_02 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_02.png').convert_alpha()
-        wizard_death_03 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_03.png').convert_alpha()
-        wizard_death_04 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_04.png').convert_alpha()
-        wizard_death_05 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_05.png').convert_alpha()
-        wizard_death_06 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_06.png').convert_alpha()
-        wizard_death_07 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_07.png').convert_alpha()
-        wizard_death_08 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_08.png').convert_alpha()
-        wizard_death_09 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_09.png').convert_alpha()
-        wizard_death_10 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_10.png').convert_alpha()
-        wizard_death_11 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_11.png').convert_alpha()
-        wizard_death_12 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_12.png').convert_alpha()
-        wizard_death_13 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_13.png').convert_alpha()
-        wizard_death_14 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_14.png').convert_alpha()
-        wizard_death_15 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_15.png').convert_alpha()
-        wizard_death_16 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_16.png').convert_alpha()
-        wizard_death_17 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_17.png').convert_alpha()
-        wizard_death_18 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_18.png').convert_alpha()
-        wizard_death_19 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_19.png').convert_alpha()
-        wizard_death_20 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_20.png').convert_alpha()
-        wizard_death_21 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_21.png').convert_alpha()
-        wizard_death_22 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_22.png').convert_alpha()
-        wizard_death_23 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_23.png').convert_alpha()
-        wizard_death_24 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_24.png').convert_alpha()
-        wizard_death_25 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_25.png').convert_alpha()
-        wizard_death_26 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_26.png').convert_alpha()
-        wizard_death_27 = pygame.image.load('Harold\'s Journey/graphics/wizard/wizard_death_animation/wizard_death_27.png').convert_alpha()
-        self.wizard_death = [wizard_death_00, wizard_death_01, wizard_death_02, wizard_death_03,
-                    wizard_death_04, wizard_death_05, wizard_death_06, wizard_death_07,
-                    wizard_death_08, wizard_death_09, wizard_death_10, wizard_death_11,
-                    wizard_death_12, wizard_death_13, wizard_death_14, wizard_death_15,
-                    wizard_death_16, wizard_death_17, wizard_death_18, wizard_death_19,
-                    wizard_death_20, wizard_death_21, wizard_death_22, wizard_death_23,
-                    wizard_death_24, wizard_death_25, wizard_death_26, wizard_death_27]
+        self.wizard_death = get_wizard_death_arr()
 
         self.wizard_index = 0
         self.image = self.wizard_walk[self.wizard_index]
@@ -230,15 +87,15 @@ class Player(pygame.sprite.Sprite):
         self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
 
         # Sounds
-        self.jump_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Bounce Jump/Retro Jump Classic 08.wav')
+        self.jump_sound = pygame.mixer.Sound('harolds_journey/audio/FreeSFX/GameSFX/Bounce Jump/Retro Jump Classic 08.wav')
         self.jump_sound.set_volume(JUMP_SOUND_VOLUME)
-        self.fireball_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Blops/Retro Blop 07.wav')
+        self.fireball_sound = pygame.mixer.Sound('harolds_journey/audio/FreeSFX/GameSFX/Blops/Retro Blop 07.wav')
         self.fireball_sound.set_volume(FIREBALL_SOUND_VOLUME)
-        self.walk_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/FootStep/Retro FootStep Grass 01.wav')
+        self.walk_sound = pygame.mixer.Sound('harolds_journey/audio/FreeSFX/GameSFX/FootStep/Retro FootStep Grass 01.wav')
         self.walk_sound.set_volume(WALK_SOUND_VOLUME)
         self.walk_sound_length = 1 * 40
         self.walk_sound_timer = self.walk_sound_length
-        self.secret_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/PowerUp/Retro PowerUP 09.wav')
+        self.secret_sound = pygame.mixer.Sound('harolds_journey/audio/FreeSFX/GameSFX/PowerUp/Retro PowerUP 09.wav')
         self.secret_sound.set_volume(SECRET_SOUND_VOLUME)
         self.secret_sound_timer = 0
         self.secret_sound_length = self.WIZARD_SECRET_ANIMATION_LIMIT

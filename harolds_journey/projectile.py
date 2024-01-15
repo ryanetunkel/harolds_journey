@@ -2,7 +2,7 @@
 from random import randint, choice
 
 from global_vars import *
-
+from harolds_journey.graphics.fireball.fireball_animation_holder import *
 
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, type, source):
@@ -48,21 +48,13 @@ class Projectile(pygame.sprite.Sprite):
             self.created = 0
 
             # Fireball Transition Animation
-            fireball_trans_0 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_0.png').convert_alpha()
-            fireball_trans_1 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_1.png').convert_alpha()
-            fireball_trans_2 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
-            fireball_trans_3 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_transition_animation/fireball_trans_3.png').convert_alpha()
-            self.fireball_trans = [fireball_trans_0, fireball_trans_1, fireball_trans_2, fireball_trans_3]
+            self.fireball_transition = get_fireball_transition_arr()
 
             # Fireball Movement Animation
-            fireball_move_0 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_0.png').convert_alpha()
-            fireball_move_1 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_1.png').convert_alpha()
-            fireball_move_2 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_2.png').convert_alpha()
-            fireball_move_3 = pygame.image.load('Harold\'s Journey/graphics/fireball/fireball_movement_animation/fireball_move_3.png').convert_alpha()
-            self.fireball_move = [fireball_move_0, fireball_move_1, fireball_move_2, fireball_move_3]
+            self.fireball_movement = get_fireball_movement_arr()
 
             self.fireball_index = 0
-            self.image = self.fireball_trans[self.fireball_index]
+            self.image = self.fireball_transition[self.fireball_index]
             # self.image = pygame.transform.scale_by(self.image,1)
             if not self.wizard_was_looking_right:
                 self.image = pygame.transform.flip(self.image,True,False)
@@ -85,13 +77,13 @@ class Projectile(pygame.sprite.Sprite):
             self.created += self.fireball_transition_animation_speed
             self.fireball_index += self.fireball_transition_animation_speed
             
-            if self.fireball_index >= len(self.fireball_trans): self.fireball_index = 0
-            self.image = self.fireball_trans[int(self.fireball_index)]
+            if self.fireball_index >= len(self.fireball_transition): self.fireball_index = 0
+            self.image = self.fireball_transition[int(self.fireball_index)]
         else:
             self.fireball_index += self.fireball_move_animation_speed # speed of animation, adjust as needed
-            if self.fireball_index >= len(self.fireball_move): self.fireball_index = 0
+            if self.fireball_index >= len(self.fireball_movement): self.fireball_index = 0
             
-            self.image = self.fireball_move[int(self.fireball_index)]
+            self.image = self.fireball_movement[int(self.fireball_index)]
         # self.image = pygame.transform.scale_by(self.image,1)
         
         if not self.wizard_was_looking_right:

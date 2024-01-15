@@ -42,20 +42,20 @@ GLOBAL_GRAVITY = -20
 OBSTACLE_SPAWN_FREQUENCY = 1500 # In milliseconds, 1000 = 1 sec
 
 screen = pygame.display.set_mode(WINDOW_SIZE)
-pygame.display.set_caption('Harold\'s Journey')
-pygame_icon = pygame.image.load('Harold\'s Journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
+pygame.display.set_caption('harolds_journey')
+pygame_icon = pygame.image.load('harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
 pygame.display.set_icon(pygame_icon)
 clock = pygame.time.Clock()
-test_font = pygame.font.Font('Harold\'s Journey/font/Pixeltype.ttf',50)
+test_font = pygame.font.Font('harolds_journey/font/Pixeltype.ttf',50)
 game_active = False
 wizard_alive = False
 start_time = 0
 death_counter = 0
 
 # Music
-bg_music = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Ambience/Retro Ambience Short 09.wav')
+bg_music = pygame.mixer.Sound('harolds_journey/audio/FreeSFX/GameSFX/Ambience/Retro Ambience Short 09.wav')
 bg_music.set_volume(BG_MUSIC_VOLUME)
 bg_music_timer = 0
 # Global Sounds
-obstacle_death_sound = pygame.mixer.Sound('Harold\'s Journey/audio/FreeSFX/GameSFX/Explosion/Retro Explosion Short 01.wav')
+obstacle_death_sound = pygame.mixer.Sound('harolds_journey/audio/FreeSFX/GameSFX/Explosion/Retro Explosion Short 01.wav')
 obstacle_death_sound.set_volume(OBSTACLE_DEATH_VOLUME)
