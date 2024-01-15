@@ -3,7 +3,6 @@ from random import randint, choice
 
 from global_vars import *
 
-
 class Pickup(pygame.sprite.Sprite):
     def __init__(self, type, x_pos, y_pos):
         super().__init__()
@@ -21,20 +20,18 @@ class Pickup(pygame.sprite.Sprite):
         if type == 'damage': # Percentages
             self.type = 'damage'
             self.bonus = 0.5
-            harold_idle_12 = pygame.image.load('harolds_journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
-            harold_idle_13 = pygame.image.load('harolds_journey/graphics/harold/harold_idle_animation/harold_idle_13.png').convert_alpha()
-            self.frames = [harold_idle_12, harold_idle_13]
+            damage_pickup = pygame.image.load('harolds_journey/graphics/pickups/damage/damage_pickup.png').convert_alpha()
+            self.frames = [damage_pickup]
 
         elif type == 'piercing': # Flat increases
             self.type = 'piercing'
             self.bonus = 1
-            fireball_trans_1 = pygame.image.load('harolds_journey/graphics/fireball/fireball_transition_animation/fireball_trans_1.png').convert_alpha()
-            fireball_trans_2 = pygame.image.load('harolds_journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
-            self.frames = [fireball_trans_1, fireball_trans_2]
+            piercing_pickup = pygame.image.load('harolds_journey\graphics\pickups\piercing\piercing_pickup.png').convert_alpha()
+            self.frames = [piercing_pickup]
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
-        self.image = pygame.transform.scale_by(self.image,1)
+        self.image = pygame.transform.scale_by(self.image,3)
         self.rect = self.image.get_rect(center = (self.x_pos,self.y_pos)) 
         print("I'm ") # this triggers so they exist but won't show
         if type == 'damage': print('damage')
@@ -56,7 +53,7 @@ class Pickup(pygame.sprite.Sprite):
         if self.animation_index >= len(self.frames): self.animation_index = 0
         
         self.image = self.frames[int(self.animation_index)]
-        self.image = pygame.transform.scale_by(self.image,1)
+        self.image = pygame.transform.scale_by(self.image,3)
     
     def update(self):
         self.apply_gravity()

@@ -23,9 +23,9 @@ def display_score():
 
 def display_stats():
     damage_stat_surf = test_font.render('Damage: ' + str(wizard.sprite.get_wizard_damage_total()), False, '#FCDC4D')
-    damage_stat_rect = damage_stat_surf.get_rect(center = (WINDOW_WIDTH*3/4,WINDOW_HEIGHT/8))
+    damage_stat_rect = damage_stat_surf.get_rect(center = (WINDOW_WIDTH*95/128,WINDOW_HEIGHT/8))
     piercing_stat_surf = test_font.render('Piercing: ' + str(wizard.sprite.get_wizard_piercing_total()), False, '#FCDC4D')
-    piercing_stat_rect = piercing_stat_surf.get_rect(center = (WINDOW_WIDTH*3/4,WINDOW_HEIGHT*7/32))
+    piercing_stat_rect = piercing_stat_surf.get_rect(center = (WINDOW_WIDTH*24/32,WINDOW_HEIGHT*7/32))
     screen.blit(damage_stat_surf,damage_stat_rect)
     screen.blit(piercing_stat_surf,piercing_stat_rect)
 
@@ -97,6 +97,8 @@ projectile_group = pygame.sprite.Group()
 
 pickup_group = pygame.sprite.Group()
 
+moving_sprites = [wizard, harold, obstacle_group, projectile_group, pickup_group]
+
 sky_surf = pygame.image.load('harolds_journey/graphics/Background.png').convert_alpha()
 sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
 
@@ -104,11 +106,11 @@ ground_surf = pygame.image.load('harolds_journey/graphics/Grass.png').convert_al
 ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 
 # Stat image Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
-damage_stat_image_surf = pygame.image.load('harolds_journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
-damage_stat_image_surf = pygame.transform.scale_by(damage_stat_image_surf,1)
+damage_stat_image_surf = pygame.image.load('harolds_journey\graphics\pickups\damage\damage_pickup.png').convert_alpha()
+damage_stat_image_surf = pygame.transform.scale_by(damage_stat_image_surf,4)
 damage_stat_image_rect = damage_stat_image_surf.get_rect(center = (WINDOW_WIDTH*21/32,WINDOW_HEIGHT/8))
-piercing_stat_image_surf = pygame.image.load('harolds_journey/graphics/fireball/fireball_transition_animation/fireball_transition_02.png').convert_alpha()
-piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,1)
+piercing_stat_image_surf = pygame.image.load('harolds_journey\graphics\pickups\piercing\piercing_pickup.png').convert_alpha()
+piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,4)
 piercing_stat_image_rect = piercing_stat_image_surf.get_rect(center = (WINDOW_WIDTH*21/32,WINDOW_HEIGHT*7/32))
 
 # Intro Screen
@@ -148,8 +150,9 @@ while True:
        
         if game_active:
             # Obstacle Timer Event Detection
-            if event.type == obstacle_timer: # After first playthrough, health of enemies does not reset, trying to fix with passing in time as that is what is responsible for the scalar
-                obstacle_group.add(Obstacle(choice(['bird','skeleton','skeleton','skeleton']),int(pygame.time.get_ticks() / 1000)))
+            if event.type == obstacle_timer: 
+                obstacle_group.add(Obstacle(choice(['bird','skeleton','skeleton','skeleton']),int(pygame.time.get_ticks() / 1000) - start_time))
+                print(int(pygame.time.get_ticks() / 1000) - start_time)
             if wizard.sprite.get_wizard_dead() == False and event.type == shoot_button:
                 if wizard.sprite.get_current_fireball_cooldown() == 0 or wizard.sprite.get_fireball_hit():
                     wizard.sprite.play_fireball_sound()
@@ -181,21 +184,10 @@ while True:
             screen.blit(piercing_stat_image_surf,piercing_stat_image_rect)
             score = display_score()
             display_stats() # updating stats
-
-            wizard.draw(screen) # draws sprites
-            harold.draw(screen)
             
-            wizard.update() # updates sprites
-            harold.update()
-
-            obstacle_group.draw(screen)
-            obstacle_group.update()
-
-            projectile_group.draw(screen)
-            projectile_group.update()
-            
-            pickup_group.draw(screen)
-            pickup_group.update()
+            for sprite in moving_sprites: # Holds all things to be drawn
+                sprite.draw(screen)
+                sprite.update()
             
             projectile_collision()
             
