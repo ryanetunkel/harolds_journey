@@ -106,34 +106,34 @@ ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 
 # Stat image Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
 damage_stat_image_surf = pygame.image.load('harolds_journey\graphics\pickups\damage\damage_pickup.png').convert_alpha()
-damage_stat_image_surf = pygame.transform.scale_by(damage_stat_image_surf,4)
-damage_stat_image_rect = damage_stat_image_surf.get_rect(center = (WINDOW_WIDTH*21/32,WINDOW_HEIGHT/8))
+damage_stat_image_surf = pygame.transform.scale_by(damage_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+damage_stat_image_rect = damage_stat_image_surf.get_rect(center = (WINDOW_WIDTH*20/32,WINDOW_HEIGHT/8))
 piercing_stat_image_surf = pygame.image.load('harolds_journey\graphics\pickups\piercing\piercing_pickup.png').convert_alpha()
-piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,4)
-piercing_stat_image_rect = piercing_stat_image_surf.get_rect(center = (WINDOW_WIDTH*21/32,WINDOW_HEIGHT*7/32))
+piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+piercing_stat_image_rect = piercing_stat_image_surf.get_rect(center = (WINDOW_WIDTH*20/32,WINDOW_HEIGHT*7/32))
 
 # Intro Screen
 wizard_title_start_x_pos = WINDOW_WIDTH / 2
-wizard_title_start_y_pos = WINDOW_HEIGHT  * 3/4
+wizard_title_start_y_pos = WINDOW_HEIGHT * 3/4
 wizard_title_surf = pygame.image.load('harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png').convert_alpha()
-wizard_title_surf = pygame.transform.scale(wizard_title_surf,(WIZARD_WIDTH * (WINDOW_WIDTH/WINDOW_HEIGHT), WIZARD_HEIGHT * (WINDOW_WIDTH/WINDOW_HEIGHT)))
+wizard_title_surf = pygame.transform.scale(wizard_title_surf,(WIZARD_WIDTH * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200), WIZARD_HEIGHT * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)))
 wizard_title_rect = wizard_title_surf.get_rect(center = (wizard_title_start_x_pos,wizard_title_start_y_pos))
 
 harold_title_start_x_pos = wizard_title_rect.centerx
 harold_title_start_y_pos = wizard_title_rect.top - (52/4 * PIXEL_SIZE)
 harold_title_surf = pygame.image.load('harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
-harold_title_surf = pygame.transform.scale_by(harold_title_surf,(2.25 * (WINDOW_WIDTH/WINDOW_HEIGHT)))
+harold_title_surf = pygame.transform.scale_by(harold_title_surf,(2.25 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)))
 harold_title_rect = harold_title_surf.get_rect(midbottom = (harold_title_start_x_pos,harold_title_start_y_pos))
 
-title_game_name_surf = test_font.render('harolds_journey',False,"#FCDC4D")
-title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,(WINDOW_WIDTH/WINDOW_HEIGHT))
+title_game_name_surf = test_font.render('Harold\'s Journey',False,"#FCDC4D")
+title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
 title_game_name_rect = title_game_name_surf.get_rect(center = (WINDOW_WIDTH/2,((70/400) * WINDOW_HEIGHT)))
 
 title_info_start_x_pos = wizard_title_rect.centerx
 title_info_start_y_pos = wizard_title_rect.centery + ((40/400) * WINDOW_HEIGHT)
 title_info_start_pos = (title_info_start_x_pos,title_info_start_y_pos)
 title_info_surf = test_font.render('Press any key or click to Start',False,"#FCDC4D")
-title_info_surf = pygame.transform.scale_by(title_info_surf,(WINDOW_WIDTH/WINDOW_HEIGHT))
+title_info_surf = pygame.transform.scale_by(title_info_surf,((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
 title_info_rect = title_info_surf.get_rect(center = (title_info_start_pos))
 
 # Timer
@@ -225,7 +225,7 @@ while True:
         harold_title_rect.midbottom = (harold_title_start_x_pos,harold_title_start_y_pos)
 
         score_message_surf = test_font.render('Score: ' + str(score),False,"#FCDC4D")
-        score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
+        score_message_surf = pygame.transform.scale_by(score_message_surf,((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
         score_message_rect = score_message_surf.get_rect(center = (WINDOW_WIDTH/2,(100/800 * WINDOW_HEIGHT)))
 
         if score == 0: screen.blit(title_game_name_surf,title_game_name_rect)

@@ -32,6 +32,8 @@ pygame.init()
 
 WINDOW_WIDTH = 800 * 3/2
 WINDOW_HEIGHT = 400 * 3/2
+# WINDOW_WIDTH = 800
+# WINDOW_HEIGHT = 400
 PIXEL_SIZE = 4
 WINDOW_SIZE = (WINDOW_WIDTH,WINDOW_HEIGHT)
 WIZARD_WIDTH = 32 * PIXEL_SIZE
@@ -42,7 +44,7 @@ GLOBAL_GRAVITY = -20
 OBSTACLE_SPAWN_FREQUENCY = 1500 # In milliseconds, 1000 = 1 sec
 
 screen = pygame.display.set_mode(WINDOW_SIZE)
-pygame.display.set_caption('harolds_journey')
+pygame.display.set_caption('Harold\'s Journey')
 pygame_icon = pygame.image.load('harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png').convert_alpha()
 pygame.display.set_icon(pygame_icon)
 clock = pygame.time.Clock()
