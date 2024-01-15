@@ -51,11 +51,14 @@ def projectile_collision():
                 temp_projectile_damage = projectile.get_fireball_damage()
                 temp_projectile_piercing = projectile.get_fireball_piercing()
                 temp_obstacle_x_pos = int(obstacle.get_x_pos())
+                print(f"obs x_pos: {temp_obstacle_x_pos}")
                 temp_obstacle_y_pos = int(obstacle.get_y_pos())
+                print(f"obs y_pos: {temp_obstacle_y_pos}")
                 if temp_obstacle_immunity_timer <= 0:
                     if (temp_obstacle_health - temp_projectile_damage) <= 0:
                         if randint(1,5) == 5: # Chance to drop pickup
                             pickup_group.add(Pickup(choice(['piercing','damage','damage','damage']),temp_obstacle_x_pos,temp_obstacle_y_pos))
+                            print("I should've spawned")
                         temp_additional_score += obstacle.get_points()
                         pygame.sprite.spritecollide(projectile,obstacle_group,True)
                         pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
@@ -152,7 +155,6 @@ while True:
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: 
                 obstacle_group.add(Obstacle(choice(['bird','skeleton','skeleton','skeleton']),int(pygame.time.get_ticks() / 1000) - start_time))
-                print(int(pygame.time.get_ticks() / 1000) - start_time)
             if wizard.sprite.get_wizard_dead() == False and event.type == shoot_button:
                 if wizard.sprite.get_current_fireball_cooldown() == 0 or wizard.sprite.get_fireball_hit():
                     wizard.sprite.play_fireball_sound()

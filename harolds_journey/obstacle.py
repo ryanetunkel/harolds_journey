@@ -6,7 +6,7 @@ from graphics.enemies.bird.bird_animation_holder import *
 from graphics.enemies.skeleton.skeleton_animation_holder import *
 
 class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, type, time_at_spawn):
+    def __init__(self, type: str, time_at_spawn: int):
         super().__init__()
         
         self.ROUND_DIFFICULTY_INCREASE_INCREMENT = 20 # frequency in seconds the difficulty increases
@@ -80,10 +80,10 @@ class Obstacle(pygame.sprite.Sprite):
         self.direction_multiplier = 1 if self.enemy_looking_right else -1
     
     def get_x_pos(self):
-        return self.x_pos
+        return self.rect.centerx
     
     def get_y_pos(self):
-        return self.y_pos
+        return self.rect.centery
     
     def get_obstacle_rect(self):
         return self.rect
