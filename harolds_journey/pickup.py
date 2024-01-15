@@ -35,9 +35,6 @@ class Pickup(pygame.sprite.Sprite):
         self.image = self.frames[self.animation_index]
         self.image = pygame.transform.scale_by(self.image,3)
         self.rect = self.image.get_rect(center = (self.x_pos,self.y_pos)) 
-        print("I'm ") # this triggers so they exist but won't show
-        if type == 'damage': print('damage')
-        else: print('piercing')
 
     def get_bonus(self):
         return self.bonus
