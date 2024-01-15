@@ -2,8 +2,8 @@
 from random import randint, choice
 
 from global_vars import *
-from harolds_journey.graphics.enemies.bird.bird_animation_holder import *
-from harolds_journey.graphics.enemies.skeleton.skeleton_animation_holder import *
+from graphics.enemies.bird.bird_animation_holder import *
+from graphics.enemies.skeleton.skeleton_animation_holder import *
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, type, time_at_spawn):

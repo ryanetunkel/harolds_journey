@@ -107,7 +107,7 @@ ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 damage_stat_image_surf = pygame.image.load('harolds_journey/graphics/harold/harold_idle_animation/harold_idle_12.png').convert_alpha()
 damage_stat_image_surf = pygame.transform.scale_by(damage_stat_image_surf,1)
 damage_stat_image_rect = damage_stat_image_surf.get_rect(center = (WINDOW_WIDTH*21/32,WINDOW_HEIGHT/8))
-piercing_stat_image_surf = pygame.image.load('harolds_journey/graphics/fireball/fireball_transition_animation/fireball_trans_2.png').convert_alpha()
+piercing_stat_image_surf = pygame.image.load('harolds_journey/graphics/fireball/fireball_transition_animation/fireball_transition_02.png').convert_alpha()
 piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,1)
 piercing_stat_image_rect = piercing_stat_image_surf.get_rect(center = (WINDOW_WIDTH*21/32,WINDOW_HEIGHT*7/32))
 

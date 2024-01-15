@@ -2,7 +2,7 @@
 from random import randint, choice
 
 from global_vars import *
-from harolds_journey.graphics.fireball.fireball_animation_holder import *
+from graphics.fireball.fireball_animation_holder import *
 
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, type, source):
