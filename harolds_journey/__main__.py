@@ -102,6 +102,8 @@ projectile_group = pygame.sprite.Group()
 
 pickup_group = pygame.sprite.Group()
 
+health_bar_group = pygame.sprite.Group() # add this in
+
 moving_sprites = [wizard, harold, obstacle_group, projectile_group, pickup_group]
 
 sky_surf = pygame.image.load('harolds_journey/graphics/Background.png').convert_alpha()

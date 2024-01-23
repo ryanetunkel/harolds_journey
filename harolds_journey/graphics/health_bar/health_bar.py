@@ -9,23 +9,22 @@ class HealthBar(pygame.sprite.Sprite):
         self.y_pos = y_pos
         self.source = source
         self.current_health = current_health
-        MAX_HEALTH = max_health
-        self.health_percentage = current_health / MAX_HEALTH
-        OUTER_WIDTH = 32
-        OUTER_HEIGHT = 8
-        OUTER_THICKNESS = 2
-        INNER_WIDTH = OUTER_WIDTH - OUTER_THICKNESS
-        INNER_HEIGHT = INNER_WIDTH - OUTER_THICKNESS
-        outline_color = "#AAAAAA"
-        inner_color = "#00AA00"
+        self.MAX_HEALTH = max_health
+        self.health_percentage = current_health / self.MAX_HEALTH
+        self.OUTER_WIDTH = 32
+        self.OUTER_HEIGHT = 8
+        self.OUTER_THICKNESS = 2
+        self.INNER_WIDTH = self.OUTER_WIDTH - self.OUTER_THICKNESS
+        self.INNER_HEIGHT = self.INNER_WIDTH - self.OUTER_THICKNESS
+        self.outline_color = "#AAAAAA"
+        self.inner_color = "#00AA00"
         outline_left = source.left
-        outline_top = source.top + OUTER_HEIGHT + 2
-        inner_left = source.left + OUTER_THICKNESS
-        inner_top = outline_top - OUTER_THICKNESS
-        # keep working
+        outline_top = source.top + self.OUTER_HEIGHT + 2
+        inner_left = source.left + self.OUTER_THICKNESS
+        inner_top = outline_top - self.OUTER_THICKNESS
         
-        self.outline = pygame.draw.rect(self.source, outline_color, (outline_left, outline_top, OUTER_WIDTH, OUTER_HEIGHT), OUTER_THICKNESS)
-        self.moving_bar = pygame.draw.rect(self.source, inner_color, (inner_left, inner_top, INNER_WIDTH, INNER_HEIGHT))
+        self.outline = pygame.draw.rect(self.source, self.outline_color, (outline_left, outline_top, self.OUTER_WIDTH, self.OUTER_HEIGHT), self.OUTER_THICKNESS)
+        self.moving_bar = pygame.draw.rect(self.source, self.inner_color, (inner_left, inner_top, self.INNER_WIDTH, self.INNER_HEIGHT))
         
     # Coords
     def get_x_pos(self):
@@ -52,10 +51,21 @@ class HealthBar(pygame.sprite.Sprite):
     def set_health_percentage(self, new_health_percentage):
         self.health_percentage = new_health_percentage
 
+    def get_color(self):
+        if self.health_percentage > 0.5:
+            self.inner_color = "#00AA00"
+        elif self.health_percentage <= 0.5 and self.health_percentage > 0.25:
+            self.inner_color = "#AAAA00"
+        elif self.health_percentage <= 0.25:
+            self.inner_color = "#AA0000"
     
     def animation_state(self):
-        self.x_pos = self.source.centerx
-        self.y_pos = self.source.topy + 4
+        outline_left = self.source.left
+        outline_top = self.source.top + self.OUTER_HEIGHT + 2
+        inner_left = self.source.left + self.OUTER_THICKNESS
+        inner_top = outline_top - self.OUTER_THICKNESS
+        self.outline = pygame.draw.rect(self.source, self.outline_color, (outline_left, outline_top, self.OUTER_WIDTH, self.OUTER_HEIGHT), self.OUTER_THICKNESS)
+        self.moving_bar = pygame.draw.rect(self.source, self.inner_color, (inner_left, inner_top, self.INNER_WIDTH, self.INNER_HEIGHT))
     
     def update(self):
         self.animation_state()
