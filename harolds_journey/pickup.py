@@ -7,9 +7,6 @@ class Pickup(pygame.sprite.Sprite):
     def __init__(self, type: str, x_pos: int, y_pos: int):
         super().__init__()
         
-        # Won't agree with x_pos and y_pos fsr
-        # self.x_pos = WINDOW_WIDTH / 2
-        # self.y_pos = WIZARD_HEIGHT
         self.x_pos = x_pos
         self.y_pos = y_pos
         self.gravity_intensity = 1
@@ -18,7 +15,6 @@ class Pickup(pygame.sprite.Sprite):
         self.LIFETIME_LIMIT = 10 * 60
         self.lifetime = self.LIFETIME_LIMIT
         
-        # Pickups don't show up and don't go away when walked over
         if type == 'damage': # Percentages
             self.type = 'damage'
             self.bonus = 0.5

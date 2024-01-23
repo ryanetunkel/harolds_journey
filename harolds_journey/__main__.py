@@ -12,6 +12,7 @@ from pickup import *
 from player import *
 from projectile import *
 
+
 # Functions
 def display_score():
     temp_additional_score = wizard.sprite.get_additional_score()
@@ -21,6 +22,7 @@ def display_score():
     screen.blit(score_surf,score_rect)
     return current_time + temp_additional_score
 
+
 def display_stats():
     damage_stat_surf = test_font.render('Damage: ' + str(wizard.sprite.get_wizard_damage_total()), False, '#FCDC4D')
     damage_stat_rect = damage_stat_surf.get_rect(center = (WINDOW_WIDTH*95/128,WINDOW_HEIGHT/8))
@@ -29,7 +31,8 @@ def display_stats():
     screen.blit(damage_stat_surf,damage_stat_rect)
     screen.blit(piercing_stat_surf,piercing_stat_rect)
 
-def collision_sprite(): # Basically game over condition
+
+def player_and_obstacle_collision_bool(): # Basically game over condition
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
         temp_wizard_fireball_cooldown_time = wizard.sprite.get_fireball_cooldown_time()
         wizard.sprite.set_current_fireball_cooldown(temp_wizard_fireball_cooldown_time)
@@ -39,7 +42,8 @@ def collision_sprite(): # Basically game over condition
         return False
     else: return True
 
-def projectile_collision():
+
+def obstacle_and_player_owned_projectile_collision():
     temp_additional_score = wizard.sprite.get_additional_score()
     for projectile in projectile_group:
         if pygame.sprite.spritecollide(projectile,obstacle_group,False):
@@ -71,7 +75,8 @@ def projectile_collision():
                     else:
                         projectile.set_fireball_piercing(temp_projectile_piercing)
 
-def pickup_collision():
+
+def player_and_pickup_collision():
     if pygame.sprite.spritecollide(wizard.sprite,pickup_group,False):
         pickups_overlapping = pygame.sprite.spritecollide(wizard.sprite,pickup_group,False)
         for pickup in pickups_overlapping:
@@ -83,6 +88,7 @@ def pickup_collision():
             if pickup.get_type() == 'piercing':
                 wizard.sprite.set_wizard_piercing_increase(temp_piercing + temp_bonus)
             pygame.sprite.spritecollide(wizard.sprite,pickup_group,True)
+
 
 wizard = pygame.sprite.GroupSingle()
 wizard.add(Player())
@@ -105,10 +111,10 @@ ground_surf = pygame.image.load('harolds_journey/graphics/Grass.png').convert_al
 ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 
 # Stat image Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
-damage_stat_image_surf = pygame.image.load('harolds_journey\graphics\pickups\damage\damage_pickup.png').convert_alpha()
+damage_stat_image_surf = pygame.image.load('harolds_journey/graphics/pickups/damage/damage_pickup.png').convert_alpha()
 damage_stat_image_surf = pygame.transform.scale_by(damage_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
 damage_stat_image_rect = damage_stat_image_surf.get_rect(center = (WINDOW_WIDTH*20/32,WINDOW_HEIGHT/8))
-piercing_stat_image_surf = pygame.image.load('harolds_journey\graphics\pickups\piercing\piercing_pickup.png').convert_alpha()
+piercing_stat_image_surf = pygame.image.load('harolds_journey/graphics/pickups/piercing/piercing_pickup.png').convert_alpha()
 piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
 piercing_stat_image_rect = piercing_stat_image_surf.get_rect(center = (WINDOW_WIDTH*20/32,WINDOW_HEIGHT*7/32))
 
@@ -187,11 +193,11 @@ while True:
                 sprite.draw(screen)
                 sprite.update()
             
-            projectile_collision()
+            obstacle_and_player_owned_projectile_collision()
             
-            pickup_collision()
+            player_and_pickup_collision()
 
-            wizard_alive = collision_sprite()
+            wizard_alive = player_and_obstacle_collision_bool()
 
         else: # Work on death animation
             wizard.sprite.set_wizard_dead(True)

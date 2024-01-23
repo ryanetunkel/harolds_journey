@@ -5,7 +5,7 @@ from global_vars import *
 from graphics.fireball.fireball_animation_holder import *
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, type: str, source):
+    def __init__(self, type: str, source: pygame.sprite.Sprite):
         super().__init__()
 
         # Projectiles
