@@ -11,6 +11,7 @@ from obstacle import *
 from pickup import *
 from player import *
 from projectile import *
+from graphics.health_bar.health_bar import *
 
 
 # Functions
@@ -49,7 +50,7 @@ def obstacle_and_player_owned_projectile_collision():
         if pygame.sprite.spritecollide(projectile,obstacle_group,False):
             obstacles_overlapping = pygame.sprite.spritecollide(projectile,obstacle_group,False)
             for obstacle in obstacles_overlapping:
-                temp_obstacle_health = obstacle.get_health()
+                temp_obstacle_health = obstacle.get_max_health()
                 temp_obstacle_immunity_limit = obstacle.get_immunity_limit()
                 temp_obstacle_immunity_timer = obstacle.get_immunity_timer()
                 temp_projectile_damage = projectile.get_fireball_damage()
@@ -61,11 +62,15 @@ def obstacle_and_player_owned_projectile_collision():
                         if randint(1,5) == 5: # Chance to drop pickup
                             pickup_group.add(Pickup(choice(['piercing','damage','damage','damage']),temp_obstacle_x_pos,temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
+                        old_health_bar = health_bar_ownership_group[new_obstacle]
+                        # This doesn't remove the old_health_bar for some reason
+                        health_bar_ownership_group.pop(old_health_bar)
+                        old_health_bar.kill()
                         pygame.sprite.spritecollide(projectile,obstacle_group,True)
                         pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
                         wizard.sprite.set_additional_score(temp_additional_score)
                     else:
-                        obstacle.set_health(temp_obstacle_health - temp_projectile_damage)
+                        obstacle.set_current_health(temp_obstacle_health - temp_projectile_damage)
                         if (temp_projectile_piercing > 1):
                             obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
                     wizard.sprite.set_fireball_hit(True)
@@ -104,7 +109,9 @@ pickup_group = pygame.sprite.Group()
 
 health_bar_group = pygame.sprite.Group() # add this in
 
-moving_sprites = [wizard, harold, obstacle_group, projectile_group, pickup_group]
+health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
+
+moving_sprites = [wizard, harold, obstacle_group, projectile_group, pickup_group, health_bar_group]
 
 sky_surf = pygame.image.load('harolds_journey/graphics/Background.png').convert_alpha()
 sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
@@ -158,7 +165,11 @@ while True:
         if game_active:
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer: 
-                obstacle_group.add(Obstacle(choice(['bird','skeleton','skeleton','skeleton']),int(pygame.time.get_ticks() / 1000) - start_time))
+                new_obstacle = Obstacle(choice(['bird','skeleton','skeleton','skeleton']),int(pygame.time.get_ticks() / 1000) - start_time)
+                obstacle_group.add(new_obstacle)
+                new_health_bar = HealthBar(new_obstacle, new_obstacle.get_x_pos(), new_obstacle.get_y_pos(), new_obstacle.get_current_health(), new_obstacle.get_max_health())
+                health_bar_group.add(new_health_bar)
+                health_bar_ownership_group[new_obstacle] = new_health_bar
             if wizard.sprite.get_wizard_dead() == False and event.type == shoot_button:
                 if wizard.sprite.get_current_fireball_cooldown() == 0 or wizard.sprite.get_fireball_hit():
                     wizard.sprite.play_fireball_sound()

@@ -37,6 +37,9 @@ class Pickup(pygame.sprite.Sprite):
     
     def get_type(self):
         return self.type
+
+    def get_height(self):
+        return self.rect.bottom - self.rect.top
     
     def apply_gravity(self):
         self.gravity += self.gravity_intensity

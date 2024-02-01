@@ -19,13 +19,13 @@ class Obstacle(pygame.sprite.Sprite):
         
         # Skeleton Base Stats
         self.skeleton_value = 2
-        self.skeleton_health = 1
+        self.skeleton_max_health = 1
         self.skeleton_speed = 2
         self.skeleton_damage = 1
         
         # Flying Enemy Base Stats
         self.bird_value = 5
-        self.bird_health = 1
+        self.bird_max_health = 1
         self.bird_speed = 2
         self.bird_damage = 1
         
@@ -42,7 +42,8 @@ class Obstacle(pygame.sprite.Sprite):
 
         if type == 'skeleton':
             self.points = self.skeleton_value
-            self.health = self.skeleton_health * self.time_scalar
+            self.max_health = self.skeleton_max_health * self.time_scalar
+            self.current_health = self.max_health
             self.damage = self.skeleton_damage * self.time_scalar
             self.y_pos = GRASS_TOP_Y
             self.obstacle_speed = self.skeleton_speed
@@ -57,7 +58,8 @@ class Obstacle(pygame.sprite.Sprite):
             self.move_timer = self.move_limit
         elif type == 'bird':
             self.points = self.bird_value 
-            self.health = self.bird_health * self.time_scalar
+            self.max_health = self.bird_max_health * self.time_scalar
+            self.current_health = self.max_health
             self.damage = self.skeleton_damage * self.time_scalar
             
             self.y_pos = GRASS_TOP_Y - (WIZARD_HEIGHT + (WIZARD_HEIGHT / 4))
@@ -88,11 +90,17 @@ class Obstacle(pygame.sprite.Sprite):
     def get_obstacle_rect(self):
         return self.rect
     
-    def get_health(self):
-        return self.health
+    def get_current_health(self):
+        return self.current_health
     
-    def set_health(self, new_health):
-        self.health = new_health
+    def set_current_health(self, new_health):
+        self.current_health = new_health
+    
+    def get_max_health(self):
+        return self.max_health
+    
+    def set_max_health(self, new_max_health):
+        self.max_health = new_max_health
         
     def get_points(self):
         return self.points
@@ -125,6 +133,9 @@ class Obstacle(pygame.sprite.Sprite):
     
     def set_points(self,new_points):
         self.points = new_points
+        
+    def get_height(self):
+        return self.rect.bottom - self.rect.top
     
     def animation_state(self):
         self.animation_index += self.obstacle_animation_speed

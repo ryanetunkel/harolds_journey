@@ -67,6 +67,9 @@ class Harold(pygame.sprite.Sprite):
     
     def set_harold_gravity(self,new_harold_gravity):
         self.harold_gravity = new_harold_gravity
+        
+    def get_height(self):
+        return self.rect.bottom - self.rect.top
 
     def harold_input(self):
         keys = pygame.key.get_pressed()

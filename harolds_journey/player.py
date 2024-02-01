@@ -105,11 +105,17 @@ class Player(pygame.sprite.Sprite):
     def get_wizard_pos(self):
         return (self.wizard_x_pos,self.wizard_y_pos)
     
+    def get_x_pos(self): # Here for new implementations, eventually switch to just this, just need to replace a lot that uses the old
+        return self.rect.centerx
+    
     def set_wizard_x_pos(self,new_wizard_x_pos):
         self.wizard_x_pos = new_wizard_x_pos
 
     def get_wizard_y_pos(self):
         return self.wizard_y_pos
+    
+    def get_y_pos(self): # Here for new implementations, eventually switch to just this, just need to replace a lot that uses the old
+        return self.rect.centery
     
     def set_wizard_y_pos(self,new_wizard_y_pos):
         self.wizard_y_pos = new_wizard_y_pos
@@ -265,6 +271,9 @@ class Player(pygame.sprite.Sprite):
     def calculate_wizard_stats(self):
         self.calculate_wizard_damage()
         self.calculate_wizard_piercing()
+
+    def get_height(self):
+        return self.rect.bottom - self.rect.top
 
     def wizard_input(self):
         keys = pygame.key.get_pressed()
