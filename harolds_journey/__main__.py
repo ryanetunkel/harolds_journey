@@ -40,6 +40,7 @@ def player_and_obstacle_collision_bool(): # Basically game over condition
         obstacle_group.empty()
         projectile_group.empty()
         pickup_group.empty()
+        health_bar_group.empty()
         return False
     else: return True
 
@@ -62,9 +63,7 @@ def obstacle_and_player_owned_projectile_collision():
                         if randint(1,5) == 5: # Chance to drop pickup
                             pickup_group.add(Pickup(choice(['piercing','damage','damage','damage']),temp_obstacle_x_pos,temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
-                        old_health_bar = health_bar_ownership_group[new_obstacle]
-                        # This doesn't remove the old_health_bar for some reason
-                        health_bar_ownership_group.pop(old_health_bar)
+                        old_health_bar = health_bar_ownership_group[obstacle]
                         old_health_bar.kill()
                         pygame.sprite.spritecollide(projectile,obstacle_group,True)
                         pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
