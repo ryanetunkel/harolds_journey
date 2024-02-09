@@ -10,8 +10,8 @@ class HealthBar(pygame.sprite.Sprite):
         self.y_pos = y_pos + (source.get_height() / 2) + 4
         self.source = source
         self.current_health = current_health
-        self.MAX_HEALTH = max_health
-        self.health_percentage = current_health / self.MAX_HEALTH
+        self.max_health = max_health
+        self.health_percentage = current_health / self.max_health
         self.INNER_WIDTH = 16
         self.INNER_HEIGHT = 4
         inner_centerx = self.x_pos
@@ -39,6 +39,12 @@ class HealthBar(pygame.sprite.Sprite):
     
     def set_current_health(self, new_current_health):
         self.current_health = new_current_health
+        
+    def get_max_health(self):
+        return self.max_health
+    
+    def set_max_health(self, new_max_health):
+        self.max_health = new_max_health
     
     def get_health_percentage(self):
         return self.health_percentage
@@ -52,10 +58,20 @@ class HealthBar(pygame.sprite.Sprite):
     def animation_state(self):
         inner_centerx = self.source.get_x_pos()
         inner_centery = self.source.get_y_pos() + (WIZARD_HEIGHT / 2) + (self.INNER_HEIGHT * 2)
+        if self.health_percentage > 0.5:
+            self.image = get_green_health_bar()
+        elif self.health_percentage <= 0.5:
+            self.image = get_yellow_health_bar()
+        elif self.health_percentage <= 0.25:
+            self.image = get_red_health_bar()
+        self.image = pygame.transform.scale(self.image,(self.INNER_WIDTH * 4, self.INNER_HEIGHT * 2))
         self.rect = self.image.get_rect(center = (inner_centerx,inner_centery))      
         # self.moving_bar = pygame.draw.rect(screen, self.inner_color, (inner_left, inner_top, self.INNER_WIDTH, self.INNER_HEIGHT))
     
     def update(self):
+        self.set_current_health(self.source.get_current_health())
+        self.set_max_health(self.source.get_max_health())
+        self.set_health_percentage(self.current_health / self.max_health)
         self.animation_state()
         if self.current_health <= 0:
             self.current_health = 0

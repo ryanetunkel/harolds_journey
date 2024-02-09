@@ -37,10 +37,19 @@ def player_and_obstacle_collision_bool(): # Basically game over condition
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
         temp_wizard_fireball_cooldown_time = wizard.sprite.get_fireball_cooldown_time()
         wizard.sprite.set_current_fireball_cooldown(temp_wizard_fireball_cooldown_time)
+        for obstacle in obstacle_group:
+            obstacle.kill()
         obstacle_group.empty()
+        for projectile in projectile_group:
+            projectile.kill()
         projectile_group.empty()
+        for pickup in pickup_group:
+            pickup.kill()
         pickup_group.empty()
+        for health_bar in health_bar_group:
+            health_bar.kill()
         health_bar_group.empty()
+        pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
         return False
     else: return True
 
