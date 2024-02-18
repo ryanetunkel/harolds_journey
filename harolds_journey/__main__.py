@@ -12,6 +12,7 @@ from pickup import *
 from player import *
 from projectile import *
 from graphics.health_bar.health_bar import *
+from graphics.health_bar.outline_health_bar import *
 
 
 # Functions
@@ -48,7 +49,10 @@ def player_and_obstacle_collision_bool(): # Basically game over condition
         pickup_group.empty()
         for health_bar in health_bar_group:
             health_bar.kill()
+        for outline_health_bar in outline_health_bar_group:
+            outline_health_bar.kill()
         health_bar_group.empty()
+        outline_health_bar_group.empty()
         pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
         return False
     else: return True
@@ -60,7 +64,7 @@ def obstacle_and_player_owned_projectile_collision():
         if pygame.sprite.spritecollide(projectile,obstacle_group,False):
             obstacles_overlapping = pygame.sprite.spritecollide(projectile,obstacle_group,False)
             for obstacle in obstacles_overlapping:
-                temp_obstacle_health = obstacle.get_max_health()
+                temp_obstacle_health = obstacle.get_current_health()
                 temp_obstacle_immunity_limit = obstacle.get_immunity_limit()
                 temp_obstacle_immunity_timer = obstacle.get_immunity_timer()
                 temp_projectile_damage = projectile.get_fireball_damage()
@@ -69,10 +73,14 @@ def obstacle_and_player_owned_projectile_collision():
                 temp_obstacle_y_pos = int(obstacle.get_y_pos())
                 if temp_obstacle_immunity_timer <= 0:
                     if (temp_obstacle_health - temp_projectile_damage) <= 0:
+                        # Pickup Spawn
                         if randint(1,5) == 5: # Chance to drop pickup
                             pickup_group.add(Pickup(choice(['piercing','damage','damage','damage']),temp_obstacle_x_pos,temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
+                        # Health Bar and Outline Health Bar Cleanup
                         old_health_bar = health_bar_ownership_group[obstacle]
+                        old_outline_bar = outline_health_bar_ownership_group[old_health_bar]
+                        old_outline_bar.kill()
                         old_health_bar.kill()
                         pygame.sprite.spritecollide(projectile,obstacle_group,True)
                         pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
@@ -117,9 +125,13 @@ pickup_group = pygame.sprite.Group()
 
 health_bar_group = pygame.sprite.Group() # add this in
 
+outline_health_bar_group = pygame.sprite.Group()
+
 health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
 
-moving_sprites = [wizard, harold, obstacle_group, projectile_group, pickup_group, health_bar_group]
+outline_health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
+
+moving_sprites = [wizard, harold, obstacle_group, projectile_group, pickup_group, outline_health_bar_group, health_bar_group,]
 
 sky_surf = pygame.image.load('harolds_journey/graphics/Background.png').convert_alpha()
 sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
@@ -175,9 +187,14 @@ while True:
             if event.type == obstacle_timer: 
                 new_obstacle = Obstacle(choice(['bird','skeleton','skeleton','skeleton']),int(pygame.time.get_ticks() / 1000) - start_time)
                 obstacle_group.add(new_obstacle)
-                new_health_bar = HealthBar(new_obstacle, new_obstacle.get_x_pos(), new_obstacle.get_y_pos(), new_obstacle.get_current_health(), new_obstacle.get_max_health())
+                # Health Bar
+                new_health_bar = HealthBar(new_obstacle, new_obstacle.get_current_health(), new_obstacle.get_max_health())
                 health_bar_group.add(new_health_bar)
                 health_bar_ownership_group[new_obstacle] = new_health_bar
+                # Outline Health Bar
+                new_outline_health_bar = OutlineHealthBar(new_health_bar, new_obstacle.get_x_pos(), new_obstacle.get_y_pos())
+                outline_health_bar_group.add(new_outline_health_bar)
+                outline_health_bar_ownership_group[new_health_bar] = new_outline_health_bar
             if wizard.sprite.get_wizard_dead() == False and event.type == shoot_button:
                 if wizard.sprite.get_current_fireball_cooldown() == 0 or wizard.sprite.get_fireball_hit():
                     wizard.sprite.play_fireball_sound()

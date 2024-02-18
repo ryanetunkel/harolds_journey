@@ -87,7 +87,7 @@ class Obstacle(pygame.sprite.Sprite):
     def get_y_pos(self):
         return self.rect.centery
     
-    def get_obstacle_rect(self):
+    def get_rect(self):
         return self.rect
     
     def get_current_health(self):

@@ -6,7 +6,7 @@ from player import *
 from graphics.harold.harold_animation_holder import *
 
 class Harold(pygame.sprite.Sprite):
-    def __init__(self, player: pygame.sprite.GroupSingle()):
+    def __init__(self, player: pygame.sprite.GroupSingle):
         super().__init__()
         
         # Temp Wizard Attribute
