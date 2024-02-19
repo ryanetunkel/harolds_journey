@@ -26,12 +26,31 @@ def display_score():
 
 
 def display_stats():
+    # Damage
     damage_stat_surf = test_font.render('Damage: ' + str(wizard.sprite.get_wizard_damage_total()), False, '#FCDC4D')
     damage_stat_rect = damage_stat_surf.get_rect(center = (WINDOW_WIDTH*95/128,WINDOW_HEIGHT/8))
+    # Piercing
     piercing_stat_surf = test_font.render('Piercing: ' + str(wizard.sprite.get_wizard_piercing_total()), False, '#FCDC4D')
     piercing_stat_rect = piercing_stat_surf.get_rect(center = (WINDOW_WIDTH*24/32,WINDOW_HEIGHT*7/32))
+    # Fireball Cooldown
+    fireball_cooldown_x_pos = WINDOW_WIDTH * 3/8
+    fireball_cooldown_y_pos = WINDOW_HEIGHT * 11/64
+    fireball_cooldown_surf = pygame.image.load('harolds_journey/graphics/fireball/fireball_movement_animation/fireball_movement_00.png').convert_alpha()
+    fireball_cooldown_rect = fireball_cooldown_surf.get_rect(center = (fireball_cooldown_x_pos,fireball_cooldown_y_pos))
+    # Fireball Cooldown Overlay
+    fireball_cooldown_overlay_color = pygame.Color(0,255,255,200)
+    fireball_cooldown_overlay_left = fireball_cooldown_rect.left
+    fireball_cooldown_overlay_top = fireball_cooldown_rect.top
+    fireball_cooldown_overlay_width = fireball_cooldown_rect.left - fireball_cooldown_rect.right
+    fireball_cooldown_overlay_height = fireball_cooldown_rect.bottom - fireball_cooldown_rect.top
+    fireball_cooldown_overlay_coords = (fireball_cooldown_overlay_left, fireball_cooldown_overlay_top, fireball_cooldown_overlay_width, fireball_cooldown_overlay_height)
+    pygame.draw.rect(fireball_cooldown_surf, fireball_cooldown_overlay_color, fireball_cooldown_overlay_coords)
+    # pygame.Surface.subsurface(fireball_cooldown_surf, fireball_cooldown_overlay_coords)
     screen.blit(damage_stat_surf,damage_stat_rect)
     screen.blit(piercing_stat_surf,piercing_stat_rect)
+    screen.blit(fireball_cooldown_surf,fireball_cooldown_rect)
+    # screen.blit(fireball_cooldown_surf,fireball_cooldown_overlay_rect)
+    # transparent square won't display over top of fireball_cooldown surf
 
 
 def player_and_obstacle_collision_bool(): # Basically game over condition
