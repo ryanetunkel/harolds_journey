@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
 
         # Fireball
         self.fireball_hit = False
-        self.fireball_cooldown_time = 60
+        self.max_fireball_cooldown_time = 60
         self.current_fireball_cooldown = 0
         self.fireball_shot = False
         self.start_fireball_animation = False
@@ -163,11 +163,11 @@ class Player(pygame.sprite.Sprite):
     def set_current_fireball_cooldown(self,new_fireball_cooldown):
         self.current_fireball_cooldown = new_fireball_cooldown
     
-    def get_fireball_cooldown_time(self):
-        return self.fireball_cooldown_time
+    def get_max_fireball_cooldown_time(self):
+        return self.max_fireball_cooldown_time
     
-    def set_fireball_cooldown_time(self,new_fireball_cooldown_time):
-        self.fireball_cooldown_time = new_fireball_cooldown_time
+    def set_max_fireball_cooldown_time(self,new_max_fireball_cooldown_time):
+        self.max_fireball_cooldown_time = new_max_fireball_cooldown_time
     
     # X Velocity
     def get_wizard_x_velocity(self):
@@ -409,7 +409,7 @@ class Player(pygame.sprite.Sprite):
 
         # Fireball
         self.fireball_hit = False
-        self.fireball_cooldown_time = 60
+        self.max_fireball_cooldown_time = 60
         self.current_fireball_cooldown = 0
         self.fireball_shot = False
         self.start_fireball_animation = False
