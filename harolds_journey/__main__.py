@@ -38,25 +38,28 @@ def display_stats():
     fireball_cooldown_surf = pygame.image.load('harolds_journey/graphics/fireball/fireball_movement_animation/fireball_movement_00.png').convert_alpha()
     fireball_cooldown_rect = fireball_cooldown_surf.get_rect(center = (fireball_cooldown_x_pos,fireball_cooldown_y_pos))
     # Fireball Cooldown Overlay
-    fireball_cooldown_overlay_color = pygame.Color(0,255,255,200)
+    current_fireball_cooldown = wizard.sprite.get_current_fireball_cooldown()
+    max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
+    fireball_cooldown_overlay_function = current_fireball_cooldown / max_fireball_cooldown_time
+    fireball_cooldown_overlay_color = pygame.Color(255,255,255)
+    fireball_cooldown_overlay_width = fireball_cooldown_surf.get_width()
+    fireball_cooldown_overlay_height = fireball_cooldown_surf.get_height() * fireball_cooldown_overlay_function
     fireball_cooldown_overlay_left = fireball_cooldown_rect.left
-    fireball_cooldown_overlay_top = fireball_cooldown_rect.top
-    fireball_cooldown_overlay_width = fireball_cooldown_rect.left - fireball_cooldown_rect.right
-    fireball_cooldown_overlay_height = fireball_cooldown_rect.bottom - fireball_cooldown_rect.top
-    fireball_cooldown_overlay_coords = (fireball_cooldown_overlay_left, fireball_cooldown_overlay_top, fireball_cooldown_overlay_width, fireball_cooldown_overlay_height)
-    pygame.draw.rect(fireball_cooldown_surf, fireball_cooldown_overlay_color, fireball_cooldown_overlay_coords)
-    # pygame.Surface.subsurface(fireball_cooldown_surf, fireball_cooldown_overlay_coords)
+    fireball_cooldown_overlay_top = fireball_cooldown_rect.bottom - int(fireball_cooldown_overlay_height)
+    fireball_cooldown_overlay_surf = pygame.Surface((fireball_cooldown_overlay_width, fireball_cooldown_overlay_height))
+    fireball_cooldown_overlay_surf.fill(fireball_cooldown_overlay_color)
+    fireball_cooldown_overlay_surf.set_alpha(100)
+    # Blits
     screen.blit(damage_stat_surf,damage_stat_rect)
     screen.blit(piercing_stat_surf,piercing_stat_rect)
     screen.blit(fireball_cooldown_surf,fireball_cooldown_rect)
-    # screen.blit(fireball_cooldown_surf,fireball_cooldown_overlay_rect)
-    # transparent square won't display over top of fireball_cooldown surf
+    screen.blit(fireball_cooldown_overlay_surf, (fireball_cooldown_overlay_left, fireball_cooldown_overlay_top))
 
 
 def player_and_obstacle_collision_bool(): # Basically game over condition
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
-        temp_wizard_fireball_cooldown_time = wizard.sprite.get_fireball_cooldown_time()
-        wizard.sprite.set_current_fireball_cooldown(temp_wizard_fireball_cooldown_time)
+        temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
+        wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
         for obstacle in obstacle_group:
             obstacle.kill()
         obstacle_group.empty()
@@ -218,8 +221,8 @@ while True:
                 if wizard.sprite.get_current_fireball_cooldown() == 0 or wizard.sprite.get_fireball_hit():
                     wizard.sprite.play_fireball_sound()
                     wizard.sprite.set_fireball_shot(True)
-                    temp_fireball_cooldown_time = wizard.sprite.get_fireball_cooldown_time()
-                    wizard.sprite.set_current_fireball_cooldown(temp_fireball_cooldown_time)
+                    temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
+                    wizard.sprite.set_current_fireball_cooldown(temp_max_fireball_cooldown_time)
                     wizard.sprite.set_fireball_hit(False)
                     projectile_group.add(Projectile('fireball', wizard))
 
