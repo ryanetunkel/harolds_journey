@@ -24,8 +24,14 @@ class Pickup(pygame.sprite.Sprite):
         elif type == 'piercing': # Flat increases
             self.type = 'piercing'
             self.bonus = 1
-            piercing_pickup = pygame.image.load('harolds_journey\graphics\pickups\piercing\piercing_pickup.png').convert_alpha()
+            piercing_pickup = pygame.image.load('harolds_journey/graphics/pickups/piercing/piercing_pickup.png').convert_alpha()
             self.frames = [piercing_pickup]
+        
+        elif type == 'fireball_cooldown': # Flat increases?
+            self.type = 'fireball_cooldown'
+            self.bonus = 2
+            fireball_cooldown_pickup = pygame.image.load('harolds_journey/graphics/pickups/fireball_cooldown/fireball_cooldown_pickup.png').convert_alpha()
+            self.frames = [fireball_cooldown_pickup]
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]

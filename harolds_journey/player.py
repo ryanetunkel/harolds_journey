@@ -27,8 +27,6 @@ class Player(pygame.sprite.Sprite):
 
         # Fireball
         self.fireball_hit = False
-        self.max_fireball_cooldown_time = 60
-        self.current_fireball_cooldown = 0
         self.fireball_shot = False
         self.start_fireball_animation = False
         
@@ -43,9 +41,13 @@ class Player(pygame.sprite.Sprite):
         self.WIZARD_STARTING_DAMAGE = 1
         self.wizard_damage_percent = 1
         self.wizard_damage_total = self.WIZARD_STARTING_DAMAGE * self.wizard_damage_percent
+        
         self.WIZARD_STARTING_PIERCING = 1
         self.wizard_piercing_increase = 0
         self.wizard_piercing_total = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
+        
+        self.max_fireball_cooldown_time = 60
+        self.current_fireball_cooldown = 0
 
         # Wizard Idle Animation  
         self.wizard_idle = get_wizard_idle_arr()
@@ -156,19 +158,6 @@ class Player(pygame.sprite.Sprite):
     def get_looking_right(self):
         return self.looking_right
     
-    # Fireball Stats
-    def get_current_fireball_cooldown(self):
-        return self.current_fireball_cooldown
-
-    def set_current_fireball_cooldown(self,new_fireball_cooldown):
-        self.current_fireball_cooldown = new_fireball_cooldown
-    
-    def get_max_fireball_cooldown_time(self):
-        return self.max_fireball_cooldown_time
-    
-    def set_max_fireball_cooldown_time(self,new_max_fireball_cooldown_time):
-        self.max_fireball_cooldown_time = new_max_fireball_cooldown_time
-    
     # X Velocity
     def get_wizard_x_velocity(self):
         return self.wizard_x_velocity
@@ -267,6 +256,19 @@ class Player(pygame.sprite.Sprite):
         temp_increase = self.get_wizard_piercing_increase()
         temp_total = self.WIZARD_STARTING_PIERCING * temp_increase
         self.set_wizard_piercing_total(temp_total)
+    
+    # Fireball Stats
+    def get_current_fireball_cooldown(self):
+        return self.current_fireball_cooldown
+
+    def set_current_fireball_cooldown(self,new_fireball_cooldown):
+        self.current_fireball_cooldown = new_fireball_cooldown
+    
+    def get_max_fireball_cooldown_time(self):
+        return self.max_fireball_cooldown_time
+    
+    def set_max_fireball_cooldown_time(self,new_max_fireball_cooldown_time):
+        self.max_fireball_cooldown_time = new_max_fireball_cooldown_time
     
     def calculate_wizard_stats(self):
         self.calculate_wizard_damage()
