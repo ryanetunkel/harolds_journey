@@ -41,7 +41,7 @@ def display_stats():
     piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
     piercing_stat_image_rect = piercing_stat_image_surf.get_rect(center = (WINDOW_WIDTH*20/32,WINDOW_HEIGHT*5/32))
 
-    piercing_stat_surf = test_font.render('Piercing: ' + str(wizard.sprite.get_wizard_piercing_total()), False, '#FCDC4D')
+    piercing_stat_surf = test_font.render('Piercing: ' + str(wizard.sprite.get_wizard_piercing_total() - 1), False, '#FCDC4D')
     piercing_stat_surf = pygame.transform.scale_by(piercing_stat_surf, 0.9)
     piercing_stat_rect = piercing_stat_surf.get_rect(center = (WINDOW_WIDTH*47/64,WINDOW_HEIGHT*5/32))
     
@@ -247,7 +247,7 @@ while True:
                 outline_health_bar_group.add(new_outline_health_bar)
                 outline_health_bar_ownership_group[new_health_bar] = new_outline_health_bar
             if wizard.sprite.get_wizard_dead() == False and event.type == shoot_button:
-                if wizard.sprite.get_current_fireball_cooldown() == 0 or wizard.sprite.get_fireball_hit():
+                if wizard.sprite.get_current_fireball_cooldown() == 0: # or wizard.sprite.get_fireball_hit(): # causes fireball_cooldown refresh on hit
                     wizard.sprite.play_fireball_sound()
                     wizard.sprite.set_fireball_shot(True)
                     temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
@@ -297,7 +297,7 @@ while True:
             wizard.update() # updates sprites
             harold.update()
             death_counter += 1
-            if death_counter > 120:
+            if death_counter > 180:
                 game_active = False
             
     # Menu Screen
