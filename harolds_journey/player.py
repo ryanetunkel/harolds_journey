@@ -254,7 +254,7 @@ class Player(pygame.sprite.Sprite):
     
     def calculate_wizard_piercing(self):
         temp_increase = self.get_wizard_piercing_increase()
-        temp_total = self.WIZARD_STARTING_PIERCING * temp_increase
+        temp_total = self.WIZARD_STARTING_PIERCING + temp_increase
         self.set_wizard_piercing_total(temp_total)
     
     # Fireball Stats
