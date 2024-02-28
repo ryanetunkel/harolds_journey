@@ -51,9 +51,9 @@ def display_stats():
     fireball_cooldown_stat_image_surf = pygame.transform.scale_by(fireball_cooldown_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
     fireball_cooldown_stat_image_rect = fireball_cooldown_stat_image_surf.get_rect(center = (WINDOW_WIDTH*20/32,WINDOW_HEIGHT*8/32))
     
-    fireball_cooldown_stat_surf = test_font.render('Fireball Cooldown: ' + str(wizard.sprite.get_max_fireball_cooldown_time()), False, '#FCDC4D')
+    fireball_cooldown_stat_surf = test_font.render(f'Cooldown: {round(wizard.sprite.get_max_fireball_cooldown_time()/60, 2)}', False, '#FCDC4D')
     fireball_cooldown_stat_surf = pygame.transform.scale_by(fireball_cooldown_stat_surf, 0.9)
-    fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (WINDOW_WIDTH*101/128,WINDOW_HEIGHT*8/32))
+    fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (WINDOW_WIDTH*95/128,WINDOW_HEIGHT*8/32))
     
     # Fireball Cooldown Icon
     fireball_cooldown_x_pos = WINDOW_WIDTH * 3/8
