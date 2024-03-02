@@ -23,6 +23,7 @@ class Projectile(pygame.sprite.Sprite):
             # Wizard related 
             temp_wizard_rect = source.sprite.get_wizard_rect()
             self.wizard_was_looking_right = source.sprite.get_looking_right()
+            self.wizard_speed = source.sprite.get_wizard_x_velocity()
             self.direction_multiplier = 1 if self.wizard_was_looking_right else -1
             
             # Start position
@@ -92,7 +93,10 @@ class Projectile(pygame.sprite.Sprite):
     def update(self):
         self.animation_state()
         if self.created >= 4:
-            self.rect.x += (self.projectile_speed * self.direction_multiplier)
+            if abs((self.projectile_speed + (self.wizard_speed / 2)) * self.direction_multiplier) > abs((self.projectile_speed * self.direction_multiplier)): # making fireball go with wiz speed
+                self.rect.x += (self.projectile_speed + (self.wizard_speed / 2)) * self.direction_multiplier
+            else:
+                self.rect.x += (self.projectile_speed * self.direction_multiplier)
         self.destroy()
     
     def destroy(self):
