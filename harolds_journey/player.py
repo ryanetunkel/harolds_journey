@@ -37,6 +37,13 @@ class Player(pygame.sprite.Sprite):
         self.wizard_dead = False
         self.wizard_start_death = False
         
+        # Health
+        self.wizard_max_health = 5
+        self.wizard_current_health = self.wizard_max_health
+        self.wizard_hurt = False
+        self.wizard_max_immunity_frames = 30
+        self.wizard_immunity_frames = self.wizard_max_immunity_frames
+        
         # Damage Statistics
         self.WIZARD_STARTING_DAMAGE = 1
         self.wizard_damage_percent = 1
@@ -178,21 +185,6 @@ class Player(pygame.sprite.Sprite):
     def set_gravity_acceleration(self,new_gravity_acceleration):
         self.gravity_acceleration = new_gravity_acceleration
 
-    def get_fireball_hit(self):
-        return self.fireball_hit
-    
-    def set_fireball_hit(self,new_fireball_hit):
-        self.fireball_hit = new_fireball_hit
-        
-    def get_fireball_shot(self):
-        return self.fireball_shot
-
-    def set_fireball_shot(self,new_fireball_shot):
-        self.fireball_shot = new_fireball_shot
-    
-    def play_fireball_sound(self):
-        pygame.mixer.Channel(FIREBALL_SOUND_CHANNEL).play(self.fireball_sound)
-    
     # Wizard Moving
     def get_wizard_moving(self):
         return self.wizard_moving
@@ -214,6 +206,19 @@ class Player(pygame.sprite.Sprite):
     def set_additional_score(self,new_additional_score):
         self.additional_score = new_additional_score
 
+    # Wizard Hurt
+    def get_wizard_hurt(self):
+        return self.wizard_hurt
+    
+    def set_wizard_hurt(self, new_wizard_hurt):
+        self.wizard_hurt = new_wizard_hurt
+    
+    def set_wizard_color(surface, color):
+        rect = surface.get_rect()
+        surf = pygame.Surface(rect.size, pygame.SRCALPHA)
+        surf.fill(color)
+        surface.blit(surf, (0, 0), None, pygame.BLEND_ADD)
+    
     # Death
     def get_wizard_dead(self):
         return self.wizard_dead
@@ -222,6 +227,38 @@ class Player(pygame.sprite.Sprite):
         self.wizard_dead = new_wizard_dead
     
     # Wizard Game Stats
+    # Health
+    def get_wizard_max_health(self):
+        return self.wizard_max_health
+    
+    def set_wizard_max_health(self, new_wizard_max_health):
+        self.wizard_max_health = new_wizard_max_health
+    
+    def get_wizard_current_health(self):
+        return self.wizard_current_health
+    
+    def set_wizard_current_health(self, new_wizard_current_health):
+        self.wizard_current_health = new_wizard_current_health
+        
+    def get_wizard_max_immunity_frames(self):
+        return self.wizard_max_immunity_frames
+    
+    def set_wizard_max_immunity_frames(self,new_wizard_max_immunity_frames):
+        self.wizard_max_immunity_frames = new_wizard_max_immunity_frames
+    
+    def get_wizard_immunity_frames(self):
+        return self.wizard_immunity_frames
+    
+    def set_wizard_immunity_frames(self,new_wizard_immunity_frames):
+        self.wizard_immunity_frames = new_wizard_immunity_frames
+    
+    def calculate_wizard_immunity_frames(self):
+        if self.wizard_immunity_frames > 0:
+            self.set_wizard_immunity_frames(self.get_wizard_immunity_frames()-1)
+            self.set_wizard_color(self.rect,"#550000")
+        else:
+            self.set_wizard_hurt(False)
+
     # Damage    
     def get_wizard_damage_percent(self):
         return self.wizard_damage_percent
@@ -269,6 +306,21 @@ class Player(pygame.sprite.Sprite):
     
     def set_max_fireball_cooldown_time(self,new_max_fireball_cooldown_time):
         self.max_fireball_cooldown_time = new_max_fireball_cooldown_time
+    
+    def get_fireball_hit(self):
+        return self.fireball_hit
+    
+    def set_fireball_hit(self,new_fireball_hit):
+        self.fireball_hit = new_fireball_hit
+        
+    def get_fireball_shot(self):
+        return self.fireball_shot
+
+    def set_fireball_shot(self,new_fireball_shot):
+        self.fireball_shot = new_fireball_shot
+    
+    def play_fireball_sound(self):
+        pygame.mixer.Channel(FIREBALL_SOUND_CHANNEL).play(self.fireball_sound)
     
     def calculate_wizard_stats(self):
         self.calculate_wizard_damage()
@@ -368,6 +420,8 @@ class Player(pygame.sprite.Sprite):
                         self.secret_sound_timer = 0
                     if self.secret_sound_timer < self.secret_sound_length:
                         self.secret_sound_timer += 1
+            if self.wizard_hurt:
+                self.calculate_wizard_immunity_frames()
         else:
             if not self.wizard_start_death:
                 self.wizard_index = 0

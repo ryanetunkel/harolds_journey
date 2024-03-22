@@ -88,25 +88,30 @@ def display_stats():
 
 def player_and_obstacle_collision_bool(): # Basically game over condition
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
-        temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
-        wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
-        for obstacle in obstacle_group:
-            obstacle.kill()
-        obstacle_group.empty()
-        for projectile in projectile_group:
-            projectile.kill()
-        projectile_group.empty()
-        for pickup in pickup_group:
-            pickup.kill()
-        pickup_group.empty()
-        for health_bar in health_bar_group:
-            health_bar.kill()
-        for outline_health_bar in outline_health_bar_group:
-            outline_health_bar.kill()
-        health_bar_group.empty()
-        outline_health_bar_group.empty()
-        pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
-        return False
+        obstacles_overlapping = pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False)
+        for obstacle in obstacles_overlapping: 
+            if wizard.sprite.get_wizard_current_health() - obstacle.get_damage() > 0:
+                wizard.sprite.set_wizard_immunity_frames(wizard.sprite.get_wizard_max_immunity_frames())
+            if wizard.sprite.get_wizard_current_health() - obstacle.get_damage() <= 0:
+                temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
+                wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
+                for obstacle in obstacle_group:
+                    obstacle.kill()
+                obstacle_group.empty()
+                for projectile in projectile_group:
+                    projectile.kill()
+                projectile_group.empty()
+                for pickup in pickup_group:
+                    pickup.kill()
+                pickup_group.empty()
+                for health_bar in health_bar_group:
+                    health_bar.kill()
+                for outline_health_bar in outline_health_bar_group:
+                    outline_health_bar.kill()
+                health_bar_group.empty()
+                outline_health_bar_group.empty()
+                pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
+                return False
     else: return True
 
 

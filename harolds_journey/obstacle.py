@@ -21,13 +21,13 @@ class Obstacle(pygame.sprite.Sprite):
         self.skeleton_value = 2
         self.skeleton_max_health = 1
         self.skeleton_speed = 2
-        self.skeleton_damage = 1
+        self.skeleton_damage = 1 # implement under self.get_damage()
         
         # Flying Enemy Base Stats
         self.bird_value = 5
         self.bird_max_health = 1
         self.bird_speed = 2
-        self.bird_damage = 1
+        self.bird_damage = 1 # implement under self.get_damage()
         
         self.immunity = False
         self.IMMUNITY_LIMIT = 50
