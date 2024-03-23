@@ -32,44 +32,64 @@ def display_stats():
     # Health
     health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/heart.png").convert_alpha()
     health_stat_image_surf = pygame.transform.scale_by(health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-    health_stat_image_rect = health_stat_image_surf.get_rect(center = (WINDOW_WIDTH*3/32,WINDOW_HEIGHT*3/32))
+    health_stat_image_rect = health_stat_image_surf.get_rect(center = (WINDOW_WIDTH*1/16,WINDOW_HEIGHT*3/32))
 
     health_stat_surf = test_font.render(str(wizard.sprite.get_wizard_current_health()), False, "#FCDC4D")
-    health_stat_surf = pygame.transform.scale_by(health_stat_surf, 1)
-    health_stat_rect = health_stat_surf.get_rect(center = (WINDOW_WIDTH*9/64,WINDOW_HEIGHT*3/32))
+    health_stat_surf = pygame.transform.scale_by(health_stat_surf, 1.3)
+    health_stat_rect = health_stat_surf.get_rect(center = (WINDOW_WIDTH*7/64,WINDOW_HEIGHT*13/128))
 
     # Stat image Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
+    stat_image_surf_x_pos = WINDOW_WIDTH/4 #29/128 dif
+    stat_image_surf_y_pos_offset = WINDOW_HEIGHT*3/32
+    # First
+    damage_stat_image_y_pos = WINDOW_HEIGHT*5/64
+    # Second
+    piercing_stat_image_y_pos = damage_stat_image_y_pos + stat_image_surf_y_pos_offset
+    # Third
+    fireball_cooldown_stat_image_y_pos = piercing_stat_image_y_pos + stat_image_surf_y_pos_offset
+    # Stat text surfs
+    stat_surf_x_pos = WINDOW_WIDTH*43/128
+    stat_surf_y_pos_offset = stat_image_surf_y_pos_offset
+    # First
+    damage_stat_x_pos = stat_surf_x_pos
+    damage_stat_y_pos = damage_stat_image_y_pos + WINDOW_WIDTH/256
+    # Second
+    piercing_stat_x_pos = stat_surf_x_pos + WINDOW_WIDTH/128
+    piercing_stat_y_pos = damage_stat_y_pos + stat_surf_y_pos_offset
+    # Third
+    fireball_cooldown_stat_x_pos = stat_surf_x_pos + WINDOW_WIDTH*2/128
+    fireball_cooldown_stat_y_pos = piercing_stat_y_pos + stat_surf_y_pos_offset
     # Damage
     damage_stat_image_surf = pygame.image.load("harolds_journey/graphics/pickups/damage/damage_pickup.png").convert_alpha()
     damage_stat_image_surf = pygame.transform.scale_by(damage_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-    damage_stat_image_rect = damage_stat_image_surf.get_rect(center = (WINDOW_WIDTH*20/32,WINDOW_HEIGHT/16))
+    damage_stat_image_rect = damage_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,damage_stat_image_y_pos))
 
     damage_stat_surf = test_font.render("Damage: " + str(wizard.sprite.get_wizard_damage_total()), False, "#FCDC4D")
     damage_stat_surf = pygame.transform.scale_by(damage_stat_surf, 0.9)
-    damage_stat_rect = damage_stat_surf.get_rect(center = (WINDOW_WIDTH*93/128,WINDOW_HEIGHT/16))
+    damage_stat_rect = damage_stat_surf.get_rect(center = (damage_stat_x_pos,damage_stat_y_pos))
 
     # Piercing
     piercing_stat_image_surf = pygame.image.load("harolds_journey/graphics/pickups/piercing/piercing_pickup.png").convert_alpha()
     piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-    piercing_stat_image_rect = piercing_stat_image_surf.get_rect(center = (WINDOW_WIDTH*20/32,WINDOW_HEIGHT*5/32))
+    piercing_stat_image_rect = piercing_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,piercing_stat_image_y_pos))
 
     piercing_stat_surf = test_font.render("Piercing: " + str(wizard.sprite.get_wizard_piercing_total() - 1), False, "#FCDC4D")
     piercing_stat_surf = pygame.transform.scale_by(piercing_stat_surf, 0.9)
-    piercing_stat_rect = piercing_stat_surf.get_rect(center = (WINDOW_WIDTH*47/64,WINDOW_HEIGHT*5/32))
+    piercing_stat_rect = piercing_stat_surf.get_rect(center = (piercing_stat_x_pos,piercing_stat_y_pos))
 
     # Fireball Cooldown Stat
     # Fix text
     fireball_cooldown_stat_image_surf = pygame.image.load("harolds_journey/graphics/pickups/fireball_cooldown/fireball_cooldown_pickup.png").convert_alpha()
     fireball_cooldown_stat_image_surf = pygame.transform.scale_by(fireball_cooldown_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-    fireball_cooldown_stat_image_rect = fireball_cooldown_stat_image_surf.get_rect(center = (WINDOW_WIDTH*20/32,WINDOW_HEIGHT*8/32))
+    fireball_cooldown_stat_image_rect = fireball_cooldown_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,fireball_cooldown_stat_image_y_pos))
 
     fireball_cooldown_stat_surf = test_font.render(f"Cooldown: {round(wizard.sprite.get_max_fireball_cooldown_time()/60, 2)}", False, "#FCDC4D")
     fireball_cooldown_stat_surf = pygame.transform.scale_by(fireball_cooldown_stat_surf, 0.9)
-    fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (WINDOW_WIDTH*95/128,WINDOW_HEIGHT*8/32))
+    fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (fireball_cooldown_stat_x_pos,fireball_cooldown_stat_y_pos))
 
     # Fireball Cooldown Icon
-    fireball_cooldown_x_pos = WINDOW_WIDTH * 3/8
-    fireball_cooldown_y_pos = WINDOW_HEIGHT * 11/64
+    fireball_cooldown_x_pos = WINDOW_WIDTH * 1/16 # right of health: 11/64
+    fireball_cooldown_y_pos = WINDOW_HEIGHT * 7/32 # right of health: 25/256
     fireball_cooldown_surf = pygame.image.load("harolds_journey/graphics/fireball/fireball_movement_animation/fireball_movement_00.png").convert_alpha()
     fireball_cooldown_rect = fireball_cooldown_surf.get_rect(center = (fireball_cooldown_x_pos,fireball_cooldown_y_pos))
     # Fireball Cooldown Overlay
