@@ -14,20 +14,20 @@ class Obstacle(pygame.sprite.Sprite):
         
         self.enemy_looking_right = False
 
-        self.skeleton_walk_animation_speed =  0.32 # Changed, won't work in current implementation but will in new ones 
+        self.skeleton_walk_animation_speed =  0.32
         self.bird_fly_animation_speed = 0.2
         
         # Skeleton Base Stats
         self.skeleton_value = 2
         self.skeleton_max_health = 1
         self.skeleton_speed = 2
-        self.skeleton_damage = 1 # implement under self.get_damage()
+        self.skeleton_damage = 1
         
         # Flying Enemy Base Stats
         self.bird_value = 5
         self.bird_max_health = 1
         self.bird_speed = 2
-        self.bird_damage = 1 # implement under self.get_damage()
+        self.bird_damage = 1
         
         self.immunity = False
         self.IMMUNITY_LIMIT = 50
@@ -101,7 +101,13 @@ class Obstacle(pygame.sprite.Sprite):
     
     def set_max_health(self, new_max_health):
         self.max_health = new_max_health
-        
+    
+    def get_damage(self):
+        return self.damage
+    
+    def set_damage(self, new_damage):
+        self.damage = new_damage
+    
     def get_points(self):
         return self.points
     
