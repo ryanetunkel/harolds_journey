@@ -47,6 +47,8 @@ def display_stats():
     piercing_stat_image_y_pos = damage_stat_image_y_pos + stat_image_surf_y_pos_offset
     # Third
     fireball_cooldown_stat_image_y_pos = piercing_stat_image_y_pos + stat_image_surf_y_pos_offset
+    # Fourth
+    speed_stat_image_y_pos = fireball_cooldown_stat_image_y_pos + stat_image_surf_y_pos_offset
     # Stat text surfs
     stat_surf_x_pos = WINDOW_WIDTH*43/128
     stat_surf_y_pos_offset = stat_image_surf_y_pos_offset
@@ -59,6 +61,9 @@ def display_stats():
     # Third
     fireball_cooldown_stat_x_pos = stat_surf_x_pos + WINDOW_WIDTH*2/128
     fireball_cooldown_stat_y_pos = piercing_stat_y_pos + stat_surf_y_pos_offset
+    # Fourth
+    speed_stat_x_pos = stat_surf_x_pos # + WINDOW_WIDTH*2/128
+    speed_stat_y_pos = fireball_cooldown_stat_y_pos + stat_surf_y_pos_offset
     # Damage
     damage_stat_image_surf = pygame.image.load("harolds_journey/graphics/pickups/damage/damage_pickup.png").convert_alpha()
     damage_stat_image_surf = pygame.transform.scale_by(damage_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
@@ -78,7 +83,6 @@ def display_stats():
     piercing_stat_rect = piercing_stat_surf.get_rect(center = (piercing_stat_x_pos,piercing_stat_y_pos))
 
     # Fireball Cooldown Stat
-    # Fix text
     fireball_cooldown_stat_image_surf = pygame.image.load("harolds_journey/graphics/pickups/fireball_cooldown/fireball_cooldown_pickup.png").convert_alpha()
     fireball_cooldown_stat_image_surf = pygame.transform.scale_by(fireball_cooldown_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
     fireball_cooldown_stat_image_rect = fireball_cooldown_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,fireball_cooldown_stat_image_y_pos))
@@ -104,6 +108,14 @@ def display_stats():
     fireball_cooldown_overlay_surf = pygame.Surface((fireball_cooldown_overlay_width, fireball_cooldown_overlay_height))
     fireball_cooldown_overlay_surf.fill(fireball_cooldown_overlay_color)
     fireball_cooldown_overlay_surf.set_alpha(100)
+    # Speed
+    speed_stat_image_surf = pygame.image.load("harolds_journey/graphics/pickups/speed/speed_pickup.png").convert_alpha()
+    speed_stat_image_surf = pygame.transform.scale_by(speed_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+    speed_stat_image_rect = speed_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,speed_stat_image_y_pos))
+
+    speed_stat_surf = test_font.render("Speed: " + str(wizard.sprite.get_wizard_speed()), False, "#FCDC4D")
+    speed_stat_surf = pygame.transform.scale_by(speed_stat_surf, 0.9)
+    speed_stat_rect = speed_stat_surf.get_rect(center = (speed_stat_x_pos,speed_stat_y_pos))
     # Blits
     screen.blit(health_stat_image_surf,health_stat_image_rect)
     screen.blit(health_stat_surf,health_stat_rect)
@@ -119,6 +131,9 @@ def display_stats():
 
     screen.blit(fireball_cooldown_surf,fireball_cooldown_rect)
     screen.blit(fireball_cooldown_overlay_surf, (fireball_cooldown_overlay_left, fireball_cooldown_overlay_top))
+
+    screen.blit(speed_stat_image_surf,speed_stat_image_rect)
+    screen.blit(speed_stat_surf,speed_stat_rect)
 
 
 def player_and_obstacle_collision(): # Basically game over condition
@@ -175,6 +190,8 @@ def obstacle_and_player_owned_projectile_collision():
                             pickup_group.add(Pickup("fireball_cooldown",temp_obstacle_x_pos,temp_obstacle_y_pos))
                         if randint(1,20) == 20: # Chance to drop piercing pickup
                             pickup_group.add(Pickup("piercing",temp_obstacle_x_pos,temp_obstacle_y_pos))
+                        if randint(1,25) == 25: # Chance to drop piercing pickup
+                            pickup_group.add(Pickup("speed",temp_obstacle_x_pos,temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
                         # Health Bar and Outline Health Bar Cleanup
                         old_health_bar = health_bar_ownership_group[obstacle]
@@ -204,12 +221,15 @@ def player_and_pickup_collision():
             temp_damage = wizard.sprite.get_wizard_damage_percent()
             temp_piercing = wizard.sprite.get_wizard_piercing_increase()
             temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
+            temp_speed = wizard.sprite.get_wizard_speed()
             if pickup.get_type() == "damage":
                 wizard.sprite.set_wizard_damage_percent(temp_damage + temp_bonus)
             if pickup.get_type() == "piercing":
                 wizard.sprite.set_wizard_piercing_increase(temp_piercing + temp_bonus)
             if pickup.get_type() == "fireball_cooldown" and temp_max_fireball_cooldown_time >= 6:
                 wizard.sprite.set_max_fireball_cooldown_time(temp_max_fireball_cooldown_time - temp_bonus)
+            if pickup.get_type() == "speed" and temp_speed < 8:
+                wizard.sprite.set_wizard_speed(temp_speed + temp_bonus)
             pygame.sprite.spritecollide(wizard.sprite,pickup_group,True)
 
 
