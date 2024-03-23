@@ -448,6 +448,7 @@ class Player(pygame.sprite.Sprite):
         self.calculate_wizard_stats()
 
     def reset(self):
+
         # X Directions
         self.wizard_x_pos = self.WIZARD_START_X_POS
         self.wizard_speed = 4
@@ -463,8 +464,6 @@ class Player(pygame.sprite.Sprite):
 
         # Fireball
         self.fireball_hit = False
-        self.max_fireball_cooldown_time = 60
-        self.current_fireball_cooldown = 0
         self.fireball_shot = False
         self.start_fireball_animation = False
 
@@ -475,25 +474,57 @@ class Player(pygame.sprite.Sprite):
         self.wizard_dead = False
         self.wizard_start_death = False
 
+        # Health
+        self.wizard_max_health = 5
+        self.wizard_current_health = self.wizard_max_health
+        self.wizard_hurt = False
+        self.wizard_max_immunity_frames = 30
+        self.wizard_immunity_frames = 0
+
         # Damage Statistics
-        self.WIZARD_STARTING_DAMAGE = 1
         self.wizard_damage_percent = 1
         self.wizard_damage_total = self.WIZARD_STARTING_DAMAGE * self.wizard_damage_percent
-        self.WIZARD_STARTING_PIERCING = 1
+
         self.wizard_piercing_increase = 0
-        self.wizard_piercing = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
+        self.wizard_piercing_total = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
 
-        # Secret Animation
-        self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
+        self.max_fireball_cooldown_time = 60
+        self.current_fireball_cooldown = 0
 
-        # Wizard Index
+        # Wizard Idle Animation
+        self.wizard_idle = get_wizard_idle_arr()
+
+        # Wizard Secret Idle Animation
+        self.wizard_secret_idle = get_wizard_secret_idle_arr()
+
+        # Wizard Walk Animation
+        self.wizard_walk = get_wizard_walk_arr()
+
+        # Wizard Jump Animation
+        # Ascending - Frames 0-7
+        # Top of Jump - Frames 8-14
+        # Descending - Frames 15-23
+        self.wizard_jump = get_wizard_jump_arr()
+
+        # Wizard Fireball Animation
+        self.wizard_fireball = get_wizard_fireball_arr()
+
+        # Wizard Death Animation
+        self.wizard_death = get_wizard_death_arr()
+
         self.wizard_index = 0
         self.image = self.wizard_walk[self.wizard_index]
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
+        self.wizard_gravity = 0
+
+        # Secret Animation
+        self.wizard_secret_idle_animation_speed = self.WIZARD_IDLE_ANIMATION_SPEED
+        self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
 
         # Sounds
         self.walk_sound_length = 1 * 40
         self.walk_sound_timer = self.walk_sound_length
         self.secret_sound_timer = 0
-        self.secret_sound_length = self.WIZARD_SECRET_ANIMATION_LIMIT # gives exact time for animation to play once
+        self.secret_sound_length = self.WIZARD_SECRET_ANIMATION_LIMIT
+        # self.death_sound = pygame.mixer.Sound('placeholder') # Find Death Sound
