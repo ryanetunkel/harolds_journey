@@ -19,8 +19,11 @@ from graphics.health_bar.outline_health_bar import *
 def display_score():
     temp_additional_score = wizard.sprite.get_additional_score()
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
+    score_title_surf = test_font.render("SCORE", False, "#FCDC4D")
+    score_title_rect = score_title_surf.get_rect(center = (WINDOW_WIDTH/2,WINDOW_HEIGHT*1/16))
     score_surf = test_font.render(str(current_time + temp_additional_score), False, "#FCDC4D")
     score_rect = score_surf.get_rect(center = (WINDOW_WIDTH/2,WINDOW_HEIGHT/8))
+    screen.blit(score_title_surf,score_title_rect)
     screen.blit(score_surf,score_rect)
     return current_time + temp_additional_score
 
