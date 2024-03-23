@@ -11,14 +11,14 @@ class Player(pygame.sprite.Sprite):
         # Start
         self.WIZARD_START_X_POS = WINDOW_WIDTH / 2
         self.WIZARD_START_Y_POS = GRASS_TOP_Y
-        
+
         # X Directions
         self.wizard_x_pos = self.WIZARD_START_X_POS
         self.wizard_speed = 4
         self.wizard_x_velocity = 0
         self.looking_right = True
         self.wizard_moving = False
-        
+
         # Y Directions
         self.wizard_y_pos = self.WIZARD_START_Y_POS
         self.gravity_acceleration = GLOBAL_GRAVITY
@@ -29,34 +29,34 @@ class Player(pygame.sprite.Sprite):
         self.fireball_hit = False
         self.fireball_shot = False
         self.start_fireball_animation = False
-        
+
         # Additional Score
         self.additional_score = 0
-        
+
         # Death
         self.wizard_dead = False
         self.wizard_start_death = False
-        
+
         # Health
         self.wizard_max_health = 5
         self.wizard_current_health = self.wizard_max_health
         self.wizard_hurt = False
         self.wizard_max_immunity_frames = 30
-        self.wizard_immunity_frames = self.wizard_max_immunity_frames
-        
+        self.wizard_immunity_frames = 0
+
         # Damage Statistics
         self.WIZARD_STARTING_DAMAGE = 1
         self.wizard_damage_percent = 1
         self.wizard_damage_total = self.WIZARD_STARTING_DAMAGE * self.wizard_damage_percent
-        
+
         self.WIZARD_STARTING_PIERCING = 1
         self.wizard_piercing_increase = 0
         self.wizard_piercing_total = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
-        
+
         self.max_fireball_cooldown_time = 60
         self.current_fireball_cooldown = 0
 
-        # Wizard Idle Animation  
+        # Wizard Idle Animation
         self.wizard_idle = get_wizard_idle_arr()
 
         # Wizard Secret Idle Animation
@@ -89,7 +89,7 @@ class Player(pygame.sprite.Sprite):
         self.WIZARD_IDLE_ANIMATION_SPEED = 0.1
         self.WIZARD_FIREBALL_ANIMATION_SPEED = 0.4
         self.WIZARD_DEATH_ANIMATION_SPEED = 0.2
-        
+
         # Secret Animation
         self.wizard_secret_idle_animation_speed = self.WIZARD_IDLE_ANIMATION_SPEED
         self.WIZARD_SECRET_ANIMATION_LIMIT = 240
@@ -113,47 +113,47 @@ class Player(pygame.sprite.Sprite):
     # Positions
     def get_wizard_pos(self):
         return (self.wizard_x_pos,self.wizard_y_pos)
-    
+
     def get_x_pos(self): # Here for new implementations, eventually switch to just this, just need to replace a lot that uses the old
         return self.rect.centerx
-    
+
     def set_wizard_x_pos(self,new_wizard_x_pos):
         self.wizard_x_pos = new_wizard_x_pos
 
     def get_wizard_y_pos(self):
         return self.wizard_y_pos
-    
+
     def get_y_pos(self): # Here for new implementations, eventually switch to just this, just need to replace a lot that uses the old
         return self.rect.centery
-    
+
     def set_wizard_y_pos(self,new_wizard_y_pos):
         self.wizard_y_pos = new_wizard_y_pos
 
     def get_wizard_start_x_pos(self):
         return self.WIZARD_START_X_POS
-    
+
     def set_wizard_start_x_pos(self,new_wizard_start_x_pos):
         self.WIZARD_START_X_POS = new_wizard_start_x_pos
-    
+
     def get_wizard_start_y_pos(self):
         return self.WIZARD_START_Y_POS
-    
+
     def set_wizard_start_y_pos(self,new_wizard_start_y_pos):
         self.WIZARD_START_Y_POS = new_wizard_start_y_pos
 
     # Rects and Images
     def get_wizard_rect(self):
         return self.rect
-    
+
     def set_wizard_rect(self,new_rect):
         self.rect = new_rect
-    
+
     def get_wizard_image(self):
         return self.image
-    
+
     def set_wizard_image(self,new_image):
         self.image = new_image
-    
+
     # Speed
     def get_wizard_speed(self):
         return self.wizard_speed
@@ -164,24 +164,24 @@ class Player(pygame.sprite.Sprite):
     # Looking Right
     def get_looking_right(self):
         return self.looking_right
-    
+
     # X Velocity
     def get_wizard_x_velocity(self):
         return self.wizard_x_velocity
-    
+
     def set_wizard_x_velocity(self,new_wizard_x_velocity):
         self.wizard_x_velocity = new_wizard_x_velocity
 
     # Gravity Stats
     def get_wizard_gravity(self):
         return self.wizard_gravity
-    
+
     def set_wizard_gravity(self,new_wizard_gravity):
         self.wizard_gravity = new_wizard_gravity
 
     def get_gravity_acceleration(self):
         return self.gravity_acceleration
-    
+
     def set_gravity_acceleration(self,new_gravity_acceleration):
         self.gravity_acceleration = new_gravity_acceleration
 
@@ -191,14 +191,14 @@ class Player(pygame.sprite.Sprite):
 
     def set_wizard_moving(self,new_wizard_moving):
         self.wizard_moving = new_wizard_moving
-    
+
     # Wizard Jumping
     def get_wizard_jumping(self):
         return self.wizard_jumping
-    
+
     def set_wizard_jumping(self,new_wizard_jumping):
         self.wizard_jumping = new_wizard_jumping
-    
+
     # Score
     def get_additional_score(self):
         return self.additional_score
@@ -209,119 +209,119 @@ class Player(pygame.sprite.Sprite):
     # Wizard Hurt
     def get_wizard_hurt(self):
         return self.wizard_hurt
-    
-    def set_wizard_hurt(self, new_wizard_hurt):
+
+    def set_wizard_hurt(self,new_wizard_hurt):
         self.wizard_hurt = new_wizard_hurt
-    
-    def set_wizard_color(surface, color):
+
+    def set_wizard_color(self,surface, color):
         rect = surface.get_rect()
         surf = pygame.Surface(rect.size, pygame.SRCALPHA)
         surf.fill(color)
         surface.blit(surf, (0, 0), None, pygame.BLEND_ADD)
-    
+
     # Death
     def get_wizard_dead(self):
         return self.wizard_dead
-    
+
     def set_wizard_dead(self,new_wizard_dead):
         self.wizard_dead = new_wizard_dead
-    
+
     # Wizard Game Stats
     # Health
     def get_wizard_max_health(self):
         return self.wizard_max_health
-    
+
     def set_wizard_max_health(self, new_wizard_max_health):
         self.wizard_max_health = new_wizard_max_health
-    
+
     def get_wizard_current_health(self):
         return self.wizard_current_health
-    
+
     def set_wizard_current_health(self, new_wizard_current_health):
         self.wizard_current_health = new_wizard_current_health
-        
+
     def get_wizard_max_immunity_frames(self):
         return self.wizard_max_immunity_frames
-    
+
     def set_wizard_max_immunity_frames(self,new_wizard_max_immunity_frames):
         self.wizard_max_immunity_frames = new_wizard_max_immunity_frames
-    
+
     def get_wizard_immunity_frames(self):
         return self.wizard_immunity_frames
-    
+
     def set_wizard_immunity_frames(self,new_wizard_immunity_frames):
         self.wizard_immunity_frames = new_wizard_immunity_frames
-    
+
     def calculate_wizard_immunity_frames(self):
         if self.wizard_immunity_frames > 0:
             self.set_wizard_immunity_frames(self.get_wizard_immunity_frames()-1)
-            self.set_wizard_color(self.rect,"#550000")
+            # If later get immunity frames from a different source, this could cause it to always look like it is caused by damage
         else:
             self.set_wizard_hurt(False)
 
-    # Damage    
+    # Damage
     def get_wizard_damage_percent(self):
         return self.wizard_damage_percent
-    
+
     def set_wizard_damage_percent(self,new_wizard_damage_percent):
         self.wizard_damage_percent = new_wizard_damage_percent
-        
+
     def get_wizard_damage_total(self):
         return self.wizard_damage_total
-    
+
     def set_wizard_damage_total(self,new_wizard_damage_total):
         self.wizard_damage_total = new_wizard_damage_total
-    
+
     def calculate_wizard_damage(self):
         temp_percent = self.get_wizard_damage_percent()
         temp_total = self.WIZARD_STARTING_DAMAGE * temp_percent
         self.set_wizard_damage_total(temp_total)
-    # Piercing    
+    # Piercing
     def get_wizard_piercing_increase(self):
         return self.wizard_piercing_increase
-    
+
     def set_wizard_piercing_increase(self,new_wizard_piercing_increase):
         self.wizard_piercing_increase = new_wizard_piercing_increase
-        
+
     def get_wizard_piercing_total(self):
         return self.wizard_piercing_total
-    
+
     def set_wizard_piercing_total(self,new_wizard_piercing_total):
         self.wizard_piercing_total = new_wizard_piercing_total
-    
+
     def calculate_wizard_piercing(self):
         temp_increase = self.get_wizard_piercing_increase()
         temp_total = self.WIZARD_STARTING_PIERCING + temp_increase
         self.set_wizard_piercing_total(temp_total)
-    
+
     # Fireball Stats
     def get_current_fireball_cooldown(self):
         return self.current_fireball_cooldown
 
     def set_current_fireball_cooldown(self,new_fireball_cooldown):
         self.current_fireball_cooldown = new_fireball_cooldown
-    
+
     def get_max_fireball_cooldown_time(self):
         return self.max_fireball_cooldown_time
-    
+
     def set_max_fireball_cooldown_time(self,new_max_fireball_cooldown_time):
         self.max_fireball_cooldown_time = new_max_fireball_cooldown_time
-    
+
     def get_fireball_hit(self):
         return self.fireball_hit
-    
+
     def set_fireball_hit(self,new_fireball_hit):
         self.fireball_hit = new_fireball_hit
-        
+
     def get_fireball_shot(self):
         return self.fireball_shot
 
     def set_fireball_shot(self,new_fireball_shot):
         self.fireball_shot = new_fireball_shot
-    
+
     def play_fireball_sound(self):
         pygame.mixer.Channel(FIREBALL_SOUND_CHANNEL).play(self.fireball_sound)
-    
+
     def calculate_wizard_stats(self):
         self.calculate_wizard_damage()
         self.calculate_wizard_piercing()
@@ -345,7 +345,7 @@ class Player(pygame.sprite.Sprite):
                 self.wizard_x_velocity = self.wizard_speed
                 self.rect.x -= self.wizard_x_velocity
                 self.wizard_moving = True
-            elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]): 
+            elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]):
                 self.wizard_x_velocity = 0
                 self.wizard_moving = False
                 self.wizard_jumping = False
@@ -355,12 +355,12 @@ class Player(pygame.sprite.Sprite):
                 self.walk_sound_timer = 0
             if self.walk_sound_timer < self.walk_sound_length:
                 self.walk_sound_timer += 1
-        
+
     def apply_gravity(self):
         self.wizard_gravity += self.gravity_intensity
         self.rect.y += self.wizard_gravity
         if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
-        
+
     def animation_state(self):
         if not self.wizard_dead:
             (mouse_x,mouse_y) = pygame.mouse.get_pos()
@@ -373,7 +373,7 @@ class Player(pygame.sprite.Sprite):
                 self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
                 self.secret_sound_timer = 0
                 self.wizard_index += self.WIZARD_FIREBALL_ANIMATION_SPEED # speed of animation, adjust as needed
-                if self.wizard_index >= len(self.wizard_fireball): 
+                if self.wizard_index >= len(self.wizard_fireball):
                     self.wizard_index = 0
                     self.start_fireball_animation = True
                     self.fireball_shot = False
@@ -411,7 +411,6 @@ class Player(pygame.sprite.Sprite):
                     self.wizard_index += self.wizard_secret_idle_animation_speed # speed of animation, adjust as needed
                     if self.wizard_index >= len(self.wizard_secret_idle): self.wizard_index = 0
                     self.image = self.wizard_secret_idle[int(self.wizard_index)]
-                    
                     if self.secret_sound_timer >= self.secret_sound_length:
                         # Secret Sound - Plays too much, look at how secret_sound_timer and secret_sound_limit work together
                         # Should work as timer counts up to limit, plays song, resets to 0, begins counting up again
@@ -422,6 +421,7 @@ class Player(pygame.sprite.Sprite):
                         self.secret_sound_timer += 1
             if self.wizard_hurt:
                 self.calculate_wizard_immunity_frames()
+                # This means if ever get immunity frames from another source they wouldn't be calculated
         else:
             if not self.wizard_start_death:
                 self.wizard_index = 0
@@ -430,9 +430,7 @@ class Player(pygame.sprite.Sprite):
             if self.wizard_index + self.WIZARD_DEATH_ANIMATION_SPEED < len(self.wizard_death):
                 self.wizard_index += self.WIZARD_DEATH_ANIMATION_SPEED
             self.image = self.wizard_death[int(self.wizard_index)]
-        
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
-        
         if not self.looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
         # Death animation if game was ended - rn game ends instantly so can't be implemented
@@ -440,7 +438,7 @@ class Player(pygame.sprite.Sprite):
 
     def fireball_timer_tick(self):
         if self.current_fireball_cooldown > 0:
-            self.current_fireball_cooldown -= 1            
+            self.current_fireball_cooldown -= 1
 
     def update(self):
         self.wizard_input()
@@ -448,7 +446,7 @@ class Player(pygame.sprite.Sprite):
         self.animation_state()
         self.fireball_timer_tick()
         self.calculate_wizard_stats()
-    
+
     def reset(self):
         # X Directions
         self.wizard_x_pos = self.WIZARD_START_X_POS
@@ -456,7 +454,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_x_velocity = 0
         self.looking_right = True
         self.wizard_moving = False
-        
+
         # Y Directions
         self.wizard_y_pos = self.WIZARD_START_Y_POS
         self.gravity_acceleration = GLOBAL_GRAVITY
@@ -469,14 +467,14 @@ class Player(pygame.sprite.Sprite):
         self.current_fireball_cooldown = 0
         self.fireball_shot = False
         self.start_fireball_animation = False
-        
+
         # Additional Score
         self.additional_score = 0
-        
+
         # Death
         self.wizard_dead = False
         self.wizard_start_death = False
-        
+
         # Damage Statistics
         self.WIZARD_STARTING_DAMAGE = 1
         self.wizard_damage_percent = 1
@@ -484,16 +482,16 @@ class Player(pygame.sprite.Sprite):
         self.WIZARD_STARTING_PIERCING = 1
         self.wizard_piercing_increase = 0
         self.wizard_piercing = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
-        
+
         # Secret Animation
         self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
-        
+
         # Wizard Index
         self.wizard_index = 0
         self.image = self.wizard_walk[self.wizard_index]
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
-        
+
         # Sounds
         self.walk_sound_length = 1 * 40
         self.walk_sound_timer = self.walk_sound_length
