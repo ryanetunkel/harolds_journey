@@ -33,6 +33,12 @@ class Pickup(pygame.sprite.Sprite):
             fireball_cooldown_pickup = pygame.image.load('harolds_journey/graphics/pickups/fireball_cooldown/fireball_cooldown_pickup.png').convert_alpha()
             self.frames = [fireball_cooldown_pickup]
 
+        elif type == 'speed': # Flat increases
+            self.type = 'speed'
+            self.bonus = 0.5
+            speed_pickup = pygame.image.load('harolds_journey/graphics/pickups/speed/speed_pickup.png').convert_alpha()
+            self.frames = [speed_pickup]
+
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
         self.image = pygame.transform.scale_by(self.image,3)
