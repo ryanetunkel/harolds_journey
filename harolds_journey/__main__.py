@@ -235,10 +235,10 @@ outline_health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Spri
 
 moving_sprites = [wizard, harold, obstacle_group, projectile_group, pickup_group, outline_health_bar_group, health_bar_group,]
 
-sky_surf = pygame.image.load("harolds_journey/graphics/Background.png").convert_alpha()
+sky_surf = pygame.image.load("harolds_journey/graphics/bg_images/Background.png").convert_alpha()
 sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
 
-ground_surf = pygame.image.load("harolds_journey/graphics/Grass.png").convert_alpha()
+ground_surf = pygame.image.load("harolds_journey/graphics/bg_images/Grass.png").convert_alpha()
 ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 
 # Intro Screen
