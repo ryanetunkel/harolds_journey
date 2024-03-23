@@ -128,11 +128,9 @@ def player_and_obstacle_collision(): # Basically game over condition
             wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),"#550000")
             if wizard.sprite.get_wizard_immunity_frames() <= 0:
                 wizard.sprite.set_wizard_hurt(True)
-                print(wizard.sprite.get_wizard_current_health())
                 if (temp_health:=(wizard.sprite.get_wizard_current_health() - obstacle.get_damage())) > 0:
                     wizard.sprite.set_wizard_current_health(temp_health)
                     wizard.sprite.set_wizard_immunity_frames(wizard.sprite.get_wizard_max_immunity_frames())
-                    print(wizard.sprite.get_wizard_current_health())
                 elif wizard.sprite.get_wizard_current_health() - obstacle.get_damage() <= 0:
                     temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
                     wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
