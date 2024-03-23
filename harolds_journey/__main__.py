@@ -4,8 +4,8 @@ from random import randint, choice
 
 import pygame
 
-from controls import * 
-from global_vars import * 
+from controls import *
+from global_vars import *
 from harold import *
 from obstacle import *
 from pickup import *
@@ -26,6 +26,15 @@ def display_score():
 
 
 def display_stats():
+    # Health
+    health_stat_image_surf = pygame.image.load('harolds_journey/graphics/pickups/piercing/piercing_pickup.png').convert_alpha()
+    health_stat_image_surf = pygame.transform.scale_by(health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+    health_stat_image_rect = health_stat_image_surf.get_rect(center = (WINDOW_WIDTH*20/32,WINDOW_HEIGHT*5/32))
+
+    health_stat_surf = test_font.render('Piercing: ' + str(wizard.sprite.get_wizard_piercing_total() - 1), False, '#FCDC4D')
+    health_stat_surf = pygame.transform.scale_by(health_stat_surf, 0.9)
+    health_stat_rect = health_stat_surf.get_rect(center = (WINDOW_WIDTH*47/64,WINDOW_HEIGHT*5/32))
+
     # Stat image Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
     # Damage
     damage_stat_image_surf = pygame.image.load('harolds_journey/graphics/pickups/damage/damage_pickup.png').convert_alpha()
@@ -35,7 +44,7 @@ def display_stats():
     damage_stat_surf = test_font.render('Damage: ' + str(wizard.sprite.get_wizard_damage_total()), False, '#FCDC4D')
     damage_stat_surf = pygame.transform.scale_by(damage_stat_surf, 0.9)
     damage_stat_rect = damage_stat_surf.get_rect(center = (WINDOW_WIDTH*93/128,WINDOW_HEIGHT/16))
-    
+
     # Piercing
     piercing_stat_image_surf = pygame.image.load('harolds_journey/graphics/pickups/piercing/piercing_pickup.png').convert_alpha()
     piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
@@ -44,17 +53,17 @@ def display_stats():
     piercing_stat_surf = test_font.render('Piercing: ' + str(wizard.sprite.get_wizard_piercing_total() - 1), False, '#FCDC4D')
     piercing_stat_surf = pygame.transform.scale_by(piercing_stat_surf, 0.9)
     piercing_stat_rect = piercing_stat_surf.get_rect(center = (WINDOW_WIDTH*47/64,WINDOW_HEIGHT*5/32))
-    
+
     # Fireball Cooldown Stat
     # Fix text
     fireball_cooldown_stat_image_surf = pygame.image.load('harolds_journey/graphics/pickups/fireball_cooldown/fireball_cooldown_pickup.png').convert_alpha()
     fireball_cooldown_stat_image_surf = pygame.transform.scale_by(fireball_cooldown_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
     fireball_cooldown_stat_image_rect = fireball_cooldown_stat_image_surf.get_rect(center = (WINDOW_WIDTH*20/32,WINDOW_HEIGHT*8/32))
-    
+
     fireball_cooldown_stat_surf = test_font.render(f'Cooldown: {round(wizard.sprite.get_max_fireball_cooldown_time()/60, 2)}', False, '#FCDC4D')
     fireball_cooldown_stat_surf = pygame.transform.scale_by(fireball_cooldown_stat_surf, 0.9)
     fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (WINDOW_WIDTH*95/128,WINDOW_HEIGHT*8/32))
-    
+
     # Fireball Cooldown Icon
     fireball_cooldown_x_pos = WINDOW_WIDTH * 3/8
     fireball_cooldown_y_pos = WINDOW_HEIGHT * 11/64
@@ -75,44 +84,49 @@ def display_stats():
     # Blits
     screen.blit(damage_stat_image_surf,damage_stat_image_rect)
     screen.blit(damage_stat_surf,damage_stat_rect)
-    
+
     screen.blit(piercing_stat_image_surf,piercing_stat_image_rect)
     screen.blit(piercing_stat_surf,piercing_stat_rect)
-    
+
     screen.blit(fireball_cooldown_stat_image_surf,fireball_cooldown_stat_image_rect)
     screen.blit(fireball_cooldown_stat_surf,fireball_cooldown_stat_rect)
-    
+
     screen.blit(fireball_cooldown_surf,fireball_cooldown_rect)
     screen.blit(fireball_cooldown_overlay_surf, (fireball_cooldown_overlay_left, fireball_cooldown_overlay_top))
 
 
-def player_and_obstacle_collision_bool(): # Basically game over condition
+def player_and_obstacle_collision(): # Basically game over condition
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
         obstacles_overlapping = pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False)
-        for obstacle in obstacles_overlapping: 
-            if wizard.sprite.get_wizard_current_health() - obstacle.get_damage() > 0:
-                wizard.sprite.set_wizard_immunity_frames(wizard.sprite.get_wizard_max_immunity_frames())
-            if wizard.sprite.get_wizard_current_health() - obstacle.get_damage() <= 0:
-                temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
-                wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
-                for obstacle in obstacle_group:
-                    obstacle.kill()
-                obstacle_group.empty()
-                for projectile in projectile_group:
-                    projectile.kill()
-                projectile_group.empty()
-                for pickup in pickup_group:
-                    pickup.kill()
-                pickup_group.empty()
-                for health_bar in health_bar_group:
-                    health_bar.kill()
-                for outline_health_bar in outline_health_bar_group:
-                    outline_health_bar.kill()
-                health_bar_group.empty()
-                outline_health_bar_group.empty()
-                pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
-                return False
-    else: return True
+        for obstacle in obstacles_overlapping:
+            wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),"#550000")
+            if wizard.sprite.get_wizard_immunity_frames() <= 0:
+                wizard.sprite.set_wizard_hurt(True)
+                print(wizard.sprite.get_wizard_current_health())
+                if (temp_health:=(wizard.sprite.get_wizard_current_health() - obstacle.get_damage())) > 0:
+                    wizard.sprite.set_wizard_current_health(temp_health)
+                    wizard.sprite.set_wizard_immunity_frames(wizard.sprite.get_wizard_max_immunity_frames())
+                    print(wizard.sprite.get_wizard_current_health())
+                elif wizard.sprite.get_wizard_current_health() - obstacle.get_damage() <= 0:
+                    temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
+                    wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
+                    for obstacle in obstacle_group:
+                        obstacle.kill()
+                    obstacle_group.empty()
+                    for projectile in projectile_group:
+                        projectile.kill()
+                    projectile_group.empty()
+                    for pickup in pickup_group:
+                        pickup.kill()
+                    pickup_group.empty()
+                    for health_bar in health_bar_group:
+                        health_bar.kill()
+                    for outline_health_bar in outline_health_bar_group:
+                        outline_health_bar.kill()
+                    health_bar_group.empty()
+                    outline_health_bar_group.empty()
+                    pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
+                    wizard.sprite.set_wizard_dead(True)
 
 
 def obstacle_and_player_owned_projectile_collision():
@@ -237,10 +251,10 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit() # opposite of pygame.init()
             exit() # breaks out of the while True loop
-       
+
         if game_active:
             # Obstacle Timer Event Detection
-            if event.type == obstacle_timer: 
+            if event.type == obstacle_timer:
                 new_obstacle = Obstacle(choice(['bird','skeleton','skeleton','skeleton']),int(pygame.time.get_ticks() / 1000) - start_time)
                 obstacle_group.add(new_obstacle)
                 # Health Bar
@@ -273,40 +287,42 @@ while True:
             pygame.mixer.Channel(BG_MUSIC_CHANNEL).play(bg_music)
         elif bg_music_timer >= (25 * 60):
             bg_music_timer = -1
-        if wizard_alive: 
+        if wizard_alive:
             bg_music_timer += 1
             screen.blit(sky_surf,(0,0))
             screen.blit(ground_surf,(0,0))
             # Stat Image Postions
             score = display_score()
             display_stats() # updating stats
-            
+
             for sprite in moving_sprites: # Holds all things to be drawn
                 sprite.draw(screen)
                 sprite.update()
-            
+
             obstacle_and_player_owned_projectile_collision()
-            
+
             player_and_pickup_collision()
 
-            wizard_alive = player_and_obstacle_collision_bool()
+            player_and_obstacle_collision()
+
+            wizard_alive = not wizard.sprite.get_wizard_dead()
 
         else: # Work on death animation
             wizard.sprite.set_wizard_dead(True)
             screen.blit(sky_surf,(0,0))
             screen.blit(ground_surf,(0,0))
-            
+
             wizard.draw(screen) # draws sprites
             harold.draw(screen)
-            
+
             wizard.update() # updates sprites
             harold.update()
             death_counter += 1
             if death_counter > 180:
                 game_active = False
-            
+
     # Menu Screen
-    else:         
+    else:
         wizard.sprite.reset()
         harold.sprite.reset()
         pygame.event.clear()
