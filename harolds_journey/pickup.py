@@ -15,28 +15,28 @@ class Pickup(pygame.sprite.Sprite):
         self.LIFETIME_LIMIT = 10 * 60
         self.lifetime = self.LIFETIME_LIMIT
 
-        if type == 'damage': # Percentages
-            self.type = 'damage'
+        if type == "damage": # Percentages
+            self.type = "damage"
             self.bonus = 0.5
-            damage_pickup = pygame.image.load('harolds_journey/graphics/pickups/damage/damage_pickup.png').convert_alpha()
+            damage_pickup = pygame.image.load("harolds_journey/graphics/pickups/damage/damage_pickup.png").convert_alpha()
             self.frames = [damage_pickup]
 
-        elif type == 'piercing': # Flat increases
-            self.type = 'piercing'
+        elif type == "piercing": # Flat increases
+            self.type = "piercing"
             self.bonus = 1
-            piercing_pickup = pygame.image.load('harolds_journey/graphics/pickups/piercing/piercing_pickup.png').convert_alpha()
+            piercing_pickup = pygame.image.load("harolds_journey/graphics/pickups/piercing/piercing_pickup.png").convert_alpha()
             self.frames = [piercing_pickup]
 
-        elif type == 'fireball_cooldown': # Flat increases?
-            self.type = 'fireball_cooldown'
+        elif type == "fireball_cooldown": # Flat increases?
+            self.type = "fireball_cooldown"
             self.bonus = 2
-            fireball_cooldown_pickup = pygame.image.load('harolds_journey/graphics/pickups/fireball_cooldown/fireball_cooldown_pickup.png').convert_alpha()
+            fireball_cooldown_pickup = pygame.image.load("harolds_journey/graphics/pickups/fireball_cooldown/fireball_cooldown_pickup.png").convert_alpha()
             self.frames = [fireball_cooldown_pickup]
 
-        elif type == 'speed': # Flat increases
-            self.type = 'speed'
+        elif type == "speed": # Flat increases
+            self.type = "speed"
             self.bonus = 0.5
-            speed_pickup = pygame.image.load('harolds_journey/graphics/pickups/speed/speed_pickup.png').convert_alpha()
+            speed_pickup = pygame.image.load("harolds_journey/graphics/pickups/speed/speed_pickup.png").convert_alpha()
             self.frames = [speed_pickup]
 
         self.animation_index = 0
