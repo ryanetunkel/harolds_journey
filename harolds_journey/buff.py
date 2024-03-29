@@ -29,17 +29,34 @@ class Buff(Pickup):
             self.frames = []
             # Load two images into an array, their transparent bit is (255, 255, 255)
             self.frames = self.sprite_sheet.images_at(self.image_coords, colorkey=(255, 255, 255))
-            # Do this for the other buffs too
 
         elif type == "shield":
             self.type = "shield"
-            piercing_pickup = pygame.image.load("harolds_journey/graphics/pickups/piercing/piercing_pickup.png").convert_alpha()
-            self.frames = [piercing_pickup]
+            self.sprite_sheet = spritesheet.spritesheet("harolds_journey/graphics/buffs/shield_buff/shield_buff.png")
+            self.default_image = self.sprite_sheet.image_at((0, 0, 10, 10))
+            self.image = self.default_image
+            self.image_coords = [
+                (11, 0, 10,10),(21, 0, 10,10),
+                (0, 11, 10,10),(11, 11, 10,10),(21, 11, 10,10),
+                (11, 21, 10,10),(21, 21, 10,10),
+            ]
+            self.frames = []
+            # Load two images into an array, their transparent bit is (255, 255, 255)
+            self.frames = self.sprite_sheet.images_at(self.image_coords, colorkey=(255, 255, 255))
 
-        elif type == "shield":
-            self.type = "shield"
-            fireball_cooldown_pickup = pygame.image.load("harolds_journey/graphics/pickups/fireball_cooldown/fireball_cooldown_pickup.png").convert_alpha()
-            self.frames = [fireball_cooldown_pickup]
+        elif type == "knockback":
+            self.type = "knockback"
+            self.sprite_sheet = spritesheet.spritesheet("harolds_journey/graphics/buffs/knockback_buff/knockback_buff.png")
+            self.default_image = self.sprite_sheet.image_at((0, 0, 10, 10))
+            self.image = self.default_image
+            self.image_coords = [
+                (11, 0, 10,10),(21, 0, 10,10),
+                (0, 11, 10,10),(11, 11, 10,10),(21, 11, 10,10),
+                (11, 21, 10,10),(21, 21, 10,10),
+            ]
+            self.frames = []
+            # Load two images into an array, their transparent bit is (255, 255, 255)
+            self.frames = self.sprite_sheet.images_at(self.image_coords, colorkey=(255, 255, 255))
 
     def apply_gravity(self):
         self.gravity += self.gravity_intensity
