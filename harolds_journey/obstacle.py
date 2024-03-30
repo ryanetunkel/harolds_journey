@@ -13,6 +13,10 @@ class Obstacle(pygame.sprite.Sprite):
         self.time_scalar = int(time_at_spawn / self.ROUND_DIFFICULTY_INCREASE_INCREMENT) + 1 # Should mean every 20 seconds goes up by 1 
 
         self.enemy_looking_right = False
+        self.knockback_value = 4
+        self.knockback_vector = 0
+        self.knockback_timer_max = 4
+        self.knockback_timer = self.knockback_timer_max
 
         self.skeleton_walk_animation_speed =  0.32
         self.bird_fly_animation_speed = 0.2
@@ -133,6 +137,31 @@ class Obstacle(pygame.sprite.Sprite):
         else:
             self.set_immunity(False)
 
+    def get_knockback_value(self):
+        return self.knockback_value
+
+    def set_knockback_value(self, new_knockback_value):
+        self.knockback_value = new_knockback_value
+
+    def get_knockback_vector(self):
+        return self.knockback_vector
+
+    def set_knockback_vector(self, new_knockback_vector):
+        self.knockback_vector = new_knockback_vector
+
+    def get_knockback_timer(self):
+        return self.knockback_timer
+
+    def set_knockback_timer(self, new_knockback_timer):
+        self.knockback_timer = new_knockback_timer
+
+    def calculate_knockback(self):
+        if self.knockback_vector == self.knockback_value:
+            if self.knockback_timer < self.knockback_timer_max:
+                self.set_knockback_timer(self.get_knockback_timer() - 1)
+            if self.knockback_timer <= 0:
+                self.set_knockback_vector(0)
+
     def get_points(self):
         return self.points
 
@@ -159,7 +188,7 @@ class Obstacle(pygame.sprite.Sprite):
 
     def update(self):
         self.animation_state()
-        self.rect.x += (self.obstacle_speed * self.direction_multiplier)
+        self.rect.x += (self.obstacle_speed * self.direction_multiplier) + self.knockback_vector
         self.calculate_immunity()
         self.destroy()
 

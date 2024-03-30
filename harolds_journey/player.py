@@ -56,6 +56,12 @@ class Player(pygame.sprite.Sprite):
         self.max_fireball_cooldown_time = 60
         self.current_fireball_cooldown = 0
 
+        # Buffs
+        self.double_jump = False
+        self.double_jump_used = False
+        self.shield = False
+        self.knockback = True
+
         # Wizard Idle Animation
         self.wizard_idle = get_wizard_idle_arr()
 
@@ -199,6 +205,28 @@ class Player(pygame.sprite.Sprite):
     def set_wizard_jumping(self,new_wizard_jumping):
         self.wizard_jumping = new_wizard_jumping
 
+    # Buffs
+    # Double Jump
+    def get_double_jump(self):
+        return self.double_jump
+
+    def set_double_jump(self,new_double_jump):
+        self.double_jump = new_double_jump
+
+    # Shield
+    def get_shield(self):
+        return self.shield
+
+    def set_shield(self,new_shield):
+        self.shield = new_shield
+
+    # Knockback
+    def get_knockback(self):
+        return self.knockback
+
+    def set_knockback(self,new_knockback):
+        self.knockback = new_knockback
+
     # Score
     def get_additional_score(self):
         return self.additional_score
@@ -332,7 +360,11 @@ class Player(pygame.sprite.Sprite):
     def wizard_input(self):
         keys = pygame.key.get_pressed()
         if not self.wizard_dead:
-            if keys[jump_button] and self.rect.bottom >= GRASS_TOP_Y:
+            if keys[jump_button] and (self.rect.bottom >= GRASS_TOP_Y or (self.double_jump and self.rect.bottom < GRASS_TOP_Y and not self.double_jump_used)):
+                self.double_jump_used = False
+                if self.double_jump:
+                    if self.rect.bottom < GRASS_TOP_Y:
+                        self.double_jump_used = True
                 self.wizard_jumping = True
                 self.wizard_gravity = self.gravity_acceleration
                 # Jump Sound

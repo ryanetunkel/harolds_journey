@@ -9,6 +9,7 @@ from global_vars import *
 from harold import *
 from obstacle import *
 from pickup import *
+from buff import *
 from player import *
 from projectile import *
 from graphics.health_bar.health_bar import *
@@ -192,6 +193,13 @@ def obstacle_and_player_owned_projectile_collision():
                             pickup_group.add(Pickup("piercing",temp_obstacle_x_pos,temp_obstacle_y_pos))
                         if randint(1,25) == 25: # Chance to drop piercing pickup
                             pickup_group.add(Pickup("speed",temp_obstacle_x_pos,temp_obstacle_y_pos))
+                        # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
+                        if randint(1,5) == 5: # Chance to drop piercing pickup
+                            buff_group.add(Buff("double_jump",temp_obstacle_x_pos,temp_obstacle_y_pos))
+                        if randint(1,5) == 5: # Chance to drop piercing pickup
+                            buff_group.add(Buff("shield",temp_obstacle_x_pos,temp_obstacle_y_pos))
+                        if randint(1,5) == 5: # Chance to drop piercing pickup
+                            buff_group.add(Buff("knockback",temp_obstacle_x_pos,temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
                         # Health Bar and Outline Health Bar Cleanup
                         old_health_bar = health_bar_ownership_group[obstacle]
@@ -203,8 +211,10 @@ def obstacle_and_player_owned_projectile_collision():
                         wizard.sprite.set_additional_score(temp_additional_score)
                     else:
                         obstacle.set_current_health(temp_obstacle_health - temp_projectile_damage)
-                        if (temp_projectile_piercing > 1):
+                        if temp_projectile_piercing > 1:
                             obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
+                        if wizard.sprite.get_knockback():
+                            obstacle.set_x_velocity()
                     wizard.sprite.set_fireball_hit(True)
                     temp_projectile_piercing -= 1
                     if temp_projectile_piercing <= 0:
@@ -233,6 +243,19 @@ def player_and_pickup_collision():
             pygame.sprite.spritecollide(wizard.sprite,pickup_group,True)
 
 
+def player_and_buff_collision():
+    if pygame.sprite.spritecollide(wizard.sprite,buff_group,False):
+        buffs_overlapping = pygame.sprite.spritecollide(wizard.sprite,buff_group,False)
+        for buff in buffs_overlapping:
+            if buff.get_type() == "double_jump":
+                wizard.sprite.set_double_jump(True)
+            if buff.get_type() == "shield":
+                wizard.sprite.set_shield(True)
+            if buff.get_type() == "knockback":
+                wizard.sprite.set_knockback(True)
+            pygame.sprite.spritecollide(wizard.sprite,buff_group,True)
+
+
 wizard = pygame.sprite.GroupSingle()
 wizard.add(Player())
 
@@ -245,7 +268,9 @@ projectile_group = pygame.sprite.Group()
 
 pickup_group = pygame.sprite.Group()
 
-health_bar_group = pygame.sprite.Group() # add this in
+buff_group = pygame.sprite.Group()
+
+health_bar_group = pygame.sprite.Group()
 
 outline_health_bar_group = pygame.sprite.Group()
 
@@ -253,7 +278,16 @@ health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
 
 outline_health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
 
-moving_sprites = [wizard, harold, obstacle_group, projectile_group, pickup_group, outline_health_bar_group, health_bar_group,]
+moving_sprites = [
+    wizard,
+    harold,
+    obstacle_group,
+    projectile_group,
+    pickup_group,
+    buff_group,
+    outline_health_bar_group,
+    health_bar_group,
+]
 
 sky_surf = pygame.image.load("harolds_journey/graphics/bg_images/Background.png").convert_alpha()
 sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
