@@ -25,6 +25,7 @@ class Projectile(pygame.sprite.Sprite):
             self.wizard_was_looking_right = source.sprite.get_looking_right()
             self.wizard_speed = source.sprite.get_wizard_x_velocity()
             self.direction_multiplier = 1 if self.wizard_was_looking_right else -1
+            self.knockback = source.sprite.get_knockback()
 
             # Start position
             self.fireball_x_start = temp_wizard_rect.centerx + ((4 * PIXEL_SIZE) + (WIZARD_WIDTH/2) * self.direction_multiplier)
@@ -72,6 +73,12 @@ class Projectile(pygame.sprite.Sprite):
 
     def set_fireball_piercing(self,new_fireball_piercing):
         self.fireball_piercing = new_fireball_piercing
+
+    def get_knockback(self):
+        return self.knockback
+
+    def set_knockback(self,new_knockback):
+        self.knockback = new_knockback
 
     def animation_state(self):
         if self.created < 4:

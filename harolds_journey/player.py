@@ -60,7 +60,7 @@ class Player(pygame.sprite.Sprite):
         self.double_jump = False
         self.double_jump_used = False
         self.shield = False
-        self.knockback = True
+        self.knockback = False
 
         # Wizard Idle Animation
         self.wizard_idle = get_wizard_idle_arr()
@@ -212,14 +212,12 @@ class Player(pygame.sprite.Sprite):
 
     def set_double_jump(self,new_double_jump):
         self.double_jump = new_double_jump
-
     # Shield
     def get_shield(self):
         return self.shield
 
     def set_shield(self,new_shield):
         self.shield = new_shield
-
     # Knockback
     def get_knockback(self):
         return self.knockback
@@ -522,6 +520,12 @@ class Player(pygame.sprite.Sprite):
 
         self.max_fireball_cooldown_time = 60
         self.current_fireball_cooldown = 0
+
+        # Buffs
+        self.double_jump = False
+        self.double_jump_used = False
+        self.shield = False
+        self.knockback = False
 
         # Wizard Idle Animation
         self.wizard_idle = get_wizard_idle_arr()

@@ -194,12 +194,12 @@ def obstacle_and_player_owned_projectile_collision():
                         if randint(1,25) == 25: # Chance to drop piercing pickup
                             pickup_group.add(Pickup("speed",temp_obstacle_x_pos,temp_obstacle_y_pos))
                         # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
-                        if randint(1,5) == 5: # Chance to drop piercing pickup
+                        if not wizard.sprite.get_double_jump() and randint(1,1) == 1: # Chance to drop piercing pickup
                             buff_group.add(Buff("double_jump",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        if randint(1,5) == 5: # Chance to drop piercing pickup
-                            buff_group.add(Buff("shield",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        if randint(1,5) == 5: # Chance to drop piercing pickup
-                            buff_group.add(Buff("knockback",temp_obstacle_x_pos,temp_obstacle_y_pos))
+                        if not wizard.sprite.get_shield() and randint(1,5) == 0: # Chance to drop piercing pickup
+                            buff_group.add(Buff(type="shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
+                        if not wizard.sprite.get_knockback() and randint(1,5) == 0: # Chance to drop piercing pickup
+                            buff_group.add(Buff(type="knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
                         # Health Bar and Outline Health Bar Cleanup
                         old_health_bar = health_bar_ownership_group[obstacle]
@@ -207,14 +207,15 @@ def obstacle_and_player_owned_projectile_collision():
                         old_outline_bar.kill()
                         old_health_bar.kill()
                         pygame.sprite.spritecollide(projectile,obstacle_group,True)
+                        pygame.sprite.spritecollide(projectile,buff_group,True) # Temporary
                         pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
                         wizard.sprite.set_additional_score(temp_additional_score)
                     else:
                         obstacle.set_current_health(temp_obstacle_health - temp_projectile_damage)
                         if temp_projectile_piercing > 1:
                             obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
-                        if wizard.sprite.get_knockback():
-                            obstacle.set_x_velocity()
+                        if projectile.get_knockback():
+                            obstacle.set_knockback_vector(obstacle.get_knockback_value())
                     wizard.sprite.set_fireball_hit(True)
                     temp_projectile_piercing -= 1
                     if temp_projectile_piercing <= 0:
@@ -253,6 +254,18 @@ def player_and_buff_collision():
                 wizard.sprite.set_shield(True)
             if buff.get_type() == "knockback":
                 wizard.sprite.set_knockback(True)
+            if wizard.sprite.get_double_jump():
+                for buff in buff_group:
+                    if buff.get_type() == "double_jump":
+                        buff.kill()
+            if wizard.sprite.get_shield():
+                for buff in buff_group:
+                    if buff.get_type() == "shield":
+                        buff.kill()
+            if wizard.sprite.get_knockback():
+                for buff in buff_group:
+                    if buff.get_type() == "knockback":
+                        buff.kill()
             pygame.sprite.spritecollide(wizard.sprite,buff_group,True)
 
 

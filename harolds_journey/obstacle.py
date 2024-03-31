@@ -188,7 +188,7 @@ class Obstacle(pygame.sprite.Sprite):
 
     def update(self):
         self.animation_state()
-        self.rect.x += (self.obstacle_speed * self.direction_multiplier) + self.knockback_vector
+        self.rect.x += (self.obstacle_speed * self.direction_multiplier) + (self.knockback_vector)
         self.calculate_immunity()
         self.destroy()
 
