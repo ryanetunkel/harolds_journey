@@ -9,8 +9,8 @@ class Pickup(pygame.sprite.Sprite):
 
         self.x_pos = x_pos
         self.y_pos = y_pos
-        self.gravity_intensity = 1
-        self.gravity = GLOBAL_GRAVITY
+        self.gravity_acceleration = GLOBAL_GRAVITY
+        self.y_velocity = -20
         self.PICKUP_ANIMATION_SPEED = 0.2
         self.LIFETIME_LIMIT = 10 * 60
         self.lifetime = self.LIFETIME_LIMIT
@@ -54,8 +54,8 @@ class Pickup(pygame.sprite.Sprite):
         return self.rect.bottom - self.rect.top
 
     def apply_gravity(self):
-        self.gravity += self.gravity_intensity
-        self.rect.y += self.gravity
+        self.y_velocity += self.gravity_acceleration
+        self.rect.y += self.y_velocity
         if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
 
     def animation_state(self):

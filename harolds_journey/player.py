@@ -21,8 +21,10 @@ class Player(pygame.sprite.Sprite):
 
         # Y Directions
         self.wizard_y_pos = self.WIZARD_START_Y_POS
-        self.gravity_acceleration = GLOBAL_GRAVITY
-        self.gravity_intensity = 1 # How quickly gravity accelerates the player
+        self.wizard_y_velocity = 0
+        self.jump_speed = -20
+        self.gravity_acceleration = GLOBAL_GRAVITY # How quickly gravity accelerates the player
+        self.wizard_gravity = 0
         self.wizard_jumping = False
 
         # Fireball
@@ -58,7 +60,7 @@ class Player(pygame.sprite.Sprite):
 
         # Buffs
         self.double_jump = False
-        self.double_jump_used = False
+        self.double_jump_used = True
         self.shield = False
         self.knockback = False
 
@@ -87,7 +89,6 @@ class Player(pygame.sprite.Sprite):
         self.image = self.wizard_walk[self.wizard_index]
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
-        self.wizard_gravity = 0
 
         # Animation Speeds
         self.WIZARD_WALK_ANIMATION_SPEED = 0.1
@@ -178,12 +179,19 @@ class Player(pygame.sprite.Sprite):
     def set_wizard_x_velocity(self,new_wizard_x_velocity):
         self.wizard_x_velocity = new_wizard_x_velocity
 
-    # Gravity Stats
-    def get_wizard_gravity(self):
-        return self.wizard_gravity
+    # Y Velocity
+    def get_wizard_y_velocity(self):
+        return self.wizard_y_velocity
 
-    def set_wizard_gravity(self,new_wizard_gravity):
-        self.wizard_gravity = new_wizard_gravity
+    def set_wizard_y_velocity(self,new_wizard_y_velocity):
+        self.wizard_y_velocity = new_wizard_y_velocity
+
+    # Gravity Stats
+    def get_jump_speed(self):
+        return self.jump_speed
+
+    def set_jump_speed(self,new_jump_speed):
+        self.jump_speed = new_jump_speed
 
     def get_gravity_acceleration(self):
         return self.gravity_acceleration
@@ -358,13 +366,11 @@ class Player(pygame.sprite.Sprite):
     def wizard_input(self):
         keys = pygame.key.get_pressed()
         if not self.wizard_dead:
-            if keys[jump_button] and (self.rect.bottom >= GRASS_TOP_Y or (self.double_jump and self.rect.bottom < GRASS_TOP_Y and not self.double_jump_used)):
-                self.double_jump_used = False
-                if self.double_jump:
-                    if self.rect.bottom < GRASS_TOP_Y:
-                        self.double_jump_used = True
+            if keys[jump_button] and (self.rect.bottom >= GRASS_TOP_Y or (self.get_double_jump() and self.rect.bottom < GRASS_TOP_Y and not self.double_jump_used)):
+                if self.get_double_jump() and self.rect.bottom < GRASS_TOP_Y:
+                    self.double_jump_used = True
                 self.wizard_jumping = True
-                self.wizard_gravity = self.gravity_acceleration
+                self.set_wizard_y_velocity(self.jump_speed)
                 # Jump Sound
                 pygame.mixer.Channel(JUMP_SOUND_CHANNEL).play(self.jump_sound)
             if keys[right_button] and self.rect.x + WIZARD_WIDTH + self.wizard_speed < WINDOW_WIDTH:
@@ -387,9 +393,11 @@ class Player(pygame.sprite.Sprite):
                 self.walk_sound_timer += 1
 
     def apply_gravity(self):
-        self.wizard_gravity += self.gravity_intensity
-        self.rect.y += self.wizard_gravity
-        if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
+        self.wizard_y_velocity += self.gravity_acceleration
+        self.rect.y += self.wizard_y_velocity
+        if self.rect.bottom >= GRASS_TOP_Y:
+            self.set_wizard_y_velocity(0)
+            self.rect.bottom = GRASS_TOP_Y
 
     def animation_state(self):
         if not self.wizard_dead:
@@ -415,7 +423,17 @@ class Player(pygame.sprite.Sprite):
                 self.wizard_index += self.WIZARD_JUMP_ANIMATION_SPEED # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_jump): self.wizard_index = 0
                 self.image = self.wizard_jump[int(self.wizard_index)]
-                # this is it raw with no adjustment
+                # 0 - stationary
+                # 1 - beginning crouch
+                # 2 - in crouch
+                # 3 - releasing crouch
+                # 4 & 5 - standing out of crouch
+                # 6 - 11 - fully jumping
+                # 13 - peak, same as 0
+                # 14 - same as 1, used as start of fall
+                # 15 - same as 2, used as continuation of fall blowing up cloak
+                # 16 - same as 3, used as settle for landing?
+                # 17 - 23 - same as 0, used for landing and stopping
                 # below is the ideal
                 # wizard_surf = wizard_jump[0,7] # can't just do this need to go through
                 # 8 - 14 need to be when reach peak, prob cut and edit which goes where
@@ -488,8 +506,8 @@ class Player(pygame.sprite.Sprite):
 
         # Y Directions
         self.wizard_y_pos = self.WIZARD_START_Y_POS
-        self.gravity_acceleration = GLOBAL_GRAVITY
-        self.gravity_intensity = 1 # How quickly gravity accelerates the player
+        self.jump_speed = -20
+        self.gravity_acceleration = GLOBAL_GRAVITY # How quickly gravity accelerates the player
         self.wizard_jumping = False
 
         # Fireball
@@ -552,7 +570,6 @@ class Player(pygame.sprite.Sprite):
         self.image = self.wizard_walk[self.wizard_index]
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
-        self.wizard_gravity = 0
 
         # Secret Animation
         self.wizard_secret_idle_animation_speed = self.WIZARD_IDLE_ANIMATION_SPEED

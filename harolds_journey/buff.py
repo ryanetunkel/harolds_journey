@@ -9,8 +9,8 @@ class Buff(pygame.sprite.Sprite):
 
         self.x_pos = x_pos
         self.y_pos = y_pos
-        self.gravity_intensity = 1
-        self.gravity = GLOBAL_GRAVITY
+        self.gravity_acceleration = GLOBAL_GRAVITY
+        self.y_velocity = -20
         self.BUFF_ANIMATION_SPEED = 0.2
         self.LIFETIME_LIMIT = 10 * 60
         self.lifetime = self.LIFETIME_LIMIT
@@ -67,15 +67,17 @@ class Buff(pygame.sprite.Sprite):
     def get_type(self):
         return self.type
 
-    def apply_gravity(self):
-        self.gravity += self.gravity_intensity
-        self.rect.y += self.gravity
-        if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
+    def off_screen_recovery(self):
         # If when readjusting the camera to follow player the buffs come with it, this is why
         if self.rect.x >= WINDOW_WIDTH:
             self.rect.x -= self.speed
         if self.rect.y <= 0:
             self.rect.x += self.speed
+
+    def apply_gravity(self):
+        self.y_velocity += self.gravity_acceleration
+        self.rect.y += self.y_velocity
+        if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
 
     def animation_state(self):
         self.animation_index += self.BUFF_ANIMATION_SPEED
@@ -86,4 +88,5 @@ class Buff(pygame.sprite.Sprite):
 
     def update(self):
         self.apply_gravity()
+        self.off_screen_recovery()
         self.animation_state()
