@@ -269,6 +269,13 @@ def player_and_buff_collision():
             pygame.sprite.spritecollide(wizard.sprite,buff_group,True)
 
 
+def do_collisions():
+    obstacle_and_player_owned_projectile_collision()
+    player_and_buff_collision()
+    player_and_pickup_collision()
+    player_and_obstacle_collision()
+
+
 wizard = pygame.sprite.GroupSingle()
 wizard.add(Player())
 
@@ -390,11 +397,7 @@ while True:
                 sprite.draw(screen)
                 sprite.update()
 
-            obstacle_and_player_owned_projectile_collision()
-
-            player_and_pickup_collision()
-
-            player_and_obstacle_collision()
+            do_collisions()
 
             wizard_alive = not wizard.sprite.get_wizard_dead()
 
