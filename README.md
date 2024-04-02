@@ -3,6 +3,7 @@ Harold's Journey
 
 This was initially a space to practice my skills in Python but came to be a project that was a bit larger.
 I initially followed a pygame tutorial made by Clear Code on YouTube: https://www.youtube.com/watch?v=AY9MnQ4x3zk
+
 My brother and I began adding onto it and altering it and the project came to be known as Harold's Journey.
 He does the artwork and I write the code.
 
