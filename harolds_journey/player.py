@@ -220,6 +220,12 @@ class Player(pygame.sprite.Sprite):
 
     def set_double_jump(self,new_double_jump):
         self.double_jump = new_double_jump
+
+    def get_double_jump_used(self):
+        return self.double_jump_used
+
+    def set_double_jump_used(self,new_double_jump_used):
+        self.double_jump_used = new_double_jump_used
     # Shield
     def get_shield(self):
         return self.shield
@@ -403,8 +409,8 @@ class Player(pygame.sprite.Sprite):
         if not self.wizard_dead:
             (mouse_x,mouse_y) = pygame.mouse.get_pos()
             self.looking_right = mouse_x >= self.rect.centerx
+            # Fireball Animation
             if self.fireball_shot:
-                # wizard fireball animation
                 if self.start_fireball_animation:
                     self.wizard_index = 0
                     self.start_fireball_animation = False
@@ -416,19 +422,28 @@ class Player(pygame.sprite.Sprite):
                     self.start_fireball_animation = True
                     self.fireball_shot = False
                 self.image = self.wizard_fireball[int(self.wizard_index)]
+            # Jumping Animation
             elif self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping: # and add landing tracker this would be if it is off
                 # jump (first half)
                 self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
                 self.secret_sound_timer = 0
                 self.wizard_index += self.WIZARD_JUMP_ANIMATION_SPEED # speed of animation, adjust as needed
+                if -19 <= self.wizard_y_velocity <= -13:
+                    # frames 3 to 4
+                    print(self.wizard_y_velocity) # first instance was -19 to -13
                 if self.wizard_index >= len(self.wizard_jump): self.wizard_index = 0
                 self.image = self.wizard_jump[int(self.wizard_index)]
+                # current wizard_jump_animation_speed = 0.075
+                # 0.075 * 60 = 4.5fps
+                # 24 frames in the animation, currently it doesn't even get to 4
+                # 5.3333 repeated seconds to complete the animation
+                # Animation Breakdown
                 # 0 - stationary
                 # 1 - beginning crouch
                 # 2 - in crouch
                 # 3 - releasing crouch
                 # 4 & 5 - standing out of crouch
-                # 6 - 11 - fully jumping
+                # 6 - 12 - fully jumping
                 # 13 - peak, same as 0
                 # 14 - same as 1, used as start of fall
                 # 15 - same as 2, used as continuation of fall blowing up cloak
@@ -439,6 +454,7 @@ class Player(pygame.sprite.Sprite):
                 # 8 - 14 need to be when reach peak, prob cut and edit which goes where
                 # and add landing tracker this would be if landed
                 # landing animation for a few frames via timer and then when ends revert to idle
+            # Walking Animation
             elif self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
                 self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
                 self.wizard_jumping = False
@@ -446,6 +462,7 @@ class Player(pygame.sprite.Sprite):
                 self.wizard_index += self.WIZARD_WALK_ANIMATION_SPEED # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_walk): self.wizard_index = 0
                 self.image = self.wizard_walk[int(self.wizard_index)]
+            # Idle Animation
             elif not self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
                 self.wizard_jumping = False
                 if self.wizard_secret_animation_timer != 0:
@@ -455,6 +472,7 @@ class Player(pygame.sprite.Sprite):
                     # idle animation
                     # start timer that last for a few rounds of idle animation until would do the second
                     self.wizard_secret_animation_timer -= 1
+                # Secret Idle Animation
                 else:
                     self.wizard_index += self.wizard_secret_idle_animation_speed # speed of animation, adjust as needed
                     if self.wizard_index >= len(self.wizard_secret_idle): self.wizard_index = 0
