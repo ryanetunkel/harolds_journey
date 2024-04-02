@@ -64,6 +64,9 @@ class Buff(pygame.sprite.Sprite):
         self.image = pygame.transform.scale_by(self.image,3)
         self.rect = self.image.get_rect(center = (self.x_pos,self.y_pos))
 
+    def get_type(self):
+        return self.type
+
     def apply_gravity(self):
         self.gravity += self.gravity_intensity
         self.rect.y += self.gravity
