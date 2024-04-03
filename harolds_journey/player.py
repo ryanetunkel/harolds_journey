@@ -60,7 +60,8 @@ class Player(pygame.sprite.Sprite):
 
         # Buffs
         self.double_jump = False
-        self.double_jump_used = True
+        self.double_jump_used = False
+        self.first_jump_used = False
         self.shield = False
         self.knockback = False
 
@@ -226,6 +227,12 @@ class Player(pygame.sprite.Sprite):
 
     def set_double_jump_used(self,new_double_jump_used):
         self.double_jump_used = new_double_jump_used
+
+    def get_first_jump_used(self):
+        return self.first_jump_used
+
+    def set_first_jump_used(self,new_first_jump_used):
+        self.first_jump_used = new_first_jump_used
     # Shield
     def get_shield(self):
         return self.shield
@@ -372,9 +379,10 @@ class Player(pygame.sprite.Sprite):
     def wizard_input(self):
         keys = pygame.key.get_pressed()
         if not self.wizard_dead:
-            if keys[jump_button] and (self.rect.bottom >= GRASS_TOP_Y or (self.get_double_jump() and self.rect.bottom < GRASS_TOP_Y and not self.double_jump_used)):
-                if self.get_double_jump() and self.rect.bottom < GRASS_TOP_Y:
-                    self.double_jump_used = True
+            double_jump_bool = self.get_double_jump() and self.rect.bottom < GRASS_TOP_Y and not self.double_jump_used and self.get_first_jump_used()
+            if keys[jump_button] and (self.rect.bottom >= GRASS_TOP_Y or double_jump_bool):
+                if double_jump_bool:
+                    self.set_double_jump_used(True)
                 self.wizard_jumping = True
                 self.set_wizard_y_velocity(self.jump_speed)
                 # Jump Sound
@@ -390,7 +398,6 @@ class Player(pygame.sprite.Sprite):
             elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]):
                 self.wizard_x_velocity = 0
                 self.wizard_moving = False
-                self.wizard_jumping = False
             if self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y and self.walk_sound_timer >= self.walk_sound_length:
                 # Walk Sound
                 pygame.mixer.Channel(WALK_SOUND_CHANNEL).play(self.walk_sound)
@@ -404,6 +411,9 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom >= GRASS_TOP_Y:
             self.set_wizard_y_velocity(0)
             self.rect.bottom = GRASS_TOP_Y
+            self.set_double_jump_used(False)
+            self.set_first_jump_used(False)
+            self.set_wizard_jumping(False)
 
     def animation_state(self):
         if not self.wizard_dead:
@@ -427,12 +437,39 @@ class Player(pygame.sprite.Sprite):
                 # jump (first half)
                 self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
                 self.secret_sound_timer = 0
-                self.wizard_index += self.WIZARD_JUMP_ANIMATION_SPEED # speed of animation, adjust as needed
-                if -19 <= self.wizard_y_velocity <= -13:
-                    # frames 3 to 4
-                    print(self.wizard_y_velocity) # first instance was -19 to -13
-                if self.wizard_index >= len(self.wizard_jump): self.wizard_index = 0
-                self.image = self.wizard_jump[int(self.wizard_index)]
+
+                # Old Jump Animation Logic
+                # self.wizard_index += self.WIZARD_JUMP_ANIMATION_SPEED # speed of animation, adjust as needed
+                # if self.wizard_index >= len(self.wizard_jump): self.wizard_index = 0
+                # self.image = self.wizard_jump[int(self.wizard_index)]
+
+                # switch -19 and -13 to be percentages of the frames
+                # frames 3 to 4
+                # first instance was -19 to -13
+                # In y_velocity it should be an arc from -20 to 20
+
+                # Numbers listed were only the case when self.jump_speed was -20 and len(self.wizard_jump) was 23
+                starting_y_velocity = self.get_jump_speed() # -20
+                ending_y_velocity = 2 # 2
+                y_velocity_range = ending_y_velocity - starting_y_velocity # 22
+                y_velocity = self.get_wizard_y_velocity()
+                # [-20,2] + 20 = [0, 22] / 22 = [0,1] in 22nds
+                current_y_velocity_percentage = ((y_velocity + abs(starting_y_velocity)) / y_velocity_range)
+                # print("y_velocity: ", y_velocity)
+                # print("current_y_velocity_percentage: ",current_y_velocity_percentage)
+                starting_fall_frame_index = 14
+                # [0,1] in 22nds * 14 = [0,14] in 22 steps
+                y_velocity_frame_equivalent = int(current_y_velocity_percentage * starting_fall_frame_index)
+                # print("y_velocity_frame_equivalent: ",y_velocity_frame_equivalent)
+                falling_frame_index = 15
+                settling_frame_index = 16
+                if GRASS_TOP_Y - 2 < self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping:
+                    self.image = self.wizard_jump[settling_frame_index]
+                elif y_velocity <= 2:
+                    self.image = self.wizard_jump[y_velocity_frame_equivalent]
+                elif y_velocity > 2: self.image = self.wizard_jump[falling_frame_index]
+                # Should be self-resetting
+
                 # current wizard_jump_animation_speed = 0.075
                 # 0.075 * 60 = 4.5fps
                 # 24 frames in the animation, currently it doesn't even get to 4
@@ -448,7 +485,7 @@ class Player(pygame.sprite.Sprite):
                 # 14 - same as 1, used as start of fall
                 # 15 - same as 2, used as continuation of fall blowing up cloak
                 # 16 - same as 3, used as settle for landing?
-                # 17 - 23 - same as 0, used for landing and stopping
+                # 17 - 23 - same as 0, used for landing and stopping - not used
                 # below is the ideal
                 # wizard_surf = wizard_jump[0,7] # can't just do this need to go through
                 # 8 - 14 need to be when reach peak, prob cut and edit which goes where
@@ -457,14 +494,12 @@ class Player(pygame.sprite.Sprite):
             # Walking Animation
             elif self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
                 self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
-                self.wizard_jumping = False
                 self.secret_sound_timer = 0
                 self.wizard_index += self.WIZARD_WALK_ANIMATION_SPEED # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_walk): self.wizard_index = 0
                 self.image = self.wizard_walk[int(self.wizard_index)]
             # Idle Animation
             elif not self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
-                self.wizard_jumping = False
                 if self.wizard_secret_animation_timer != 0:
                     self.wizard_index += self.WIZARD_IDLE_ANIMATION_SPEED # speed of animation, adjust as needed
                     if self.wizard_index >= len(self.wizard_idle): self.wizard_index = 0
@@ -499,6 +534,8 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
         if not self.looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
+            print("left")
+        else: print("right")
         # Death animation if game was ended - rn game ends instantly so can't be implemented
         # Damage animation if hit and not killed - rn can't do cuz no health
 

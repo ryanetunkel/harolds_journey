@@ -352,9 +352,9 @@ while True:
 
         if game_active:
             # Spacebar Release Event Detection
-            if wizard.sprite.get_double_jump() and event.type == pygame.KEYUP:
+            if wizard.sprite.get_double_jump() and not wizard.sprite.get_double_jump_used() and event.type == pygame.KEYUP:
                 if event.key == jump_button:
-                    wizard.sprite.set_double_jump_used(False)
+                    wizard.sprite.set_first_jump_used(True)
             # Obstacle Timer Event Detection
             if event.type == obstacle_timer:
                 new_obstacle = Obstacle(choice(["bird","skeleton","skeleton","skeleton"]),int(pygame.time.get_ticks() / 1000) - start_time)
