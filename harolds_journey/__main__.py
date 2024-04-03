@@ -194,7 +194,7 @@ def obstacle_and_player_owned_projectile_collision():
                         if randint(1,25) == 25: # Chance to drop piercing pickup
                             pickup_group.add(Pickup("speed",temp_obstacle_x_pos,temp_obstacle_y_pos))
                         # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
-                        if not wizard.sprite.get_double_jump() and randint(1,1) == 1: # Chance to drop piercing pickup
+                        if not wizard.sprite.get_double_jump() and randint(1,75) == 75: # Chance to drop piercing pickup
                             buff_group.add(Buff("double_jump",temp_obstacle_x_pos,temp_obstacle_y_pos))
                         if not wizard.sprite.get_shield() and randint(1,5) == 0: # Chance to drop piercing pickup
                             buff_group.add(Buff(type="shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
