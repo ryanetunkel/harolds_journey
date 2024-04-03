@@ -534,8 +534,6 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
         if not self.looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
-            print("left")
-        else: print("right")
         # Death animation if game was ended - rn game ends instantly so can't be implemented
         # Damage animation if hit and not killed - rn can't do cuz no health
 
