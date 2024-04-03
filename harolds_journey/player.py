@@ -273,6 +273,12 @@ class Player(pygame.sprite.Sprite):
     def set_wizard_dead(self,new_wizard_dead):
         self.wizard_dead = new_wizard_dead
 
+    def get_wizard_start_death(self):
+        return self.wizard_start_death
+
+    def set_wizard_start_death(self,new_wizard_start_death):
+        self.wizard_start_death = new_wizard_start_death
+
     # Wizard Game Stats
     # Health
     def get_wizard_max_health(self):
@@ -526,7 +532,7 @@ class Player(pygame.sprite.Sprite):
         else:
             if not self.wizard_start_death:
                 self.wizard_index = 0
-                self.wizard_start_death = True
+                self.set_wizard_start_death(True)
             self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
             if self.wizard_index + self.WIZARD_DEATH_ANIMATION_SPEED < len(self.wizard_death):
                 self.wizard_index += self.WIZARD_DEATH_ANIMATION_SPEED
@@ -595,6 +601,7 @@ class Player(pygame.sprite.Sprite):
         # Buffs
         self.double_jump = False
         self.double_jump_used = False
+        self.first_jump_used = False
         self.shield = False
         self.knockback = False
 

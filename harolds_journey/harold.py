@@ -13,6 +13,7 @@ class Harold(pygame.sprite.Sprite):
         self.player = player
         temp_wizard_rect = self.player.sprite.get_wizard_rect()
         self.WIZARD_HAT_SIZE = 20
+        self.wizard_was_jumping = False
 
         # Harold Start
         self.harold_start_x_pos = temp_wizard_rect.centerx
@@ -82,6 +83,12 @@ class Harold(pygame.sprite.Sprite):
     def set_harold_gravity_acceleration(self,new_harold_gravity_acceleration):
         self.harold_gravity_acceleration = new_harold_gravity_acceleration
 
+    def get_wizard_was_jumping(self):
+        return self.wizard_was_jumping
+
+    def set_wizard_was_jumping(self,new_wizard_was_jumping):
+        self.wizard_was_jumping = new_wizard_was_jumping
+
     def get_height(self):
         return self.rect.bottom - self.rect.top
 
@@ -89,7 +96,7 @@ class Harold(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         # Refreshing Harold speed
         self.harold_speed = self.player.sprite.get_wizard_speed()
-        if not self.player.sprite.get_wizard_dead():
+        if not self.player.sprite.get_wizard_dead() and not self.player.sprite.get_wizard_start_death():
             if keys[jump_button] and self.rect.bottom >= self.harold_start_y_pos:
                 self.harold_y_velocity = self.jump_speed
             if keys[right_button] and self.player.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < WINDOW_WIDTH:
@@ -100,14 +107,19 @@ class Harold(pygame.sprite.Sprite):
                 self.rect.x -= self.harold_x_velocity
 
     def apply_gravity(self):
-        if not self.player.sprite.get_wizard_dead():
+        temp_player = self.player.sprite
+        temp_wizard_rect = self.player.sprite.get_wizard_rect()
+        wizard_was_jumping = self.get_wizard_was_jumping()
+        print(self.rect.y)
+        if not self.player.sprite.get_wizard_dead() and not self.player.sprite.get_wizard_start_death():
             self.harold_y_velocity += self.gravity_acceleration
             self.rect.y += self.harold_y_velocity
-            if self.rect.bottom >= self.harold_start_y_pos:
+            if not self.player.sprite.get_wizard_start_death() and self.rect.bottom >= temp_wizard_rect.top + 28:
                 # No inclusion of setting harold y vel to 0 so he gets flung
-                self.rect.bottom = self.harold_start_y_pos
+                self.rect.bottom = temp_wizard_rect.top + 28
+            self.set_wizard_was_jumping(temp_player.get_wizard_jumping())
         else:
-            if self.player.sprite.get_wizard_jumping():
+            if wizard_was_jumping:
                 self.harold_y_velocity += 0.4
                 self.rect.y += self.harold_y_velocity
             else:
@@ -133,6 +145,8 @@ class Harold(pygame.sprite.Sprite):
     def reset(self):
         # Temp Wizard Attribute
         temp_wizard_rect = self.player.sprite.get_wizard_rect()
+        self.WIZARD_HAT_SIZE = 20
+        self.wizard_was_jumping = False
 
         # Harold Start
         self.harold_start_x_pos = temp_wizard_rect.centerx
