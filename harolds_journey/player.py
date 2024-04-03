@@ -63,6 +63,8 @@ class Player(pygame.sprite.Sprite):
         self.double_jump_used = False
         self.first_jump_used = False
         self.shield = False
+        self.shield_max_health = 3
+        self.shield_current_health = self.shield_max_health
         self.knockback = False
 
         # Wizard Idle Animation
@@ -239,6 +241,18 @@ class Player(pygame.sprite.Sprite):
 
     def set_shield(self,new_shield):
         self.shield = new_shield
+
+    def get_shield_max_health(self):
+        return self.shield_max_health
+
+    def set_shield_max_health(self,new_shield_max_health):
+        self.shield_max_health = new_shield_max_health
+
+    def get_shield_current_health(self):
+        return self.shield_current_health
+
+    def set_shield_current_health(self,new_shield_current_health):
+        self.shield_current_health = new_shield_current_health
     # Knockback
     def get_knockback(self):
         return self.knockback
