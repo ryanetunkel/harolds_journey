@@ -145,7 +145,7 @@ def display_stats():
             shield_stat_image_rect_1,
             shield_stat_image_rect_2,
         ]
-        for shield_stat_index in range(0,wizard.sprite.get_shield_current_health()):
+        for shield_stat_index in range(0,wizard.sprite.get_current_shield_health()):
             screen.blit(shield_stat_image_surf,shield_stat_images[shield_stat_index])
 
     screen.blit(damage_stat_image_surf,damage_stat_image_rect)
@@ -169,19 +169,19 @@ def player_and_obstacle_collision(): # Basically game over condition
         obstacles_overlapping = pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False)
         wizard_shield = wizard.sprite.get_shield()
         for obstacle in obstacles_overlapping:
-            temp_shield_health = wizard.sprite.get_shield_current_health()
+            temp_shield_health = wizard.sprite.get_current_shield_health()
             if wizard_shield and temp_shield_health > 0:
                 wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),"#000055")
             else: wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),"#550000")
             if wizard.sprite.get_wizard_immunity_frames() <= 0:
                 wizard.sprite.set_wizard_hurt(True)
                 temp_obstacle_damage = obstacle.get_damage()
-                wizard.sprite.set_shield_countdown_timer(wizard.sprite.get_shield_countdown_max)
+                wizard.sprite.set_current_shield_cooldown(wizard.sprite.get_max_shield_cooldown)
                 if wizard_shield:
                     if temp_shield_health:=(temp_shield_health - temp_obstacle_damage > 0):
-                        wizard.sprite.set_shield_current_health(temp_shield_health)
+                        wizard.sprite.set_current_shield_health(temp_shield_health)
                     else:
-                        wizard.sprite.set_shield_current_health(0)
+                        wizard.sprite.set_current_shield_healthh(0)
                         temp_obstacle_damage = temp_obstacle_damage - temp_shield_health
                 if (temp_health:=(wizard.sprite.get_wizard_current_health() - temp_obstacle_damage)) > 0:
                     wizard.sprite.set_wizard_current_health(temp_health)
