@@ -39,6 +39,22 @@ def display_stats():
     health_stat_surf = pygame.transform.scale_by(health_stat_surf, 1.3)
     health_stat_rect = health_stat_surf.get_rect(center = (WINDOW_WIDTH*7/64,WINDOW_HEIGHT*13/128))
 
+    # Shield
+    shield_stat_x_pos_offset = WINDOW_WIDTH * 1/32
+    shield_stat_x_pos_0 = WINDOW_WIDTH * 1/16
+    shield_stat_x_pos_1 = shield_stat_x_pos_0 + shield_stat_x_pos_offset
+    shield_stat_x_pos_2 = shield_stat_x_pos_1 + shield_stat_x_pos_offset
+    shield_stat_y_pos = WINDOW_HEIGHT * 7/32
+    shield_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/shield_stat_display.png").convert_alpha()
+    shield_stat_image_surf = pygame.transform.scale_by(shield_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+    shield_stat_image_rect_0 = shield_stat_image_surf.get_rect(center = (shield_stat_x_pos_0,shield_stat_y_pos))
+    shield_stat_image_rect_1 = shield_stat_image_surf.get_rect(center = (shield_stat_x_pos_1,shield_stat_y_pos))
+    shield_stat_image_rect_2 = shield_stat_image_surf.get_rect(center = (shield_stat_x_pos_2,shield_stat_y_pos))
+
+    # shield_stat_surf = test_font.render(str(wizard.sprite.get_shield_current_health()), False, "#FCDC4D")
+    # shield_stat_surf = pygame.transform.scale_by(shield_stat_surf, 1.3)
+    # shield_stat_rect = shield_stat_surf.get_rect(center = (WINDOW_WIDTH*7/64,WINDOW_HEIGHT*13/128))
+
     # Stat image Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
     stat_image_surf_x_pos = WINDOW_WIDTH/4 #29/128 dif
     stat_image_surf_y_pos_offset = WINDOW_HEIGHT*3/32
@@ -93,8 +109,9 @@ def display_stats():
     fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (fireball_cooldown_stat_x_pos,fireball_cooldown_stat_y_pos))
 
     # Fireball Cooldown Icon
-    fireball_cooldown_x_pos = WINDOW_WIDTH * 1/16 # right of health: 11/64
-    fireball_cooldown_y_pos = WINDOW_HEIGHT * 7/32 # right of health: 25/256
+    fireball_cooldown_x_pos = WINDOW_WIDTH * 1/16 # right of health: 11/64 # Below Health: 1/16
+    fireball_cooldown_y_pos_num = 7/32 if not wizard.sprite.get_shield() else 11/32
+    fireball_cooldown_y_pos = WINDOW_HEIGHT * fireball_cooldown_y_pos_num # right of health: 25/256 # Below Health: 7/32
     fireball_cooldown_surf = pygame.image.load("harolds_journey/graphics/fireball/fireball_movement_animation/fireball_movement_00.png").convert_alpha()
     fireball_cooldown_rect = fireball_cooldown_surf.get_rect(center = (fireball_cooldown_x_pos,fireball_cooldown_y_pos))
     # Fireball Cooldown Overlay
@@ -121,6 +138,16 @@ def display_stats():
     screen.blit(health_stat_image_surf,health_stat_image_rect)
     screen.blit(health_stat_surf,health_stat_rect)
 
+    # Shield
+    if wizard.sprite.get_shield():
+        shield_stat_images = [
+            shield_stat_image_rect_0,
+            shield_stat_image_rect_1,
+            shield_stat_image_rect_2,
+        ]
+        for shield_stat_index in range(0,wizard.sprite.get_shield_current_health()):
+            screen.blit(shield_stat_image_surf,shield_stat_images[shield_stat_index])
+
     screen.blit(damage_stat_image_surf,damage_stat_image_rect)
     screen.blit(damage_stat_surf,damage_stat_rect)
 
@@ -140,11 +167,23 @@ def display_stats():
 def player_and_obstacle_collision(): # Basically game over condition
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
         obstacles_overlapping = pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False)
+        wizard_shield = wizard.sprite.get_shield()
         for obstacle in obstacles_overlapping:
-            wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),"#550000")
+            temp_shield_health = wizard.sprite.get_shield_current_health()
+            if wizard_shield and temp_shield_health > 0:
+                wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),"#000055")
+            else: wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),"#550000")
             if wizard.sprite.get_wizard_immunity_frames() <= 0:
                 wizard.sprite.set_wizard_hurt(True)
-                if (temp_health:=(wizard.sprite.get_wizard_current_health() - obstacle.get_damage())) > 0:
+                temp_obstacle_damage = obstacle.get_damage()
+                wizard.sprite.set_shield_countdown_timer(wizard.sprite.get_shield_countdown_max)
+                if wizard_shield:
+                    if temp_shield_health:=(temp_shield_health - temp_obstacle_damage > 0):
+                        wizard.sprite.set_shield_current_health(temp_shield_health)
+                    else:
+                        wizard.sprite.set_shield_current_health(0)
+                        temp_obstacle_damage = temp_obstacle_damage - temp_shield_health
+                if (temp_health:=(wizard.sprite.get_wizard_current_health() - temp_obstacle_damage)) > 0:
                     wizard.sprite.set_wizard_current_health(temp_health)
                     wizard.sprite.set_wizard_immunity_frames(wizard.sprite.get_wizard_max_immunity_frames())
                 elif wizard.sprite.get_wizard_current_health() - obstacle.get_damage() <= 0:
@@ -196,7 +235,7 @@ def obstacle_and_player_owned_projectile_collision():
                         # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
                         if not wizard.sprite.get_double_jump() and randint(1,75) == 75: # Chance to drop piercing pickup
                             buff_group.add(Buff("double_jump",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        if not wizard.sprite.get_shield() and randint(1,5) == 0: # Chance to drop piercing pickup
+                        if not wizard.sprite.get_shield() and randint(1,1) == 1: # Chance to drop piercing pickup
                             buff_group.add(Buff(type="shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
                         if not wizard.sprite.get_knockback() and randint(1,5) == 0: # Chance to drop piercing pickup
                             buff_group.add(Buff(type="knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))

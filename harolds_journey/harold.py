@@ -110,7 +110,6 @@ class Harold(pygame.sprite.Sprite):
         temp_player = self.player.sprite
         temp_wizard_rect = self.player.sprite.get_wizard_rect()
         wizard_was_jumping = self.get_wizard_was_jumping()
-        print(self.rect.y)
         if not self.player.sprite.get_wizard_dead() and not self.player.sprite.get_wizard_start_death():
             self.harold_y_velocity += self.gravity_acceleration
             self.rect.y += self.harold_y_velocity
