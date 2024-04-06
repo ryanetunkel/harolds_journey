@@ -51,10 +51,6 @@ def display_stats():
     shield_stat_image_rect_1 = shield_stat_image_surf.get_rect(center = (shield_stat_x_pos_1,shield_stat_y_pos))
     shield_stat_image_rect_2 = shield_stat_image_surf.get_rect(center = (shield_stat_x_pos_2,shield_stat_y_pos))
 
-    # shield_stat_surf = test_font.render(str(wizard.sprite.get_shield_current_health()), False, "#FCDC4D")
-    # shield_stat_surf = pygame.transform.scale_by(shield_stat_surf, 1.3)
-    # shield_stat_rect = shield_stat_surf.get_rect(center = (WINDOW_WIDTH*7/64,WINDOW_HEIGHT*13/128))
-
     # Stat image Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
     stat_image_surf_x_pos = WINDOW_WIDTH/4 #29/128 dif
     stat_image_surf_y_pos_offset = WINDOW_HEIGHT*3/32
@@ -176,12 +172,12 @@ def player_and_obstacle_collision():
             if wizard.sprite.get_wizard_immunity_frames() <= 0:
                 wizard.sprite.set_wizard_hurt(True)
                 temp_obstacle_damage = obstacle.get_damage()
-                wizard.sprite.set_current_shield_cooldown(wizard.sprite.get_max_shield_cooldown)
+                wizard.sprite.set_current_shield_cooldown(wizard.sprite.get_current_max_shield_cooldown())
                 if wizard_shield:
                     if temp_shield_health:=(temp_shield_health - temp_obstacle_damage > 0):
                         wizard.sprite.set_current_shield_health(temp_shield_health)
                     else:
-                        wizard.sprite.set_current_shield_healthh(0)
+                        wizard.sprite.set_current_shield_health(0)
                         temp_obstacle_damage = temp_obstacle_damage - temp_shield_health
                 if (temp_health:=(wizard.sprite.get_wizard_current_health() - temp_obstacle_damage)) > 0:
                     wizard.sprite.set_wizard_current_health(temp_health)

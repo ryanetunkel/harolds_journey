@@ -256,20 +256,22 @@ class Player(pygame.sprite.Sprite):
     def set_current_shield_health(self,new_current_shield_health):
         self.current_shield_health = new_current_shield_health
 
-    def get_max_shield_cooldown(self):
+    def get_current_max_shield_cooldown(self):
         return self.max_shield_cooldown
 
-    def set_max_shield_cooldown(self,new_max_shield_cooldown):
+    def set_new_max_shield_cooldown(self,new_max_shield_cooldown):
         self.max_shield_cooldown = new_max_shield_cooldown
 
-    def get_current_shield_cooldown(self):
-        return self.current_shield_cooldown
+    def get_current_shield_cooldown(self) -> int:
+        return int(self.current_shield_cooldown)
 
-    def set_current_shield_cooldown(self,new_current_shield_cooldown):
+    def set_current_shield_cooldown(self,new_current_shield_cooldown:int):
         self.current_shield_cooldown = new_current_shield_cooldown
 
     def decrease_current_shield_cooldown(self):
-        self.current_shield_cooldown -= 1
+        temp_current_shield_cooldown = self.get_current_shield_cooldown()
+        temp_current_shield_cooldown -= 1
+        self.set_current_shield_cooldown(temp_current_shield_cooldown)
 
     # Knockback
     def get_knockback(self):
@@ -582,8 +584,8 @@ class Player(pygame.sprite.Sprite):
     def shield_timer_tick(self):
         if self.get_shield() and self.get_current_shield_health() < self.get_shield_max_health():
             if self.get_current_shield_cooldown() == 0:
-                self.set_current_shield_health(self.get_current_shield_health + 1)
-                self.set_current_shield_cooldown(self.get_max_shield_cooldown)
+                self.set_current_shield_health(self.get_current_shield_health() + 1)
+                self.set_current_shield_cooldown(self.get_current_max_shield_cooldown())
             else:
                 self.decrease_current_shield_cooldown()
 
