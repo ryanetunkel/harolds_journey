@@ -582,9 +582,14 @@ class Player(pygame.sprite.Sprite):
             self.current_fireball_cooldown -= 1
 
     def shield_timer_tick(self):
-        if self.get_shield() and self.get_current_shield_health() < self.get_shield_max_health():
+        shield = self.get_shield()
+        temp_shield_health = self.get_current_shield_health()
+        current_shield_health_pos = temp_shield_health < self.get_shield_max_health()
+        no_immunity_frames = self.get_wizard_immunity_frames() <= 0
+        not_hurt = not self.get_wizard_hurt()
+        if shield and current_shield_health_pos and no_immunity_frames and not_hurt:
             if self.get_current_shield_cooldown() == 0:
-                self.set_current_shield_health(self.get_current_shield_health() + 1)
+                self.set_current_shield_health(temp_shield_health + 1)
                 self.set_current_shield_cooldown(self.get_current_max_shield_cooldown())
             else:
                 self.decrease_current_shield_cooldown()

@@ -164,25 +164,34 @@ def player_and_obstacle_collision():
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
         obstacles_overlapping = pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False)
         wizard_shield = wizard.sprite.get_shield()
+        temp_shield_health = wizard.sprite.get_current_shield_health()
+        temp_health = wizard.sprite.get_wizard_current_health()
+        color = "#550000" if not (wizard_shield and temp_shield_health > 0) else "#000055"
+        wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),color)
         for obstacle in obstacles_overlapping:
-            temp_shield_health = wizard.sprite.get_current_shield_health()
-            if wizard_shield and temp_shield_health > 0:
-                wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),"#000055")
-            else: wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),"#550000")
             if wizard.sprite.get_wizard_immunity_frames() <= 0:
                 wizard.sprite.set_wizard_hurt(True)
                 temp_obstacle_damage = obstacle.get_damage()
+                print(temp_obstacle_damage)
                 wizard.sprite.set_current_shield_cooldown(wizard.sprite.get_current_max_shield_cooldown())
-                if wizard_shield:
-                    if temp_shield_health:=(temp_shield_health - temp_obstacle_damage > 0):
-                        wizard.sprite.set_current_shield_health(temp_shield_health)
-                    else:
-                        wizard.sprite.set_current_shield_health(0)
-                        temp_obstacle_damage = temp_obstacle_damage - temp_shield_health
-                if (temp_health:=(wizard.sprite.get_wizard_current_health() - temp_obstacle_damage)) > 0:
-                    wizard.sprite.set_wizard_current_health(temp_health)
+                # if wizard_shield:
+                #     if (new_shield_health:=(temp_shield_health - temp_obstacle_damage) > 0):
+                #         wizard.sprite.set_current_shield_health(new_shield_health)
+                #     else:
+                #         wizard.sprite.set_current_shield_health(0)
+                #         temp_obstacle_damage -= temp_shield_health
+                relevant_shield_health = 0 if not wizard_shield else temp_shield_health
+                new_shield_health = relevant_shield_health - temp_obstacle_damage
+                if new_shield_health < 0:
+                    new_shield_health = 0
+                    temp_obstacle_damage -= relevant_shield_health
+                wizard.sprite.set_current_shield_health(new_shield_health)
+                new_health = temp_health - temp_obstacle_damage
+                if new_health > 0:
+                    wizard.sprite.set_wizard_current_health(new_health)
                     wizard.sprite.set_wizard_immunity_frames(wizard.sprite.get_wizard_max_immunity_frames())
-                elif wizard.sprite.get_wizard_current_health() - obstacle.get_damage() <= 0:
+                else:
+                    wizard.sprite.set_wizard_current_health(0)
                     temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
                     wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
                     for obstacle in obstacle_group:
