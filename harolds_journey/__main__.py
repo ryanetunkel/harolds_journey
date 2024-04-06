@@ -164,7 +164,7 @@ def display_stats():
     screen.blit(speed_stat_surf,speed_stat_rect)
 
 
-def player_and_obstacle_collision(): # Basically game over condition
+def player_and_obstacle_collision():
     if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
         obstacles_overlapping = pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False)
         wizard_shield = wizard.sprite.get_shield()
