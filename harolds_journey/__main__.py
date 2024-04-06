@@ -180,12 +180,14 @@ def player_and_obstacle_collision():
                 #     else:
                 #         wizard.sprite.set_current_shield_health(0)
                 #         temp_obstacle_damage -= temp_shield_health
-                relevant_shield_health = 0 if not wizard_shield else temp_shield_health
-                new_shield_health = relevant_shield_health - temp_obstacle_damage
-                if new_shield_health < 0:
-                    new_shield_health = 0
-                    temp_obstacle_damage -= relevant_shield_health
-                wizard.sprite.set_current_shield_health(new_shield_health)
+                if wizard_shield:
+                    new_shield_health = temp_shield_health - temp_obstacle_damage
+                    if new_shield_health <= 0:
+                        new_shield_health = 0
+                        temp_obstacle_damage -= temp_shield_health
+                    else:
+                        temp_obstacle_damage = 0
+                    wizard.sprite.set_current_shield_health(new_shield_health)
                 new_health = temp_health - temp_obstacle_damage
                 if new_health > 0:
                     wizard.sprite.set_wizard_current_health(new_health)
