@@ -167,6 +167,7 @@ def player_and_obstacle_collision():
         temp_shield_health = wizard.sprite.get_current_shield_health()
         temp_health = wizard.sprite.get_wizard_current_health()
         color = "#550000" if not (wizard_shield and temp_shield_health > 0) else "#000055"
+        # Make it so the color is still blue if at 0 but just lost shield_health
         wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),color)
         for obstacle in obstacles_overlapping:
             if wizard.sprite.get_wizard_immunity_frames() <= 0:
