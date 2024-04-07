@@ -17,6 +17,8 @@ class Obstacle(pygame.sprite.Sprite):
         self.knockback_vector = 0
         self.knockback_timer_max = 4
         self.knockback_timer = self.knockback_timer_max
+        self.hurt = False
+        self.damaged_color = "#550000"
 
         self.skeleton_walk_animation_speed =  0.32
         self.bird_fly_animation_speed = 0.2
@@ -34,7 +36,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.bird_damage = 1
         self.immunity = False
         self.IMMUNITY_LIMIT = 50
-        self.immunity_timer = 0 # will need to eventually track what fireball id hit it 
+        self.immunity_timer = 0 # will need to eventually track what fireball id hit it
 
         if randint(0,1) == 1:
             self.x_pos = randint(WINDOW_WIDTH + 100,WINDOW_WIDTH + 300)
@@ -87,6 +89,7 @@ class Obstacle(pygame.sprite.Sprite):
         # Outside Source
         self.knockback_direction_multiplier = 0
 
+    # Position
     def get_x_pos(self):
         return self.rect.centerx
 
@@ -99,6 +102,7 @@ class Obstacle(pygame.sprite.Sprite):
     def get_direction_multiplier(self):
         return self.direction_multiplier
 
+    # Health
     def get_current_health(self):
         return self.current_health
 
@@ -120,6 +124,7 @@ class Obstacle(pygame.sprite.Sprite):
     def get_points(self):
         return self.points
 
+    # Immunity
     def get_immunity(self):
         return self.immunity
 
@@ -139,10 +144,25 @@ class Obstacle(pygame.sprite.Sprite):
         temp_immunity_timer = self.get_immunity_timer()
         if temp_immunity_timer > 0:
             self.set_immunity(True)
+            self.set_obstacle_color(self.get_damaged_color())
             self.set_immunity_timer(temp_immunity_timer - 1)
         else:
             self.set_immunity(False)
 
+    # Damaged
+    def get_damaged_color(self):
+        return self.damaged_color
+
+    def set_damaged_color(self,new_damaged_color):
+        self.damaged_color = new_damaged_color
+
+    def set_obstacle_color(self,surface, color):
+        rect = surface.get_rect()
+        surf = pygame.Surface(rect.size, pygame.SRCALPHA)
+        surf.fill(color)
+        surface.blit(surf, (0, 0), None, pygame.BLEND_ADD)
+
+    # Knockback
     def get_knockback_value(self):
         return self.knockback_value
 
@@ -169,17 +189,21 @@ class Obstacle(pygame.sprite.Sprite):
 
     def calculate_knockback(self):
         if self.knockback_vector == self.knockback_value * self.get_knockback_direction_multiplier():
-            if 0 < self.knockback_timer < self.knockback_timer_max:
-                self.set_knockback_timer(self.get_knockback_timer() - 1)
+            knockback_time = self.get_knockback_timer()
+            if knockback_time > 0:
+                self.set_knockback_timer(knockback_time - 1)
             else:
                 self.set_knockback_vector(0)
+                self.set_knockback_direction_multiplier(0)
 
+    # Points
     def get_points(self):
         return self.points
 
     def set_points(self,new_points):
         self.points = new_points
 
+    # Height
     def get_height(self):
         return self.rect.bottom - self.rect.top
 
@@ -200,11 +224,11 @@ class Obstacle(pygame.sprite.Sprite):
 
     def update(self):
         self.animation_state()
+        self.calculate_knockback()
+        self.calculate_immunity()
         x_velocity = self.obstacle_speed * self.direction_multiplier
         knockback_velocity = self.get_knockback_vector() * self.get_knockback_direction_multiplier()
         self.rect.x += x_velocity + knockback_velocity
-        self.calculate_immunity()
-        self.calculate_knockback()
         self.destroy()
 
     def destroy(self):

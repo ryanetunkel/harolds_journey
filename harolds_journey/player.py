@@ -276,12 +276,6 @@ class Player(pygame.sprite.Sprite):
         temp_current_shield_cooldown -= 1
         self.set_current_shield_cooldown(temp_current_shield_cooldown)
 
-    def get_damaged_color(self):
-        return self.damaged_color
-
-    def set_damaged_color(self,new_damaged_color):
-        self.damaged_color = new_damaged_color
-
     # Knockback
     def get_knockback(self):
         return self.knockback
@@ -348,7 +342,13 @@ class Player(pygame.sprite.Sprite):
     def set_wizard_hurt(self,new_wizard_hurt):
         self.wizard_hurt = new_wizard_hurt
 
-    def set_wizard_color(self,surface, color):
+    def get_damaged_color(self):
+        return self.damaged_color
+
+    def set_damaged_color(self,new_damaged_color):
+        self.damaged_color = new_damaged_color
+
+    def set_wizard_color(self,surface,color):
         rect = surface.get_rect()
         surf = pygame.Surface(rect.size, pygame.SRCALPHA)
         surf.fill(color)
