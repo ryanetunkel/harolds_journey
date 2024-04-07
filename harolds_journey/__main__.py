@@ -161,25 +161,18 @@ def display_stats():
 
 
 def player_and_obstacle_collision():
-    if pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
-        obstacles_overlapping = pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False)
+    if obstacles_overlapping:=pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
         wizard_shield = wizard.sprite.get_shield()
         temp_shield_health = wizard.sprite.get_current_shield_health()
         temp_health = wizard.sprite.get_wizard_current_health()
-        color = "#550000" if not (wizard_shield and temp_shield_health > 0) else "#000055"
-        # Make it so the color is still blue if at 0 but just lost shield_health
-        wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),color)
+        temp_immunity_frames = wizard.sprite.get_wizard_immunity_frames()
+        temp_damaged_color = wizard.sprite.get_damaged_color()
+        wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),temp_damaged_color)
         for obstacle in obstacles_overlapping:
-            if wizard.sprite.get_wizard_immunity_frames() <= 0:
-                wizard.sprite.set_wizard_hurt(True)
+            if temp_immunity_frames <= 0:
                 temp_obstacle_damage = obstacle.get_damage()
-                wizard.sprite.set_current_shield_cooldown(wizard.sprite.get_current_max_shield_cooldown())
-                # if wizard_shield:
-                #     if (new_shield_health:=(temp_shield_health - temp_obstacle_damage) > 0):
-                #         wizard.sprite.set_current_shield_health(new_shield_health)
-                #     else:
-                #         wizard.sprite.set_current_shield_health(0)
-                #         temp_obstacle_damage -= temp_shield_health
+                wizard.sprite.set_wizard_hurt(True)
+                wizard.sprite.set_current_shield_cooldown(wizard.sprite.get_max_shield_cooldown())
                 if wizard_shield:
                     new_shield_health = temp_shield_health - temp_obstacle_damage
                     if new_shield_health <= 0:

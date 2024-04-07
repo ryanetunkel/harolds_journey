@@ -67,6 +67,7 @@ class Player(pygame.sprite.Sprite):
         self.current_shield_health = self.shield_max_health
         self.max_shield_cooldown = 180
         self.current_shield_cooldown = self.max_shield_cooldown
+        self.damaged_color = "#550000"
         self.knockback = False
 
         # Wizard Idle Animation
@@ -250,28 +251,34 @@ class Player(pygame.sprite.Sprite):
     def set_shield_max_health(self,new_shield_max_health):
         self.shield_max_health = new_shield_max_health
 
-    def get_current_shield_health(self): # shield error when have shield and collide with obstacle
+    def get_current_shield_health(self):
         return self.current_shield_health
 
     def set_current_shield_health(self,new_current_shield_health):
         self.current_shield_health = new_current_shield_health
 
-    def get_current_max_shield_cooldown(self):
+    def get_max_shield_cooldown(self):
         return self.max_shield_cooldown
 
-    def set_new_max_shield_cooldown(self,new_max_shield_cooldown):
+    def set_max_shield_cooldown(self,new_max_shield_cooldown):
         self.max_shield_cooldown = new_max_shield_cooldown
 
-    def get_current_shield_cooldown(self) -> int:
-        return int(self.current_shield_cooldown)
+    def get_current_shield_cooldown(self):
+        return self.current_shield_cooldown
 
-    def set_current_shield_cooldown(self,new_current_shield_cooldown:int):
+    def set_current_shield_cooldown(self,new_current_shield_cooldown):
         self.current_shield_cooldown = new_current_shield_cooldown
 
     def decrease_current_shield_cooldown(self):
         temp_current_shield_cooldown = self.get_current_shield_cooldown()
         temp_current_shield_cooldown -= 1
         self.set_current_shield_cooldown(temp_current_shield_cooldown)
+
+    def get_damaged_color(self):
+        return self.damaged_color
+
+    def set_damaged_color(self,new_damaged_color):
+        self.damaged_color = new_damaged_color
 
     # Knockback
     def get_knockback(self):
@@ -342,9 +349,15 @@ class Player(pygame.sprite.Sprite):
     def calculate_wizard_immunity_frames(self):
         if self.wizard_immunity_frames > 0:
             self.set_wizard_immunity_frames(self.get_wizard_immunity_frames()-1)
-            # If later get immunity frames from a different source, this could cause it to always look like it is caused by damage
+            if self.get_shield() and self.get_current_shield_health() > 0:
+                self.set_damaged_color("#000055")
         else:
             self.set_wizard_hurt(False)
+            if self.get_shield():
+                if self.get_current_shield_health() <= 0:
+                    self.set_damaged_color("#550000")
+                else:
+                    self.set_damaged_color("#000055") # Unsure if this gets used
 
     # Damage
     def get_wizard_damage_percent(self):
@@ -589,8 +602,9 @@ class Player(pygame.sprite.Sprite):
         not_hurt = not self.get_wizard_hurt()
         if shield and current_shield_health_pos and no_immunity_frames and not_hurt:
             if self.get_current_shield_cooldown() == 0:
+                self.set_damaged_color("#000055")
                 self.set_current_shield_health(temp_shield_health + 1)
-                self.set_current_shield_cooldown(self.get_current_max_shield_cooldown())
+                self.set_current_shield_cooldown(self.get_max_shield_cooldown())
             else:
                 self.decrease_current_shield_cooldown()
 
@@ -651,6 +665,11 @@ class Player(pygame.sprite.Sprite):
         self.double_jump_used = False
         self.first_jump_used = False
         self.shield = False
+        self.shield_max_health = 3
+        self.current_shield_health = self.shield_max_health
+        self.max_shield_cooldown = 180
+        self.current_shield_cooldown = self.max_shield_cooldown
+        self.damaged_color = "#550000"
         self.knockback = False
 
         # Wizard Idle Animation
