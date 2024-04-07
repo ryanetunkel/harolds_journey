@@ -60,7 +60,7 @@ class Projectile(pygame.sprite.Sprite):
             # self.image = pygame.transform.scale_by(self.image,1)
             if not self.wizard_was_looking_right:
                 self.image = pygame.transform.flip(self.image,True,False)
-            self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos)) 
+            self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos))
 
     def get_fireball_damage(self):
         return self.fireball_damage
@@ -73,6 +73,15 @@ class Projectile(pygame.sprite.Sprite):
 
     def set_fireball_piercing(self,new_fireball_piercing):
         self.fireball_piercing = new_fireball_piercing
+
+    def get_x_pos(self):
+        return self.rect.centerx
+
+    def get_y_pos(self):
+        return self.rect.centery
+
+    def get_direction_multiplier(self):
+        return self.direction_multiplier
 
     def get_knockback(self):
         return self.knockback
@@ -101,13 +110,13 @@ class Projectile(pygame.sprite.Sprite):
         self.animation_state()
         if self.created >= 4:
             if abs((self.projectile_speed + (self.wizard_speed / 2)) * self.direction_multiplier) > abs((self.projectile_speed * self.direction_multiplier)): # making fireball go with wiz speed
-                self.rect.x += (self.projectile_speed + (self.wizard_speed / 2)) * self.direction_multiplier
+                self.rect.centerx += (self.projectile_speed + (self.wizard_speed / 2)) * self.direction_multiplier
             else:
-                self.rect.x += (self.projectile_speed * self.direction_multiplier)
+                self.rect.centerx += (self.projectile_speed * self.direction_multiplier)
         self.destroy()
 
     def destroy(self):
-        if self.rect.x <= -100 and not self.wizard_was_looking_right:
+        if self.rect.right <= -100 and not self.wizard_was_looking_right:
             self.kill()
-        elif self.rect.x >= WINDOW_WIDTH + 100 and self.wizard_was_looking_right:
+        elif self.rect.left >= WINDOW_WIDTH + 100 and self.wizard_was_looking_right:
             self.kill()

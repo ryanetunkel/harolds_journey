@@ -39,17 +39,17 @@ def display_stats():
     health_stat_surf = pygame.transform.scale_by(health_stat_surf, 1.3)
     health_stat_rect = health_stat_surf.get_rect(center = (WINDOW_WIDTH*7/64,WINDOW_HEIGHT*13/128))
 
-    # Shield
-    shield_stat_x_pos_offset = WINDOW_WIDTH * 1/32
-    shield_stat_x_pos_0 = WINDOW_WIDTH * 1/16
-    shield_stat_x_pos_1 = shield_stat_x_pos_0 + shield_stat_x_pos_offset
-    shield_stat_x_pos_2 = shield_stat_x_pos_1 + shield_stat_x_pos_offset
-    shield_stat_y_pos = WINDOW_HEIGHT * 7/32
-    shield_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/shield_stat_display.png").convert_alpha()
-    shield_stat_image_surf = pygame.transform.scale_by(shield_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-    shield_stat_image_rect_0 = shield_stat_image_surf.get_rect(center = (shield_stat_x_pos_0,shield_stat_y_pos))
-    shield_stat_image_rect_1 = shield_stat_image_surf.get_rect(center = (shield_stat_x_pos_1,shield_stat_y_pos))
-    shield_stat_image_rect_2 = shield_stat_image_surf.get_rect(center = (shield_stat_x_pos_2,shield_stat_y_pos))
+    # Shield Health
+    shield_health_stat_x_pos_offset = WINDOW_WIDTH * 1/32
+    shield_health_stat_x_pos_0 = WINDOW_WIDTH * 1/16
+    shield_health_stat_x_pos_1 = shield_health_stat_x_pos_0 + shield_health_stat_x_pos_offset
+    shield_health_stat_x_pos_2 = shield_health_stat_x_pos_1 + shield_health_stat_x_pos_offset
+    shield_health_stat_y_pos = WINDOW_HEIGHT * 7/32
+    shield_health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/shield_stat_display.png").convert_alpha()
+    shield_health_stat_image_surf = pygame.transform.scale_by(shield_health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+    shield_health_stat_image_rect_0 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_0,shield_health_stat_y_pos))
+    shield_health_stat_image_rect_1 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_1,shield_health_stat_y_pos))
+    shield_health_stat_image_rect_2 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_2,shield_health_stat_y_pos))
 
     # Stat image Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
     stat_image_surf_x_pos = WINDOW_WIDTH/4 #29/128 dif
@@ -122,6 +122,7 @@ def display_stats():
     fireball_cooldown_overlay_surf = pygame.Surface((fireball_cooldown_overlay_width, fireball_cooldown_overlay_height))
     fireball_cooldown_overlay_surf.fill(fireball_cooldown_overlay_color)
     fireball_cooldown_overlay_surf.set_alpha(100)
+    fireball_cooldown_overlay_rect = (fireball_cooldown_overlay_left, fireball_cooldown_overlay_top)
     # Speed
     speed_stat_image_surf = pygame.image.load("harolds_journey/graphics/pickups/speed/speed_pickup.png").convert_alpha()
     speed_stat_image_surf = pygame.transform.scale_by(speed_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
@@ -130,34 +131,77 @@ def display_stats():
     speed_stat_surf = test_font.render("Speed: " + str(wizard.sprite.get_wizard_speed()), False, "#FCDC4D")
     speed_stat_surf = pygame.transform.scale_by(speed_stat_surf, 0.9)
     speed_stat_rect = speed_stat_surf.get_rect(center = (speed_stat_x_pos,speed_stat_y_pos))
+    # Buffs
+    # Health coords: WINDOW_WIDTH*1/16,WINDOW_HEIGHT*3/32
+    # Arrange in order recieved going from right to left
+    order_offset = WINDOW_WIDTH*3/64
+    default_image_x_pos = WINDOW_WIDTH*15/16
+    default_image_y_pos = WINDOW_HEIGHT*3/32
+    # Double Jump
+    if wizard.sprite.get_double_jump():
+        double_jump_idx = wizard.sprite.get_buff_idx_in_buff_list("double_jump")
+        double_jump_x_offset = order_offset * double_jump_idx
+        double_jump_buff_image_x_pos = default_image_x_pos - double_jump_x_offset
+        double_jump_buff_image_y_pos = default_image_y_pos
+        double_jump_buff_image_surf = wizard.sprite.get_buff_image_in_buff_image_list_by_idx(double_jump_idx)
+        double_jump_buff_image_surf = pygame.transform.scale_by(double_jump_buff_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+        double_jump_buff_image_rect = double_jump_buff_image_surf.get_rect(center = (double_jump_buff_image_x_pos,double_jump_buff_image_y_pos))
+    # Shield
+    if wizard.sprite.get_shield():
+        shield_idx = wizard.sprite.get_buff_idx_in_buff_list("shield")
+        shield_x_offset = order_offset * shield_idx
+        shield_buff_image_x_pos = default_image_x_pos - shield_x_offset
+        shield_buff_image_y_pos = default_image_y_pos
+        shield_buff_image_surf = wizard.sprite.get_buff_image_in_buff_image_list_by_idx(shield_idx)
+        shield_buff_image_surf = pygame.transform.scale_by(shield_buff_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+        shield_buff_image_rect = shield_buff_image_surf.get_rect(center = (shield_buff_image_x_pos,shield_buff_image_y_pos))
+    # Knockback
+    if wizard.sprite.get_knockback():
+        knockback_idx = wizard.sprite.get_buff_idx_in_buff_list("knockback")
+        knockback_x_offset = order_offset * knockback_idx
+        knockback_buff_image_x_pos = default_image_x_pos - knockback_x_offset
+        knockback_buff_image_y_pos = default_image_y_pos
+        knockback_buff_image_surf = wizard.sprite.get_buff_image_in_buff_image_list_by_idx(knockback_idx)
+        knockback_buff_image_surf = pygame.transform.scale_by(knockback_buff_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+        knockback_buff_image_rect = knockback_buff_image_surf.get_rect(center = (knockback_buff_image_x_pos,knockback_buff_image_y_pos))
+
     # Blits
     screen.blit(health_stat_image_surf,health_stat_image_rect)
     screen.blit(health_stat_surf,health_stat_rect)
-
-    # Shield
+    # Shield Health Blit
     if wizard.sprite.get_shield():
         shield_stat_images = [
-            shield_stat_image_rect_0,
-            shield_stat_image_rect_1,
-            shield_stat_image_rect_2,
+            shield_health_stat_image_rect_0,
+            shield_health_stat_image_rect_1,
+            shield_health_stat_image_rect_2,
         ]
         for shield_stat_index in range(0,wizard.sprite.get_current_shield_health()):
-            screen.blit(shield_stat_image_surf,shield_stat_images[shield_stat_index])
-
+            screen.blit(shield_health_stat_image_surf,shield_stat_images[shield_stat_index])
+    # Damage Blit
     screen.blit(damage_stat_image_surf,damage_stat_image_rect)
     screen.blit(damage_stat_surf,damage_stat_rect)
-
+    # Piercing Blit
     screen.blit(piercing_stat_image_surf,piercing_stat_image_rect)
     screen.blit(piercing_stat_surf,piercing_stat_rect)
-
+    # Fireball Cooldown Blit
     screen.blit(fireball_cooldown_stat_image_surf,fireball_cooldown_stat_image_rect)
     screen.blit(fireball_cooldown_stat_surf,fireball_cooldown_stat_rect)
-
+    # Fireball Cooldown Overlay Blit
     screen.blit(fireball_cooldown_surf,fireball_cooldown_rect)
-    screen.blit(fireball_cooldown_overlay_surf, (fireball_cooldown_overlay_left, fireball_cooldown_overlay_top))
-
+    screen.blit(fireball_cooldown_overlay_surf,fireball_cooldown_overlay_rect)
+    # Speed Stat Blit
     screen.blit(speed_stat_image_surf,speed_stat_image_rect)
     screen.blit(speed_stat_surf,speed_stat_rect)
+    # Buff Blits
+    # Double Jump Buff Blit
+    if wizard.sprite.get_double_jump():
+        screen.blit(double_jump_buff_image_surf,double_jump_buff_image_rect)
+    # Shield Buff Blit Blit
+    if wizard.sprite.get_shield():
+        screen.blit(shield_buff_image_surf,shield_buff_image_rect)
+    # Knockback Buff Blit Blit
+    if wizard.sprite.get_knockback():
+        screen.blit(knockback_buff_image_surf,knockback_buff_image_rect)
 
 
 def player_and_obstacle_collision():
@@ -189,15 +233,19 @@ def player_and_obstacle_collision():
                     wizard.sprite.set_wizard_current_health(0)
                     temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
                     wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
-                    for obstacle in obstacle_group:
-                        obstacle.kill()
-                    obstacle_group.empty()
-                    for projectile in projectile_group:
-                        projectile.kill()
-                    projectile_group.empty()
-                    for pickup in pickup_group:
-                        pickup.kill()
-                    pickup_group.empty()
+                    for objects in objects_to_be_removed:
+                        for object in objects:
+                            object.kill()
+                        objects.empty()
+                    # for obstacle in obstacle_group:
+                    #     obstacle.kill()
+                    # obstacle_group.empty()
+                    # for projectile in projectile_group:
+                    #     projectile.kill()
+                    # projectile_group.empty()
+                    # for pickup in pickup_group:
+                    #     pickup.kill()
+                    # pickup_group.empty()
                     for health_bar in health_bar_group:
                         health_bar.kill()
                     for outline_health_bar in outline_health_bar_group:
@@ -233,12 +281,12 @@ def obstacle_and_player_owned_projectile_collision():
                         if randint(1,25) == 25: # Chance to drop piercing pickup
                             pickup_group.add(Pickup("speed",temp_obstacle_x_pos,temp_obstacle_y_pos))
                         # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
-                        if not wizard.sprite.get_double_jump() and randint(1,75) == 75: # Chance to drop piercing pickup
+                        if not wizard.sprite.get_double_jump() and randint(1,50) == 50: # 1/50 Chance to drop double_jump buff
                             buff_group.add(Buff("double_jump",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        if not wizard.sprite.get_shield() and randint(1,1) == 1: # Chance to drop piercing pickup
-                            buff_group.add(Buff(type="shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
-                        if not wizard.sprite.get_knockback() and randint(1,5) == 0: # Chance to drop piercing pickup
-                            buff_group.add(Buff(type="knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
+                        if not wizard.sprite.get_shield() and randint(1,50) == 50: # 1/50 Chance to drop shield buff
+                            buff_group.add(Buff("shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
+                        if not wizard.sprite.get_knockback() and randint(1,1) == 1: # 1/50 Chance to drop knockback buff
+                            buff_group.add(Buff("knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
                         # Health Bar and Outline Health Bar Cleanup
                         old_health_bar = health_bar_ownership_group[obstacle]
@@ -254,7 +302,11 @@ def obstacle_and_player_owned_projectile_collision():
                         if temp_projectile_piercing > 1:
                             obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
                         if projectile.get_knockback():
-                            obstacle.set_knockback_vector(obstacle.get_knockback_value())
+                            obstacle.set_knockback_direction_multiplier(projectile.get_direction_multiplier())
+                            if temp_obstacle_x_pos > projectile.get_x_pos():
+                                obstacle.set_knockback_vector(obstacle.get_knockback_value() * 1.25)
+                            else:
+                                obstacle.set_knockback_vector(obstacle.get_knockback_value())
                     wizard.sprite.set_fireball_hit(True)
                     temp_projectile_piercing -= 1
                     if temp_projectile_piercing <= 0:
@@ -287,6 +339,8 @@ def player_and_buff_collision():
     if pygame.sprite.spritecollide(wizard.sprite,buff_group,False):
         buffs_overlapping = pygame.sprite.spritecollide(wizard.sprite,buff_group,False)
         for buff in buffs_overlapping:
+            wizard.sprite.add_buff_to_buff_list(buff.get_type())
+            wizard.sprite.add_buff_image_to_buff_image_list(buff.get_default_image())
             if buff.get_type() == "double_jump":
                 wizard.sprite.set_double_jump(True)
             if buff.get_type() == "shield":
@@ -347,6 +401,14 @@ moving_sprites = [
     outline_health_bar_group,
     health_bar_group,
 ]
+
+objects_to_be_removed = [
+    obstacle_group,
+    projectile_group,
+    pickup_group,
+    buff_group,
+]
+
 
 sky_surf = pygame.image.load("harolds_journey/graphics/bg_images/Background.png").convert_alpha()
 sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)

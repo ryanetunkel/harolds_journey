@@ -20,7 +20,7 @@ class Buff(pygame.sprite.Sprite):
 
         if type == "double_jump":
             self.type = "double_jump"
-            self.sprite_sheet = spritesheet.spritesheet("harolds_journey/graphics/buffs/double_jump_buff/double_jump_buff.png")
+            self.sprite_sheet = spritesheet.spritesheet("harolds_journey/graphics/buffs/double_jump_buff/double_jump_buff_spritesheet.png")
             self.default_image = self.sprite_sheet.image_at((0, 0, 10, 10), colorkey=(0, 0, 0))
             self.image_coords = [
                 (0, 0, 10, 10),(0, 0, 10, 10),(0, 0, 10, 10),
@@ -34,7 +34,7 @@ class Buff(pygame.sprite.Sprite):
 
         elif type == "shield":
             self.type = "shield"
-            self.sprite_sheet = spritesheet.spritesheet("harolds_journey/graphics/buffs/shield_buff/shield_buff.png")
+            self.sprite_sheet = spritesheet.spritesheet("harolds_journey/graphics/buffs/shield_buff/shield_buff_spritesheet.png")
             self.default_image = self.sprite_sheet.image_at((0, 0, 10, 10), colorkey=(0, 0, 0))
             self.image_coords = [
                 (0, 0, 10, 10),(0, 0, 10, 10),(0, 0, 10, 10),
@@ -48,7 +48,7 @@ class Buff(pygame.sprite.Sprite):
 
         elif type == "knockback":
             self.type = "knockback"
-            self.sprite_sheet = spritesheet.spritesheet("harolds_journey/graphics/buffs/knockback_buff/knockback_buff.png")
+            self.sprite_sheet = spritesheet.spritesheet("harolds_journey/graphics/buffs/knockback_buff/knockback_buff_spritesheet.png")
             self.default_image = self.sprite_sheet.image_at((0, 0, 10, 10), colorkey=(0, 0, 0))
             self.image_coords = [
                 (0, 0, 10, 10),(0, 0, 10, 10),(0, 0, 10, 10),
@@ -66,6 +66,9 @@ class Buff(pygame.sprite.Sprite):
 
     def get_type(self):
         return self.type
+
+    def get_default_image(self):
+        return self.default_image
 
     def off_screen_recovery(self):
         # If when readjusting the camera to follow player the buffs come with it, this is why

@@ -84,6 +84,9 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = (self.x_pos,self.y_pos))
         self.direction_multiplier = 1 if self.enemy_looking_right else -1
 
+        # Outside Source
+        self.knockback_direction_multiplier = 0
+
     def get_x_pos(self):
         return self.rect.centerx
 
@@ -92,6 +95,9 @@ class Obstacle(pygame.sprite.Sprite):
 
     def get_rect(self):
         return self.rect
+
+    def get_direction_multiplier(self):
+        return self.direction_multiplier
 
     def get_current_health(self):
         return self.current_health
@@ -140,26 +146,32 @@ class Obstacle(pygame.sprite.Sprite):
     def get_knockback_value(self):
         return self.knockback_value
 
-    def set_knockback_value(self, new_knockback_value):
+    def set_knockback_value(self,new_knockback_value):
         self.knockback_value = new_knockback_value
 
     def get_knockback_vector(self):
         return self.knockback_vector
 
-    def set_knockback_vector(self, new_knockback_vector):
+    def set_knockback_vector(self,new_knockback_vector):
         self.knockback_vector = new_knockback_vector
 
     def get_knockback_timer(self):
         return self.knockback_timer
 
-    def set_knockback_timer(self, new_knockback_timer):
+    def set_knockback_timer(self,new_knockback_timer):
         self.knockback_timer = new_knockback_timer
 
+    def get_knockback_direction_multiplier(self):
+        return self.knockback_direction_multiplier
+
+    def set_knockback_direction_multiplier(self, new_knockback_direction_multiplier):
+        self.knockback_direction_multiplier = new_knockback_direction_multiplier
+
     def calculate_knockback(self):
-        if self.knockback_vector == self.knockback_value:
-            if self.knockback_timer < self.knockback_timer_max:
+        if self.knockback_vector == self.knockback_value * self.get_knockback_direction_multiplier():
+            if 0 < self.knockback_timer < self.knockback_timer_max:
                 self.set_knockback_timer(self.get_knockback_timer() - 1)
-            if self.knockback_timer <= 0:
+            else:
                 self.set_knockback_vector(0)
 
     def get_points(self):
@@ -188,8 +200,11 @@ class Obstacle(pygame.sprite.Sprite):
 
     def update(self):
         self.animation_state()
-        self.rect.x += (self.obstacle_speed * self.direction_multiplier) + (self.knockback_vector)
+        x_velocity = self.obstacle_speed * self.direction_multiplier
+        knockback_velocity = self.get_knockback_vector() * self.get_knockback_direction_multiplier()
+        self.rect.x += x_velocity + knockback_velocity
         self.calculate_immunity()
+        self.calculate_knockback()
         self.destroy()
 
     def destroy(self):

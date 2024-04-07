@@ -69,6 +69,8 @@ class Player(pygame.sprite.Sprite):
         self.current_shield_cooldown = self.max_shield_cooldown
         self.damaged_color = "#550000"
         self.knockback = False
+        self.buff_list = []
+        self.buff_image_list = []
 
         # Wizard Idle Animation
         self.wizard_idle = get_wizard_idle_arr()
@@ -286,6 +288,51 @@ class Player(pygame.sprite.Sprite):
 
     def set_knockback(self,new_knockback):
         self.knockback = new_knockback
+
+    # Buff List
+    def get_buff_list(self):
+        return self.buff_list
+
+    def get_buff_idx_in_buff_list(self,buff_name_to_index)->int:
+        buff_name_index = -1
+        for idx,buff_name in enumerate(self.buff_list):
+            if buff_name == buff_name_to_index:
+                buff_name_index = idx
+        return buff_name_index
+
+    def add_buff_to_buff_list(self,new_buff_name):
+        if new_buff_name not in self.buff_list:
+            self.buff_list.append(new_buff_name)
+
+    def remove_buff_from_buff_list(self,buff_name_to_remove):
+        for buff_name in self.buff_list:
+            if buff_name == buff_name_to_remove:
+                self.buff_list.remove(buff_name)
+
+    def empty_buff_list(self):
+        self.buff_list.clear()
+
+    def set_buff_list(self,new_buff_list):
+        self.empty_buff_list()
+        for buff_name in new_buff_list:
+            self.add_buff_to_buff_list(buff_name)
+
+    # Buff Image List
+    def get_buff_image_list(self):
+        return self.buff_image_list
+
+    def get_buff_image_in_buff_image_list_by_idx(self,buff_image_idx):
+        return self.buff_image_list[buff_image_idx]
+
+    def add_buff_image_to_buff_image_list(self,new_buff_image):
+        if new_buff_image not in self.buff_image_list:
+            self.buff_image_list.append(new_buff_image)
+
+    def remove_buff_image_from_buff_image_list_by_idx(self,buff_image_idx):
+        self.buff_image_list[buff_image_idx] = 0
+
+    def empty_buff_image_list(self):
+        self.buff_image_list.clear()
 
     # Score
     def get_additional_score(self):
@@ -671,6 +718,8 @@ class Player(pygame.sprite.Sprite):
         self.current_shield_cooldown = self.max_shield_cooldown
         self.damaged_color = "#550000"
         self.knockback = False
+        self.buff_list = []
+        self.buff_image_list = []
 
         # Wizard Idle Animation
         self.wizard_idle = get_wizard_idle_arr()
