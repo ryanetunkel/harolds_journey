@@ -173,7 +173,6 @@ def player_and_obstacle_collision():
             if wizard.sprite.get_wizard_immunity_frames() <= 0:
                 wizard.sprite.set_wizard_hurt(True)
                 temp_obstacle_damage = obstacle.get_damage()
-                print(temp_obstacle_damage)
                 wizard.sprite.set_current_shield_cooldown(wizard.sprite.get_current_max_shield_cooldown())
                 # if wizard_shield:
                 #     if (new_shield_health:=(temp_shield_health - temp_obstacle_damage) > 0):
