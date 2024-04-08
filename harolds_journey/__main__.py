@@ -272,22 +272,23 @@ def obstacle_and_player_owned_projectile_collision():
                 obstacle.set_obstacle_color(obstacle.get_image(),obstacle.get_damaged_color())
                 if temp_obstacle_immunity_timer <= 0:
                     if (temp_obstacle_health - temp_projectile_damage) <= 0:
-                        # Pickup Spawn
-                        if randint(1,5) == 5: # Chance to drop damage pickup
-                            pickup_group.add(Pickup("damage",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        if randint(1,10) == 10: # Chance to drop fireball cooldown pickup
-                            pickup_group.add(Pickup("fireball_cooldown",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        if randint(1,20) == 20: # Chance to drop piercing pickup
-                            pickup_group.add(Pickup("piercing",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        if randint(1,25) == 25: # Chance to drop piercing pickup
-                            pickup_group.add(Pickup("speed",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
-                        if not wizard.sprite.get_double_jump() and randint(1,50) == 50: # 1/50 Chance to drop double_jump buff
-                            buff_group.add(Buff("double_jump",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        if not wizard.sprite.get_shield() and randint(1,50) == 50: # 1/50 Chance to drop shield buff
-                            buff_group.add(Buff("shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
-                        if not wizard.sprite.get_knockback() and randint(1,1) == 1: # 1/50 Chance to drop knockback buff
-                            buff_group.add(Buff("knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
+                        do_drop_spawns(obstacle)
+                        # # Pickup Spawn
+                        # if randint(1,5) == 5: # Chance to drop damage pickup
+                        #     pickup_group.add(Pickup("damage",temp_obstacle_x_pos,temp_obstacle_y_pos))
+                        # if randint(1,10) == 10: # Chance to drop fireball cooldown pickup
+                        #     pickup_group.add(Pickup("fireball_cooldown",temp_obstacle_x_pos,temp_obstacle_y_pos))
+                        # if randint(1,20) == 20: # Chance to drop piercing pickup
+                        #     pickup_group.add(Pickup("piercing",temp_obstacle_x_pos,temp_obstacle_y_pos))
+                        # if randint(1,25) == 25: # Chance to drop piercing pickup
+                        #     pickup_group.add(Pickup("speed",temp_obstacle_x_pos,temp_obstacle_y_pos))
+                        # # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
+                        # if not wizard.sprite.get_double_jump() and randint(1,50) == 50: # 1/50 Chance to drop double_jump buff
+                        #     buff_group.add(Buff("double_jump",temp_obstacle_x_pos,temp_obstacle_y_pos))
+                        # if not wizard.sprite.get_shield() and randint(1,50) == 50: # 1/50 Chance to drop shield buff
+                        #     buff_group.add(Buff("shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
+                        # if not wizard.sprite.get_knockback() and randint(1,1) == 1: # 1/50 Chance to drop knockback buff
+                        #     buff_group.add(Buff("knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
                         # Health Bar and Outline Health Bar Cleanup
                         old_health_bar = health_bar_ownership_group[obstacle]
@@ -317,6 +318,38 @@ def obstacle_and_player_owned_projectile_collision():
                         projectile.set_fireball_piercing(temp_projectile_piercing)
 
 
+def do_drop_spawns(obstacle):
+    temp_obstacle_x_pos = int(obstacle.get_x_pos())
+    temp_obstacle_y_pos = int(obstacle.get_y_pos())
+    # Pickup Spawn
+    # Damage
+    if randint(1,5) == 5:
+        pickup_group.add(Pickup("damage",temp_obstacle_x_pos,temp_obstacle_y_pos))
+    # Fireball Cooldown
+    if randint(1,10) == 10:
+        pickup_group.add(Pickup("fireball_cooldown",temp_obstacle_x_pos,temp_obstacle_y_pos))
+    # Piercing
+    if randint(1,20) == 20:
+        pickup_group.add(Pickup("piercing",temp_obstacle_x_pos,temp_obstacle_y_pos))
+    # Speed
+    if randint(1,25) == 25:
+        pickup_group.add(Pickup("speed",temp_obstacle_x_pos,temp_obstacle_y_pos))
+    # Health
+    if wizard.sprite.get_wizard_current_health() < wizard.sprite.get_wizard_max_health():
+        if randint(1,1) == 1:
+            pickup_group.add(Pickup("health",temp_obstacle_x_pos,temp_obstacle_y_pos))
+    # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
+    # Double Jump
+    if not wizard.sprite.get_double_jump() and randint(1,50) == 50:
+        buff_group.add(Buff("double_jump",temp_obstacle_x_pos,temp_obstacle_y_pos))
+    # Shield
+    if not wizard.sprite.get_shield() and randint(1,50) == 50:
+        buff_group.add(Buff("shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
+    # Knockback
+    if not wizard.sprite.get_knockback() and randint(1,50) == 50:
+        buff_group.add(Buff("knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
+
+
 def player_and_pickup_collision():
     if pygame.sprite.spritecollide(wizard.sprite,pickup_group,False):
         pickups_overlapping = pygame.sprite.spritecollide(wizard.sprite,pickup_group,False)
@@ -326,6 +359,8 @@ def player_and_pickup_collision():
             temp_piercing = wizard.sprite.get_wizard_piercing_increase()
             temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
             temp_speed = wizard.sprite.get_wizard_speed()
+            temp_current_health = wizard.sprite.get_wizard_current_health()
+            temp_max_health = wizard.sprite.get_wizard_max_health()
             if pickup.get_type() == "damage":
                 wizard.sprite.set_wizard_damage_percent(temp_damage + temp_bonus)
             if pickup.get_type() == "piercing":
@@ -334,6 +369,11 @@ def player_and_pickup_collision():
                 wizard.sprite.set_max_fireball_cooldown_time(temp_max_fireball_cooldown_time - temp_bonus)
             if pickup.get_type() == "speed" and temp_speed < 8:
                 wizard.sprite.set_wizard_speed(temp_speed + temp_bonus)
+            if pickup.get_type() == "health" and temp_current_health < temp_max_health:
+                if temp_current_health + temp_bonus <= temp_max_health:
+                    wizard.sprite.set_wizard_current_health(temp_current_health + temp_bonus)
+                else:
+                    wizard.sprite.set_wizard_current_health(temp_max_health)
             pygame.sprite.spritecollide(wizard.sprite,pickup_group,True)
 
 

@@ -38,6 +38,11 @@ class Pickup(pygame.sprite.Sprite):
             self.bonus = 0.5
             speed_pickup = pygame.image.load("harolds_journey/graphics/pickups/speed/speed_pickup.png").convert_alpha()
             self.frames = [speed_pickup]
+        elif type == "health": # Flat increases
+            self.type = "health"
+            self.bonus = 1
+            health_pickup = pygame.image.load("harolds_journey/graphics/pickups/health/health_pickup.png").convert_alpha()
+            self.frames = [health_pickup]
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
