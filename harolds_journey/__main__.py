@@ -269,6 +269,7 @@ def obstacle_and_player_owned_projectile_collision():
                 temp_projectile_piercing = projectile.get_fireball_piercing()
                 temp_obstacle_x_pos = int(obstacle.get_x_pos())
                 temp_obstacle_y_pos = int(obstacle.get_y_pos())
+                obstacle.set_obstacle_color(obstacle.get_image(),obstacle.get_damaged_color())
                 if temp_obstacle_immunity_timer <= 0:
                     if (temp_obstacle_health - temp_projectile_damage) <= 0:
                         # Pickup Spawn
@@ -302,6 +303,7 @@ def obstacle_and_player_owned_projectile_collision():
                         if temp_projectile_piercing > 1:
                             obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
                         if projectile.get_knockback():
+                            obstacle.set_knockback_active(True)
                             obstacle.set_knockback_direction_multiplier(projectile.get_direction_multiplier())
                             if temp_obstacle_x_pos > projectile.get_x_pos():
                                 obstacle.set_knockback_vector(obstacle.get_knockback_value() * 1.25)
