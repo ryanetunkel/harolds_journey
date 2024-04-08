@@ -237,15 +237,6 @@ def player_and_obstacle_collision():
                         for object in objects:
                             object.kill()
                         objects.empty()
-                    # for obstacle in obstacle_group:
-                    #     obstacle.kill()
-                    # obstacle_group.empty()
-                    # for projectile in projectile_group:
-                    #     projectile.kill()
-                    # projectile_group.empty()
-                    # for pickup in pickup_group:
-                    #     pickup.kill()
-                    # pickup_group.empty()
                     for health_bar in health_bar_group:
                         health_bar.kill()
                     for outline_health_bar in outline_health_bar_group:
@@ -273,22 +264,6 @@ def obstacle_and_player_owned_projectile_collision():
                 if temp_obstacle_immunity_timer <= 0:
                     if (temp_obstacle_health - temp_projectile_damage) <= 0:
                         do_drop_spawns(obstacle)
-                        # # Pickup Spawn
-                        # if randint(1,5) == 5: # Chance to drop damage pickup
-                        #     pickup_group.add(Pickup("damage",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        # if randint(1,10) == 10: # Chance to drop fireball cooldown pickup
-                        #     pickup_group.add(Pickup("fireball_cooldown",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        # if randint(1,20) == 20: # Chance to drop piercing pickup
-                        #     pickup_group.add(Pickup("piercing",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        # if randint(1,25) == 25: # Chance to drop piercing pickup
-                        #     pickup_group.add(Pickup("speed",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        # # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
-                        # if not wizard.sprite.get_double_jump() and randint(1,50) == 50: # 1/50 Chance to drop double_jump buff
-                        #     buff_group.add(Buff("double_jump",temp_obstacle_x_pos,temp_obstacle_y_pos))
-                        # if not wizard.sprite.get_shield() and randint(1,50) == 50: # 1/50 Chance to drop shield buff
-                        #     buff_group.add(Buff("shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
-                        # if not wizard.sprite.get_knockback() and randint(1,1) == 1: # 1/50 Chance to drop knockback buff
-                        #     buff_group.add(Buff("knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
                         temp_additional_score += obstacle.get_points()
                         # Health Bar and Outline Health Bar Cleanup
                         old_health_bar = health_bar_ownership_group[obstacle]
