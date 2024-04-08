@@ -298,20 +298,20 @@ def do_drop_spawns(obstacle):
     temp_obstacle_y_pos = int(obstacle.get_y_pos())
     # Pickup Spawn
     # Damage
-    if randint(1,5) == 5:
+    if randint(1,10) == 10:
         pickup_group.add(Pickup("damage",temp_obstacle_x_pos,temp_obstacle_y_pos))
     # Fireball Cooldown
     if randint(1,10) == 10:
         pickup_group.add(Pickup("fireball_cooldown",temp_obstacle_x_pos,temp_obstacle_y_pos))
     # Piercing
-    if randint(1,20) == 20:
+    if randint(1,25) == 25:
         pickup_group.add(Pickup("piercing",temp_obstacle_x_pos,temp_obstacle_y_pos))
     # Speed
-    if randint(1,25) == 25:
+    if randint(1,20) == 20:
         pickup_group.add(Pickup("speed",temp_obstacle_x_pos,temp_obstacle_y_pos))
     # Health
     if wizard.sprite.get_wizard_current_health() < wizard.sprite.get_wizard_max_health():
-        if randint(1,1) == 1:
+        if randint(1,10) == 10:
             pickup_group.add(Pickup("health",temp_obstacle_x_pos,temp_obstacle_y_pos))
     # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
     # Double Jump
