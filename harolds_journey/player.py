@@ -156,13 +156,14 @@ class Player(pygame.sprite.Sprite):
     def set_wizard_start_y_pos(self,new_wizard_start_y_pos):
         self.WIZARD_START_Y_POS = new_wizard_start_y_pos
 
-    # Rects and Images
+    # Rect
     def get_wizard_rect(self):
         return self.rect
 
     def set_wizard_rect(self,new_rect):
         self.rect = new_rect
 
+    # Image
     def get_wizard_image(self):
         return self.image
 

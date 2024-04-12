@@ -213,38 +213,39 @@ def player_and_obstacle_collision():
         temp_damaged_color = wizard.sprite.get_damaged_color()
         wizard.sprite.set_wizard_color(wizard.sprite.get_wizard_image(),temp_damaged_color)
         for obstacle in obstacles_overlapping:
-            if temp_immunity_frames <= 0:
-                temp_obstacle_damage = obstacle.get_damage()
-                wizard.sprite.set_wizard_hurt(True)
-                wizard.sprite.set_current_shield_cooldown(wizard.sprite.get_max_shield_cooldown())
-                if wizard_shield:
-                    new_shield_health = temp_shield_health - temp_obstacle_damage
-                    if new_shield_health <= 0:
-                        new_shield_health = 0
-                        temp_obstacle_damage -= temp_shield_health
+            if pygame.sprite.collide_mask(wizard.sprite,obstacle):
+                if temp_immunity_frames <= 0:
+                    temp_obstacle_damage = obstacle.get_damage()
+                    wizard.sprite.set_wizard_hurt(True)
+                    wizard.sprite.set_current_shield_cooldown(wizard.sprite.get_max_shield_cooldown())
+                    if wizard_shield:
+                        new_shield_health = temp_shield_health - temp_obstacle_damage
+                        if new_shield_health <= 0:
+                            new_shield_health = 0
+                            temp_obstacle_damage -= temp_shield_health
+                        else:
+                            temp_obstacle_damage = 0
+                        wizard.sprite.set_current_shield_health(new_shield_health)
+                    new_health = temp_health - temp_obstacle_damage
+                    if new_health > 0:
+                        wizard.sprite.set_wizard_current_health(new_health)
+                        wizard.sprite.set_wizard_immunity_frames(wizard.sprite.get_wizard_max_immunity_frames())
                     else:
-                        temp_obstacle_damage = 0
-                    wizard.sprite.set_current_shield_health(new_shield_health)
-                new_health = temp_health - temp_obstacle_damage
-                if new_health > 0:
-                    wizard.sprite.set_wizard_current_health(new_health)
-                    wizard.sprite.set_wizard_immunity_frames(wizard.sprite.get_wizard_max_immunity_frames())
-                else:
-                    wizard.sprite.set_wizard_current_health(0)
-                    temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
-                    wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
-                    for objects in objects_to_be_removed:
-                        for object in objects:
-                            object.kill()
-                        objects.empty()
-                    for health_bar in health_bar_group:
-                        health_bar.kill()
-                    for outline_health_bar in outline_health_bar_group:
-                        outline_health_bar.kill()
-                    health_bar_group.empty()
-                    outline_health_bar_group.empty()
-                    pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
-                    wizard.sprite.set_wizard_dead(True)
+                        wizard.sprite.set_wizard_current_health(0)
+                        temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
+                        wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
+                        for objects in objects_to_be_removed:
+                            for object in objects:
+                                object.kill()
+                            objects.empty()
+                        for health_bar in health_bar_group:
+                            health_bar.kill()
+                        for outline_health_bar in outline_health_bar_group:
+                            outline_health_bar.kill()
+                        health_bar_group.empty()
+                        outline_health_bar_group.empty()
+                        pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
+                        wizard.sprite.set_wizard_dead(True)
 
 
 def obstacle_and_player_owned_projectile_collision():
@@ -253,44 +254,45 @@ def obstacle_and_player_owned_projectile_collision():
         if pygame.sprite.spritecollide(projectile,obstacle_group,False):
             obstacles_overlapping = pygame.sprite.spritecollide(projectile,obstacle_group,False)
             for obstacle in obstacles_overlapping:
-                temp_obstacle_health = obstacle.get_current_health()
-                temp_obstacle_immunity_limit = obstacle.get_immunity_limit()
-                temp_obstacle_immunity_timer = obstacle.get_immunity_timer()
-                temp_projectile_damage = projectile.get_fireball_damage()
-                temp_projectile_piercing = projectile.get_fireball_piercing()
-                temp_obstacle_x_pos = int(obstacle.get_x_pos())
-                temp_obstacle_y_pos = int(obstacle.get_y_pos())
-                obstacle.set_obstacle_color(obstacle.get_image(),obstacle.get_damaged_color())
-                if temp_obstacle_immunity_timer <= 0:
-                    if (temp_obstacle_health - temp_projectile_damage) <= 0:
-                        do_drop_spawns(obstacle)
-                        temp_additional_score += obstacle.get_points()
-                        # Health Bar and Outline Health Bar Cleanup
-                        old_health_bar = health_bar_ownership_group[obstacle]
-                        old_outline_bar = outline_health_bar_ownership_group[old_health_bar]
-                        old_outline_bar.kill()
-                        old_health_bar.kill()
-                        pygame.sprite.spritecollide(projectile,obstacle_group,True)
-                        pygame.sprite.spritecollide(projectile,buff_group,True) # Temporary
-                        pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
-                        wizard.sprite.set_additional_score(temp_additional_score)
-                    else:
-                        obstacle.set_current_health(temp_obstacle_health - temp_projectile_damage)
-                        if temp_projectile_piercing > 1:
-                            obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
-                        if projectile.get_knockback():
-                            obstacle.set_knockback_active(True)
-                            obstacle.set_knockback_direction_multiplier(projectile.get_direction_multiplier())
-                            if temp_obstacle_x_pos > projectile.get_x_pos():
-                                obstacle.set_knockback_vector(obstacle.get_knockback_value() * 1.25)
-                            else:
-                                obstacle.set_knockback_vector(obstacle.get_knockback_value())
-                    wizard.sprite.set_fireball_hit(True)
-                    temp_projectile_piercing -= 1
-                    if temp_projectile_piercing <= 0:
-                        projectile_group.remove(projectile)
-                    else:
-                        projectile.set_fireball_piercing(temp_projectile_piercing)
+                if pygame.sprite.collide_mask(projectile,obstacle):
+                    temp_obstacle_health = obstacle.get_current_health()
+                    temp_obstacle_immunity_limit = obstacle.get_immunity_limit()
+                    temp_obstacle_immunity_timer = obstacle.get_immunity_timer()
+                    temp_projectile_damage = projectile.get_fireball_damage()
+                    temp_projectile_piercing = projectile.get_fireball_piercing()
+                    temp_obstacle_x_pos = int(obstacle.get_x_pos())
+                    temp_obstacle_y_pos = int(obstacle.get_y_pos())
+                    obstacle.set_obstacle_color(obstacle.get_image(),obstacle.get_damaged_color())
+                    if temp_obstacle_immunity_timer <= 0:
+                        if (temp_obstacle_health - temp_projectile_damage) <= 0:
+                            do_drop_spawns(obstacle)
+                            temp_additional_score += obstacle.get_points()
+                            # Health Bar and Outline Health Bar Cleanup
+                            old_health_bar = health_bar_ownership_group[obstacle]
+                            old_outline_bar = outline_health_bar_ownership_group[old_health_bar]
+                            old_outline_bar.kill()
+                            old_health_bar.kill()
+                            pygame.sprite.spritecollide(projectile,obstacle_group,True)
+                            pygame.sprite.spritecollide(projectile,buff_group,True) # Temporary
+                            pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
+                            wizard.sprite.set_additional_score(temp_additional_score)
+                        else:
+                            obstacle.set_current_health(temp_obstacle_health - temp_projectile_damage)
+                            if temp_projectile_piercing > 1:
+                                obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
+                            if projectile.get_knockback():
+                                obstacle.set_knockback_active(True)
+                                obstacle.set_knockback_direction_multiplier(projectile.get_direction_multiplier())
+                                if temp_obstacle_x_pos > projectile.get_x_pos():
+                                    obstacle.set_knockback_vector(obstacle.get_knockback_value() * 1.25)
+                                else:
+                                    obstacle.set_knockback_vector(obstacle.get_knockback_value())
+                        wizard.sprite.set_fireball_hit(True)
+                        temp_projectile_piercing -= 1
+                        if temp_projectile_piercing <= 0:
+                            projectile_group.remove(projectile)
+                        else:
+                            projectile.set_fireball_piercing(temp_projectile_piercing)
 
 
 def do_drop_spawns(obstacle):
@@ -329,54 +331,56 @@ def player_and_pickup_collision():
     if pygame.sprite.spritecollide(wizard.sprite,pickup_group,False):
         pickups_overlapping = pygame.sprite.spritecollide(wizard.sprite,pickup_group,False)
         for pickup in pickups_overlapping:
-            temp_bonus = pickup.get_bonus()
-            temp_damage = wizard.sprite.get_wizard_damage_percent()
-            temp_piercing = wizard.sprite.get_wizard_piercing_increase()
-            temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
-            temp_speed = wizard.sprite.get_wizard_speed()
-            temp_current_health = wizard.sprite.get_wizard_current_health()
-            temp_max_health = wizard.sprite.get_wizard_max_health()
-            if pickup.get_type() == "damage":
-                wizard.sprite.set_wizard_damage_percent(temp_damage + temp_bonus)
-            if pickup.get_type() == "piercing":
-                wizard.sprite.set_wizard_piercing_increase(temp_piercing + temp_bonus)
-            if pickup.get_type() == "fireball_cooldown" and temp_max_fireball_cooldown_time >= 6:
-                wizard.sprite.set_max_fireball_cooldown_time(temp_max_fireball_cooldown_time - temp_bonus)
-            if pickup.get_type() == "speed" and temp_speed < 8:
-                wizard.sprite.set_wizard_speed(temp_speed + temp_bonus)
-            if pickup.get_type() == "health" and temp_current_health < temp_max_health:
-                if temp_current_health + temp_bonus <= temp_max_health:
-                    wizard.sprite.set_wizard_current_health(temp_current_health + temp_bonus)
-                else:
-                    wizard.sprite.set_wizard_current_health(temp_max_health)
-            pygame.sprite.spritecollide(wizard.sprite,pickup_group,True)
+            if pygame.sprite.collide_mask(wizard.sprite,pickup):
+                temp_bonus = pickup.get_bonus()
+                temp_damage = wizard.sprite.get_wizard_damage_percent()
+                temp_piercing = wizard.sprite.get_wizard_piercing_increase()
+                temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
+                temp_speed = wizard.sprite.get_wizard_speed()
+                temp_current_health = wizard.sprite.get_wizard_current_health()
+                temp_max_health = wizard.sprite.get_wizard_max_health()
+                if pickup.get_type() == "damage":
+                    wizard.sprite.set_wizard_damage_percent(temp_damage + temp_bonus)
+                if pickup.get_type() == "piercing":
+                    wizard.sprite.set_wizard_piercing_increase(temp_piercing + temp_bonus)
+                if pickup.get_type() == "fireball_cooldown" and temp_max_fireball_cooldown_time >= 6:
+                    wizard.sprite.set_max_fireball_cooldown_time(temp_max_fireball_cooldown_time - temp_bonus)
+                if pickup.get_type() == "speed" and temp_speed < 8:
+                    wizard.sprite.set_wizard_speed(temp_speed + temp_bonus)
+                if pickup.get_type() == "health" and temp_current_health < temp_max_health:
+                    if temp_current_health + temp_bonus <= temp_max_health:
+                        wizard.sprite.set_wizard_current_health(temp_current_health + temp_bonus)
+                    else:
+                        wizard.sprite.set_wizard_current_health(temp_max_health)
+                pygame.sprite.spritecollide(wizard.sprite,pickup_group,True)
 
 
 def player_and_buff_collision():
     if pygame.sprite.spritecollide(wizard.sprite,buff_group,False):
         buffs_overlapping = pygame.sprite.spritecollide(wizard.sprite,buff_group,False)
         for buff in buffs_overlapping:
-            wizard.sprite.add_buff_to_buff_list(buff.get_type())
-            wizard.sprite.add_buff_image_to_buff_image_list(buff.get_default_image())
-            if buff.get_type() == "double_jump":
-                wizard.sprite.set_double_jump(True)
-            if buff.get_type() == "shield":
-                wizard.sprite.set_shield(True)
-            if buff.get_type() == "knockback":
-                wizard.sprite.set_knockback(True)
-            if wizard.sprite.get_double_jump():
-                for buff in buff_group:
-                    if buff.get_type() == "double_jump":
-                        buff.kill()
-            if wizard.sprite.get_shield():
-                for buff in buff_group:
-                    if buff.get_type() == "shield":
-                        buff.kill()
-            if wizard.sprite.get_knockback():
-                for buff in buff_group:
-                    if buff.get_type() == "knockback":
-                        buff.kill()
-            pygame.sprite.spritecollide(wizard.sprite,buff_group,True)
+            if pygame.sprite.collide_mask(wizard.sprite,buff):
+                wizard.sprite.add_buff_to_buff_list(buff.get_type())
+                wizard.sprite.add_buff_image_to_buff_image_list(buff.get_default_image())
+                if buff.get_type() == "double_jump":
+                    wizard.sprite.set_double_jump(True)
+                if buff.get_type() == "shield":
+                    wizard.sprite.set_shield(True)
+                if buff.get_type() == "knockback":
+                    wizard.sprite.set_knockback(True)
+                if wizard.sprite.get_double_jump():
+                    for buff in buff_group:
+                        if buff.get_type() == "double_jump":
+                            buff.kill()
+                if wizard.sprite.get_shield():
+                    for buff in buff_group:
+                        if buff.get_type() == "shield":
+                            buff.kill()
+                if wizard.sprite.get_knockback():
+                    for buff in buff_group:
+                        if buff.get_type() == "knockback":
+                            buff.kill()
+                pygame.sprite.spritecollide(wizard.sprite,buff_group,True)
 
 
 def do_collisions():
