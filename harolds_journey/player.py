@@ -17,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.wizard_speed = 4
         self.wizard_x_velocity = 0
         self.looking_right = True
+        self.looking_down = True
         self.wizard_moving = False
 
         # Y Directions
@@ -180,6 +181,10 @@ class Player(pygame.sprite.Sprite):
     # Looking Right
     def get_looking_right(self):
         return self.looking_right
+
+    # Looking Down
+    def get_looking_down(self):
+        return self.looking_down
 
     # X Velocity
     def get_wizard_x_velocity(self):
@@ -520,6 +525,7 @@ class Player(pygame.sprite.Sprite):
         if not self.wizard_dead:
             (mouse_x,mouse_y) = pygame.mouse.get_pos()
             self.looking_right = mouse_x >= self.rect.centerx
+            self.looking_down = mouse_y <= self.rect.centery # expand on this
             # Fireball Animation
             if self.fireball_shot:
                 if self.start_fireball_animation:

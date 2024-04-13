@@ -1,5 +1,6 @@
 """Projectile Class"""
 from random import randint, choice
+import math
 
 from global_vars import *
 from graphics.fireball.fireball_animation_holder import *
@@ -11,7 +12,6 @@ class Projectile(pygame.sprite.Sprite):
         # Projectiles
         # These might not all be universal, especially damage and speed, will be varied
 
-        # Unused
         self.projectile_speed = 5
         self.projectile_damage = 1
 
@@ -21,23 +21,35 @@ class Projectile(pygame.sprite.Sprite):
             self.fireball_transition_animation_speed = 0.4
 
             # Wizard related
-            temp_wizard_rect = source.sprite.get_wizard_rect()
+            self.temp_wizard_rect = source.sprite.get_wizard_rect()
             self.wizard_was_looking_right = source.sprite.get_looking_right()
-            self.wizard_speed = source.sprite.get_wizard_x_velocity()
-            self.direction_multiplier = 1 if self.wizard_was_looking_right else -1
+            self.wizard_was_looking_down = source.sprite.get_looking_down()
+            self.wizard_x_velocity = source.sprite.get_wizard_x_velocity()
+            self.wizard_y_velocity = source.sprite.get_wizard_y_velocity()
+            self.x_direction_multiplier = 1 if self.wizard_was_looking_right else -1
+            self.y_direction_multiplier = 1 if self.wizard_was_looking_down else -1
             self.knockback = source.sprite.get_knockback()
 
             # Start position
-            self.fireball_x_start = temp_wizard_rect.centerx + ((4 * PIXEL_SIZE) + (WIZARD_WIDTH/2) * self.direction_multiplier)
-            self.fireball_y_start = temp_wizard_rect.centery + (6 * PIXEL_SIZE)
+            self.fireball_x_start = self.temp_wizard_rect.centerx + ((4 * PIXEL_SIZE) + (WIZARD_WIDTH/2) * self.x_direction_multiplier)
+            self.fireball_y_start = self.temp_wizard_rect.centery + (6 * PIXEL_SIZE)
 
             # Position
             self.fireball_x_pos = self.fireball_x_start
             self.fireball_y_pos = self.fireball_y_start
+            (self.mouse_x,self.mouse_y) = pygame.mouse.get_pos()
+            self.x_dif = self.fireball_x_start - self.mouse_x
+            self.y_dif = self.fireball_y_start - self.mouse_y
+            self.angle = math.tan(self.y_dif/self.x_dif)
+            self.quadrant = (self.x_direction_multiplier,self.y_direction_multiplier)
 
             # Speed
+            self.speed = 5
             self.fireball_x_start_speed = 0
-            self.fireball_speed = 5
+            self.fireball_x_speed = self.projectile_speed
+            self.fireball_y_start_speed = 0
+            self.fireball_y_speed = 0
+            # Pythagoras' fav time
 
             # Gravity
             self.fireball_gravity_when_held = 0
@@ -80,8 +92,8 @@ class Projectile(pygame.sprite.Sprite):
     def get_y_pos(self):
         return self.rect.centery
 
-    def get_direction_multiplier(self):
-        return self.direction_multiplier
+    def get_x_direction_multiplier(self):
+        return self.x_direction_multiplier
 
     def get_knockback(self):
         return self.knockback
@@ -106,13 +118,35 @@ class Projectile(pygame.sprite.Sprite):
         if not self.wizard_was_looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
 
+    def move_fireball(self):
+        # Preference by a pixel to right (+x) and down (+y)
+        # Don't need the 5 lines below this
+        (self.mouse_x,self.mouse_y) = pygame.mouse.get_pos()
+        self.x_dif = self.fireball_x_start - self.mouse_x
+        self.y_dif = self.fireball_y_start - self.mouse_y
+        self.angle = math.tan(self.y_dif/self.x_dif)
+        self.quadrant = (self.x_direction_multiplier,self.y_direction_multiplier)
+
+        x_velocity_with_movement = abs((self.projectile_speed + (self.wizard_x_velocity / 2)) * self.x_direction_multiplier)
+        x_velocity_without_movement = abs((self.projectile_speed * self.x_direction_multiplier))
+        y_velocity_with_movement = abs((self.projectile_speed + (self.wizard_y_velocity / 2)) * self.y_direction_multiplier)
+        y_velocity_without_movement = abs((self.projectile_speed * self.y_direction_multiplier))
+
+        # Change different movements to account for having max speed when combined be 5 using trig and vector math
+
+        if self.created >= 4:
+            if x_velocity_with_movement > x_velocity_without_movement: # making fireball go with wiz x velocity
+                self.rect.centerx += x_velocity_with_movement
+            else:
+                self.rect.centerx += x_velocity_without_movement
+            if y_velocity_with_movement > y_velocity_without_movement: # making fireball go with wiz y velocity
+                self.rect.centery += y_velocity_with_movement
+            else:
+                self.rect.centery += y_velocity_without_movement
+
     def update(self):
         self.animation_state()
-        if self.created >= 4:
-            if abs((self.projectile_speed + (self.wizard_speed / 2)) * self.direction_multiplier) > abs((self.projectile_speed * self.direction_multiplier)): # making fireball go with wiz speed
-                self.rect.centerx += (self.projectile_speed + (self.wizard_speed / 2)) * self.direction_multiplier
-            else:
-                self.rect.centerx += (self.projectile_speed * self.direction_multiplier)
+        self.move_fireball()
         self.destroy()
 
     def destroy(self):
