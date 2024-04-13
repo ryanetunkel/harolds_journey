@@ -273,7 +273,7 @@ def obstacle_and_player_owned_projectile_collision():
                             old_outline_bar.kill()
                             old_health_bar.kill()
                             pygame.sprite.spritecollide(projectile,obstacle_group,True)
-                            pygame.sprite.spritecollide(projectile,buff_group,True) # Temporary
+                            # pygame.sprite.spritecollide(projectile,buff_group,True) # Temporary
                             pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
                             wizard.sprite.set_additional_score(temp_additional_score)
                         else:
