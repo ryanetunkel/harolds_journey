@@ -238,12 +238,14 @@ def player_and_obstacle_collision():
                             for object in objects:
                                 object.kill()
                             objects.empty()
-                        for health_bar in health_bar_group:
-                            health_bar.kill()
+                        outline_health_bar_ownership_group.clear()
+                        health_bar_ownership_group.clear()
                         for outline_health_bar in outline_health_bar_group:
                             outline_health_bar.kill()
-                        health_bar_group.empty()
+                        for health_bar in health_bar_group:
+                            health_bar.kill()
                         outline_health_bar_group.empty()
+                        health_bar_group.empty()
                         pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
                         wizard.sprite.set_wizard_dead(True)
 
@@ -262,24 +264,28 @@ def obstacle_and_player_owned_projectile_collision():
                     temp_projectile_piercing = projectile.get_fireball_piercing()
                     temp_obstacle_x_pos = int(obstacle.get_x_pos())
                     temp_obstacle_y_pos = int(obstacle.get_y_pos())
+                    # Damage Color Set
                     obstacle.set_obstacle_color(obstacle.get_image(),obstacle.get_damaged_color())
                     if temp_obstacle_immunity_timer <= 0:
+                        # Death
                         if (temp_obstacle_health - temp_projectile_damage) <= 0:
                             do_drop_spawns(obstacle)
                             temp_additional_score += obstacle.get_points()
                             # Health Bar and Outline Health Bar Cleanup
                             old_health_bar = health_bar_ownership_group[obstacle]
-                            old_outline_bar = outline_health_bar_ownership_group[old_health_bar]
-                            old_outline_bar.kill()
+                            old_outline_health_bar = outline_health_bar_ownership_group[old_health_bar]
+                            old_outline_health_bar.kill()
                             old_health_bar.kill()
-                            pygame.sprite.spritecollide(projectile,obstacle_group,True)
+                            dead_obstacle_group.add(obstacle)
                             # pygame.sprite.spritecollide(projectile,buff_group,True) # Temporary
                             pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
                             wizard.sprite.set_additional_score(temp_additional_score)
+                        # Damaged
                         else:
                             obstacle.set_current_health(temp_obstacle_health - temp_projectile_damage)
                             if temp_projectile_piercing > 1:
                                 obstacle.set_immunity_timer(temp_obstacle_immunity_limit)
+                            # Knockback Calc
                             if projectile.get_knockback():
                                 obstacle.set_knockback_active(True)
                                 obstacle.set_knockback_direction_multiplier(projectile.get_direction_multiplier())
@@ -293,6 +299,7 @@ def obstacle_and_player_owned_projectile_collision():
                             projectile_group.remove(projectile)
                         else:
                             projectile.set_fireball_piercing(temp_projectile_piercing)
+            pygame.sprite.spritecollide(projectile,dead_obstacle_group,True)
 
 
 def do_drop_spawns(obstacle):
@@ -398,6 +405,8 @@ harold.add(Harold(wizard))
 
 obstacle_group = pygame.sprite.Group()
 
+dead_obstacle_group = pygame.sprite.Group()
+
 projectile_group = pygame.sprite.Group()
 
 pickup_group = pygame.sprite.Group()
@@ -408,8 +417,9 @@ health_bar_group = pygame.sprite.Group()
 
 outline_health_bar_group = pygame.sprite.Group()
 
+# Obstacle: Health Bar
 health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
-
+# Health Bar: Outline Health Bar
 outline_health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
 
 moving_sprites = [
@@ -425,6 +435,7 @@ moving_sprites = [
 
 objects_to_be_removed = [
     obstacle_group,
+    dead_obstacle_group,
     projectile_group,
     pickup_group,
     buff_group,
