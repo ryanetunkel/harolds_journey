@@ -331,56 +331,56 @@ def player_and_pickup_collision():
     if pygame.sprite.spritecollide(wizard.sprite,pickup_group,False):
         pickups_overlapping = pygame.sprite.spritecollide(wizard.sprite,pickup_group,False)
         for pickup in pickups_overlapping:
-            if pygame.sprite.collide_mask(wizard.sprite,pickup):
-                temp_bonus = pickup.get_bonus()
-                temp_damage = wizard.sprite.get_wizard_damage_percent()
-                temp_piercing = wizard.sprite.get_wizard_piercing_increase()
-                temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
-                temp_speed = wizard.sprite.get_wizard_speed()
-                temp_current_health = wizard.sprite.get_wizard_current_health()
-                temp_max_health = wizard.sprite.get_wizard_max_health()
-                if pickup.get_type() == "damage":
-                    wizard.sprite.set_wizard_damage_percent(temp_damage + temp_bonus)
-                if pickup.get_type() == "piercing":
-                    wizard.sprite.set_wizard_piercing_increase(temp_piercing + temp_bonus)
-                if pickup.get_type() == "fireball_cooldown" and temp_max_fireball_cooldown_time >= 6:
-                    wizard.sprite.set_max_fireball_cooldown_time(temp_max_fireball_cooldown_time - temp_bonus)
-                if pickup.get_type() == "speed" and temp_speed < 8:
-                    wizard.sprite.set_wizard_speed(temp_speed + temp_bonus)
-                if pickup.get_type() == "health" and temp_current_health < temp_max_health:
-                    if temp_current_health + temp_bonus <= temp_max_health:
-                        wizard.sprite.set_wizard_current_health(temp_current_health + temp_bonus)
-                    else:
-                        wizard.sprite.set_wizard_current_health(temp_max_health)
-                pygame.sprite.spritecollide(wizard.sprite,pickup_group,True)
+            # if pygame.sprite.collide_mask(wizard.sprite,pickup):
+            temp_bonus = pickup.get_bonus()
+            temp_damage = wizard.sprite.get_wizard_damage_percent()
+            temp_piercing = wizard.sprite.get_wizard_piercing_increase()
+            temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
+            temp_speed = wizard.sprite.get_wizard_speed()
+            temp_current_health = wizard.sprite.get_wizard_current_health()
+            temp_max_health = wizard.sprite.get_wizard_max_health()
+            if pickup.get_type() == "damage":
+                wizard.sprite.set_wizard_damage_percent(temp_damage + temp_bonus)
+            if pickup.get_type() == "piercing":
+                wizard.sprite.set_wizard_piercing_increase(temp_piercing + temp_bonus)
+            if pickup.get_type() == "fireball_cooldown" and temp_max_fireball_cooldown_time >= 6:
+                wizard.sprite.set_max_fireball_cooldown_time(temp_max_fireball_cooldown_time - temp_bonus)
+            if pickup.get_type() == "speed" and temp_speed < 8:
+                wizard.sprite.set_wizard_speed(temp_speed + temp_bonus)
+            if pickup.get_type() == "health" and temp_current_health < temp_max_health:
+                if temp_current_health + temp_bonus <= temp_max_health:
+                    wizard.sprite.set_wizard_current_health(temp_current_health + temp_bonus)
+                else:
+                    wizard.sprite.set_wizard_current_health(temp_max_health)
+            pygame.sprite.spritecollide(wizard.sprite,pickup_group,True)
 
 
 def player_and_buff_collision():
     if pygame.sprite.spritecollide(wizard.sprite,buff_group,False):
         buffs_overlapping = pygame.sprite.spritecollide(wizard.sprite,buff_group,False)
         for buff in buffs_overlapping:
-            if pygame.sprite.collide_mask(wizard.sprite,buff):
-                wizard.sprite.add_buff_to_buff_list(buff.get_type())
-                wizard.sprite.add_buff_image_to_buff_image_list(buff.get_default_image())
-                if buff.get_type() == "double_jump":
-                    wizard.sprite.set_double_jump(True)
-                if buff.get_type() == "shield":
-                    wizard.sprite.set_shield(True)
-                if buff.get_type() == "knockback":
-                    wizard.sprite.set_knockback(True)
-                if wizard.sprite.get_double_jump():
-                    for buff in buff_group:
-                        if buff.get_type() == "double_jump":
-                            buff.kill()
-                if wizard.sprite.get_shield():
-                    for buff in buff_group:
-                        if buff.get_type() == "shield":
-                            buff.kill()
-                if wizard.sprite.get_knockback():
-                    for buff in buff_group:
-                        if buff.get_type() == "knockback":
-                            buff.kill()
-                pygame.sprite.spritecollide(wizard.sprite,buff_group,True)
+            # if pygame.sprite.collide_mask(wizard.sprite,buff):
+            wizard.sprite.add_buff_to_buff_list(buff.get_type())
+            wizard.sprite.add_buff_image_to_buff_image_list(buff.get_default_image())
+            if buff.get_type() == "double_jump":
+                wizard.sprite.set_double_jump(True)
+            if buff.get_type() == "shield":
+                wizard.sprite.set_shield(True)
+            if buff.get_type() == "knockback":
+                wizard.sprite.set_knockback(True)
+            if wizard.sprite.get_double_jump():
+                for buff in buff_group:
+                    if buff.get_type() == "double_jump":
+                        buff.kill()
+            if wizard.sprite.get_shield():
+                for buff in buff_group:
+                    if buff.get_type() == "shield":
+                        buff.kill()
+            if wizard.sprite.get_knockback():
+                for buff in buff_group:
+                    if buff.get_type() == "knockback":
+                        buff.kill()
+            pygame.sprite.spritecollide(wizard.sprite,buff_group,True)
 
 
 def do_collisions():
