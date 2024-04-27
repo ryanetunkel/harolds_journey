@@ -294,7 +294,7 @@ def obstacle_and_player_owned_projectile_collision():
                             # Knockback Calc
                             if projectile.get_knockback():
                                 obstacle.set_knockback_active(True)
-                                obstacle.set_knockback_direction_multiplier(projectile.get_direction_multiplier())
+                                obstacle.set_knockback_direction_multiplier(projectile.get_x_direction_multiplier())
                                 if temp_obstacle_x_pos > projectile.get_x_pos():
                                     obstacle.set_knockback_vector(obstacle.get_knockback_value() * 1.25)
                                 else:

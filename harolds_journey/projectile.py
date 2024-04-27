@@ -15,6 +15,8 @@ class Projectile(pygame.sprite.Sprite):
         self.projectile_speed = 5
         self.projectile_damage = 1
 
+        (self.mouse_x,self.mouse_y) = pygame.mouse.get_pos()
+
         if type == 'fireball': # Can't currently handle any projectile other than 'fireball'
             # Fireball - Mess with these values and the wizard's casting aniamtion to get good looking animation
             self.fireball_move_animation_speed = 0.4
@@ -31,7 +33,7 @@ class Projectile(pygame.sprite.Sprite):
             self.knockback = source.sprite.get_knockback()
 
             # Start position
-            self.fireball_x_start = self.temp_wizard_rect.centerx + ((4 * PIXEL_SIZE) + (WIZARD_WIDTH/2) * self.x_direction_multiplier)
+            self.fireball_x_start = self.temp_wizard_rect.centerx + ((WIZARD_WIDTH/2) * self.x_direction_multiplier)
             self.fireball_y_start = self.temp_wizard_rect.centery + (6 * PIXEL_SIZE)
 
             # Position
@@ -40,8 +42,8 @@ class Projectile(pygame.sprite.Sprite):
             (self.mouse_x,self.mouse_y) = pygame.mouse.get_pos()
             self.x_dif = self.fireball_x_start - self.mouse_x
             self.y_dif = self.fireball_y_start - self.mouse_y
-            self.angle = math.tan(self.y_dif/self.x_dif)
             self.quadrant = (self.x_direction_multiplier,self.y_direction_multiplier)
+            self.angle = math.atan2(self.y_dif,self.x_dif)
 
             # Speed
             self.speed = 5
@@ -95,6 +97,12 @@ class Projectile(pygame.sprite.Sprite):
     def get_x_direction_multiplier(self):
         return self.x_direction_multiplier
 
+    def get_angle_radians(self):
+        return self.angle
+
+    def get_angle_degrees(self):
+        return self.angle * 180 / math.pi
+
     def get_knockback(self):
         return self.knockback
 
@@ -113,26 +121,25 @@ class Projectile(pygame.sprite.Sprite):
             if self.fireball_index >= len(self.fireball_movement): self.fireball_index = 0
 
             self.image = self.fireball_movement[int(self.fireball_index)]
-        # self.image = pygame.transform.scale_by(self.image,1)
 
         if not self.wizard_was_looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
+        else:
+            self.image = pygame.transform.flip(self.image,True,True)
+
+        self.image = pygame.transform.rotozoom(self.image,self.get_angle_degrees()*-1,1)
 
     def move_fireball(self):
         # Preference by a pixel to right (+x) and down (+y)
-        # Don't need the 5 lines below this
-        (self.mouse_x,self.mouse_y) = pygame.mouse.get_pos()
-        self.x_dif = self.fireball_x_start - self.mouse_x
-        self.y_dif = self.fireball_y_start - self.mouse_y
-        self.angle = math.tan(self.y_dif/self.x_dif)
-        self.quadrant = (self.x_direction_multiplier,self.y_direction_multiplier)
+        x_velocity_via_angle = self.projectile_speed * math.cos(self.angle) * -1
+        y_velocity_via_angle = self.projectile_speed * math.sin(self.angle) * -1
+        wizard_x_velocity_change = (self.wizard_x_velocity / 2) * self.x_direction_multiplier
+        wizard_y_velocity_change = (self.wizard_y_velocity / 2) * self.y_direction_multiplier
 
-        x_velocity_with_movement = abs((self.projectile_speed + (self.wizard_x_velocity / 2)) * self.x_direction_multiplier)
-        x_velocity_without_movement = abs((self.projectile_speed * self.x_direction_multiplier))
-        y_velocity_with_movement = abs((self.projectile_speed + (self.wizard_y_velocity / 2)) * self.y_direction_multiplier)
-        y_velocity_without_movement = abs((self.projectile_speed * self.y_direction_multiplier))
-
-        # Change different movements to account for having max speed when combined be 5 using trig and vector math
+        x_velocity_without_movement = x_velocity_via_angle
+        x_velocity_with_movement = x_velocity_without_movement + wizard_x_velocity_change
+        y_velocity_without_movement = y_velocity_via_angle
+        y_velocity_with_movement = y_velocity_without_movement + wizard_y_velocity_change
 
         if self.created >= 4:
             if x_velocity_with_movement > x_velocity_without_movement: # making fireball go with wiz x velocity
