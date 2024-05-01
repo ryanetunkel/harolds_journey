@@ -485,6 +485,7 @@ class Player(pygame.sprite.Sprite):
     def wizard_input(self):
         keys = pygame.key.get_pressed()
         if not self.wizard_dead:
+            print(self.rect.centerx)
             double_jump_bool = self.get_double_jump() and self.rect.bottom < GRASS_TOP_Y and not self.double_jump_used and self.get_first_jump_used()
             if keys[jump_button] and (self.rect.bottom >= GRASS_TOP_Y or double_jump_bool):
                 if double_jump_bool:

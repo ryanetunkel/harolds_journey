@@ -458,13 +458,19 @@ ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 wizard_title_start_x_pos = WINDOW_WIDTH / 2
 wizard_title_start_y_pos = WINDOW_HEIGHT * 3/4
 wizard_title_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png").convert_alpha()
-wizard_title_surf = pygame.transform.scale(wizard_title_surf,(WIZARD_WIDTH * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200), WIZARD_HEIGHT * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)))
+wizard_height_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+wizard_width_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+wizard_size_by_scale = (wizard_height_by_scale,wizard_width_by_scale)
+wizard_title_surf = pygame.transform.scale(wizard_title_surf,wizard_size_by_scale)
 wizard_title_rect = wizard_title_surf.get_rect(center = (wizard_title_start_x_pos,wizard_title_start_y_pos))
 
 harold_title_start_x_pos = wizard_title_rect.centerx
-harold_title_start_y_pos = wizard_title_rect.top - (52/4 * PIXEL_SIZE)
+harold_title_start_y_pos = wizard_title_rect.top - 32 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
 harold_title_surf = pygame.image.load("harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png").convert_alpha()
-harold_title_surf = pygame.transform.scale_by(harold_title_surf,(2.25 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)))
+harold_height_by_scale = wizard_height_by_scale * 3/8
+harold_width_by_scale = wizard_width_by_scale * 3/8
+harold_size_by_scale = (harold_height_by_scale,harold_width_by_scale)
+harold_title_surf = pygame.transform.scale(harold_title_surf,harold_size_by_scale)
 harold_title_rect = harold_title_surf.get_rect(midbottom = (harold_title_start_x_pos,harold_title_start_y_pos))
 
 title_game_name_surf = test_font.render("Harold\'s Journey",False,"#FCDC4D")
