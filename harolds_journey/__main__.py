@@ -498,7 +498,6 @@ while True:
                 # Obstacle Timer Event Detection
                 if event.type == obstacle_timer:
                     new_obstacle = Obstacle(choice(["bird","skeleton","skeleton","skeleton"]),int(pygame.time.get_ticks() / 1000) - start_time)
-                    print(int(pygame.time.get_ticks() / 1000) - start_time)
                     obstacle_group.add(new_obstacle)
                     # Health Bar
                     new_health_bar = HealthBar(new_obstacle, new_obstacle.get_current_health(), new_obstacle.get_max_health())
