@@ -18,7 +18,6 @@ class Harold(pygame.sprite.Sprite):
 
         # Harold Start
         self.harold_start_x_pos = temp_wizard_rect.centerx
-        print(temp_wizard_rect.centerx)
         self.harold_start_y_pos = temp_wizard_rect.top + self.ALIVE_WIZARD_HAT_SIZE
 
         # Harold X Values
