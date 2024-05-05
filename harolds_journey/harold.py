@@ -1,5 +1,6 @@
 """Harold Class"""
 from random import randint, choice
+import math
 
 from global_vars import *
 from player import *
@@ -124,10 +125,11 @@ class Harold(pygame.sprite.Sprite):
             self.set_wizard_was_jumping(temp_player.get_wizard_jumping())
         else:
             if wizard_was_jumping:
-                self.harold_y_velocity += 0.4 * GLOBAL_SCALAR
+                self.harold_y_velocity += (0.4 * GLOBAL_SCALAR)
                 self.rect.y += self.harold_y_velocity
             else:
-                self.rect.y += 0.5 * GLOBAL_SCALAR
+                self.rect.y += math.ceil(0.5 * GLOBAL_SCALAR) # Should be falling at a rate of 15 pixels per second
+                print("Hi I should fall when you aren't jumping")
             if self.rect.bottom >= GRASS_TOP_Y - self.DEAD_WIZARD_HAT_SIZE:
                 self.set_harold_y_velocity(0)
                 self.rect.bottom = GRASS_TOP_Y - self.DEAD_WIZARD_HAT_SIZE
