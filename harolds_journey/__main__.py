@@ -90,7 +90,7 @@ def display_stats():
     shield_health_stat_image_rect_1 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_1,shield_health_stat_y_pos))
     shield_health_stat_image_rect_2 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_2,shield_health_stat_y_pos))
 
-    # Stat image Surfs - find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
+    # Stat image Surfs - Find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
     stat_image_surf_x_pos = WINDOW_WIDTH/4 #29/128 dif
     stat_image_surf_y_pos_offset = WINDOW_HEIGHT*3/32
     # First
@@ -144,9 +144,9 @@ def display_stats():
     fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (fireball_cooldown_stat_x_pos,fireball_cooldown_stat_y_pos))
 
     # Fireball Cooldown Icon
-    fireball_cooldown_x_pos = WINDOW_WIDTH * 1/16 # right of health: 11/64 # Below Health: 1/16
+    fireball_cooldown_x_pos = WINDOW_WIDTH * 1/16 # Right of health: 11/64 # Below Health: 1/16
     fireball_cooldown_y_pos_num = 7/32 if not wizard.sprite.get_shield() else 11/32
-    fireball_cooldown_y_pos = WINDOW_HEIGHT * fireball_cooldown_y_pos_num # right of health: 25/256 # Below Health: 7/32
+    fireball_cooldown_y_pos = WINDOW_HEIGHT * fireball_cooldown_y_pos_num # Right of health: 25/256 # Below Health: 7/32
     fireball_cooldown_surf = pygame.image.load("harolds_journey/graphics/fireball/fireball_movement_animation/fireball_movement_00.png").convert_alpha()
     fireball_cooldown_rect = fireball_cooldown_surf.get_rect(center = (fireball_cooldown_x_pos,fireball_cooldown_y_pos))
     # Fireball Cooldown Overlay
@@ -276,7 +276,6 @@ def player_and_obstacle_collision():
                         wizard.sprite.set_wizard_immunity_frames(wizard.sprite.get_wizard_max_immunity_frames())
                     # Wizard dies
                     else:
-                        # pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
                         wizard.sprite.set_wizard_current_health(0)
                         temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
                         wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
@@ -322,7 +321,6 @@ def obstacle_and_player_owned_projectile_collision():
                             old_outline_health_bar.kill()
                             old_health_bar.kill()
                             dead_obstacle_group.add(obstacle)
-                            # pygame.sprite.spritecollide(projectile,buff_group,True) # Temporary
                             pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
                             wizard.sprite.set_additional_score(temp_additional_score)
                         # Damaged
@@ -525,10 +523,10 @@ pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
 
 while True:
     (mouse_x,mouse_y) = pygame.mouse.get_pos()
-    for event in pygame.event.get(): # gets all the events
+    for event in pygame.event.get(): # Gets all the events
         if event.type == pygame.QUIT:
-            pygame.quit() # opposite of pygame.init()
-            exit() # breaks out of the while True loop
+            pygame.quit() # Opposite of pygame.init()
+            exit() # Breaks out of the while True loop
         if event.type == pygame.KEYUP or event.type == pygame.MOUSEBUTTONUP:
             intro_played = True
 
@@ -624,7 +622,7 @@ while True:
             screen.blit(ground_surf,(0,0))
             # Stat Image Postions
             score = display_score()
-            display_stats() # updating stats
+            display_stats() # Updating stats
 
             for sprite in moving_sprites: # Holds all things to be drawn
                 sprite.draw(screen)
@@ -639,10 +637,10 @@ while True:
             screen.blit(sky_surf,(0,0))
             screen.blit(ground_surf,(0,0))
 
-            wizard.draw(screen) # draws sprites
+            wizard.draw(screen) # Draws sprites
             harold.draw(screen)
 
-            wizard.update() # updates sprites
+            wizard.update() # Updates sprites
             harold.update()
             death_timer += 1
             if death_timer > 180:
@@ -670,7 +668,7 @@ while True:
         score_message_surf = test_font.render("Score: " + str(score),False,"#FCDC4D")
         score_message_surf = pygame.transform.scale_by(score_message_surf,((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
         score_message_rect = score_message_surf.get_rect(center = (WINDOW_WIDTH/2,(100/800 * WINDOW_HEIGHT)))
-        # Main Menu Score vs. Tile Blit
+        # Main Menu Score vs. Title Blit
         if score == 0: screen.blit(title_game_name_surf,title_game_name_rect)
         else: screen.blit(score_message_surf,score_message_rect)
 
