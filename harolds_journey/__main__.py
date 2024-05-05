@@ -454,23 +454,56 @@ sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
 ground_surf = pygame.image.load("harolds_journey/graphics/bg_images/Grass.png").convert_alpha()
 ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
 
-# Intro Screen
+# Intro
+wizard_walk_in_animation_complete = False
+harold_jump_on_hat_animation_complete = False
+intro_jump_speed = -14 * GLOBAL_SCALAR
+intro_gravity_acceleration = GLOBAL_GRAVITY
+x_lineup = False
+y_lineup = False
+fall = False
+harold_turn_animation_complete = False
+harold_flipped = False
+wizard_and_harold_center_animation_complete = False
+wizard_and_harold_center_with_title_animation_complete = False
+
+wizard_intro_start_x_pos = -(128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
+wizard_intro_start_y_pos = GRASS_TOP_Y
+wizard_intro_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png").convert_alpha()
+wizard_intro_height_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+wizard_intro_width_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+wizard_intro_size_by_scale = (wizard_intro_height_by_scale,wizard_intro_width_by_scale)
+wizard_intro_surf = pygame.transform.scale(wizard_intro_surf,wizard_intro_size_by_scale)
+wizard_intro_rect = wizard_intro_surf.get_rect(midbottom = (wizard_intro_start_x_pos,wizard_intro_start_y_pos))
+
+harold_intro_start_x_pos = WINDOW_WIDTH / 2
+harold_intro_start_y_pos = GRASS_TOP_Y + 6/32 * (wizard_intro_width_by_scale * 3/8)
+harold_intro_surf = pygame.image.load("harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png").convert_alpha()
+harold_intro_height_by_scale = wizard_intro_height_by_scale * 3/8
+harold_intro_width_by_scale = wizard_intro_width_by_scale * 3/8
+harold_intro_size_by_scale = (harold_intro_height_by_scale,harold_intro_width_by_scale)
+harold_intro_surf = pygame.transform.scale(harold_intro_surf,harold_intro_size_by_scale)
+harold_intro_surf = pygame.transform.flip(harold_intro_surf,True,False)
+harold_intro_rect = harold_intro_surf.get_rect(midbottom = (harold_intro_start_x_pos,harold_intro_start_y_pos))
+
+# Menu Screen
 wizard_title_start_x_pos = WINDOW_WIDTH / 2
 wizard_title_start_y_pos = WINDOW_HEIGHT * 3/4
+wizard_title_hat_size = 32 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
 wizard_title_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png").convert_alpha()
-wizard_height_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-wizard_width_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-wizard_size_by_scale = (wizard_height_by_scale,wizard_width_by_scale)
-wizard_title_surf = pygame.transform.scale(wizard_title_surf,wizard_size_by_scale)
+wizard_title_height_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+wizard_title_width_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+wizard_title_size_by_scale = (wizard_title_height_by_scale,wizard_title_width_by_scale)
+wizard_title_surf = pygame.transform.scale(wizard_title_surf,wizard_title_size_by_scale)
 wizard_title_rect = wizard_title_surf.get_rect(center = (wizard_title_start_x_pos,wizard_title_start_y_pos))
 
 harold_title_start_x_pos = wizard_title_rect.centerx
-harold_title_start_y_pos = wizard_title_rect.top - 32 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+harold_title_start_y_pos = wizard_title_rect.top - wizard_title_hat_size
 harold_title_surf = pygame.image.load("harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png").convert_alpha()
-harold_height_by_scale = wizard_height_by_scale * 3/8
-harold_width_by_scale = wizard_width_by_scale * 3/8
-harold_size_by_scale = (harold_height_by_scale,harold_width_by_scale)
-harold_title_surf = pygame.transform.scale(harold_title_surf,harold_size_by_scale)
+harold_title_height_by_scale = wizard_title_height_by_scale * 3/8
+harold_title_width_by_scale = wizard_title_width_by_scale * 3/8
+harold_title_size_by_scale = (harold_title_height_by_scale,harold_title_width_by_scale)
+harold_title_surf = pygame.transform.scale(harold_title_surf,harold_title_size_by_scale)
 harold_title_rect = harold_title_surf.get_rect(midbottom = (harold_title_start_x_pos,harold_title_start_y_pos))
 
 title_game_name_surf = test_font.render("Harold\'s Journey",False,"#FCDC4D")
@@ -494,18 +527,10 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit() # opposite of pygame.init()
             exit() # breaks out of the while True loop
+        if event.type == pygame.KEYUP or event.type == pygame.MOUSEBUTTONUP:
+            intro_played = True
 
-        # Opening Cinematic (Intro)
-        if not intro_played:
-            screen.blit(sky_surf,(0,0))
-            screen.blit(ground_surf,(0,0))
-            if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                intro_played = True
-            screen.blit(wizard_title_surf,wizard_title_rect)
-            screen.blit(harold_title_surf,harold_title_rect)
-            wizard_title_rect.midbottom = (wizard_title_start_x_pos,wizard_title_start_y_pos)
-            harold_title_rect.midbottom = (harold_title_start_x_pos,harold_title_start_y_pos)
-        else:
+        if intro_played:
             if game_active:
                 if not wizard.sprite.get_wizard_dead():
                     # Spacebar Release Event Detection
@@ -539,6 +564,48 @@ while True:
                     wizard_alive = True
                     start_time = int(pygame.time.get_ticks() / 1000)
                     additional_score = 0
+
+    # Opening Cinematic (Intro)
+    if not intro_played:
+        screen.blit(sky_surf,(0,0))
+        screen.blit(ground_surf,(0,0))
+        screen.blit(wizard_intro_surf,wizard_intro_rect)
+        if harold_turn_animation_complete and not harold_flipped:
+            harold_intro_surf = pygame.transform.flip(harold_intro_surf,True,False)
+            harold_flipped = True
+        screen.blit(harold_intro_surf,harold_intro_rect)
+        if not wizard_walk_in_animation_complete:
+            if wizard_intro_rect.right < WINDOW_WIDTH / 2 - wizard_intro_width_by_scale/2:
+                wizard_intro_rect.centerx += wizard.sprite.get_wizard_speed()
+            else:
+                wizard_walk_in_animation_complete = True
+        elif not harold_jump_on_hat_animation_complete:
+            if harold_intro_rect.centerx > wizard_intro_rect.centerx:
+                harold_intro_rect.centerx -= (harold.sprite.get_harold_speed() * 2)
+            else:
+                x_lineup = True
+            intro_jump_speed += intro_gravity_acceleration
+            harold_intro_rect.centery += intro_jump_speed
+            if not fall:
+                if harold_intro_rect.bottom >= wizard_intro_rect.top:
+                    fall = True
+            elif harold_intro_rect.bottom >= wizard_intro_rect.top + wizard_title_hat_size:
+                harold_intro_rect.bottom = wizard_intro_rect.top + wizard_title_hat_size
+                harold_jump_on_hat_animation_complete = x_lineup
+        elif not harold_turn_animation_complete:
+            harold_turn_animation_complete = True
+        elif not wizard_and_harold_center_animation_complete:
+            if wizard_intro_rect.centerx < wizard_title_start_x_pos:
+                wizard_intro_rect.centerx += wizard.sprite.get_wizard_speed()
+                harold_intro_rect.centerx += harold.sprite.get_harold_speed()
+            else:
+                wizard_and_harold_center_animation_complete = True
+        elif not wizard_and_harold_center_with_title_animation_complete:
+            if wizard_intro_rect.bottom > wizard_title_start_y_pos:
+                wizard_intro_rect.centery -= wizard.sprite.get_wizard_speed()
+                harold_intro_rect.centery -= harold.sprite.get_harold_speed()
+            else:
+                intro_played = True
 
     # Active Game
     if game_active:
