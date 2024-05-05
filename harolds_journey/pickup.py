@@ -12,7 +12,7 @@ class Pickup(pygame.sprite.Sprite):
         self.gravity_acceleration = GLOBAL_GRAVITY
         self.y_velocity = -20 * GLOBAL_SCALAR
         self.PICKUP_ANIMATION_SPEED = 0.2
-        self.LIFETIME_LIMIT = 10 * 60
+        self.LIFETIME_LIMIT = 10 * 60 / GLOBAL_SCALAR
         self.lifetime = self.LIFETIME_LIMIT
 
         if type == "damage": # Percentages
