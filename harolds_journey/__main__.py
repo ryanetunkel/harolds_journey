@@ -523,7 +523,6 @@ title_start_button_rect_big = title_start_button_surf_big.get_rect(center = (tit
 obstacle_timer = pygame.USEREVENT + 1 # + 1 to avoid events taking previous numbers by default
 pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
 
-# pygame.draw exists, can do rects, circles, lines, points, ellipses etc
 while True:
     (mouse_x,mouse_y) = pygame.mouse.get_pos()
     for event in pygame.event.get(): # gets all the events
