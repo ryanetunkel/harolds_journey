@@ -129,7 +129,6 @@ class Harold(pygame.sprite.Sprite):
                 self.rect.y += self.harold_y_velocity
             else:
                 self.rect.y += math.ceil(0.5 * GLOBAL_SCALAR) # Should be falling at a rate of 15 pixels per second
-                print("Hi I should fall when you aren't jumping")
             if self.rect.bottom >= GRASS_TOP_Y - self.DEAD_WIZARD_HAT_SIZE:
                 self.set_harold_y_velocity(0)
                 self.rect.bottom = GRASS_TOP_Y - self.DEAD_WIZARD_HAT_SIZE
