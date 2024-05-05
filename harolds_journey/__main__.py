@@ -16,6 +16,45 @@ from graphics.health_bar.health_bar import *
 from graphics.health_bar.outline_health_bar import *
 
 
+wizard = pygame.sprite.GroupSingle()
+wizard.add(Player())
+
+harold = pygame.sprite.GroupSingle()
+harold.add(Harold(wizard))
+
+obstacle_group = pygame.sprite.Group()
+dead_obstacle_group = pygame.sprite.Group()
+projectile_group = pygame.sprite.Group()
+pickup_group = pygame.sprite.Group()
+buff_group = pygame.sprite.Group()
+health_bar_group = pygame.sprite.Group()
+outline_health_bar_group = pygame.sprite.Group()
+
+# Obstacle: Health Bar
+health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
+# Health Bar: Outline Health Bar
+outline_health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
+
+moving_sprites = [
+    wizard,
+    harold,
+    obstacle_group,
+    projectile_group,
+    pickup_group,
+    buff_group,
+    outline_health_bar_group,
+    health_bar_group,
+]
+
+objects_to_be_removed = [
+    obstacle_group,
+    dead_obstacle_group,
+    projectile_group,
+    pickup_group,
+    buff_group,
+]
+
+
 # Functions
 def display_score():
     temp_additional_score = wizard.sprite.get_additional_score()
@@ -403,51 +442,7 @@ def do_collisions():
     player_and_obstacle_collision()
 
 
-wizard = pygame.sprite.GroupSingle()
-wizard.add(Player())
-
-harold = pygame.sprite.GroupSingle()
-harold.add(Harold(wizard))
-
-obstacle_group = pygame.sprite.Group()
-
-dead_obstacle_group = pygame.sprite.Group()
-
-projectile_group = pygame.sprite.Group()
-
-pickup_group = pygame.sprite.Group()
-
-buff_group = pygame.sprite.Group()
-
-health_bar_group = pygame.sprite.Group()
-
-outline_health_bar_group = pygame.sprite.Group()
-
-# Obstacle: Health Bar
-health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
-# Health Bar: Outline Health Bar
-outline_health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
-
-moving_sprites = [
-    wizard,
-    harold,
-    obstacle_group,
-    projectile_group,
-    pickup_group,
-    buff_group,
-    outline_health_bar_group,
-    health_bar_group,
-]
-
-objects_to_be_removed = [
-    obstacle_group,
-    dead_obstacle_group,
-    projectile_group,
-    pickup_group,
-    buff_group,
-]
-
-
+# Background Elements
 sky_surf = pygame.image.load("harolds_journey/graphics/bg_images/Background.png").convert_alpha()
 sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
 
