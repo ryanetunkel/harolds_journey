@@ -54,7 +54,7 @@ game_active = False
 intro_played = False
 wizard_alive = False
 start_time = 0
-death_counter = 0
+death_timer = 0
 
 # Music
 bg_music = pygame.mixer.Sound("harolds_journey/audio/FreeSFX/GameSFX/Ambience/Retro Ambience Short 09.wav")

@@ -481,19 +481,21 @@ harold_intro_surf = pygame.transform.scale(harold_intro_surf,harold_intro_size_b
 harold_intro_surf = pygame.transform.flip(harold_intro_surf,True,False)
 harold_intro_rect = harold_intro_surf.get_rect(midbottom = (harold_intro_start_x_pos,harold_intro_start_y_pos))
 
-# Menu Screen
+# Main Menu Screen
+# Wizard on Menu Screen
 wizard_title_start_x_pos = WINDOW_WIDTH / 2
-wizard_title_start_y_pos = WINDOW_HEIGHT * 3/4
+wizard_title_start_y_pos = WINDOW_HEIGHT * 5/8
 wizard_title_hat_size = 32 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
 wizard_title_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png").convert_alpha()
 wizard_title_height_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
 wizard_title_width_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
 wizard_title_size_by_scale = (wizard_title_height_by_scale,wizard_title_width_by_scale)
 wizard_title_surf = pygame.transform.scale(wizard_title_surf,wizard_title_size_by_scale)
-wizard_title_rect = wizard_title_surf.get_rect(center = (wizard_title_start_x_pos,wizard_title_start_y_pos))
+wizard_title_rect = wizard_title_surf.get_rect(midbottom = (wizard_title_start_x_pos,wizard_title_start_y_pos))
 
+# Harold on Menu Screen
 harold_title_start_x_pos = wizard_title_rect.centerx
-harold_title_start_y_pos = wizard_title_rect.top - wizard_title_hat_size
+harold_title_start_y_pos = wizard_title_rect.top + wizard_title_hat_size
 harold_title_surf = pygame.image.load("harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png").convert_alpha()
 harold_title_height_by_scale = wizard_title_height_by_scale * 3/8
 harold_title_width_by_scale = wizard_title_width_by_scale * 3/8
@@ -501,16 +503,21 @@ harold_title_size_by_scale = (harold_title_height_by_scale,harold_title_width_by
 harold_title_surf = pygame.transform.scale(harold_title_surf,harold_title_size_by_scale)
 harold_title_rect = harold_title_surf.get_rect(midbottom = (harold_title_start_x_pos,harold_title_start_y_pos))
 
+# Game Title
 title_game_name_surf = test_font.render("Harold\'s Journey",False,"#FCDC4D")
-title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
-title_game_name_rect = title_game_name_surf.get_rect(center = (WINDOW_WIDTH/2,((70/400) * WINDOW_HEIGHT)))
+title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,1.5 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
+title_game_name_rect = title_game_name_surf.get_rect(center = (WINDOW_WIDTH/2,((50/400) * WINDOW_HEIGHT)))
 
-title_info_start_x_pos = wizard_title_rect.centerx
-title_info_start_y_pos = wizard_title_rect.centery + ((40/400) * WINDOW_HEIGHT)
-title_info_start_pos = (title_info_start_x_pos,title_info_start_y_pos)
-title_info_surf = test_font.render("Press any key or click to Start",False,"#FCDC4D")
-title_info_surf = pygame.transform.scale_by(title_info_surf,((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
-title_info_rect = title_info_surf.get_rect(center = (title_info_start_pos))
+# Start Button
+title_start_button_start_x_pos = wizard_title_rect.centerx
+title_start_button_start_y_pos = wizard_title_rect.bottom + ((40/400) * WINDOW_HEIGHT)
+title_start_button_start_pos = (title_start_button_start_x_pos,title_start_button_start_y_pos)
+title_start_button_surf = test_font.render("Start Game",False,"#FCDC4D")
+title_start_button_surf = pygame.transform.scale_by(title_start_button_surf,((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
+title_start_button_rect = title_start_button_surf.get_rect(center = (title_start_button_start_pos))
+mouse_on_start_button = False
+title_start_button_surf_big = pygame.transform.scale_by(title_start_button_surf,1.1)
+title_start_button_rect_big = title_start_button_surf_big.get_rect(center = (title_start_button_start_pos))
 
 # Timer
 obstacle_timer = pygame.USEREVENT + 1 # + 1 to avoid events taking previous numbers by default
@@ -518,6 +525,7 @@ pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
 
 # pygame.draw exists, can do rects, circles, lines, points, ellipses etc
 while True:
+    (mouse_x,mouse_y) = pygame.mouse.get_pos()
     for event in pygame.event.get(): # gets all the events
         if event.type == pygame.QUIT:
             pygame.quit() # opposite of pygame.init()
@@ -554,11 +562,14 @@ while True:
                             projectile_group.add(Projectile("fireball", wizard))
 
             else:
-                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                    game_active = True
-                    wizard_alive = True
-                    start_time = int(pygame.time.get_ticks() / 1000)
-                    additional_score = 0
+                # Start Button
+                mouse_on_start_button = title_start_button_rect.left <= mouse_x <= title_start_button_rect.right and title_start_button_rect.top <= mouse_y <= title_start_button_rect.bottom
+                if mouse_on_start_button:
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        game_active = True
+                        wizard_alive = True
+                        start_time = int(pygame.time.get_ticks() / 1000)
+                        additional_score = 0
 
     # Opening Cinematic (Intro)
     if not intro_played:
@@ -634,33 +645,36 @@ while True:
 
             wizard.update() # updates sprites
             harold.update()
-            death_counter += 1
-            if death_counter > 180:
+            death_timer += 1
+            if death_timer > 180:
                 game_active = False
 
-    # Menu Screen
+    # Main Menu Screen
     elif intro_played:
+        # Sprite Resets
         wizard.sprite.reset()
         harold.sprite.reset()
+        # Event Clear
         pygame.event.clear()
-        death_counter = 0
+        # Timer Resets
+        death_timer = 0
         bg_music_timer = 0
+        # Main Menu Screen Blits
         screen.blit(sky_surf,(0,0))
         screen.blit(ground_surf,(0,0))
         screen.blit(wizard_title_surf,wizard_title_rect)
         screen.blit(harold_title_surf,harold_title_rect)
-        screen.blit(title_info_surf,title_info_rect)
-
-        wizard_title_rect.midbottom = (wizard_title_start_x_pos,wizard_title_start_y_pos)
-
-        harold_title_rect.midbottom = (harold_title_start_x_pos,harold_title_start_y_pos)
-
+        # Main Menu Button Blits
+        if not mouse_on_start_button: screen.blit(title_start_button_surf,title_start_button_rect)
+        else: screen.blit(title_start_button_surf_big,title_start_button_rect_big)
+        # Main Menu Score
         score_message_surf = test_font.render("Score: " + str(score),False,"#FCDC4D")
         score_message_surf = pygame.transform.scale_by(score_message_surf,((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
         score_message_rect = score_message_surf.get_rect(center = (WINDOW_WIDTH/2,(100/800 * WINDOW_HEIGHT)))
-
+        # Main Menu Score vs. Tile Blit
         if score == 0: screen.blit(title_game_name_surf,title_game_name_rect)
         else: screen.blit(score_message_surf,score_message_rect)
 
+    # Global Clock and Display Update
     pygame.display.update()
     clock.tick(60)
