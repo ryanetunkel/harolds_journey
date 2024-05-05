@@ -47,7 +47,8 @@ class Pickup(pygame.sprite.Sprite):
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
-        self.image = pygame.transform.scale_by(self.image,3)
+        self.scale = 3 * GLOBAL_SCALAR
+        self.image = pygame.transform.scale_by(self.image,self.scale)
         self.rect = self.image.get_rect(center = (self.x_pos,self.y_pos))
 
     def get_bonus(self):
@@ -69,7 +70,7 @@ class Pickup(pygame.sprite.Sprite):
         if self.animation_index >= len(self.frames): self.animation_index = 0
 
         self.image = self.frames[int(self.animation_index)]
-        self.image = pygame.transform.scale_by(self.image,3)
+        self.image = pygame.transform.scale_by(self.image,self.scale)
 
     def update(self):
         self.apply_gravity()

@@ -61,7 +61,8 @@ class Buff(pygame.sprite.Sprite):
             self.frames = self.sprite_sheet.images_at(self.image_coords, colorkey=(0, 0, 0))
         self.image = self.default_image
         self.animation_index = 0
-        self.image = pygame.transform.scale_by(self.image,3)
+        self.scale = 3 * GLOBAL_SCALAR
+        self.image = pygame.transform.scale_by(self.image,self.scale)
         self.rect = self.image.get_rect(center = (self.x_pos,self.y_pos))
 
     def get_type(self):
@@ -87,7 +88,7 @@ class Buff(pygame.sprite.Sprite):
         if self.animation_index >= len(self.frames) - 1:self.animation_index = 0
 
         self.image = self.frames[int(self.animation_index)]
-        self.image = pygame.transform.scale_by(self.image,3)
+        self.image = pygame.transform.scale_by(self.image,self.scale)
 
     def update(self):
         self.apply_gravity()

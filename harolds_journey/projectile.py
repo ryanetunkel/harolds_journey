@@ -74,6 +74,8 @@ class Projectile(pygame.sprite.Sprite):
             # self.image = pygame.transform.scale_by(self.image,1)
             if not self.wizard_was_looking_right:
                 self.image = pygame.transform.flip(self.image,True,False)
+            self.scale = GLOBAL_SCALAR
+            self.image = pygame.transform.scale_by(self.image,self.scale)
             self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos))
 
     def get_fireball_damage(self):
@@ -127,6 +129,7 @@ class Projectile(pygame.sprite.Sprite):
         else:
             self.image = pygame.transform.flip(self.image,True,True)
 
+        self.image = pygame.transform.scale_by(self.image,self.scale)
         self.image = pygame.transform.rotozoom(self.image,self.get_angle_degrees()*-1,1)
 
     def move_fireball(self):

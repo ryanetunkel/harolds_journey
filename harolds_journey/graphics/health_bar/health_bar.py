@@ -8,17 +8,17 @@ class HealthBar(pygame.sprite.Sprite):
 
         self.source = source
         self.x_pos = self.source.get_x_pos()
-        self.INNER_WIDTH = 16
-        self.INNER_HEIGHT = 4
+        self.INNER_WIDTH = 4 * PIXEL_SIZE
+        self.INNER_HEIGHT = PIXEL_SIZE
         self.y_pos = self.source.get_y_pos() + (source.get_height() / 2) + self.INNER_HEIGHT
         self.current_health = current_health
         self.max_health = max_health
         self.health_percentage = current_health / self.max_health
-        inner_centerx = self.x_pos
-        inner_centery = self.y_pos + (WIZARD_HEIGHT / 2) + (self.INNER_HEIGHT * 2) # Just to move it up a bit
+        self.inner_centerx = self.x_pos
+        self.inner_centery = self.y_pos + (WIZARD_HEIGHT / 2) + (self.INNER_HEIGHT * 2) # Just to move it up a bit
         self.image = get_green_health_bar()
         self.image = pygame.transform.scale(self.image,(self.INNER_WIDTH * 4, self.INNER_HEIGHT * 2))
-        self.rect = self.image.get_rect(center = (inner_centerx,inner_centery))
+        self.rect = self.image.get_rect(center = (self.inner_centerx,self.inner_centery))
         # self.moving_bar = pygame.draw.rect(screen, self.inner_color, (inner_left, inner_top, self.INNER_WIDTH, self.INNER_HEIGHT))
 
     # Coords
@@ -33,6 +33,12 @@ class HealthBar(pygame.sprite.Sprite):
 
     def set_y_pos(self, new_y_pos):
         self.y_pos = new_y_pos
+
+    def get_inner_centerx(self):
+        return self.inner_centerx
+
+    def get_inner_centery(self):
+        return self.inner_centery
 
     def get_current_health(self):
         return self.current_health

@@ -8,11 +8,11 @@ class OutlineHealthBar(pygame.sprite.Sprite):
 
         self.health_bar = health_bar
         self.x_pos = x_pos
-        self.OUTER_WIDTH = 18
-        self.OUTER_HEIGHT = 6
-        self.y_pos = y_pos + (self.health_bar.get_source().get_height() / 2) + self.OUTER_HEIGHT + 2
+        self.OUTER_WIDTH = 9/2 * PIXEL_SIZE
+        self.OUTER_HEIGHT = 3/2 * PIXEL_SIZE
+        self.y_pos = y_pos + (self.health_bar.get_source().get_height() / 2) + self.OUTER_HEIGHT + PIXEL_SIZE/2
         inner_centerx = self.x_pos
-        inner_centery = self.y_pos + (WIZARD_HEIGHT / 2) + ((self.OUTER_HEIGHT - 2) * 2) # Just to move it up a bit
+        inner_centery = self.y_pos + (WIZARD_HEIGHT / 2) + ((self.OUTER_HEIGHT - PIXEL_SIZE/2) * 2) # Just to move it up a bit
         self.image = get_outline_health_bar()
         self.image = pygame.transform.scale(self.image,(self.OUTER_WIDTH * 4, self.OUTER_HEIGHT * 2))
         self.rect = self.image.get_rect(center = (inner_centerx,inner_centery))
@@ -37,7 +37,7 @@ class OutlineHealthBar(pygame.sprite.Sprite):
     def animation_state(self):
         temp_source = self.health_bar.get_source()
         inner_centerx = temp_source.get_x_pos()
-        inner_centery = temp_source.get_y_pos() + (temp_source.get_height() / 2) + 8
+        inner_centery = temp_source.get_y_pos() + (temp_source.get_height() / 2) + PIXEL_SIZE * 2
         self.image = get_outline_health_bar()
         self.image = pygame.transform.scale(self.image,(self.OUTER_WIDTH * 4, self.OUTER_HEIGHT * 2))
         self.rect = self.image.get_rect(center = (inner_centerx,inner_centery))
