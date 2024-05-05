@@ -28,7 +28,7 @@ class Harold(pygame.sprite.Sprite):
         # Harold Y Values
         self.harold_y_pos = self.harold_start_y_pos
         self.harold_y_velocity = 0
-        self.jump_speed = -20
+        self.jump_speed = -20 * GLOBAL_SCALAR
         self.gravity_acceleration = GLOBAL_GRAVITY # How quickly gravity accelerates the player
 
         # Harold Animation Speed
@@ -124,10 +124,10 @@ class Harold(pygame.sprite.Sprite):
             self.set_wizard_was_jumping(temp_player.get_wizard_jumping())
         else:
             if wizard_was_jumping:
-                self.harold_y_velocity += 0.4
+                self.harold_y_velocity += 0.4 * GLOBAL_SCALAR
                 self.rect.y += self.harold_y_velocity
             else:
-                self.rect.y += 0.5
+                self.rect.y += 0.5 * GLOBAL_SCALAR
             if self.rect.bottom >= GRASS_TOP_Y - self.DEAD_WIZARD_HAT_SIZE:
                 self.set_harold_y_velocity(0)
                 self.rect.bottom = GRASS_TOP_Y - self.DEAD_WIZARD_HAT_SIZE
@@ -150,11 +150,12 @@ class Harold(pygame.sprite.Sprite):
         # Temp Wizard Attribute
         temp_wizard_rect = self.player.sprite.get_wizard_rect()
         self.DEAD_WIZARD_HAT_SIZE = 5 * PIXEL_SIZE
+        self.ALIVE_WIZARD_HAT_SIZE = 7 * PIXEL_SIZE
         self.wizard_was_jumping = False
 
         # Harold Start
         self.harold_start_x_pos = temp_wizard_rect.centerx
-        self.harold_start_y_pos = temp_wizard_rect.top + 7 * PIXEL_SIZE # pixels at this scale based on wizard are 4 pixels each
+        self.harold_start_y_pos = temp_wizard_rect.top + self.ALIVE_WIZARD_HAT_SIZE
 
         # Harold X Values
         self.harold_x_pos = self.harold_start_x_pos
@@ -164,7 +165,7 @@ class Harold(pygame.sprite.Sprite):
         # Harold Y Values
         self.harold_y_pos = self.harold_start_y_pos
         self.harold_y_velocity = 0
-        self.jump_speed = -20
+        self.jump_speed = -20 * GLOBAL_SCALAR
         self.gravity_acceleration = GLOBAL_GRAVITY # How quickly gravity accelerates the player
 
         # Harold Animation Speed

@@ -12,7 +12,7 @@ class Projectile(pygame.sprite.Sprite):
         # Projectiles
         # These might not all be universal, especially damage and speed, will be varied
 
-        self.projectile_speed = 5
+        self.projectile_speed = 5 * GLOBAL_SCALAR
         self.projectile_damage = 1
 
         (self.mouse_x,self.mouse_y) = pygame.mouse.get_pos()
@@ -46,7 +46,7 @@ class Projectile(pygame.sprite.Sprite):
             self.angle = math.atan2(self.y_dif,self.x_dif)
 
             # Speed
-            self.speed = 5
+            self.speed = 5 * GLOBAL_SCALAR
             self.fireball_x_start_speed = 0
             self.fireball_x_speed = self.projectile_speed
             self.fireball_y_start_speed = 0

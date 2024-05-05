@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
 
         # X Directions
         self.wizard_x_pos = self.WIZARD_START_X_POS
-        self.wizard_speed = 4
+        self.wizard_speed = 4 * GLOBAL_SCALAR
         self.wizard_x_velocity = 0
         self.looking_right = True
         self.looking_down = True
@@ -23,7 +23,7 @@ class Player(pygame.sprite.Sprite):
         # Y Directions
         self.wizard_y_pos = self.WIZARD_START_Y_POS
         self.wizard_y_velocity = 0
-        self.jump_speed = -20
+        self.jump_speed = -20 * GLOBAL_SCALAR
         self.gravity_acceleration = GLOBAL_GRAVITY # How quickly gravity accelerates the player
         self.wizard_gravity = 0
         self.wizard_jumping = False
@@ -557,7 +557,7 @@ class Player(pygame.sprite.Sprite):
 
                 # Numbers listed were only the case when self.jump_speed was -20 and len(self.wizard_jump) was 23
                 starting_y_velocity = self.get_jump_speed() # -20
-                ending_y_velocity = 2 # 2
+                ending_y_velocity = 2 * GLOBAL_SCALAR # 2
                 y_velocity_range = ending_y_velocity - starting_y_velocity # 22
                 y_velocity = self.get_wizard_y_velocity()
                 # [-20,2] + 20 = [0, 22] / 22 = [0,1] in 22nds
@@ -570,11 +570,11 @@ class Player(pygame.sprite.Sprite):
                 # print("y_velocity_frame_equivalent: ",y_velocity_frame_equivalent)
                 falling_frame_index = 15
                 settling_frame_index = 16
-                if GRASS_TOP_Y - 2 < self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping:
+                if GRASS_TOP_Y - ending_y_velocity < self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping:
                     self.image = self.wizard_jump[settling_frame_index]
-                elif y_velocity <= 2:
+                elif y_velocity <= ending_y_velocity:
                     self.image = self.wizard_jump[y_velocity_frame_equivalent]
-                elif y_velocity > 2: self.image = self.wizard_jump[falling_frame_index]
+                elif y_velocity > ending_y_velocity: self.image = self.wizard_jump[falling_frame_index]
                 # Should be self-resetting
 
                 # current wizard_jump_animation_speed = 0.075
@@ -674,15 +674,18 @@ class Player(pygame.sprite.Sprite):
 
         # X Directions
         self.wizard_x_pos = self.WIZARD_START_X_POS
-        self.wizard_speed = 4
+        self.wizard_speed = 4 * GLOBAL_SCALAR
         self.wizard_x_velocity = 0
         self.looking_right = True
+        self.looking_down = True
         self.wizard_moving = False
 
         # Y Directions
         self.wizard_y_pos = self.WIZARD_START_Y_POS
-        self.jump_speed = -20
+        self.wizard_y_velocity = 0
+        self.jump_speed = -20 * GLOBAL_SCALAR
         self.gravity_acceleration = GLOBAL_GRAVITY # How quickly gravity accelerates the player
+        self.wizard_gravity = 0
         self.wizard_jumping = False
 
         # Fireball
@@ -705,9 +708,11 @@ class Player(pygame.sprite.Sprite):
         self.wizard_immunity_frames = 0
 
         # Damage Statistics
+        self.WIZARD_STARTING_DAMAGE = 1
         self.wizard_damage_percent = 1
         self.wizard_damage_total = self.WIZARD_STARTING_DAMAGE * self.wizard_damage_percent
 
+        self.WIZARD_STARTING_PIERCING = 1
         self.wizard_piercing_increase = 0
         self.wizard_piercing_total = self.WIZARD_STARTING_PIERCING + self.wizard_piercing_increase
 
@@ -754,8 +759,16 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
 
+        # Animation Speeds
+        self.WIZARD_WALK_ANIMATION_SPEED = 0.1
+        self.WIZARD_JUMP_ANIMATION_SPEED = 0.075
+        self.WIZARD_IDLE_ANIMATION_SPEED = 0.1
+        self.WIZARD_FIREBALL_ANIMATION_SPEED = 0.4
+        self.WIZARD_DEATH_ANIMATION_SPEED = 0.2
+
         # Secret Animation
         self.wizard_secret_idle_animation_speed = self.WIZARD_IDLE_ANIMATION_SPEED
+        self.WIZARD_SECRET_ANIMATION_LIMIT = 240
         self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
 
         # Sounds

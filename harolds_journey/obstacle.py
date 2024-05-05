@@ -13,7 +13,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.time_scalar = int(time_at_spawn / self.ROUND_DIFFICULTY_INCREASE_INCREMENT) + 1 # Should mean every 20 seconds goes up by 1 
 
         self.enemy_looking_right = False
-        self.knockback_value = 8
+        self.knockback_value = 8 * GLOBAL_SCALAR
         self.knockback_vector = 0
         self.knockback_timer_max = 8
         self.knockback_timer = self.knockback_timer_max
@@ -27,13 +27,13 @@ class Obstacle(pygame.sprite.Sprite):
         # Skeleton Base Stats
         self.skeleton_value = 2
         self.skeleton_max_health = 1
-        self.skeleton_speed = 2
+        self.skeleton_speed = 2 * GLOBAL_SCALAR
         self.skeleton_damage = 1
 
         # Flying Enemy Base Stats
         self.bird_value = 5
         self.bird_max_health = 1
-        self.bird_speed = 2
+        self.bird_speed = 2 * GLOBAL_SCALAR
         self.bird_damage = 1
         self.immunity = False
         self.IMMUNITY_LIMIT = 50

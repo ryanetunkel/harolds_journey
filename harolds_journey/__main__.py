@@ -128,7 +128,7 @@ def display_stats():
     speed_stat_image_surf = pygame.transform.scale_by(speed_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
     speed_stat_image_rect = speed_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,speed_stat_image_y_pos))
 
-    speed_stat_surf = test_font.render("Speed: " + str(wizard.sprite.get_wizard_speed()), False, "#FCDC4D")
+    speed_stat_surf = test_font.render("Speed: " + str(wizard.sprite.get_wizard_speed() / GLOBAL_SCALAR), False, "#FCDC4D")
     speed_stat_surf = pygame.transform.scale_by(speed_stat_surf, 0.9)
     speed_stat_rect = speed_stat_surf.get_rect(center = (speed_stat_x_pos,speed_stat_y_pos))
     # Buffs
