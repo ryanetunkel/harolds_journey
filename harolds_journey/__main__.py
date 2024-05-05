@@ -460,11 +460,11 @@ harold_flipped = False
 wizard_and_harold_center_animation_complete = False
 wizard_and_harold_center_with_title_animation_complete = False
 
-wizard_intro_start_x_pos = -(128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
+wizard_intro_start_x_pos = -(128 * WINDOW_SCALAR)
 wizard_intro_start_y_pos = GRASS_TOP_Y
 wizard_intro_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png").convert_alpha()
-wizard_intro_height_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-wizard_intro_width_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+wizard_intro_height_by_scale = 128 * WINDOW_SCALAR
+wizard_intro_width_by_scale = 128 * WINDOW_SCALAR
 wizard_intro_size_by_scale = (wizard_intro_height_by_scale,wizard_intro_width_by_scale)
 wizard_intro_surf = pygame.transform.scale(wizard_intro_surf,wizard_intro_size_by_scale)
 wizard_intro_rect = wizard_intro_surf.get_rect(midbottom = (wizard_intro_start_x_pos,wizard_intro_start_y_pos))
@@ -480,13 +480,22 @@ harold_intro_surf = pygame.transform.flip(harold_intro_surf,True,False)
 harold_intro_rect = harold_intro_surf.get_rect(midbottom = (harold_intro_start_x_pos,harold_intro_start_y_pos))
 
 # Main Menu Screen
+# Game Title
+title_game_name_start_x_pos = WINDOW_WIDTH / 2
+title_game_name_start_y_pos = 42/400 * WINDOW_HEIGHT
+title_game_name_start_pos = (title_game_name_start_x_pos,title_game_name_start_y_pos)
+title_game_name_scale = 1.25 * WINDOW_SCALAR
+title_game_name_surf = test_font.render("Harold\'s Journey",False,"#FCDC4D")
+title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,title_game_name_scale)
+title_game_name_rect = title_game_name_surf.get_rect(center = title_game_name_start_pos)
+
 # Wizard on Menu Screen
 wizard_title_start_x_pos = WINDOW_WIDTH / 2
-wizard_title_start_y_pos = WINDOW_HEIGHT * 5/8
-wizard_title_hat_size = 32 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+wizard_title_start_y_pos = title_game_name_start_y_pos + 1.25 * (128 * WINDOW_SCALAR)
+wizard_title_hat_size = 32 * WINDOW_SCALAR
 wizard_title_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png").convert_alpha()
-wizard_title_height_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-wizard_title_width_by_scale = 128 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+wizard_title_height_by_scale = 128 * WINDOW_SCALAR
+wizard_title_width_by_scale = 128 * WINDOW_SCALAR
 wizard_title_size_by_scale = (wizard_title_height_by_scale,wizard_title_width_by_scale)
 wizard_title_surf = pygame.transform.scale(wizard_title_surf,wizard_title_size_by_scale)
 wizard_title_rect = wizard_title_surf.get_rect(midbottom = (wizard_title_start_x_pos,wizard_title_start_y_pos))
@@ -501,21 +510,46 @@ harold_title_size_by_scale = (harold_title_height_by_scale,harold_title_width_by
 harold_title_surf = pygame.transform.scale(harold_title_surf,harold_title_size_by_scale)
 harold_title_rect = harold_title_surf.get_rect(midbottom = (harold_title_start_x_pos,harold_title_start_y_pos))
 
-# Game Title
-title_game_name_surf = test_font.render("Harold\'s Journey",False,"#FCDC4D")
-title_game_name_surf = pygame.transform.scale_by(title_game_name_surf,1.5 * ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
-title_game_name_rect = title_game_name_surf.get_rect(center = (WINDOW_WIDTH/2,((50/400) * WINDOW_HEIGHT)))
-
+# Buttons
+button_when_big_scale = 1.1
 # Start Button
 title_start_button_start_x_pos = wizard_title_rect.centerx
-title_start_button_start_y_pos = wizard_title_rect.bottom + ((40/400) * WINDOW_HEIGHT)
+title_start_button_start_y_pos = wizard_title_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 title_start_button_start_pos = (title_start_button_start_x_pos,title_start_button_start_y_pos)
 title_start_button_surf = test_font.render("Start Game",False,"#FCDC4D")
-title_start_button_surf = pygame.transform.scale_by(title_start_button_surf,((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
+title_start_button_scale = WINDOW_SCALAR
+title_start_button_surf = pygame.transform.scale_by(title_start_button_surf,title_start_button_scale)
 title_start_button_rect = title_start_button_surf.get_rect(center = (title_start_button_start_pos))
 mouse_on_start_button = False
-title_start_button_surf_big = pygame.transform.scale_by(title_start_button_surf,1.1)
+title_start_button_big_scale = button_when_big_scale
+title_start_button_surf_big = pygame.transform.scale_by(title_start_button_surf,title_start_button_big_scale)
 title_start_button_rect_big = title_start_button_surf_big.get_rect(center = (title_start_button_start_pos))
+
+# Settings Button
+title_settings_button_start_x_pos = wizard_title_rect.centerx
+title_settings_button_start_y_pos = title_start_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
+title_settings_button_start_pos = (title_settings_button_start_x_pos,title_settings_button_start_y_pos)
+title_settings_button_surf = test_font.render("Settings",False,"#FCDC4D")
+title_settings_button_scale = WINDOW_SCALAR
+title_settings_button_surf = pygame.transform.scale_by(title_settings_button_surf,title_settings_button_scale)
+title_settings_button_rect = title_settings_button_surf.get_rect(center = (title_settings_button_start_pos))
+mouse_on_settings_button = False
+title_settings_button_big_scale = button_when_big_scale
+title_settings_button_surf_big = pygame.transform.scale_by(title_settings_button_surf,title_settings_button_big_scale)
+title_settings_button_rect_big = title_settings_button_surf_big.get_rect(center = (title_settings_button_start_pos))
+
+# Exit Button
+title_exit_button_start_x_pos = wizard_title_rect.centerx
+title_exit_button_start_y_pos = title_settings_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
+title_exit_button_start_pos = (title_exit_button_start_x_pos,title_exit_button_start_y_pos)
+title_exit_button_surf = test_font.render("Exit",False,"#FCDC4D")
+title_exit_button_scale = WINDOW_SCALAR
+title_exit_button_surf = pygame.transform.scale_by(title_exit_button_surf,title_exit_button_scale)
+title_exit_button_rect = title_exit_button_surf.get_rect(center = (title_exit_button_start_pos))
+mouse_on_exit_button = False
+title_exit_button_big_scale = button_when_big_scale
+title_exit_button_surf_big = pygame.transform.scale_by(title_exit_button_surf,title_exit_button_big_scale)
+title_exit_button_rect_big = title_exit_button_surf_big.get_rect(center = (title_exit_button_start_pos))
 
 # Timer
 obstacle_timer = pygame.USEREVENT + 1 # + 1 to avoid events taking previous numbers by default
@@ -560,13 +594,22 @@ while True:
 
             else:
                 # Start Button
-                mouse_on_start_button = title_start_button_rect.left <= mouse_x <= title_start_button_rect.right and title_start_button_rect.top <= mouse_y <= title_start_button_rect.bottom
+                mouse_on_start_button = title_start_button_rect_big.left <= mouse_x <= title_start_button_rect_big.right and title_start_button_rect_big.top <= mouse_y <= title_start_button_rect_big.bottom
                 if mouse_on_start_button:
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         game_active = True
                         wizard_alive = True
                         start_time = int(pygame.time.get_ticks() / 1000)
                         additional_score = 0
+                # Settings Button
+                mouse_on_settings_button = title_settings_button_rect_big.left <= mouse_x <= title_settings_button_rect_big.right and title_settings_button_rect_big.top <= mouse_y <= title_settings_button_rect_big.bottom
+                # if mouse_on_settings_button:
+                # Exit Button
+                mouse_on_exit_button = title_exit_button_rect_big.left <= mouse_x <= title_exit_button_rect_big.right and title_exit_button_rect_big.top <= mouse_y <= title_exit_button_rect_big.bottom
+                if mouse_on_exit_button:
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        pygame.quit()
+                        exit()
 
     # Opening Cinematic (Intro)
     if not intro_played:
@@ -662,12 +705,19 @@ while True:
         screen.blit(wizard_title_surf,wizard_title_rect)
         screen.blit(harold_title_surf,harold_title_rect)
         # Main Menu Button Blits
+        # Start Button
         if not mouse_on_start_button: screen.blit(title_start_button_surf,title_start_button_rect)
         else: screen.blit(title_start_button_surf_big,title_start_button_rect_big)
+        # Settings Button
+        if not mouse_on_settings_button: screen.blit(title_settings_button_surf,title_settings_button_rect)
+        else: screen.blit(title_settings_button_surf_big,title_settings_button_rect_big)
+        # Exit Button
+        if not mouse_on_exit_button: screen.blit(title_exit_button_surf,title_exit_button_rect)
+        else: screen.blit(title_exit_button_surf_big,title_exit_button_rect_big)
         # Main Menu Score
         score_message_surf = test_font.render("Score: " + str(score),False,"#FCDC4D")
-        score_message_surf = pygame.transform.scale_by(score_message_surf,((WINDOW_WIDTH + WINDOW_HEIGHT)/1200))
-        score_message_rect = score_message_surf.get_rect(center = (WINDOW_WIDTH/2,(100/800 * WINDOW_HEIGHT)))
+        score_message_surf = pygame.transform.scale_by(score_message_surf,WINDOW_SCALAR)
+        score_message_rect = score_message_surf.get_rect(center = (WINDOW_WIDTH/2,(84/800 * WINDOW_HEIGHT)))
         # Main Menu Score vs. Title Blit
         if score == 0: screen.blit(title_game_name_surf,title_game_name_rect)
         else: screen.blit(score_message_surf,score_message_rect)
