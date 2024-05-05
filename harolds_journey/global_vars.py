@@ -51,6 +51,7 @@ pygame.display.set_icon(pygame_icon)
 clock = pygame.time.Clock()
 test_font = pygame.font.Font("harolds_journey/font/Pixeltype.ttf",50)
 game_active = False
+intro_played = False
 wizard_alive = False
 start_time = 0
 death_counter = 0

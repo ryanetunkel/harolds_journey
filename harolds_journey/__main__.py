@@ -495,39 +495,49 @@ while True:
             pygame.quit() # opposite of pygame.init()
             exit() # breaks out of the while True loop
 
-        if game_active:
-            if not wizard.sprite.get_wizard_dead():
-                # Spacebar Release Event Detection
-                if wizard.sprite.get_double_jump() and not wizard.sprite.get_double_jump_used() and event.type == pygame.KEYUP:
-                    if event.key == jump_button:
-                        wizard.sprite.set_first_jump_used(True)
-                # Obstacle Timer Event Detection
-                if event.type == obstacle_timer:
-                    new_obstacle = Obstacle(choice(["bird","skeleton","skeleton","skeleton"]),int(pygame.time.get_ticks() / 1000) - start_time)
-                    obstacle_group.add(new_obstacle)
-                    # Health Bar
-                    new_health_bar = HealthBar(new_obstacle, new_obstacle.get_current_health(), new_obstacle.get_max_health())
-                    health_bar_group.add(new_health_bar)
-                    health_bar_ownership_group[new_obstacle] = new_health_bar
-                    # Outline Health Bar
-                    new_outline_health_bar = OutlineHealthBar(new_health_bar, new_obstacle.get_x_pos(), new_obstacle.get_y_pos())
-                    outline_health_bar_group.add(new_outline_health_bar)
-                    outline_health_bar_ownership_group[new_health_bar] = new_outline_health_bar
-                if event.type == shoot_button:
-                    if wizard.sprite.get_current_fireball_cooldown() == 0: # or wizard.sprite.get_fireball_hit(): # causes fireball_cooldown refresh on hit
-                        wizard.sprite.play_fireball_sound()
-                        wizard.sprite.set_fireball_shot(True)
-                        temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
-                        wizard.sprite.set_current_fireball_cooldown(temp_max_fireball_cooldown_time)
-                        wizard.sprite.set_fireball_hit(False)
-                        projectile_group.add(Projectile("fireball", wizard))
-
-        else:
+        if not intro_played:
+            screen.blit(sky_surf,(0,0))
+            screen.blit(ground_surf,(0,0))
             if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                game_active = True
-                wizard_alive = True
-                start_time = int(pygame.time.get_ticks() / 1000)
-                additional_score = 0
+                intro_played = True
+            screen.blit(wizard_title_surf,wizard_title_rect)
+            screen.blit(harold_title_surf,harold_title_rect)
+            wizard_title_rect.midbottom = (wizard_title_start_x_pos,wizard_title_start_y_pos)
+            harold_title_rect.midbottom = (harold_title_start_x_pos,harold_title_start_y_pos)
+        else:
+            if game_active:
+                if not wizard.sprite.get_wizard_dead():
+                    # Spacebar Release Event Detection
+                    if wizard.sprite.get_double_jump() and not wizard.sprite.get_double_jump_used() and event.type == pygame.KEYUP:
+                        if event.key == jump_button:
+                            wizard.sprite.set_first_jump_used(True)
+                    # Obstacle Timer Event Detection
+                    if event.type == obstacle_timer:
+                        new_obstacle = Obstacle(choice(["bird","skeleton","skeleton","skeleton"]),int(pygame.time.get_ticks() / 1000) - start_time)
+                        obstacle_group.add(new_obstacle)
+                        # Health Bar
+                        new_health_bar = HealthBar(new_obstacle, new_obstacle.get_current_health(), new_obstacle.get_max_health())
+                        health_bar_group.add(new_health_bar)
+                        health_bar_ownership_group[new_obstacle] = new_health_bar
+                        # Outline Health Bar
+                        new_outline_health_bar = OutlineHealthBar(new_health_bar, new_obstacle.get_x_pos(), new_obstacle.get_y_pos())
+                        outline_health_bar_group.add(new_outline_health_bar)
+                        outline_health_bar_ownership_group[new_health_bar] = new_outline_health_bar
+                    if event.type == shoot_button:
+                        if wizard.sprite.get_current_fireball_cooldown() == 0: # or wizard.sprite.get_fireball_hit(): # causes fireball_cooldown refresh on hit
+                            wizard.sprite.play_fireball_sound()
+                            wizard.sprite.set_fireball_shot(True)
+                            temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
+                            wizard.sprite.set_current_fireball_cooldown(temp_max_fireball_cooldown_time)
+                            wizard.sprite.set_fireball_hit(False)
+                            projectile_group.add(Projectile("fireball", wizard))
+
+            else:
+                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                    game_active = True
+                    wizard_alive = True
+                    start_time = int(pygame.time.get_ticks() / 1000)
+                    additional_score = 0
 
     # Active Game
     if game_active:
@@ -566,7 +576,7 @@ while True:
                 game_active = False
 
     # Menu Screen
-    else:
+    elif intro_played:
         wizard.sprite.reset()
         harold.sprite.reset()
         pygame.event.clear()
