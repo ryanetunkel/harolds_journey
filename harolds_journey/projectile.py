@@ -145,11 +145,11 @@ class Projectile(pygame.sprite.Sprite):
         y_velocity_with_movement = y_velocity_without_movement + wizard_y_velocity_change
 
         if self.created >= 4:
-            if x_velocity_with_movement > x_velocity_without_movement: # making fireball go with wiz x velocity
+            if abs(x_velocity_with_movement) > abs(x_velocity_without_movement): # making fireball go with wiz x velocity
                 self.rect.centerx += x_velocity_with_movement
             else:
                 self.rect.centerx += x_velocity_without_movement
-            if y_velocity_with_movement > y_velocity_without_movement: # making fireball go with wiz y velocity
+            if abs(y_velocity_with_movement) > abs(y_velocity_without_movement): # making fireball go with wiz y velocity
                 self.rect.centery += y_velocity_with_movement
             else:
                 self.rect.centery += y_velocity_without_movement
