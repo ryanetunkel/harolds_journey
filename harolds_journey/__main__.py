@@ -608,8 +608,8 @@ settings_controls_button_surf = pygame.transform.scale_by(settings_controls_butt
 settings_controls_button_rect = settings_controls_button_surf.get_rect(center = (settings_controls_button_start_pos))
 mouse_on_settings_controls_button = False
 settings_controls_button_big_scale = button_when_big_scale
-settings_controls_button_surf_big = pygame.transform.scale_by(settings_sounds_button_surf,settings_sounds_button_big_scale)
-settings_controls_button_rect_big = settings_sounds_button_surf_big.get_rect(center = (settings_sounds_button_start_pos))
+settings_controls_button_surf_big = pygame.transform.scale_by(settings_controls_button_surf,settings_controls_button_big_scale)
+settings_controls_button_rect_big = settings_controls_button_surf_big.get_rect(center = (settings_controls_button_start_pos))
 # Back Button
 settings_back_button_start_x_pos = main_menu_wizard_rect.centerx
 settings_back_button_start_y_pos = settings_controls_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
@@ -628,7 +628,7 @@ settings_back_button_rect_big = settings_back_button_surf_big.get_rect(center = 
 sounds_back_button_start_x_pos = main_menu_wizard_rect.centerx
 sounds_back_button_start_y_pos = main_menu_settings_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 sounds_back_button_start_pos = (sounds_back_button_start_x_pos,sounds_back_button_start_y_pos)
-sounds_back_button_surf = test_font.render("Main Menu",False,"#FCDC4D")
+sounds_back_button_surf = test_font.render("Back to Settings",False,"#FCDC4D")
 sounds_back_button_scale = WINDOW_SCALAR
 sounds_back_button_surf = pygame.transform.scale_by(sounds_back_button_surf,sounds_back_button_scale)
 sounds_back_button_rect = sounds_back_button_surf.get_rect(center = (sounds_back_button_start_pos))
@@ -642,7 +642,7 @@ sounds_back_button_rect_big = sounds_back_button_surf_big.get_rect(center = (sou
 controls_back_button_start_x_pos = main_menu_wizard_rect.centerx
 controls_back_button_start_y_pos = main_menu_settings_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 controls_back_button_start_pos = (controls_back_button_start_x_pos,controls_back_button_start_y_pos)
-controls_back_button_surf = test_font.render("Main Menu",False,"#FCDC4D")
+controls_back_button_surf = test_font.render("Back to Settings",False,"#FCDC4D")
 controls_back_button_scale = WINDOW_SCALAR
 controls_back_button_surf = pygame.transform.scale_by(controls_back_button_surf,controls_back_button_scale)
 controls_back_button_rect = settings_back_button_surf.get_rect(center = (controls_back_button_start_pos))
@@ -750,14 +750,14 @@ while True:
                     mouse_on_sounds_back_button = sounds_back_button_rect_big.left <= mouse_x <= sounds_back_button_rect_big.right and sounds_back_button_rect_big.top <= mouse_y <= sounds_back_button_rect_big.bottom
                     if mouse_on_sounds_back_button:
                         if event.type == pygame.MOUSEBUTTONDOWN:
-                            menu_section = MAIN_MENU
+                            menu_section = SETTINGS_MENU
                 # Controls Menu
                 elif menu_section == CONTROLS_MENU:
                     # Back Button
                     mouse_on_controls_back_button = controls_back_button_rect_big.left <= mouse_x <= controls_back_button_rect_big.right and controls_back_button_rect_big.top <= mouse_y <= controls_back_button_rect_big.bottom
                     if mouse_on_controls_back_button:
                         if event.type == pygame.MOUSEBUTTONDOWN:
-                            menu_section = MAIN_MENU
+                            menu_section = SETTINGS_MENU
 
 
     # Opening Cinematic (Intro)
