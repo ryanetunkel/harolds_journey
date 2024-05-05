@@ -495,6 +495,7 @@ while True:
             pygame.quit() # opposite of pygame.init()
             exit() # breaks out of the while True loop
 
+        # Opening Cinematic (Intro)
         if not intro_played:
             screen.blit(sky_surf,(0,0))
             screen.blit(ground_surf,(0,0))
