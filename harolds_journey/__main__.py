@@ -645,7 +645,7 @@ controls_back_button_start_pos = (controls_back_button_start_x_pos,controls_back
 controls_back_button_surf = test_font.render("Back to Settings",False,"#FCDC4D")
 controls_back_button_scale = WINDOW_SCALAR
 controls_back_button_surf = pygame.transform.scale_by(controls_back_button_surf,controls_back_button_scale)
-controls_back_button_rect = settings_back_button_surf.get_rect(center = (controls_back_button_start_pos))
+controls_back_button_rect = controls_back_button_surf.get_rect(center = (controls_back_button_start_pos))
 mouse_on_controls_back_button = False
 controls_back_button_big_scale = button_when_big_scale
 controls_back_button_surf_big = pygame.transform.scale_by(controls_back_button_surf,controls_back_button_big_scale)
