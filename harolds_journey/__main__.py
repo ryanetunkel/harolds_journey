@@ -16,24 +16,8 @@ from graphics.health_bar.health_bar import *
 from graphics.health_bar.outline_health_bar import *
 
 
-wizard = pygame.sprite.GroupSingle()
 wizard.add(Player())
-
-harold = pygame.sprite.GroupSingle()
 harold.add(Harold(wizard))
-
-obstacle_group = pygame.sprite.Group()
-dead_obstacle_group = pygame.sprite.Group()
-projectile_group = pygame.sprite.Group()
-pickup_group = pygame.sprite.Group()
-buff_group = pygame.sprite.Group()
-health_bar_group = pygame.sprite.Group()
-outline_health_bar_group = pygame.sprite.Group()
-
-# Obstacle: Health Bar
-health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
-# Health Bar: Outline Health Bar
-outline_health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
 
 moving_sprites = [
     wizard,
