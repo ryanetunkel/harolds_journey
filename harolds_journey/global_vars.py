@@ -64,3 +64,21 @@ bg_music_timer = 0
 # Global Sounds
 obstacle_death_sound = pygame.mixer.Sound("harolds_journey/audio/FreeSFX/GameSFX/Explosion/Retro Explosion Short 01.wav")
 obstacle_death_sound.set_volume(OBSTACLE_DEATH_VOLUME)
+
+
+# New Additions
+wizard = pygame.sprite.GroupSingle()
+harold = pygame.sprite.GroupSingle()
+
+obstacle_group = pygame.sprite.Group()
+dead_obstacle_group = pygame.sprite.Group()
+projectile_group = pygame.sprite.Group()
+pickup_group = pygame.sprite.Group()
+buff_group = pygame.sprite.Group()
+health_bar_group = pygame.sprite.Group()
+outline_health_bar_group = pygame.sprite.Group()
+
+# Obstacle: Health Bar
+health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
+# Health Bar: Outline Health Bar
+outline_health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
