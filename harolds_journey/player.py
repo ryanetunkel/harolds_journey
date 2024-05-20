@@ -1,6 +1,4 @@
 """Player Class"""
-from random import randint, choice
-
 from global_vars import *
 from graphics.wizard.wizard_animation_holder import *
 
@@ -485,22 +483,26 @@ class Player(pygame.sprite.Sprite):
     def wizard_input(self):
         keys = pygame.key.get_pressed()
         if not self.wizard_dead:
+            (mouse_x,mouse_y) = pygame.mouse.get_pos()
+            self.looking_right = mouse_x >= self.rect.centerx
+            self.looking_down = mouse_y <= self.rect.centery
             double_jump_bool = self.get_double_jump() and self.rect.bottom < GRASS_TOP_Y and not self.double_jump_used and self.get_first_jump_used()
-            if keys[jump_button] and (self.rect.bottom >= GRASS_TOP_Y or double_jump_bool):
+            if keys[jump_button] and (self.rect.bottom >= GRASS_TOP_Y or double_jump_bool): # event.type == jump_button
                 if double_jump_bool:
                     self.set_double_jump_used(True)
                 self.wizard_jumping = True
                 self.set_wizard_y_velocity(self.jump_speed)
                 # Jump Sound
                 pygame.mixer.Channel(JUMP_SOUND_CHANNEL).play(self.jump_sound)
-            if keys[right_button] and self.rect.x + WIZARD_WIDTH + self.wizard_speed < WINDOW_WIDTH:
+            if keys[right_button] and self.rect.x + WIZARD_WIDTH + self.wizard_speed < WINDOW_WIDTH: # event.type == right_button
                 self.wizard_x_velocity = self.wizard_speed
                 self.rect.x += self.wizard_x_velocity
                 self.wizard_moving = True
-            if keys[left_button] and self.rect.x - self.wizard_speed > 0:
+            if keys[left_button] and self.rect.x - self.wizard_speed > 0: # event.type == left_button
                 self.wizard_x_velocity = self.wizard_speed
                 self.rect.x -= self.wizard_x_velocity
                 self.wizard_moving = True
+            # (not event.type == left_button and not event.type == right_button and not event.type == jump_button)
             elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]):
                 self.wizard_x_velocity = 0
                 self.wizard_moving = False
@@ -523,9 +525,9 @@ class Player(pygame.sprite.Sprite):
 
     def animation_state(self):
         if not self.wizard_dead:
-            (mouse_x,mouse_y) = pygame.mouse.get_pos()
-            self.looking_right = mouse_x >= self.rect.centerx
-            self.looking_down = mouse_y <= self.rect.centery # expand on this
+            # (mouse_x,mouse_y) = pygame.mouse.get_pos()
+            # self.looking_right = mouse_x >= self.rect.centerx
+            # self.looking_down = mouse_y <= self.rect.centery # expand on this
             # Fireball Animation
             if self.fireball_shot:
                 if self.start_fireball_animation:
