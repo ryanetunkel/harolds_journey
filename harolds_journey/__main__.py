@@ -441,11 +441,14 @@ def do_collisions():
 
 
 # Background Elements
-sky_surf = pygame.image.load("harolds_journey/graphics/bg_images/Background.png").convert_alpha()
-sky_surf = pygame.transform.scale(sky_surf,WINDOW_SIZE)
-
-ground_surf = pygame.image.load("harolds_journey/graphics/bg_images/Grass.png").convert_alpha()
-ground_surf = pygame.transform.scale(ground_surf,WINDOW_SIZE)
+bg_surf = pygame.image.load("harolds_journey/graphics/bg_images/Background.png").convert_alpha()
+bg_height = bg_surf.get_height()
+bg_width = bg_surf.get_width()
+bg_height_scalar = WINDOW_HEIGHT / bg_height
+bg_width_scalar = WINDOW_WIDTH / bg_width
+if WINDOW_WIDTH > bg_width or WINDOW_HEIGHT > bg_height:
+    bg_scalar = bg_width_scalar if bg_width_scalar >= bg_height_scalar else bg_height_scalar
+    bg_surf = pygame.transform.scale_by(bg_surf,bg_scalar)
 
 # Intro
 wizard_walk_in_animation_complete = False
@@ -762,8 +765,7 @@ while True:
 
     # Opening Cinematic (Intro)
     if not intro_played:
-        screen.blit(sky_surf,(0,0))
-        screen.blit(ground_surf,(0,0))
+        screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
         screen.blit(wizard_intro_surf,wizard_intro_rect)
         if harold_turn_animation_complete and not harold_flipped:
             harold_intro_surf = pygame.transform.flip(harold_intro_surf,True,False)
@@ -810,8 +812,7 @@ while True:
             bg_music_timer = -1
         if wizard_alive:
             bg_music_timer += 1
-            screen.blit(sky_surf,(0,0))
-            screen.blit(ground_surf,(0,0))
+            screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
             # Stat Image Postions
             score = display_score()
             display_stats() # Updating stats
@@ -826,8 +827,7 @@ while True:
 
         else: # Work on death animation
             wizard.sprite.set_wizard_dead(True)
-            screen.blit(sky_surf,(0,0))
-            screen.blit(ground_surf,(0,0))
+            screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
 
             wizard.draw(screen) # Draws sprites
             harold.draw(screen)
@@ -848,9 +848,8 @@ while True:
         # Timer Resets
         death_timer = 0
         bg_music_timer = 0
-        # Main Menu Screen Blits
-        screen.blit(sky_surf,(0,0))
-        screen.blit(ground_surf,(0,0))
+        # Main Menu Screen Blitss
+        screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
         screen.blit(main_menu_wizard_surf,main_menu_wizard_rect)
         screen.blit(main_menu_harold_surf,main_menu_harold_rect)
         # Main Menu Score
