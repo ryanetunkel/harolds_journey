@@ -1,15 +1,15 @@
 default_controls_are_mouse_buttons:
-  Jump_Button: false
-  Left_Button: false
-  Right_Button: false
-  Shoot_Button: true
+  jump_button: false
+  left_button: false
+  right_button: false
+  shoot_button: true
 default_controls_dict:
-  Jump_Button: K_SPACE
-  Left_Button: K_a
-  Right_Button: K_d
-  Shoot_Button: 0
+  jump_button: K_SPACE
+  left_button: K_a
+  right_button: K_d
+  shoot_button: M_0
 default_controls_names_dict:
-  Jump_Button: Space
-  Left_Button: A
-  Right_Button: D
-  Shoot_Button: Mouse 1
+  jump_button: Space
+  left_button: A
+  right_button: D
+  shoot_button: Mouse 1
