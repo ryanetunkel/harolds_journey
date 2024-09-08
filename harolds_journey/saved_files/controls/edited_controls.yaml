@@ -7,7 +7,7 @@ edited_controls_dict:
   jump_button: K_SPACE
   left_button: K_a
   right_button: K_d
-  shoot_button: M_0
+  shoot_button: M_1
 edited_controls_names_dict:
   jump_button: Space
   left_button: A
