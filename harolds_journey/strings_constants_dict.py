@@ -137,10 +137,14 @@ keyboard_strings_constants_dict = {
     "K_AC_BACK": pygame.K_AC_BACK,
 }
 
-mouse_strings_constants_dict ={
+mouse_strings_constants_dict = {
     "M_0":0,
     "M_1":1,
     "M_2":2,
     "M_3":3,
     "M_4":4,
+}
+
+unbound_constants_dict = {
+    "U_UNBOUND":-1,
 }
