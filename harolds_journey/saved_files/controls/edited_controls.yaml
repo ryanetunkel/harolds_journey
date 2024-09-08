@@ -1,0 +1,15 @@
+edited_controls_are_mouse_buttons:
+  Jump_Button: false
+  Left_Button: false
+  Right_Button: false
+  Shoot_Button: true
+edited_controls_dict:
+  Jump_Button: K_SPACE
+  Left_Button: K_a
+  Right_Button: K_d
+  Shoot_Button: 0
+edited_controls_names_dict:
+  Jump_Button: Space
+  Left_Button: A
+  Right_Button: D
+  Shoot_Button: Mouse 1
