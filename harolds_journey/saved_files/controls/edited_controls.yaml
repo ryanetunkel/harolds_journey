@@ -1,8 +1,8 @@
 edited_controls_are_mouse_buttons:
-  jump_button: False
-  left_button: False
-  right_button: False
-  shoot_button: True
+  jump_button: false
+  left_button: false
+  right_button: false
+  shoot_button: true
 edited_controls_dict:
   jump_button: K_SPACE
   left_button: K_a
