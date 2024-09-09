@@ -1,5 +1,7 @@
 import pygame
 
+# Each dict consists of pygame_constant_name: pygame_constant
+
 keyboard_strings_constants_dict = {
     "K_BACKSPACE": pygame.K_BACKSPACE,
     "K_TAB": pygame.K_TAB,
