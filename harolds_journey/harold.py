@@ -2,6 +2,7 @@
 from random import randint, choice
 import math
 
+from controls import *
 from global_vars import *
 from player import *
 from graphics.harold.harold_animation_holder import *
@@ -99,16 +100,26 @@ class Harold(pygame.sprite.Sprite):
         return self.rect.bottom - self.rect.top
 
     def harold_input(self):
+        mouse_buttons_pressed = pygame.mouse.get_pressed(5)
         keys = pygame.key.get_pressed()
+        jump_button,jump_button_is_mouse = get_control("jump_button")
+        jump_button_press = (not jump_button_is_mouse and keys[jump_button]) or (jump_button_is_mouse and mouse_buttons_pressed[jump_button])
+        left_button,left_button_is_mouse = get_control("left_button")
+        left_button_press = (not left_button_is_mouse and keys[left_button]) or (left_button_is_mouse and mouse_buttons_pressed[left_button])
+        right_button,right_button_is_mouse = get_control("right_button")
+        right_button_press = (not right_button_is_mouse and keys[right_button]) or (right_button_is_mouse and mouse_buttons_pressed[right_button])
+        shoot_button,shoot_button_is_mouse = get_control("shoot_button")
+        shoot_button_press = (not shoot_button_is_mouse and keys[shoot_button]) or (shoot_button_is_mouse and mouse_buttons_pressed[shoot_button])
+
         # Refreshing Harold speed
         self.harold_speed = self.player.sprite.get_wizard_speed()
         if not self.player.sprite.get_wizard_dead() and not self.player.sprite.get_wizard_start_death():
-            if keys[jump_button] and self.rect.bottom >= self.harold_start_y_pos:
+            if jump_button_press and self.rect.bottom >= self.harold_start_y_pos:
                 self.harold_y_velocity = self.jump_speed
-            if keys[right_button] and self.player.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < WINDOW_WIDTH:
+            if right_button_press and self.player.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < WINDOW_WIDTH:
                 self.harold_x_velocity = self.harold_speed
                 self.rect.x += self.harold_x_velocity
-            if keys[left_button] and self.player.sprite.get_wizard_rect().x - self.harold_speed > 0:
+            if left_button_press and self.player.sprite.get_wizard_rect().x - self.harold_speed > 0:
                 self.harold_x_velocity = self.harold_speed
                 self.rect.x -= self.harold_x_velocity
 

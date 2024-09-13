@@ -1,4 +1,5 @@
 """Player Class"""
+from controls import *
 from global_vars import *
 from graphics.wizard.wizard_animation_holder import *
 
@@ -481,29 +482,38 @@ class Player(pygame.sprite.Sprite):
         return self.rect.bottom - self.rect.top
 
     def wizard_input(self):
+        mouse_buttons_pressed = pygame.mouse.get_pressed(5)
         keys = pygame.key.get_pressed()
+        jump_button,jump_button_is_mouse = get_control("jump_button")
+        jump_button_press = (not jump_button_is_mouse and keys[jump_button]) or (jump_button_is_mouse and mouse_buttons_pressed[jump_button])
+        left_button,left_button_is_mouse = get_control("left_button")
+        left_button_press = (not left_button_is_mouse and keys[left_button]) or (left_button_is_mouse and mouse_buttons_pressed[left_button])
+        right_button,right_button_is_mouse = get_control("right_button")
+        right_button_press = (not right_button_is_mouse and keys[right_button]) or (right_button_is_mouse and mouse_buttons_pressed[right_button])
+        shoot_button,shoot_button_is_mouse = get_control("shoot_button")
+        shoot_button_press = (not shoot_button_is_mouse and keys[shoot_button]) or (shoot_button_is_mouse and mouse_buttons_pressed[shoot_button])
         if not self.wizard_dead:
             (mouse_x,mouse_y) = pygame.mouse.get_pos()
             self.looking_right = mouse_x >= self.rect.centerx
             self.looking_down = mouse_y <= self.rect.centery
             double_jump_bool = self.get_double_jump() and self.rect.bottom < GRASS_TOP_Y and not self.double_jump_used and self.get_first_jump_used()
-            if keys[jump_button] and (self.rect.bottom >= GRASS_TOP_Y or double_jump_bool): # event.type == jump_button
+            if jump_button_press and (self.rect.bottom >= GRASS_TOP_Y or double_jump_bool): # event.type == jump_button
                 if double_jump_bool:
                     self.set_double_jump_used(True)
                 self.wizard_jumping = True
                 self.set_wizard_y_velocity(self.jump_speed)
                 # Jump Sound
                 pygame.mixer.Channel(JUMP_SOUND_CHANNEL).play(self.jump_sound)
-            if keys[right_button] and self.rect.x + WIZARD_WIDTH + self.wizard_speed < WINDOW_WIDTH: # event.type == right_button
+            if right_button_press and self.rect.x + WIZARD_WIDTH + self.wizard_speed < WINDOW_WIDTH: # event.type == right_button
                 self.wizard_x_velocity = self.wizard_speed
                 self.rect.x += self.wizard_x_velocity
                 self.wizard_moving = True
-            if keys[left_button] and self.rect.x - self.wizard_speed > 0: # event.type == left_button
+            if left_button_press and self.rect.x - self.wizard_speed > 0: # event.type == left_button
                 self.wizard_x_velocity = self.wizard_speed
                 self.rect.x -= self.wizard_x_velocity
                 self.wizard_moving = True
             # (not event.type == left_button and not event.type == right_button and not event.type == jump_button)
-            elif (not keys[left_button] and not keys[right_button] and not keys[jump_button]):
+            elif (not left_button_press and not right_button_press and not jump_button_press):
                 self.wizard_x_velocity = 0
                 self.wizard_moving = False
             if self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y and self.walk_sound_timer >= self.walk_sound_length:
