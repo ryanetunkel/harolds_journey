@@ -82,9 +82,9 @@ def get_control(control_name: str) -> tuple[int,bool]:
     edited_controls_pygame_constant_name = edited_controls_pygame_constants_names_dict.get(control_name)
     edited_controls_are_mouse_buttons_dict = edited_controls_file_dict.get("edited_controls_are_mouse_buttons")
     edited_control_is_mouse = edited_controls_are_mouse_buttons_dict.get(control_name)
-    if not edited_control_is_mouse and control_name in keyboard_strings_constants_dict:
+    if not edited_control_is_mouse and edited_controls_pygame_constant_name in keyboard_strings_constants_dict.keys():
         pygame_constant = keyboard_strings_constants_dict.get(edited_controls_pygame_constant_name)
-    elif edited_control_is_mouse and control_name in mouse_strings_constants_dict:
+    elif edited_control_is_mouse and edited_controls_pygame_constant_name in mouse_strings_constants_dict.keys():
         pygame_constant = mouse_strings_constants_dict.get(edited_controls_pygame_constant_name)
     else:
         pygame_constant = list(unbound_constants_dict.values())[0]

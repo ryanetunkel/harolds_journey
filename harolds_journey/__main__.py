@@ -700,14 +700,14 @@ while True:
     mouse_buttons_pressed = pygame.mouse.get_pressed(5) # 5 means 5 mouse buttons, only supports 3 or 5
     keys_pressed = pygame.key.get_pressed()
     jump_button,jump_button_is_mouse = get_control("jump_button")
-    jump_button_press = (not jump_button_is_mouse and event.key == jump_button) or (jump_button_is_mouse and event.button == jump_button)
     left_button,left_button_is_mouse = get_control("left_button")
-    left_button_press = (not left_button_is_mouse and event.key == left_button) or (left_button_is_mouse and event.button == left_button)
     right_button,right_button_is_mouse = get_control("right_button")
-    right_button_press = (not right_button_is_mouse and event.key == right_button) or (right_button_is_mouse and event.button == right_button)
     shoot_button,shoot_button_is_mouse = get_control("shoot_button")
-    shoot_button_press = (not shoot_button_is_mouse and event.key == shoot_button) or (shoot_button_is_mouse and event.button == shoot_button)
     for event in pygame.event.get(): # Gets all the events
+        jump_button_press = (not jump_button_is_mouse and hasattr(event, "key") and event.key == jump_button) or (jump_button_is_mouse and hasattr(event, "button") and event.button == jump_button)
+        left_button_press = (not left_button_is_mouse and hasattr(event, "key") and event.key == left_button) or (left_button_is_mouse and hasattr(event, "button") and event.button == left_button)
+        right_button_press = (not right_button_is_mouse and hasattr(event, "key") and event.key == right_button) or (right_button_is_mouse and hasattr(event, "button") and event.button == right_button)
+        shoot_button_press = (not shoot_button_is_mouse and hasattr(event, "key") and event.key == shoot_button) or (shoot_button_is_mouse and hasattr(event, "button") and event.button == shoot_button)
         if event.type == pygame.QUIT:
             pygame.quit() # Opposite of pygame.init()
             exit() # Breaks out of the while True loop

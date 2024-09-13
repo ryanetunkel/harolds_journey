@@ -7,6 +7,12 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
+        # Controls
+        self.jump_button,self.jump_button_is_mouse = get_control("jump_button")
+        self.left_button,self.left_button_is_mouse = get_control("left_button")
+        self.right_button,self.right_button_is_mouse = get_control("right_button")
+        self.shoot_button,self.shoot_button_is_mouse = get_control("shoot_button")
+
         # Start
         self.WIZARD_START_X_POS = WINDOW_WIDTH / 2
         self.WIZARD_START_Y_POS = GRASS_TOP_Y
@@ -484,14 +490,10 @@ class Player(pygame.sprite.Sprite):
     def wizard_input(self):
         mouse_buttons_pressed = pygame.mouse.get_pressed(5)
         keys = pygame.key.get_pressed()
-        jump_button,jump_button_is_mouse = get_control("jump_button")
-        jump_button_press = (not jump_button_is_mouse and keys[jump_button]) or (jump_button_is_mouse and mouse_buttons_pressed[jump_button])
-        left_button,left_button_is_mouse = get_control("left_button")
-        left_button_press = (not left_button_is_mouse and keys[left_button]) or (left_button_is_mouse and mouse_buttons_pressed[left_button])
-        right_button,right_button_is_mouse = get_control("right_button")
-        right_button_press = (not right_button_is_mouse and keys[right_button]) or (right_button_is_mouse and mouse_buttons_pressed[right_button])
-        shoot_button,shoot_button_is_mouse = get_control("shoot_button")
-        shoot_button_press = (not shoot_button_is_mouse and keys[shoot_button]) or (shoot_button_is_mouse and mouse_buttons_pressed[shoot_button])
+        jump_button_press = (not self.jump_button_is_mouse and keys[self.jump_button]) or (self.jump_button_is_mouse and mouse_buttons_pressed[self.jump_button])
+        left_button_press = (not self.left_button_is_mouse and keys[self.left_button]) or (self.left_button_is_mouse and mouse_buttons_pressed[self.left_button])
+        right_button_press = (not self.right_button_is_mouse and keys[self.right_button]) or (self.right_button_is_mouse and mouse_buttons_pressed[self.right_button])
+        shoot_button_press = (not self.shoot_button_is_mouse and keys[self.shoot_button]) or (self.shoot_button_is_mouse and mouse_buttons_pressed[self.shoot_button])
         if not self.wizard_dead:
             (mouse_x,mouse_y) = pygame.mouse.get_pos()
             self.looking_right = mouse_x >= self.rect.centerx
@@ -683,6 +685,11 @@ class Player(pygame.sprite.Sprite):
         self.calculate_wizard_stats()
 
     def reset(self):
+        # Controls
+        self.jump_button,self.jump_button_is_mouse = get_control("jump_button")
+        self.left_button,self.left_button_is_mouse = get_control("left_button")
+        self.right_button,self.right_button_is_mouse = get_control("right_button")
+        self.shoot_button,self.shoot_button_is_mouse = get_control("shoot_button")
 
         # X Directions
         self.wizard_x_pos = self.WIZARD_START_X_POS
