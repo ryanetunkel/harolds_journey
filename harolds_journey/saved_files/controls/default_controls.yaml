@@ -1,16 +1,16 @@
-# jump,right,left, etc. are referred to as control_name
 default_controls_are_mouse_buttons:
   jump_button: false
   left_button: false
   right_button: false
   shoot_button: true
-default_controls_pygame_constants_names_dict: # old name = default_controls_dict
-  jump_button: K_SPACE
-  left_button: K_a
-  right_button: K_d
-  shoot_button: M_1
 default_controls_display_names_dict: # old name = default_controls_names_dict
   jump_button: Space
   left_button: A
   right_button: D
   shoot_button: Mouse 1
+default_controls_pygame_constants_names_dict: # old name = default_controls_dict
+  jump_button: K_SPACE
+  left_button: K_a
+  right_button: K_d
+  shoot_button: M_1
+# jump,right,left, etc. are referred to as control_name
