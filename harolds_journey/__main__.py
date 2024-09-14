@@ -110,7 +110,7 @@ def display_controls():
         screen.blit(displayed_control_surf,displayed_control_rect)
 
 
-def display_stats():
+def display_in_game_stats():
     # Health
     health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/heart.png").convert_alpha()
     health_stat_image_surf = pygame.transform.scale_by(health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
@@ -845,7 +845,7 @@ while True:
             screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
             # Stat Image Postions
             score = display_score()
-            display_stats() # Updating stats
+            display_in_game_stats() # Updating stats
             if get_edited_options_file_dict()["edited_display_controls"]:
                 display_controls() # Maintaining controls on bottom right of screen
 
