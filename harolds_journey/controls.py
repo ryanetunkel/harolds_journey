@@ -13,6 +13,9 @@ display_names_path = "harolds_journey/display_names.csv"
 # display_names_path layout:
 # pygame_constant_name: display_name (based on one chosen)
 
+default_options_path = "harolds_journey/saved_files/options/default_options.yaml"
+edited_options_path = "harolds_journey/saved_files/options/edited_options.yaml"
+
 held_control_name = ""
 held_control_display_name = "Unbound"
 
@@ -51,6 +54,28 @@ def write_dict_to_yaml(yaml_dict: dict, yaml_file: str):
     with open(yaml_file, "w") as file:
         yaml.dump(yaml_dict,file)
     file.close()
+
+# Options Functions
+# Default Options Functions
+def get_default_options_path() -> str:
+    return default_options_path
+
+
+def get_default_options_file_dict() -> dict:
+    return read_yaml_to_dict(get_default_options_path())
+
+
+# Edited Options Functions
+def get_edited_options_path() -> str:
+    return edited_options_path
+
+
+def get_edited_options_file_dict() -> dict:
+    return read_yaml_to_dict(get_edited_options_path())
+
+
+def set_edited_options_file_dict(yaml_dict: dict):
+    write_dict_to_yaml(yaml_dict,get_edited_options_path())
 
 
 # Default Controls Functions
