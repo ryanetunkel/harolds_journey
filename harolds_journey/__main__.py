@@ -228,10 +228,6 @@ def display_stats():
         screen.blit(knockback_buff_image_surf,knockback_buff_image_rect)
 
 
-def get_controls_update() -> bool:
-    return controls_update
-
-
 def player_and_obstacle_collision():
     if obstacles_overlapping:=pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
         wizard_shield = wizard.sprite.get_shield()
@@ -694,29 +690,36 @@ controls_back_button_rect_big = controls_back_button_surf_big.get_rect(center = 
 obstacle_timer = pygame.USEREVENT + 1 # + 1 to avoid events taking previous numbers by default
 pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
 
+jump_button,jump_button_is_mouse = get_control("jump_button")
+left_button,left_button_is_mouse = get_control("left_button")
+right_button,right_button_is_mouse = get_control("right_button")
+shoot_button,shoot_button_is_mouse = get_control("shoot_button")
 while True:
-    (mouse_x,mouse_y) = pygame.mouse.get_pos()
     # Useful Function: pygame.mouse.set_visible(False) # Can help to make custom cursors
-    mouse_buttons_pressed = pygame.mouse.get_pressed(5) # 5 means 5 mouse buttons, only supports 3 or 5
-    keys_pressed = pygame.key.get_pressed()
-    jump_button,jump_button_is_mouse = get_control("jump_button")
-    left_button,left_button_is_mouse = get_control("left_button")
-    right_button,right_button_is_mouse = get_control("right_button")
-    shoot_button,shoot_button_is_mouse = get_control("shoot_button")
     for event in pygame.event.get(): # Gets all the events
-        jump_button_press = (not jump_button_is_mouse and hasattr(event, "key") and event.key == jump_button) or (jump_button_is_mouse and hasattr(event, "button") and event.button == jump_button)
-        left_button_press = (not left_button_is_mouse and hasattr(event, "key") and event.key == left_button) or (left_button_is_mouse and hasattr(event, "button") and event.button == left_button)
-        right_button_press = (not right_button_is_mouse and hasattr(event, "key") and event.key == right_button) or (right_button_is_mouse and hasattr(event, "button") and event.button == right_button)
-        shoot_button_press = (not shoot_button_is_mouse and hasattr(event, "key") and event.key == shoot_button) or (shoot_button_is_mouse and hasattr(event, "button") and event.button == shoot_button)
+        # mouse_buttons_pressed = pygame.mouse.get_pressed(5) # 5 means 5 mouse buttons, only supports 3 or 5
+        # keys_pressed = pygame.key.get_pressed()
+        if controls_update:
+            jump_button,jump_button_is_mouse = get_control("jump_button")
+            left_button,left_button_is_mouse = get_control("left_button")
+            right_button,right_button_is_mouse = get_control("right_button")
+            shoot_button,shoot_button_is_mouse = get_control("shoot_button")
+            controls_update = False
+
         if event.type == pygame.QUIT:
             pygame.quit() # Opposite of pygame.init()
             exit() # Breaks out of the while True loop
-        if not intro_played and event.type == pygame.KEYUP:
+        # Skips Intro
+        elif not intro_played and event.type == pygame.KEYUP:
             intro_played = True
-
-        if intro_played:
+        # Intro Played
+        elif intro_played:
             # Jumping, Obstacle Timer, and Player Shooting
             if game_active:
+                jump_button_press = (not jump_button_is_mouse and hasattr(event, "key") and event.key == jump_button) or (jump_button_is_mouse and hasattr(event, "button") and event.button == jump_button)
+                left_button_press = (not left_button_is_mouse and hasattr(event, "key") and event.key == left_button) or (left_button_is_mouse and hasattr(event, "button") and event.button == left_button)
+                right_button_press = (not right_button_is_mouse and hasattr(event, "key") and event.key == right_button) or (right_button_is_mouse and hasattr(event, "button") and event.button == right_button)
+                shoot_button_press = (not shoot_button_is_mouse and hasattr(event, "key") and event.key == shoot_button) or (shoot_button_is_mouse and hasattr(event, "button") and event.button == shoot_button)
                 if not wizard.sprite.get_wizard_dead():
                     edited_controls_are_mouse_buttons = get_edited_controls_file_dict().get("edited_controls_are_mouse_buttons")
                     # Spacebar Release Event Detection
@@ -744,18 +747,22 @@ while True:
                             wizard.sprite.set_current_fireball_cooldown(temp_max_fireball_cooldown_time)
                             wizard.sprite.set_fireball_hit(False)
                             projectile_group.add(Projectile("fireball", wizard))
-
+            # Main Menu (Game Inactive)
             else:
-                clicking_with_left_mouse = mouse_buttons_pressed[0]
+                # Menu Interactivity
+                (mouse_x,mouse_y) = pygame.mouse.get_pos()
+                mouse_pos = (mouse_x,mouse_y)
+                clicking_with_left_mouse = event.type == pygame.MOUSEBUTTONDOWN and event.button == 1
                 # Main Menu
                 if menu_section == MAIN_MENU:
-                    mouse_on_main_menu_start_button = main_menu_start_button_rect_big.left <= mouse_x <= main_menu_start_button_rect_big.right and main_menu_start_button_rect_big.top <= mouse_y <= main_menu_start_button_rect_big.bottom
-                    mouse_on_main_menu_statistics_button = main_menu_statistics_button_rect_big.left <= mouse_x <= main_menu_statistics_button_rect_big.right and main_menu_statistics_button_rect_big.top <= mouse_y <= main_menu_statistics_button_rect_big.bottom
-                    mouse_on_main_menu_settings_button = main_menu_settings_button_rect_big.left <= mouse_x <= main_menu_settings_button_rect_big.right and main_menu_settings_button_rect_big.top <= mouse_y <= main_menu_settings_button_rect_big.bottom
-                    mouse_on_main_menu_exit_button = main_menu_exit_button_rect_big.left <= mouse_x <= main_menu_exit_button_rect_big.right and main_menu_exit_button_rect_big.top <= mouse_y <= main_menu_exit_button_rect_big.bottom
+                    mouse_on_main_menu_start_button = main_menu_start_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_main_menu_statistics_button = main_menu_statistics_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_main_menu_settings_button = main_menu_settings_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_main_menu_exit_button = main_menu_exit_button_rect_big.collidepoint(mouse_pos)
                     # Start Button
                     if mouse_on_main_menu_start_button:
                         if clicking_with_left_mouse:
+                            controls_update = True
                             game_active = True
                             wizard_alive = True
                             start_time = int(pygame.time.get_ticks() / 1000)
@@ -776,15 +783,15 @@ while True:
                 # Statistics Menu
                 elif menu_section == STATISTICS_MENU:
                     # Back Button
-                    mouse_on_statistics_back_button = statistics_back_button_rect_big.left <= mouse_x <= statistics_back_button_rect_big.right and statistics_back_button_rect_big.top <= mouse_y <= statistics_back_button_rect_big.bottom
+                    mouse_on_statistics_back_button = statistics_back_button_rect_big.collidepoint(mouse_pos)
                     if mouse_on_statistics_back_button:
                         if clicking_with_left_mouse:
                             menu_section = MAIN_MENU
                 # Settings Menu
                 elif menu_section == SETTINGS_MENU:
-                    mouse_on_settings_sounds_button = settings_sounds_button_rect_big.left <= mouse_x <= settings_sounds_button_rect_big.right and settings_sounds_button_rect_big.top <= mouse_y <= settings_sounds_button_rect_big.bottom
-                    mouse_on_settings_controls_button = settings_controls_button_rect_big.left <= mouse_x <= settings_controls_button_rect_big.right and settings_controls_button_rect_big.top <= mouse_y <= settings_controls_button_rect_big.bottom
-                    mouse_on_settings_back_button = settings_back_button_rect_big.left <= mouse_x <= settings_back_button_rect_big.right and settings_back_button_rect_big.top <= mouse_y <= settings_back_button_rect_big.bottom
+                    mouse_on_settings_sounds_button = settings_sounds_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_settings_controls_button = settings_controls_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_settings_back_button = settings_back_button_rect_big.collidepoint(mouse_pos)
                     # Sounds Button
                     if mouse_on_settings_sounds_button:
                         if clicking_with_left_mouse:
@@ -800,7 +807,7 @@ while True:
                 # Sounds Menu
                 elif menu_section == SOUNDS_MENU:
                     # Back Button
-                    mouse_on_sounds_back_button = sounds_back_button_rect_big.left <= mouse_x <= sounds_back_button_rect_big.right and sounds_back_button_rect_big.top <= mouse_y <= sounds_back_button_rect_big.bottom
+                    mouse_on_sounds_back_button = sounds_back_button_rect_big.collidepoint(mouse_pos)
                     if mouse_on_sounds_back_button:
                         if clicking_with_left_mouse:
                             menu_section = SETTINGS_MENU
@@ -809,9 +816,7 @@ while True:
                     # Controls Buttons
                     for control_name, mouse_on_controls_button in mouse_on_controls_button_dict.items():
                         controls_button_rect_big = controls_button_rect_big_dict[control_name]
-                        mouse_on_controls_button_x = controls_button_rect_big.left <= mouse_x <= controls_button_rect_big.right
-                        mouse_on_controls_button_y = controls_button_rect_big.top <= mouse_y <= controls_button_rect_big.bottom
-                        mouse_on_controls_button = mouse_on_controls_button_x and mouse_on_controls_button_y
+                        mouse_on_controls_button = controls_button_rect_big.collidepoint(mouse_pos)
                         edited_controls_file_dict = get_edited_controls_file_dict()
                         edited_controls_display_names_dict = edited_controls_file_dict.get("edited_controls_display_names_dict")
                         edited_control_display_name = edited_controls_display_names_dict.get(control_name)
@@ -831,11 +836,12 @@ while True:
                                 interpret_input(control_name,event)
                                 held_control_name = ""
                                 held_control_display_name = unbound_display_name
+                                controls_update = True
                             elif event.type == pygame.KEYDOWN and hasattr(event, "key") and event.key == pygame.K_ESCAPE:
                                 set_control_display_name_to_other_display_name(control_name, held_control_display_name)
                                 held_control_name = ""
                                 held_control_display_name = unbound_display_name
-                            controls_update = True
+                                controls_update = True
                         elif mouse_on_controls_button and clicking_with_left_mouse and not current_control_set_to_unbound:
                             if held_control_filled:
                                 set_control_display_name_to_other_display_name(held_control_name, held_control_display_name)
@@ -845,8 +851,8 @@ while True:
                             controls_update = True
                         mouse_on_controls_button_dict.update({control_name: mouse_on_controls_button})
 
-                    mouse_on_controls_reset_button = controls_reset_button_rect_big.left <= mouse_x <= controls_reset_button_rect_big.right and controls_reset_button_rect_big.top <= mouse_y <= controls_reset_button_rect_big.bottom
-                    mouse_on_controls_back_button = controls_back_button_rect_big.left <= mouse_x <= controls_back_button_rect_big.right and controls_back_button_rect_big.top <= mouse_y <= controls_back_button_rect_big.bottom
+                    mouse_on_controls_reset_button = controls_reset_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_controls_back_button = controls_back_button_rect_big.collidepoint(mouse_pos)
                     # Reset Button
                     if mouse_on_controls_reset_button:
                         if clicking_with_left_mouse:
@@ -856,6 +862,109 @@ while True:
                     elif mouse_on_controls_back_button:
                         if clicking_with_left_mouse:
                             menu_section = SETTINGS_MENU
+
+                # Main Menu Display
+                # Sprite Resets
+                wizard.sprite.reset()
+                harold.sprite.reset()
+                # Event Clear
+                pygame.event.clear()
+                # Timer Resets
+                death_timer = 0
+                bg_music_timer = 0
+                # Main Menu Screen Blits
+                screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
+                screen.blit(main_menu_wizard_surf,main_menu_wizard_rect)
+                screen.blit(main_menu_harold_surf,main_menu_harold_rect)
+                # Main Menu Score
+                score_message_surf = test_font.render("Score: " + str(score),False,"#FCDC4D")
+                score_message_surf = pygame.transform.scale_by(score_message_surf,WINDOW_SCALAR)
+                score_message_rect = score_message_surf.get_rect(center = (WINDOW_WIDTH/2,(84/800 * WINDOW_HEIGHT)))
+                # Main Menu Score vs. Title Blit
+                if score == 0: screen.blit(main_menu_title_surf,main_menu_title_rect)
+                else: screen.blit(score_message_surf,score_message_rect)
+                # Main Menu Button Blits
+                if menu_section == MAIN_MENU:
+                    # Start Button
+                    if not mouse_on_main_menu_start_button: screen.blit(main_menu_start_button_surf,main_menu_start_button_rect)
+                    else: screen.blit(main_menu_start_button_surf_big,main_menu_start_button_rect_big)
+                    # Statistics Button
+                    if not mouse_on_main_menu_statistics_button: screen.blit(main_menu_statistics_button_surf,main_menu_statistics_button_rect)
+                    else: screen.blit(main_menu_statistics_button_surf_big,main_menu_statistics_button_rect_big)
+                    # Settings Button
+                    if not mouse_on_main_menu_settings_button: screen.blit(main_menu_settings_button_surf,main_menu_settings_button_rect)
+                    else: screen.blit(main_menu_settings_button_surf_big,main_menu_settings_button_rect_big)
+                    # Exit Button
+                    if not mouse_on_main_menu_exit_button: screen.blit(main_menu_exit_button_surf,main_menu_exit_button_rect)
+                    else: screen.blit(main_menu_exit_button_surf_big,main_menu_exit_button_rect_big)
+                # Statistics Menu Button Blits
+                elif menu_section == STATISTICS_MENU:
+                    # Back Button
+                    if not mouse_on_statistics_back_button: screen.blit(statistics_back_button_surf,statistics_back_button_rect)
+                    else: screen.blit(statistics_back_button_surf_big,statistics_back_button_rect_big)
+                # Settings Menu Button Blits
+                elif menu_section == SETTINGS_MENU:
+                    # Sounds Button
+                    if not mouse_on_settings_sounds_button: screen.blit(settings_sounds_button_surf,settings_sounds_button_rect)
+                    else: screen.blit(settings_sounds_button_surf_big,settings_sounds_button_rect_big)
+                    # Controls Button
+                    if not mouse_on_settings_controls_button: screen.blit(settings_controls_button_surf,settings_controls_button_rect)
+                    else: screen.blit(settings_controls_button_surf_big,settings_controls_button_rect_big)
+                    # Back Button
+                    if not mouse_on_settings_back_button: screen.blit(settings_back_button_surf,settings_back_button_rect)
+                    else: screen.blit(settings_back_button_surf_big,settings_back_button_rect_big)
+                # Sounds Menu Button Blits
+                elif menu_section == SOUNDS_MENU:
+                    # Back Button
+                    if not mouse_on_sounds_back_button: screen.blit(sounds_back_button_surf,sounds_back_button_rect)
+                    else: screen.blit(sounds_back_button_surf_big,sounds_back_button_rect_big)
+                # Controls Menu Button Blits
+                elif menu_section == CONTROLS_MENU:
+                    # Controls Buttons
+                    if controls_update:
+                        controls_first_button_start_x_pos = main_menu_wizard_rect.centerx
+                        controls_first_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT)
+                        controls_first_button_start_pos = (controls_first_button_start_x_pos,controls_first_button_start_y_pos)
+                        controls_buttons_y_pos_offset = WINDOW_HEIGHT * 1/18
+                        mouse_on_controls_button_dict = {}
+                        controls_button_surf_dict = {}
+                        controls_button_rect_dict = {}
+                        controls_button_surf_big_dict = {}
+                        controls_button_rect_big_dict = {}
+                        controls_button_index = 0
+                        controls_button_scalar = 0.5
+                        edited_controls_display_names_dict = get_edited_controls_file_dict().get("edited_controls_display_names_dict")
+                        default_controls_pygame_constants_names_dict = get_default_controls_file_dict().get("default_controls_pygame_constants_names_dict")
+                        for control_name, control in default_controls_pygame_constants_names_dict.items():
+                            controls_button_start_x_pos = main_menu_wizard_rect.centerx
+                            controls_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT) + controls_buttons_y_pos_offset * controls_button_index
+                            controls_button_start_pos = (controls_button_start_x_pos,controls_button_start_y_pos)
+                            control_name_underscore_removed = control_name.replace("_", " ")
+                            control_name_capitalized = control_name_underscore_removed.title()
+                            controls_button_surf = test_font.render(f"{control_name_capitalized}: {edited_controls_display_names_dict[control_name]}",False,"#FCDC4D")
+                            controls_button_scale = WINDOW_SCALAR * controls_button_scalar
+                            controls_button_surf = pygame.transform.scale_by(controls_button_surf,controls_button_scale)
+                            controls_button_surf_dict.update({control_name: controls_button_surf})
+                            controls_button_rect = controls_button_surf.get_rect(center = (controls_button_start_pos))
+                            controls_button_rect_dict.update({control_name: controls_button_rect})
+                            mouse_on_controls_button_dict.update({control_name: False})
+                            controls_button_big_scale = button_when_big_scale
+                            controls_button_surf_big = pygame.transform.scale_by(controls_button_surf,controls_button_big_scale)
+                            controls_button_surf_big_dict.update({control_name: controls_button_surf_big})
+                            controls_button_rect_big = controls_button_surf_big.get_rect(center = (controls_button_start_pos))
+                            controls_button_rect_big_dict.update({control_name: controls_button_rect_big})
+                            controls_button_index += 1
+                        controls_update = False
+                    # Controls Buttons
+                    for control_name, mouse_on_controls_button in mouse_on_controls_button_dict.items():
+                        if not mouse_on_controls_button: screen.blit(controls_button_surf_dict[control_name],controls_button_rect_dict[control_name])
+                        else: screen.blit(controls_button_surf_big_dict[control_name],controls_button_rect_big_dict[control_name])
+                    # Reset Button
+                    if not mouse_on_controls_reset_button: screen.blit(controls_reset_button_surf,controls_reset_button_rect)
+                    else: screen.blit(controls_reset_button_surf_big,controls_reset_button_rect_big)
+                    # Back Button
+                    if not mouse_on_controls_back_button: screen.blit(controls_back_button_surf,controls_back_button_rect)
+                    else: screen.blit(controls_back_button_surf_big,controls_back_button_rect_big)
 
 
     # Opening Cinematic (Intro)
@@ -899,8 +1008,8 @@ while True:
             else:
                 intro_played = True
 
-    # Active Game
-    if game_active:
+    # Active Game - Music, Death Checker, Moving Sprites, Collisions
+    elif game_active:
         if bg_music_timer == 0:
             pygame.mixer.Channel(BG_MUSIC_CHANNEL).play(bg_music)
         elif bg_music_timer >= (25 * 60):
@@ -932,113 +1041,6 @@ while True:
             death_timer += 1
             if death_timer > 180:
                 game_active = False
-
-    # Main Menu Screen
-    elif intro_played:
-        # Updating Controls
-        controls_updated = get_controls_update()
-        # Controls Buttons
-        if controls_updated:
-            controls_first_button_start_x_pos = main_menu_wizard_rect.centerx
-            controls_first_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT)
-            controls_first_button_start_pos = (controls_first_button_start_x_pos,controls_first_button_start_y_pos)
-            controls_buttons_y_pos_offset = WINDOW_HEIGHT * 1/18
-            mouse_on_controls_button_dict = {}
-            controls_button_surf_dict = {}
-            controls_button_rect_dict = {}
-            controls_button_surf_big_dict = {}
-            controls_button_rect_big_dict = {}
-            controls_button_index = 0
-            controls_button_scalar = 0.5
-            edited_controls_display_names_dict = get_edited_controls_file_dict().get("edited_controls_display_names_dict")
-            default_controls_pygame_constants_names_dict = get_default_controls_file_dict().get("default_controls_pygame_constants_names_dict")
-            for control_name, control in default_controls_pygame_constants_names_dict.items():
-                controls_button_start_x_pos = main_menu_wizard_rect.centerx
-                controls_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT) + controls_buttons_y_pos_offset * controls_button_index
-                controls_button_start_pos = (controls_button_start_x_pos,controls_button_start_y_pos)
-                control_name_underscore_removed = control_name.replace("_", " ")
-                control_name_capitalized = control_name_underscore_removed.title()
-                controls_button_surf = test_font.render(f"{control_name_capitalized}: {edited_controls_display_names_dict[control_name]}",False,"#FCDC4D")
-                controls_button_scale = WINDOW_SCALAR * controls_button_scalar
-                controls_button_surf = pygame.transform.scale_by(controls_button_surf,controls_button_scale)
-                controls_button_surf_dict.update({control_name: controls_button_surf})
-                controls_button_rect = controls_button_surf.get_rect(center = (controls_button_start_pos))
-                controls_button_rect_dict.update({control_name: controls_button_rect})
-                mouse_on_controls_button_dict.update({control_name: False})
-                controls_button_big_scale = button_when_big_scale
-                controls_button_surf_big = pygame.transform.scale_by(controls_button_surf,controls_button_big_scale)
-                controls_button_surf_big_dict.update({control_name: controls_button_surf_big})
-                controls_button_rect_big = controls_button_surf_big.get_rect(center = (controls_button_start_pos))
-                controls_button_rect_big_dict.update({control_name: controls_button_rect_big})
-                controls_button_index += 1
-            controls_updated = False
-            controls_update = False
-        # Sprite Resets
-        wizard.sprite.reset()
-        harold.sprite.reset()
-        # Event Clear
-        pygame.event.clear()
-        # Timer Resets
-        death_timer = 0
-        bg_music_timer = 0
-        # Main Menu Screen Blits
-        screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
-        screen.blit(main_menu_wizard_surf,main_menu_wizard_rect)
-        screen.blit(main_menu_harold_surf,main_menu_harold_rect)
-        # Main Menu Score
-        score_message_surf = test_font.render("Score: " + str(score),False,"#FCDC4D")
-        score_message_surf = pygame.transform.scale_by(score_message_surf,WINDOW_SCALAR)
-        score_message_rect = score_message_surf.get_rect(center = (WINDOW_WIDTH/2,(84/800 * WINDOW_HEIGHT)))
-        # Main Menu Score vs. Title Blit
-        if score == 0: screen.blit(main_menu_title_surf,main_menu_title_rect)
-        else: screen.blit(score_message_surf,score_message_rect)
-        # Main Menu Button Blits
-        if menu_section == MAIN_MENU:
-            # Start Button
-            if not mouse_on_main_menu_start_button: screen.blit(main_menu_start_button_surf,main_menu_start_button_rect)
-            else: screen.blit(main_menu_start_button_surf_big,main_menu_start_button_rect_big)
-            # Statistics Button
-            if not mouse_on_main_menu_statistics_button: screen.blit(main_menu_statistics_button_surf,main_menu_statistics_button_rect)
-            else: screen.blit(main_menu_statistics_button_surf_big,main_menu_statistics_button_rect_big)
-            # Settings Button
-            if not mouse_on_main_menu_settings_button: screen.blit(main_menu_settings_button_surf,main_menu_settings_button_rect)
-            else: screen.blit(main_menu_settings_button_surf_big,main_menu_settings_button_rect_big)
-            # Exit Button
-            if not mouse_on_main_menu_exit_button: screen.blit(main_menu_exit_button_surf,main_menu_exit_button_rect)
-            else: screen.blit(main_menu_exit_button_surf_big,main_menu_exit_button_rect_big)
-        # Statistics Menu Button Blits
-        elif menu_section == STATISTICS_MENU:
-            # Back Button
-            if not mouse_on_statistics_back_button: screen.blit(statistics_back_button_surf,statistics_back_button_rect)
-            else: screen.blit(statistics_back_button_surf_big,statistics_back_button_rect_big)
-        # Settings Menu Button Blits
-        elif menu_section == SETTINGS_MENU:
-            # Sounds Button
-            if not mouse_on_settings_sounds_button: screen.blit(settings_sounds_button_surf,settings_sounds_button_rect)
-            else: screen.blit(settings_sounds_button_surf_big,settings_sounds_button_rect_big)
-            # Controls Button
-            if not mouse_on_settings_controls_button: screen.blit(settings_controls_button_surf,settings_controls_button_rect)
-            else: screen.blit(settings_controls_button_surf_big,settings_controls_button_rect_big)
-            # Back Button
-            if not mouse_on_settings_back_button: screen.blit(settings_back_button_surf,settings_back_button_rect)
-            else: screen.blit(settings_back_button_surf_big,settings_back_button_rect_big)
-        # Sounds Menu Button Blits
-        elif menu_section == SOUNDS_MENU:
-            # Back Button
-            if not mouse_on_sounds_back_button: screen.blit(sounds_back_button_surf,sounds_back_button_rect)
-            else: screen.blit(sounds_back_button_surf_big,sounds_back_button_rect_big)
-        # Controls Menu Button Blits
-        elif menu_section == CONTROLS_MENU:
-            # Controls Buttons
-            for control_name, mouse_on_controls_button in mouse_on_controls_button_dict.items():
-                if not mouse_on_controls_button: screen.blit(controls_button_surf_dict[control_name],controls_button_rect_dict[control_name])
-                else: screen.blit(controls_button_surf_big_dict[control_name],controls_button_rect_big_dict[control_name])
-            # Reset Button
-            if not mouse_on_controls_reset_button: screen.blit(controls_reset_button_surf,controls_reset_button_rect)
-            else: screen.blit(controls_reset_button_surf_big,controls_reset_button_rect_big)
-            # Back Button
-            if not mouse_on_controls_back_button: screen.blit(controls_back_button_surf,controls_back_button_rect)
-            else: screen.blit(controls_back_button_surf_big,controls_back_button_rect_big)
 
     # Global Clock and Display Update
     pygame.display.update()
