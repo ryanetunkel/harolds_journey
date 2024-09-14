@@ -65,8 +65,7 @@ bg_music_timer = 0
 obstacle_death_sound = pygame.mixer.Sound("harolds_journey/audio/FreeSFX/GameSFX/Explosion/Retro Explosion Short 01.wav")
 obstacle_death_sound.set_volume(OBSTACLE_DEATH_VOLUME)
 
-
-# New Additions
+# Sprites
 wizard = pygame.sprite.GroupSingle()
 harold = pygame.sprite.GroupSingle()
 
@@ -82,3 +81,24 @@ outline_health_bar_group = pygame.sprite.Group()
 health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
 # Health Bar: Outline Health Bar
 outline_health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
+
+
+# Background Elements
+bg_surf = pygame.image.load("harolds_journey/graphics/bg_images/Background.png").convert_alpha()
+bg_height = bg_surf.get_height()
+bg_width = bg_surf.get_width()
+bg_height_scalar = WINDOW_HEIGHT / bg_height
+bg_width_scalar = WINDOW_WIDTH / bg_width
+if WINDOW_WIDTH > bg_width or WINDOW_HEIGHT > bg_height:
+    bg_scalar = bg_width_scalar if bg_width_scalar >= bg_height_scalar else bg_height_scalar
+    bg_surf = pygame.transform.scale_by(bg_surf,bg_scalar)
+
+
+# Timer
+obstacle_timer = pygame.USEREVENT + 1 # + 1 to avoid events taking previous numbers by default
+pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)
+
+jump_button,jump_button_is_mouse = get_control("jump_button")
+left_button,left_button_is_mouse = get_control("left_button")
+right_button,right_button_is_mouse = get_control("right_button")
+shoot_button,shoot_button_is_mouse = get_control("shoot_button")
