@@ -133,9 +133,9 @@ K_MENU,,menu,
 K_POWER,,power,
 K_EURO,,Euro,
 K_AC_BACK,,Android back button,
-M_1,,,Mouse 1
-M_2,,,Mouse 2
-M_3,,,Mouse 3
+M_1,,,Left Mouse
+M_2,,,Middle Mouse
+M_3,,,Right Mouse
 M_4,,,Mouse 4
 M_5,,,Mouse 5
 U_UNBOUND,,,Unbound

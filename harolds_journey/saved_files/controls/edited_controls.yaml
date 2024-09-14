@@ -7,7 +7,7 @@ edited_controls_display_names_dict:
   jump_button: Space
   left_button: A
   right_button: D
-  shoot_button: Mouse 1
+  shoot_button: Left Mouse
 edited_controls_pygame_constants_names_dict:
   jump_button: K_SPACE
   left_button: K_a
