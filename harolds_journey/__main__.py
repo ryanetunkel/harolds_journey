@@ -38,8 +38,6 @@ objects_to_be_removed = [
     buff_group,
 ]
 
-controls_update = False
-
 # Functions
 def display_score():
     temp_additional_score = wizard.sprite.get_additional_score()
@@ -51,6 +49,63 @@ def display_score():
     screen.blit(score_title_surf,score_title_rect)
     screen.blit(score_surf,score_rect)
     return current_time + temp_additional_score
+
+
+def display_controls(): # Working on this
+    edited_controls_file_dict = get_edited_controls_file_dict()
+    edited_controls_display_names_dict = edited_controls_file_dict.get("edited_controls_display_names_dict")
+    displayed_control_y_pos_offset = WINDOW_HEIGHT * 1/44
+    displayed_control_index = 0
+    displayed_control_scalar = 0.3
+    edited_controls_display_names_dict_size = len(list(edited_controls_display_names_dict.keys()))
+    control_board_start_y_pos = 0
+    control_board_end_y_pos = 0
+    biggest_width = 0
+    biggest_rect = None
+    displayed_control_surf_dict = {}
+    displayed_control_rect_dict = {}
+    for displayed_control_name in edited_controls_display_names_dict.keys():
+        displayed_control_start_x_pos = WINDOW_WIDTH * 7/8
+        displayed_control_start_y_pos = (25/32 * WINDOW_HEIGHT) + displayed_control_y_pos_offset * displayed_control_index
+        displayed_control_start_pos = (displayed_control_start_x_pos,displayed_control_start_y_pos)
+        displayed_control_name_underscore_removed = displayed_control_name.replace("_", " ")
+        displayed_control_name_underscore_removed = displayed_control_name.replace("button", "")
+        displayed_control_name_capitalized = displayed_control_name_underscore_removed.title()
+        displayed_control_surf = test_font.render(f"{displayed_control_name_capitalized}: {edited_controls_display_names_dict[displayed_control_name]}",False,"#FCDC4D")
+        displayed_control_scale = WINDOW_SCALAR * displayed_control_scalar
+        displayed_control_surf = pygame.transform.scale_by(displayed_control_surf,displayed_control_scale)
+        displayed_control_surf_dict.update({displayed_control_name:displayed_control_surf})
+        displayed_control_rect = displayed_control_surf.get_rect(center = (displayed_control_start_pos))
+        displayed_control_rect_dict.update({displayed_control_name:displayed_control_rect})
+        if displayed_control_rect.width > biggest_width:
+            biggest_width = displayed_control_rect.width
+            biggest_rect = displayed_control_rect
+        if displayed_control_index == 0:
+            control_board_start_y_pos = displayed_control_rect.top
+        if displayed_control_index == edited_controls_display_names_dict_size - 1:
+            control_board_end_y_pos = displayed_control_rect.bottom
+        displayed_control_index += 1
+
+    control_board_padding = WINDOW_SCALAR * 2
+    control_board_width = biggest_width + control_board_padding * 4
+    control_board_height = (control_board_end_y_pos - control_board_start_y_pos) + control_board_padding * 2
+    control_board_start_x_pos = biggest_rect.left - (control_board_padding * 2)
+    control_board_start_y_pos = control_board_start_y_pos - control_board_padding
+    control_board_rect = pygame.Rect(control_board_start_x_pos, control_board_start_y_pos, control_board_width, control_board_height)
+    control_board_color = "#442211"
+    control_board_stand_height = WINDOW_SCALAR * 4
+    control_board_stand_width = control_board_width/16
+    control_board_stand_start_x_pos = (control_board_start_x_pos + (control_board_width/2)) - (control_board_stand_width/2)
+    control_board_stand_start_y_pos = control_board_rect.bottom
+    control_board_stand_rect = pygame.Rect(control_board_stand_start_x_pos, control_board_stand_start_y_pos, control_board_stand_width, control_board_stand_height)
+    pygame.draw.rect(screen,control_board_color,control_board_rect)
+    pygame.draw.rect(screen,control_board_color,control_board_stand_rect)
+    # Drawing Rect
+
+    for displayed_control_name in edited_controls_display_names_dict.keys():
+        displayed_control_surf = displayed_control_surf_dict[displayed_control_name]
+        displayed_control_rect = displayed_control_rect_dict[displayed_control_name]
+        screen.blit(displayed_control_surf,displayed_control_rect)
 
 
 def display_stats():
@@ -473,9 +528,11 @@ STATISTICS_MENU = 2
 SETTINGS_MENU = 3
 SOUNDS_MENU = 4
 CONTROLS_MENU = 5
+DISPLAY_MENU = 6
 menu_section = MAIN_MENU
+CENTER_SCREEN = WINDOW_WIDTH / 2
 # Game Title
-main_menu_title_start_x_pos = WINDOW_WIDTH / 2
+main_menu_title_start_x_pos = CENTER_SCREEN
 main_menu_title_start_y_pos = 42/400 * WINDOW_HEIGHT
 main_menu_title_start_pos = (main_menu_title_start_x_pos,main_menu_title_start_y_pos)
 main_menu_title_scale = 1.25 * WINDOW_SCALAR
@@ -484,7 +541,7 @@ main_menu_title_surf = pygame.transform.scale_by(main_menu_title_surf,main_menu_
 main_menu_title_rect = main_menu_title_surf.get_rect(center = main_menu_title_start_pos)
 
 # Wizard on Menu Screen
-main_menu_wizard_start_x_pos = WINDOW_WIDTH / 2
+main_menu_wizard_start_x_pos = CENTER_SCREEN
 main_menu_wizard_start_y_pos = main_menu_title_start_y_pos + 1.25 * (128 * WINDOW_SCALAR)
 main_menu_wizard_hat_size = 32 * WINDOW_SCALAR
 main_menu_wizard_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png").convert_alpha()
@@ -495,7 +552,7 @@ main_menu_wizard_surf = pygame.transform.scale(main_menu_wizard_surf,main_menu_w
 main_menu_wizard_rect = main_menu_wizard_surf.get_rect(midbottom = (main_menu_wizard_start_x_pos,main_menu_wizard_start_y_pos))
 
 # Harold on Menu Screen
-main_menu_harold_start_x_pos = main_menu_wizard_rect.centerx
+main_menu_harold_start_x_pos = CENTER_SCREEN
 main_menu_harold_start_y_pos = main_menu_wizard_rect.top + main_menu_wizard_hat_size
 main_menu_harold_surf = pygame.image.load("harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png").convert_alpha()
 main_menu_harold_height_by_scale = main_menu_wizard_height_by_scale * 3/8
@@ -507,7 +564,7 @@ main_menu_harold_rect = main_menu_harold_surf.get_rect(midbottom = (main_menu_ha
 # Buttons
 button_when_big_scale = 1.1
 # Start Button
-main_menu_start_button_start_x_pos = main_menu_wizard_rect.centerx
+main_menu_start_button_start_x_pos = CENTER_SCREEN
 main_menu_start_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 main_menu_start_button_start_pos = (main_menu_start_button_start_x_pos,main_menu_start_button_start_y_pos)
 main_menu_start_button_surf = test_font.render("Start Game",False,"#FCDC4D")
@@ -520,7 +577,7 @@ main_menu_start_button_surf_big = pygame.transform.scale_by(main_menu_start_butt
 main_menu_start_button_rect_big = main_menu_start_button_surf_big.get_rect(center = (main_menu_start_button_start_pos))
 
 # Statistics Button
-main_menu_statistics_button_start_x_pos = main_menu_wizard_rect.centerx
+main_menu_statistics_button_start_x_pos = CENTER_SCREEN
 main_menu_statistics_button_start_y_pos = main_menu_start_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 main_menu_statistics_button_start_pos = (main_menu_statistics_button_start_x_pos,main_menu_statistics_button_start_y_pos)
 main_menu_statistics_button_surf = test_font.render("Statistics",False,"#FCDC4D")
@@ -533,7 +590,7 @@ main_menu_statistics_button_surf_big = pygame.transform.scale_by(main_menu_stati
 main_menu_statistics_button_rect_big = main_menu_statistics_button_surf_big.get_rect(center = (main_menu_statistics_button_start_pos))
 
 # Settings Button
-main_menu_settings_button_start_x_pos = main_menu_wizard_rect.centerx
+main_menu_settings_button_start_x_pos = CENTER_SCREEN
 main_menu_settings_button_start_y_pos = main_menu_statistics_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 main_menu_settings_button_start_pos = (main_menu_settings_button_start_x_pos,main_menu_settings_button_start_y_pos)
 main_menu_settings_button_surf = test_font.render("Settings",False,"#FCDC4D")
@@ -546,7 +603,7 @@ main_menu_settings_button_surf_big = pygame.transform.scale_by(main_menu_setting
 main_menu_settings_button_rect_big = main_menu_settings_button_surf_big.get_rect(center = (main_menu_settings_button_start_pos))
 
 # Exit Button
-main_menu_exit_button_start_x_pos = main_menu_wizard_rect.centerx
+main_menu_exit_button_start_x_pos = CENTER_SCREEN
 main_menu_exit_button_start_y_pos = main_menu_settings_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 main_menu_exit_button_start_pos = (main_menu_exit_button_start_x_pos,main_menu_exit_button_start_y_pos)
 main_menu_exit_button_surf = test_font.render("Exit",False,"#FCDC4D")
@@ -561,7 +618,7 @@ main_menu_exit_button_rect_big = main_menu_exit_button_surf_big.get_rect(center 
 # Statistics Menu
 # All the stats laid out - WIP
 # Back Button
-statistics_back_button_start_x_pos = main_menu_wizard_rect.centerx
+statistics_back_button_start_x_pos = CENTER_SCREEN
 statistics_back_button_start_y_pos = main_menu_settings_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 statistics_back_button_start_pos = (statistics_back_button_start_x_pos,statistics_back_button_start_y_pos)
 statistics_back_button_surf = test_font.render("Main Menu",False,"#FCDC4D")
@@ -575,7 +632,7 @@ statistics_back_button_rect_big = statistics_back_button_surf_big.get_rect(cente
 
 # Settings
 # Sounds Button
-settings_sounds_button_start_x_pos = main_menu_wizard_rect.centerx
+settings_sounds_button_start_x_pos = CENTER_SCREEN
 settings_sounds_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 settings_sounds_button_start_pos = (settings_sounds_button_start_x_pos,settings_sounds_button_start_y_pos)
 settings_sounds_button_surf = test_font.render("Sounds",False,"#FCDC4D")
@@ -587,7 +644,7 @@ settings_sounds_button_big_scale = button_when_big_scale
 settings_sounds_button_surf_big = pygame.transform.scale_by(settings_sounds_button_surf,settings_sounds_button_big_scale)
 settings_sounds_button_rect_big = settings_sounds_button_surf_big.get_rect(center = (settings_sounds_button_start_pos))
 # Controls Button
-settings_controls_button_start_x_pos = main_menu_wizard_rect.centerx
+settings_controls_button_start_x_pos = CENTER_SCREEN
 settings_controls_button_start_y_pos = settings_sounds_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 settings_controls_button_start_pos = (settings_controls_button_start_x_pos,settings_controls_button_start_y_pos)
 settings_controls_button_surf = test_font.render("Controls",False,"#FCDC4D")
@@ -598,9 +655,21 @@ mouse_on_settings_controls_button = False
 settings_controls_button_big_scale = button_when_big_scale
 settings_controls_button_surf_big = pygame.transform.scale_by(settings_controls_button_surf,settings_controls_button_big_scale)
 settings_controls_button_rect_big = settings_controls_button_surf_big.get_rect(center = (settings_controls_button_start_pos))
+# Display Button
+settings_display_button_start_x_pos = CENTER_SCREEN
+settings_display_button_start_y_pos = settings_controls_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
+settings_display_button_start_pos = (settings_display_button_start_x_pos,settings_display_button_start_y_pos)
+settings_display_button_surf = test_font.render("Display",False,"#FCDC4D")
+settings_display_button_scale = WINDOW_SCALAR
+settings_display_button_surf = pygame.transform.scale_by(settings_display_button_surf,settings_display_button_scale)
+settings_display_button_rect = settings_display_button_surf.get_rect(center = (settings_display_button_start_pos))
+mouse_on_settings_display_button = False
+settings_display_button_big_scale = button_when_big_scale
+settings_display_button_surf_big = pygame.transform.scale_by(settings_display_button_surf,settings_display_button_big_scale)
+settings_display_button_rect_big = settings_display_button_surf_big.get_rect(center = (settings_display_button_start_pos))
 # Back Button
-settings_back_button_start_x_pos = main_menu_wizard_rect.centerx
-settings_back_button_start_y_pos = settings_controls_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
+settings_back_button_start_x_pos = CENTER_SCREEN
+settings_back_button_start_y_pos = settings_display_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 settings_back_button_start_pos = (settings_back_button_start_x_pos,settings_back_button_start_y_pos)
 settings_back_button_surf = test_font.render("Main Menu",False,"#FCDC4D")
 settings_back_button_scale = WINDOW_SCALAR
@@ -613,7 +682,7 @@ settings_back_button_rect_big = settings_back_button_surf_big.get_rect(center = 
 
 # Sounds Menu
 # Back Button
-sounds_back_button_start_x_pos = main_menu_wizard_rect.centerx
+sounds_back_button_start_x_pos = CENTER_SCREEN
 sounds_back_button_start_y_pos = main_menu_settings_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 sounds_back_button_start_pos = (sounds_back_button_start_x_pos,sounds_back_button_start_y_pos)
 sounds_back_button_surf = test_font.render("Back to Settings",False,"#FCDC4D")
@@ -626,8 +695,9 @@ sounds_back_button_surf_big = pygame.transform.scale_by(sounds_back_button_surf,
 sounds_back_button_rect_big = sounds_back_button_surf_big.get_rect(center = (sounds_back_button_start_pos))
 
 # Controls Menu
+controls_update = False
 # Controls Buttons
-controls_first_button_start_x_pos = main_menu_wizard_rect.centerx
+controls_first_button_start_x_pos = CENTER_SCREEN
 controls_first_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 controls_first_button_start_pos = (controls_first_button_start_x_pos,controls_first_button_start_y_pos)
 controls_buttons_y_pos_offset = WINDOW_HEIGHT * 1/18
@@ -660,7 +730,7 @@ for control_name, control in default_controls_pygame_constants_names_dict.items(
     controls_button_rect_big_dict.update({control_name: controls_button_rect_big})
     controls_button_index += 1
 # Reset Button
-controls_reset_button_start_x_pos = main_menu_wizard_rect.centerx
+controls_reset_button_start_x_pos = CENTER_SCREEN
 controls_reset_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT) + (controls_buttons_y_pos_offset * (len(default_controls_pygame_constants_names_dict)))
 controls_reset_button_start_pos = (controls_reset_button_start_x_pos,controls_reset_button_start_y_pos)
 controls_reset_button_surf = test_font.render("Reset Controls to Default",False,"#FCDC4D")
@@ -671,9 +741,8 @@ mouse_on_controls_reset_button = False
 controls_reset_button_big_scale = button_when_big_scale
 controls_reset_button_surf_big = pygame.transform.scale_by(controls_reset_button_surf,controls_reset_button_big_scale)
 controls_reset_button_rect_big = controls_reset_button_surf_big.get_rect(center = (controls_reset_button_start_pos))
-
 # Back Button
-controls_back_button_start_x_pos = main_menu_wizard_rect.centerx
+controls_back_button_start_x_pos = CENTER_SCREEN
 controls_back_button_start_y_pos = main_menu_settings_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
 controls_back_button_start_pos = (controls_back_button_start_x_pos,controls_back_button_start_y_pos)
 controls_back_button_surf = test_font.render("Back to Settings",False,"#FCDC4D")
@@ -684,6 +753,35 @@ mouse_on_controls_back_button = False
 controls_back_button_big_scale = button_when_big_scale
 controls_back_button_surf_big = pygame.transform.scale_by(controls_back_button_surf,controls_back_button_big_scale)
 controls_back_button_rect_big = controls_back_button_surf_big.get_rect(center = (controls_back_button_start_pos))
+
+# Display Menu
+display_button_scalar = 0.5
+display_options_update = False
+# Show Controls Button
+controls_displayed = get_edited_options_file_dict()["edited_display_controls"]
+display_show_controls_button_start_x_pos = CENTER_SCREEN
+display_show_controls_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT)
+display_show_controls_button_start_pos = (display_show_controls_button_start_x_pos,display_show_controls_button_start_y_pos)
+display_show_controls_button_surf = test_font.render(f"Show Controls: {controls_displayed}",False,"#FCDC4D")
+display_show_controls_button_scale = WINDOW_SCALAR * display_button_scalar
+display_show_controls_button_surf = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_scale)
+display_show_controls_button_rect = display_show_controls_button_surf.get_rect(center = (display_show_controls_button_start_pos))
+mouse_on_display_show_controls_button = False
+display_show_controls_button_big_scale = button_when_big_scale
+display_show_controls_button_surf_big = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_big_scale)
+display_show_controls_button_rect_big = display_show_controls_button_surf_big.get_rect(center = (display_show_controls_button_start_pos))
+# Back Button
+display_back_button_start_x_pos = CENTER_SCREEN
+display_back_button_start_y_pos = main_menu_settings_button_rect.bottom + ((32/400) * WINDOW_HEIGHT)
+display_back_button_start_pos = (display_back_button_start_x_pos,display_back_button_start_y_pos)
+display_back_button_surf = test_font.render("Back to Settings",False,"#FCDC4D")
+display_back_button_scale = WINDOW_SCALAR
+display_back_button_surf = pygame.transform.scale_by(display_back_button_surf,display_back_button_scale)
+display_back_button_rect = display_back_button_surf.get_rect(center = (display_back_button_start_pos))
+mouse_on_display_back_button = False
+display_back_button_big_scale = button_when_big_scale
+display_back_button_surf_big = pygame.transform.scale_by(display_back_button_surf,display_back_button_big_scale)
+display_back_button_rect_big = display_back_button_surf_big.get_rect(center = (display_back_button_start_pos))
 
 
 # Timer
@@ -791,6 +889,7 @@ while True:
                 elif menu_section == SETTINGS_MENU:
                     mouse_on_settings_sounds_button = settings_sounds_button_rect_big.collidepoint(mouse_pos)
                     mouse_on_settings_controls_button = settings_controls_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_settings_display_button = settings_display_button_rect_big.collidepoint(mouse_pos)
                     mouse_on_settings_back_button = settings_back_button_rect_big.collidepoint(mouse_pos)
                     # Sounds Button
                     if mouse_on_settings_sounds_button:
@@ -800,14 +899,18 @@ while True:
                     elif mouse_on_settings_controls_button:
                         if clicking_with_left_mouse:
                             menu_section = CONTROLS_MENU
+                    # Display Button
+                    elif mouse_on_settings_display_button:
+                        if clicking_with_left_mouse:
+                            menu_section = DISPLAY_MENU
                     # Back Button
                     elif mouse_on_settings_back_button:
                         if clicking_with_left_mouse:
                             menu_section = MAIN_MENU
                 # Sounds Menu
                 elif menu_section == SOUNDS_MENU:
-                    # Back Button
                     mouse_on_sounds_back_button = sounds_back_button_rect_big.collidepoint(mouse_pos)
+                    # Back Button
                     if mouse_on_sounds_back_button:
                         if clicking_with_left_mouse:
                             menu_section = SETTINGS_MENU
@@ -862,6 +965,22 @@ while True:
                     elif mouse_on_controls_back_button:
                         if clicking_with_left_mouse:
                             menu_section = SETTINGS_MENU
+                # Display Menu
+                elif menu_section == DISPLAY_MENU:
+                    mouse_on_display_back_button = display_back_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_display_show_controls_button = display_show_controls_button_rect_big.collidepoint(mouse_pos)
+                    # Show Controls Button
+                    if mouse_on_display_show_controls_button:
+                        if clicking_with_left_mouse:
+                            edited_options_file_dict = get_edited_options_file_dict()
+                            edited_display_controls = edited_options_file_dict.get("edited_display_controls")
+                            edited_options_file_dict.update({"edited_display_controls":(not edited_display_controls)})
+                            set_edited_options_file_dict(edited_options_file_dict)
+                            display_options_update = True
+                    # Back Button
+                    if mouse_on_display_back_button:
+                        if clicking_with_left_mouse:
+                            menu_section = SETTINGS_MENU
 
                 # Main Menu Display
                 # Sprite Resets
@@ -872,7 +991,7 @@ while True:
                 # Timer Resets
                 death_timer = 0
                 bg_music_timer = 0
-                # Main Menu Screen Blits
+                # Main Menu Background, Wizard, and Harold Blits
                 screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
                 screen.blit(main_menu_wizard_surf,main_menu_wizard_rect)
                 screen.blit(main_menu_harold_surf,main_menu_harold_rect)
@@ -883,6 +1002,8 @@ while True:
                 # Main Menu Score vs. Title Blit
                 if score == 0: screen.blit(main_menu_title_surf,main_menu_title_rect)
                 else: screen.blit(score_message_surf,score_message_rect)
+
+                # Menu Blits
                 # Main Menu Button Blits
                 if menu_section == MAIN_MENU:
                     # Start Button
@@ -910,6 +1031,9 @@ while True:
                     # Controls Button
                     if not mouse_on_settings_controls_button: screen.blit(settings_controls_button_surf,settings_controls_button_rect)
                     else: screen.blit(settings_controls_button_surf_big,settings_controls_button_rect_big)
+                    # Display Button
+                    if not mouse_on_settings_display_button: screen.blit(settings_display_button_surf,settings_display_button_rect)
+                    else: screen.blit(settings_display_button_surf_big,settings_display_button_rect_big)
                     # Back Button
                     if not mouse_on_settings_back_button: screen.blit(settings_back_button_surf,settings_back_button_rect)
                     else: screen.blit(settings_back_button_surf_big,settings_back_button_rect_big)
@@ -920,12 +1044,8 @@ while True:
                     else: screen.blit(sounds_back_button_surf_big,sounds_back_button_rect_big)
                 # Controls Menu Button Blits
                 elif menu_section == CONTROLS_MENU:
-                    # Controls Buttons
+                    # Controls Update
                     if controls_update:
-                        controls_first_button_start_x_pos = main_menu_wizard_rect.centerx
-                        controls_first_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT)
-                        controls_first_button_start_pos = (controls_first_button_start_x_pos,controls_first_button_start_y_pos)
-                        controls_buttons_y_pos_offset = WINDOW_HEIGHT * 1/18
                         mouse_on_controls_button_dict = {}
                         controls_button_surf_dict = {}
                         controls_button_rect_dict = {}
@@ -936,9 +1056,6 @@ while True:
                         edited_controls_display_names_dict = get_edited_controls_file_dict().get("edited_controls_display_names_dict")
                         default_controls_pygame_constants_names_dict = get_default_controls_file_dict().get("default_controls_pygame_constants_names_dict")
                         for control_name, control in default_controls_pygame_constants_names_dict.items():
-                            controls_button_start_x_pos = main_menu_wizard_rect.centerx
-                            controls_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT) + controls_buttons_y_pos_offset * controls_button_index
-                            controls_button_start_pos = (controls_button_start_x_pos,controls_button_start_y_pos)
                             control_name_underscore_removed = control_name.replace("_", " ")
                             control_name_capitalized = control_name_underscore_removed.title()
                             controls_button_surf = test_font.render(f"{control_name_capitalized}: {edited_controls_display_names_dict[control_name]}",False,"#FCDC4D")
@@ -965,7 +1082,26 @@ while True:
                     # Back Button
                     if not mouse_on_controls_back_button: screen.blit(controls_back_button_surf,controls_back_button_rect)
                     else: screen.blit(controls_back_button_surf_big,controls_back_button_rect_big)
-
+                # Display Menu Button Blits
+                elif menu_section == DISPLAY_MENU:
+                    # Display Options Update
+                    if display_options_update: # Add in display stuff to update
+                        controls_displayed = get_edited_options_file_dict()["edited_display_controls"]
+                        display_show_controls_button_surf = test_font.render(f"Show Controls: {controls_displayed}",False,"#FCDC4D")
+                        display_show_controls_button_scale = WINDOW_SCALAR * display_button_scalar
+                        display_show_controls_button_surf = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_scale)
+                        display_show_controls_button_rect = display_show_controls_button_surf.get_rect(center = (display_show_controls_button_start_pos))
+                        mouse_on_display_show_controls_button = False
+                        display_show_controls_button_big_scale = button_when_big_scale
+                        display_show_controls_button_surf_big = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_big_scale)
+                        display_show_controls_button_rect_big = display_show_controls_button_surf_big.get_rect(center = (display_show_controls_button_start_pos))
+                        display_options_update = False
+                    # Show Controls Button
+                    if not mouse_on_display_show_controls_button: screen.blit(display_show_controls_button_surf,display_show_controls_button_rect)
+                    else: screen.blit(display_show_controls_button_surf_big,display_show_controls_button_rect_big)
+                    # Back Button
+                    if not mouse_on_display_back_button: screen.blit(display_back_button_surf,display_back_button_rect)
+                    else: screen.blit(display_back_button_surf_big,display_back_button_rect_big)
 
     # Opening Cinematic (Intro)
     if not intro_played:
@@ -1020,6 +1156,8 @@ while True:
             # Stat Image Postions
             score = display_score()
             display_stats() # Updating stats
+            if get_edited_options_file_dict()["edited_display_controls"]:
+                display_controls() # Maintaining controls on bottom right of screen
 
             for sprite in moving_sprites: # Holds all things to be drawn
                 sprite.draw(screen)
@@ -1032,6 +1170,9 @@ while True:
         else: # Work on death animation
             wizard.sprite.set_wizard_dead(True)
             screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
+            if get_edited_options_file_dict()["edited_display_controls"]:
+                display_controls() # Maintaining controls on bottom right of screen
+
 
             wizard.draw(screen) # Draws sprites
             harold.draw(screen)
