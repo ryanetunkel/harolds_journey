@@ -71,8 +71,8 @@ def display_controls():
         displayed_control_start_y_pos = (25/32 * WINDOW_HEIGHT) + displayed_control_y_pos_offset * displayed_control_index
         displayed_control_start_pos = (displayed_control_start_x_pos,displayed_control_start_y_pos)
         displayed_control_name_underscore_removed = displayed_control_name.replace("_", " ")
-        displayed_control_name_underscore_removed = displayed_control_name.replace("button", "")
-        displayed_control_name_capitalized = displayed_control_name_underscore_removed.title()
+        displayed_control_name_button_removed = displayed_control_name_underscore_removed.replace(" button", "")
+        displayed_control_name_capitalized = displayed_control_name_button_removed.title()
         displayed_control_surf = test_font.render(f"{displayed_control_name_capitalized}: {edited_controls_display_names_dict[displayed_control_name]}",False,"#FCDC4D")
         displayed_control_scale = WINDOW_SCALAR * displayed_control_scalar
         displayed_control_surf = pygame.transform.scale_by(displayed_control_surf,displayed_control_scale)
