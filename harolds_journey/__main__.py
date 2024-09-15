@@ -111,27 +111,6 @@ def display_controls():
 
 
 def display_in_game_stats():
-    # Health
-    health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/heart.png").convert_alpha()
-    health_stat_image_surf = pygame.transform.scale_by(health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-    health_stat_image_rect = health_stat_image_surf.get_rect(center = (WINDOW_WIDTH*1/16,WINDOW_HEIGHT*3/32))
-
-    health_stat_surf = test_font.render(str(wizard.sprite.get_wizard_current_health()), False, "#FCDC4D")
-    health_stat_surf = pygame.transform.scale_by(health_stat_surf, 1.3)
-    health_stat_rect = health_stat_surf.get_rect(center = (WINDOW_WIDTH*7/64,WINDOW_HEIGHT*13/128))
-
-    # Shield Health
-    shield_health_stat_x_pos_offset = WINDOW_WIDTH * 1/32
-    shield_health_stat_x_pos_0 = WINDOW_WIDTH * 1/16
-    shield_health_stat_x_pos_1 = shield_health_stat_x_pos_0 + shield_health_stat_x_pos_offset
-    shield_health_stat_x_pos_2 = shield_health_stat_x_pos_1 + shield_health_stat_x_pos_offset
-    shield_health_stat_y_pos = WINDOW_HEIGHT * 7/32
-    shield_health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/shield_stat_display.png").convert_alpha()
-    shield_health_stat_image_surf = pygame.transform.scale_by(shield_health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-    shield_health_stat_image_rect_0 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_0,shield_health_stat_y_pos))
-    shield_health_stat_image_rect_1 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_1,shield_health_stat_y_pos))
-    shield_health_stat_image_rect_2 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_2,shield_health_stat_y_pos))
-
     # Stat image Surfs - Find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
     stat_image_surf_x_pos = WINDOW_WIDTH/4 #29/128 dif
     stat_image_surf_y_pos_offset = WINDOW_HEIGHT*3/32
@@ -212,6 +191,62 @@ def display_in_game_stats():
     speed_stat_surf = test_font.render("Speed: " + str(wizard.sprite.get_wizard_speed() / GLOBAL_SCALAR), False, "#FCDC4D")
     speed_stat_surf = pygame.transform.scale_by(speed_stat_surf, 0.9)
     speed_stat_rect = speed_stat_surf.get_rect(center = (speed_stat_x_pos,speed_stat_y_pos))
+
+    # Blits
+    # Damage Blit
+    screen.blit(damage_stat_image_surf,damage_stat_image_rect)
+    screen.blit(damage_stat_surf,damage_stat_rect)
+    # Piercing Blit
+    screen.blit(piercing_stat_image_surf,piercing_stat_image_rect)
+    screen.blit(piercing_stat_surf,piercing_stat_rect)
+    # Fireball Cooldown Blit
+    screen.blit(fireball_cooldown_stat_image_surf,fireball_cooldown_stat_image_rect)
+    screen.blit(fireball_cooldown_stat_surf,fireball_cooldown_stat_rect)
+    # Fireball Cooldown Overlay Blit
+    screen.blit(fireball_cooldown_surf,fireball_cooldown_rect)
+    screen.blit(fireball_cooldown_overlay_surf,fireball_cooldown_overlay_rect)
+    # Speed Stat Blit
+    screen.blit(speed_stat_image_surf,speed_stat_image_rect)
+    screen.blit(speed_stat_surf,speed_stat_rect)
+
+
+def display_in_game_health():
+    # Health
+    health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/heart.png").convert_alpha()
+    health_stat_image_surf = pygame.transform.scale_by(health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+    health_stat_image_rect = health_stat_image_surf.get_rect(center = (WINDOW_WIDTH*1/16,WINDOW_HEIGHT*3/32))
+
+    health_stat_surf = test_font.render(str(wizard.sprite.get_wizard_current_health()), False, "#FCDC4D")
+    health_stat_surf = pygame.transform.scale_by(health_stat_surf, 1.3)
+    health_stat_rect = health_stat_surf.get_rect(center = (WINDOW_WIDTH*7/64,WINDOW_HEIGHT*13/128))
+
+    # Shield Health
+    shield_health_stat_x_pos_offset = WINDOW_WIDTH * 1/32
+    shield_health_stat_x_pos_0 = WINDOW_WIDTH * 1/16
+    shield_health_stat_x_pos_1 = shield_health_stat_x_pos_0 + shield_health_stat_x_pos_offset
+    shield_health_stat_x_pos_2 = shield_health_stat_x_pos_1 + shield_health_stat_x_pos_offset
+    shield_health_stat_y_pos = WINDOW_HEIGHT * 7/32
+    shield_health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/shield_stat_display.png").convert_alpha()
+    shield_health_stat_image_surf = pygame.transform.scale_by(shield_health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+    shield_health_stat_image_rect_0 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_0,shield_health_stat_y_pos))
+    shield_health_stat_image_rect_1 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_1,shield_health_stat_y_pos))
+    shield_health_stat_image_rect_2 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_2,shield_health_stat_y_pos))
+
+    # Blits
+    screen.blit(health_stat_image_surf,health_stat_image_rect)
+    screen.blit(health_stat_surf,health_stat_rect)
+    # Shield Health Blit
+    if wizard.sprite.get_shield():
+        shield_stat_images = [
+            shield_health_stat_image_rect_0,
+            shield_health_stat_image_rect_1,
+            shield_health_stat_image_rect_2,
+        ]
+        for shield_stat_index in range(0,wizard.sprite.get_current_shield_health()):
+            screen.blit(shield_health_stat_image_surf,shield_stat_images[shield_stat_index])
+
+
+def display_in_game_buffs():
     # Buffs
     # Health coords: WINDOW_WIDTH*1/16,WINDOW_HEIGHT*3/32
     # Arrange in order recieved going from right to left
@@ -247,33 +282,6 @@ def display_in_game_stats():
         knockback_buff_image_rect = knockback_buff_image_surf.get_rect(center = (knockback_buff_image_x_pos,knockback_buff_image_y_pos))
 
     # Blits
-    screen.blit(health_stat_image_surf,health_stat_image_rect)
-    screen.blit(health_stat_surf,health_stat_rect)
-    # Shield Health Blit
-    if wizard.sprite.get_shield():
-        shield_stat_images = [
-            shield_health_stat_image_rect_0,
-            shield_health_stat_image_rect_1,
-            shield_health_stat_image_rect_2,
-        ]
-        for shield_stat_index in range(0,wizard.sprite.get_current_shield_health()):
-            screen.blit(shield_health_stat_image_surf,shield_stat_images[shield_stat_index])
-    # Damage Blit
-    screen.blit(damage_stat_image_surf,damage_stat_image_rect)
-    screen.blit(damage_stat_surf,damage_stat_rect)
-    # Piercing Blit
-    screen.blit(piercing_stat_image_surf,piercing_stat_image_rect)
-    screen.blit(piercing_stat_surf,piercing_stat_rect)
-    # Fireball Cooldown Blit
-    screen.blit(fireball_cooldown_stat_image_surf,fireball_cooldown_stat_image_rect)
-    screen.blit(fireball_cooldown_stat_surf,fireball_cooldown_stat_rect)
-    # Fireball Cooldown Overlay Blit
-    screen.blit(fireball_cooldown_surf,fireball_cooldown_rect)
-    screen.blit(fireball_cooldown_overlay_surf,fireball_cooldown_overlay_rect)
-    # Speed Stat Blit
-    screen.blit(speed_stat_image_surf,speed_stat_image_rect)
-    screen.blit(speed_stat_surf,speed_stat_rect)
-    # Buff Blits
     # Double Jump Buff Blit
     if wizard.sprite.get_double_jump():
         screen.blit(double_jump_buff_image_surf,double_jump_buff_image_rect)
@@ -283,6 +291,7 @@ def display_in_game_stats():
     # Knockback Buff Blit Blit
     if wizard.sprite.get_knockback():
         screen.blit(knockback_buff_image_surf,knockback_buff_image_rect)
+
 
 
 def player_and_obstacle_collision():
@@ -659,6 +668,7 @@ while True:
                 elif menu_section == DISPLAY_MENU:
                     mouse_on_display_back_button = display_back_button_rect_big.collidepoint(mouse_pos)
                     mouse_on_display_show_controls_button = display_show_controls_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_display_show_in_game_stats_button = display_show_in_game_stats_button_rect_big.collidepoint(mouse_pos)
                     # Show Controls Button
                     if mouse_on_display_show_controls_button:
                         if clicking_with_left_mouse:
@@ -666,7 +676,15 @@ while True:
                             edited_display_controls = edited_options_file_dict.get("edited_display_controls")
                             edited_options_file_dict.update({"edited_display_controls":(not edited_display_controls)})
                             set_edited_options_file_dict(edited_options_file_dict)
-                            display_options_update = True
+                            display_controls_update = True
+                    # Show In Game Stats Button
+                    if mouse_on_display_show_in_game_stats_button:
+                        if clicking_with_left_mouse:
+                            edited_options_file_dict = get_edited_options_file_dict()
+                            edited_display_in_game_stats = edited_options_file_dict.get("edited_display_in_game_stats")
+                            edited_options_file_dict.update({"edited_display_in_game_stats":(not edited_display_in_game_stats)})
+                            set_edited_options_file_dict(edited_options_file_dict)
+                            display_in_game_stats_update = True
                     # Back Button
                     if mouse_on_display_back_button:
                         if clicking_with_left_mouse:
@@ -774,8 +792,8 @@ while True:
                     else: screen.blit(controls_back_button_surf_big,controls_back_button_rect_big)
                 # Display Menu Button Blits
                 elif menu_section == DISPLAY_MENU:
-                    # Display Options Update
-                    if display_options_update:
+                    # Display Controls Update
+                    if display_controls_update:
                         controls_displayed = get_edited_options_file_dict()["edited_display_controls"]
                         display_show_controls_button_surf = test_font.render(f"Show Controls: {controls_displayed}",False,"#FCDC4D")
                         display_show_controls_button_scale = WINDOW_SCALAR * display_button_scalar
@@ -785,10 +803,24 @@ while True:
                         display_show_controls_button_big_scale = button_when_big_scale
                         display_show_controls_button_surf_big = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_big_scale)
                         display_show_controls_button_rect_big = display_show_controls_button_surf_big.get_rect(center = (display_show_controls_button_start_pos))
-                        display_options_update = False
+                        display_controls_update = False
+                    if display_in_game_stats_update:
+                        in_game_stats_displayed = get_edited_options_file_dict()["edited_display_in_game_stats"]
+                        display_show_in_game_stats_button_surf = test_font.render(f"Show In Game Stats: {in_game_stats_displayed}",False,"#FCDC4D")
+                        display_show_in_game_stats_button_scale = WINDOW_SCALAR * display_button_scalar
+                        display_show_in_game_stats_button_surf = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_scale)
+                        display_show_in_game_stats_button_rect = display_show_in_game_stats_button_surf.get_rect(center = (display_show_in_game_stats_button_start_pos))
+                        mouse_on_display_show_in_game_stats_button = False
+                        display_show_in_game_stats_button_big_scale = button_when_big_scale
+                        display_show_in_game_stats_button_surf_big = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_big_scale)
+                        display_show_in_game_stats_button_rect_big = display_show_in_game_stats_button_surf_big.get_rect(center = (display_show_in_game_stats_button_start_pos))
+                        display_in_game_stats_update = False
                     # Show Controls Button
                     if not mouse_on_display_show_controls_button: screen.blit(display_show_controls_button_surf,display_show_controls_button_rect)
                     else: screen.blit(display_show_controls_button_surf_big,display_show_controls_button_rect_big)
+                    # Show In Game Stats Button
+                    if not mouse_on_display_show_in_game_stats_button: screen.blit(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_rect)
+                    else: screen.blit(display_show_in_game_stats_button_surf_big,display_show_in_game_stats_button_rect_big)
                     # Back Button
                     if not mouse_on_display_back_button: screen.blit(display_back_button_surf,display_back_button_rect)
                     else: screen.blit(display_back_button_surf_big,display_back_button_rect_big)
@@ -845,7 +877,10 @@ while True:
             screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
             # Stat Image Postions
             score = display_score()
-            display_in_game_stats() # Updating stats
+            display_in_game_health() # Add to display options
+            display_in_game_buffs() # Add to display options
+            if get_edited_options_file_dict()["edited_display_in_game_stats"]:
+                display_in_game_stats() # Updating stats
             if get_edited_options_file_dict()["edited_display_controls"]:
                 display_controls() # Maintaining controls on bottom right of screen
 
