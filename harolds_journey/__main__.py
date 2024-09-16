@@ -110,6 +110,89 @@ def display_controls():
         screen.blit(displayed_control_surf,displayed_control_rect)
 
 
+def display_in_game_health():
+    # Health
+    health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/heart.png").convert_alpha()
+    health_stat_image_surf = pygame.transform.scale_by(health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+    health_stat_image_rect = health_stat_image_surf.get_rect(center = (WINDOW_WIDTH*1/16,WINDOW_HEIGHT*3/32))
+
+    health_stat_surf = test_font.render(str(wizard.sprite.get_wizard_current_health()), False, "#FCDC4D")
+    health_stat_surf = pygame.transform.scale_by(health_stat_surf, 1.3)
+    health_stat_rect = health_stat_surf.get_rect(center = (WINDOW_WIDTH*7/64,WINDOW_HEIGHT*13/128))
+
+    # Shield Health
+    shield_health_stat_x_pos_offset = WINDOW_WIDTH * 1/32
+    shield_health_stat_x_pos_0 = WINDOW_WIDTH * 1/16
+    shield_health_stat_x_pos_1 = shield_health_stat_x_pos_0 + shield_health_stat_x_pos_offset
+    shield_health_stat_x_pos_2 = shield_health_stat_x_pos_1 + shield_health_stat_x_pos_offset
+    shield_health_stat_y_pos = WINDOW_HEIGHT * 7/32
+    shield_health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/shield_stat_display.png").convert_alpha()
+    shield_health_stat_image_surf = pygame.transform.scale_by(shield_health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+    shield_health_stat_image_rect_0 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_0,shield_health_stat_y_pos))
+    shield_health_stat_image_rect_1 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_1,shield_health_stat_y_pos))
+    shield_health_stat_image_rect_2 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_2,shield_health_stat_y_pos))
+
+    # Blits
+    screen.blit(health_stat_image_surf,health_stat_image_rect)
+    screen.blit(health_stat_surf,health_stat_rect)
+    # Shield Health Blit
+    if wizard.sprite.get_shield():
+        shield_stat_images = [
+            shield_health_stat_image_rect_0,
+            shield_health_stat_image_rect_1,
+            shield_health_stat_image_rect_2,
+        ]
+        for shield_stat_index in range(0,wizard.sprite.get_current_shield_health()):
+            screen.blit(shield_health_stat_image_surf,shield_stat_images[shield_stat_index])
+
+
+def display_in_game_buffs():
+    # Buffs
+    # Health coords: WINDOW_WIDTH*1/16,WINDOW_HEIGHT*3/32
+    # Arrange in order recieved going from right to left
+    order_offset = WINDOW_WIDTH*3/64
+    default_image_x_pos = WINDOW_WIDTH*15/16
+    default_image_y_pos = WINDOW_HEIGHT*3/32
+    # Double Jump
+    if wizard.sprite.get_double_jump():
+        double_jump_idx = wizard.sprite.get_buff_idx_in_buff_list("double_jump")
+        double_jump_x_offset = order_offset * double_jump_idx
+        double_jump_buff_image_x_pos = default_image_x_pos - double_jump_x_offset
+        double_jump_buff_image_y_pos = default_image_y_pos
+        double_jump_buff_image_surf = wizard.sprite.get_buff_image_in_buff_image_list_by_idx(double_jump_idx)
+        double_jump_buff_image_surf = pygame.transform.scale_by(double_jump_buff_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+        double_jump_buff_image_rect = double_jump_buff_image_surf.get_rect(center = (double_jump_buff_image_x_pos,double_jump_buff_image_y_pos))
+    # Shield
+    if wizard.sprite.get_shield():
+        shield_idx = wizard.sprite.get_buff_idx_in_buff_list("shield")
+        shield_x_offset = order_offset * shield_idx
+        shield_buff_image_x_pos = default_image_x_pos - shield_x_offset
+        shield_buff_image_y_pos = default_image_y_pos
+        shield_buff_image_surf = wizard.sprite.get_buff_image_in_buff_image_list_by_idx(shield_idx)
+        shield_buff_image_surf = pygame.transform.scale_by(shield_buff_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+        shield_buff_image_rect = shield_buff_image_surf.get_rect(center = (shield_buff_image_x_pos,shield_buff_image_y_pos))
+    # Knockback
+    if wizard.sprite.get_knockback():
+        knockback_idx = wizard.sprite.get_buff_idx_in_buff_list("knockback")
+        knockback_x_offset = order_offset * knockback_idx
+        knockback_buff_image_x_pos = default_image_x_pos - knockback_x_offset
+        knockback_buff_image_y_pos = default_image_y_pos
+        knockback_buff_image_surf = wizard.sprite.get_buff_image_in_buff_image_list_by_idx(knockback_idx)
+        knockback_buff_image_surf = pygame.transform.scale_by(knockback_buff_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+        knockback_buff_image_rect = knockback_buff_image_surf.get_rect(center = (knockback_buff_image_x_pos,knockback_buff_image_y_pos))
+
+    # Blits
+    # Double Jump Buff Blit
+    if wizard.sprite.get_double_jump():
+        screen.blit(double_jump_buff_image_surf,double_jump_buff_image_rect)
+    # Shield Buff Blit Blit
+    if wizard.sprite.get_shield():
+        screen.blit(shield_buff_image_surf,shield_buff_image_rect)
+    # Knockback Buff Blit Blit
+    if wizard.sprite.get_knockback():
+        screen.blit(knockback_buff_image_surf,knockback_buff_image_rect)
+
+
 def display_in_game_stats():
     # Stat image Surfs - Find a centralized place to keep all images so don't have to update this and the pickup class' version of the image
     stat_image_surf_x_pos = WINDOW_WIDTH/4 #29/128 dif
@@ -208,89 +291,6 @@ def display_in_game_stats():
     # Speed Stat Blit
     screen.blit(speed_stat_image_surf,speed_stat_image_rect)
     screen.blit(speed_stat_surf,speed_stat_rect)
-
-
-def display_in_game_health():
-    # Health
-    health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/heart.png").convert_alpha()
-    health_stat_image_surf = pygame.transform.scale_by(health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-    health_stat_image_rect = health_stat_image_surf.get_rect(center = (WINDOW_WIDTH*1/16,WINDOW_HEIGHT*3/32))
-
-    health_stat_surf = test_font.render(str(wizard.sprite.get_wizard_current_health()), False, "#FCDC4D")
-    health_stat_surf = pygame.transform.scale_by(health_stat_surf, 1.3)
-    health_stat_rect = health_stat_surf.get_rect(center = (WINDOW_WIDTH*7/64,WINDOW_HEIGHT*13/128))
-
-    # Shield Health
-    shield_health_stat_x_pos_offset = WINDOW_WIDTH * 1/32
-    shield_health_stat_x_pos_0 = WINDOW_WIDTH * 1/16
-    shield_health_stat_x_pos_1 = shield_health_stat_x_pos_0 + shield_health_stat_x_pos_offset
-    shield_health_stat_x_pos_2 = shield_health_stat_x_pos_1 + shield_health_stat_x_pos_offset
-    shield_health_stat_y_pos = WINDOW_HEIGHT * 7/32
-    shield_health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/shield_stat_display.png").convert_alpha()
-    shield_health_stat_image_surf = pygame.transform.scale_by(shield_health_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-    shield_health_stat_image_rect_0 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_0,shield_health_stat_y_pos))
-    shield_health_stat_image_rect_1 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_1,shield_health_stat_y_pos))
-    shield_health_stat_image_rect_2 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_2,shield_health_stat_y_pos))
-
-    # Blits
-    screen.blit(health_stat_image_surf,health_stat_image_rect)
-    screen.blit(health_stat_surf,health_stat_rect)
-    # Shield Health Blit
-    if wizard.sprite.get_shield():
-        shield_stat_images = [
-            shield_health_stat_image_rect_0,
-            shield_health_stat_image_rect_1,
-            shield_health_stat_image_rect_2,
-        ]
-        for shield_stat_index in range(0,wizard.sprite.get_current_shield_health()):
-            screen.blit(shield_health_stat_image_surf,shield_stat_images[shield_stat_index])
-
-
-def display_in_game_buffs():
-    # Buffs
-    # Health coords: WINDOW_WIDTH*1/16,WINDOW_HEIGHT*3/32
-    # Arrange in order recieved going from right to left
-    order_offset = WINDOW_WIDTH*3/64
-    default_image_x_pos = WINDOW_WIDTH*15/16
-    default_image_y_pos = WINDOW_HEIGHT*3/32
-    # Double Jump
-    if wizard.sprite.get_double_jump():
-        double_jump_idx = wizard.sprite.get_buff_idx_in_buff_list("double_jump")
-        double_jump_x_offset = order_offset * double_jump_idx
-        double_jump_buff_image_x_pos = default_image_x_pos - double_jump_x_offset
-        double_jump_buff_image_y_pos = default_image_y_pos
-        double_jump_buff_image_surf = wizard.sprite.get_buff_image_in_buff_image_list_by_idx(double_jump_idx)
-        double_jump_buff_image_surf = pygame.transform.scale_by(double_jump_buff_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-        double_jump_buff_image_rect = double_jump_buff_image_surf.get_rect(center = (double_jump_buff_image_x_pos,double_jump_buff_image_y_pos))
-    # Shield
-    if wizard.sprite.get_shield():
-        shield_idx = wizard.sprite.get_buff_idx_in_buff_list("shield")
-        shield_x_offset = order_offset * shield_idx
-        shield_buff_image_x_pos = default_image_x_pos - shield_x_offset
-        shield_buff_image_y_pos = default_image_y_pos
-        shield_buff_image_surf = wizard.sprite.get_buff_image_in_buff_image_list_by_idx(shield_idx)
-        shield_buff_image_surf = pygame.transform.scale_by(shield_buff_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-        shield_buff_image_rect = shield_buff_image_surf.get_rect(center = (shield_buff_image_x_pos,shield_buff_image_y_pos))
-    # Knockback
-    if wizard.sprite.get_knockback():
-        knockback_idx = wizard.sprite.get_buff_idx_in_buff_list("knockback")
-        knockback_x_offset = order_offset * knockback_idx
-        knockback_buff_image_x_pos = default_image_x_pos - knockback_x_offset
-        knockback_buff_image_y_pos = default_image_y_pos
-        knockback_buff_image_surf = wizard.sprite.get_buff_image_in_buff_image_list_by_idx(knockback_idx)
-        knockback_buff_image_surf = pygame.transform.scale_by(knockback_buff_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
-        knockback_buff_image_rect = knockback_buff_image_surf.get_rect(center = (knockback_buff_image_x_pos,knockback_buff_image_y_pos))
-
-    # Blits
-    # Double Jump Buff Blit
-    if wizard.sprite.get_double_jump():
-        screen.blit(double_jump_buff_image_surf,double_jump_buff_image_rect)
-    # Shield Buff Blit Blit
-    if wizard.sprite.get_shield():
-        screen.blit(shield_buff_image_surf,shield_buff_image_rect)
-    # Knockback Buff Blit Blit
-    if wizard.sprite.get_knockback():
-        screen.blit(knockback_buff_image_surf,knockback_buff_image_rect)
 
 
 def player_and_obstacle_collision():
@@ -503,6 +503,14 @@ while True:
             controls_update = False
 
         if event.type == pygame.QUIT:
+            edited_controls_file_dict = get_edited_controls_file_dict()
+            edited_controls_display_names_dict = edited_controls_file_dict.get("edited_controls_display_names_dict")
+            unbound_display_name = get_display_name(list(unbound_constants_dict.keys())[0])
+            if unbound_display_name in edited_controls_display_names_dict:
+                edited_controls_display_names_dict_index = list(edited_controls_display_names_dict.values()).index(unbound_display_name)
+                edited_control_name = list(edited_controls_display_names_dict.keys())[edited_controls_display_names_dict_index]
+                edited_controls_display_names_dict.update({edited_control_name:held_control_display_name})
+                edited_controls_file_dict.update({"edited_controls_display_names_dict":edited_controls_display_names_dict})
             pygame.quit() # Opposite of pygame.init()
             exit() # Breaks out of the while True loop
         # Skips Intro
@@ -614,6 +622,7 @@ while True:
                             menu_section = SETTINGS_MENU
                 # Controls Menu
                 elif menu_section == CONTROLS_MENU:
+                    mouse_released = event.type == pygame.MOUSEBUTTONUP
                     # Controls Buttons
                     for control_name, mouse_on_controls_button in mouse_on_controls_button_dict.items():
                         controls_button_rect_big = controls_button_rect_big_dict[control_name]
@@ -628,7 +637,7 @@ while True:
                         unbound_display_name = get_display_name(list(unbound_constants_dict.keys())[0])
                         current_control_set_to_unbound = edited_control_display_name == unbound_display_name
                         held_control_filled = held_control_name != ""
-                        if current_control_set_to_unbound:
+                        if current_control_set_to_unbound and can_edit_controls:
                             MOUSE_WHEEL_UP = 4
                             MOUSE_WHEEL_DOWN = 5
                             if ((
@@ -638,11 +647,17 @@ while True:
                                 held_control_name = ""
                                 held_control_display_name = unbound_display_name
                                 controls_update = True
-                            elif event.type == pygame.KEYDOWN and hasattr(event, "key") and event.key == pygame.K_ESCAPE:
-                                set_control_display_name_to_other_display_name(control_name, held_control_display_name)
-                                held_control_name = ""
-                                held_control_display_name = unbound_display_name
-                                controls_update = True
+                            can_edit_controls = False
+                        elif unbound_display_name in edited_controls_display_names_dict and event.type == pygame.KEYDOWN and hasattr(event, "key") and event.key == pygame.K_ESCAPE:
+                            edited_controls_display_names_dict_index = list(edited_controls_display_names_dict.values()).index(unbound_display_name)
+                            edited_control_name = list(edited_controls_display_names_dict.keys())[edited_controls_display_names_dict_index]
+                            edited_controls_display_names_dict.update({edited_control_name:held_control_display_name})
+                            edited_controls_file_dict.update({"edited_controls_display_names_dict":edited_controls_display_names_dict})
+                            set_control_display_name_to_other_display_name(control_name, held_control_display_name)
+                            held_control_name = ""
+                            held_control_display_name = unbound_display_name
+                            controls_update = True
+                            can_edit_controls = False
                         elif mouse_on_controls_button and clicking_with_left_mouse and not current_control_set_to_unbound:
                             if held_control_filled:
                                 set_control_display_name_to_other_display_name(held_control_name, held_control_display_name)
@@ -650,6 +665,8 @@ while True:
                             held_control_display_name = edited_control_display_name
                             set_control_display_name_to_unbound(control_name)
                             controls_update = True
+                        elif mouse_released:
+                            can_edit_controls = True
                         mouse_on_controls_button_dict.update({control_name: mouse_on_controls_button})
 
                     mouse_on_controls_reset_button = controls_reset_button_rect_big.collidepoint(mouse_pos)
@@ -668,6 +685,9 @@ while True:
                     mouse_on_display_back_button = display_back_button_rect_big.collidepoint(mouse_pos)
                     mouse_on_display_show_controls_button = display_show_controls_button_rect_big.collidepoint(mouse_pos)
                     mouse_on_display_show_in_game_stats_button = display_show_in_game_stats_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_display_show_in_game_health_button = display_show_in_game_health_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_display_show_in_game_buffs_button = display_show_in_game_buffs_button_rect_big.collidepoint(mouse_pos)
+                    mouse_on_display_reset_button = display_reset_button_rect_big.collidepoint(mouse_pos)
                     # Show Controls Button
                     if mouse_on_display_show_controls_button:
                         if clicking_with_left_mouse:
@@ -684,6 +704,30 @@ while True:
                             edited_options_file_dict.update({"edited_display_in_game_stats":(not edited_display_in_game_stats)})
                             set_edited_options_file_dict(edited_options_file_dict)
                             display_in_game_stats_update = True
+                    # Show In Game Health Button
+                    if mouse_on_display_show_in_game_health_button:
+                        if clicking_with_left_mouse:
+                            edited_options_file_dict = get_edited_options_file_dict()
+                            edited_display_in_game_health = edited_options_file_dict.get("edited_display_in_game_health")
+                            edited_options_file_dict.update({"edited_display_in_game_health":(not edited_display_in_game_health)})
+                            set_edited_options_file_dict(edited_options_file_dict)
+                            display_in_game_health_update = True
+                    # Show In Game Buffs Button
+                    if mouse_on_display_show_in_game_buffs_button:
+                        if clicking_with_left_mouse:
+                            edited_options_file_dict = get_edited_options_file_dict()
+                            edited_display_in_game_buffs = edited_options_file_dict.get("edited_display_in_game_buffs")
+                            edited_options_file_dict.update({"edited_display_in_game_buffs":(not edited_display_in_game_buffs)})
+                            set_edited_options_file_dict(edited_options_file_dict)
+                            display_in_game_buffs_update = True
+                    # Reset Button
+                    if mouse_on_display_reset_button:
+                        if clicking_with_left_mouse:
+                            reset_display_options()
+                            display_controls_update = True
+                            display_in_game_stats_update = True
+                            display_in_game_health_update = True
+                            display_in_game_buffs_update = True
                     # Back Button
                     if mouse_on_display_back_button:
                         if clicking_with_left_mouse:
@@ -763,6 +807,9 @@ while True:
                         edited_controls_display_names_dict = get_edited_controls_file_dict().get("edited_controls_display_names_dict")
                         default_controls_pygame_constants_names_dict = get_default_controls_file_dict().get("default_controls_pygame_constants_names_dict")
                         for control_name, control in default_controls_pygame_constants_names_dict.items():
+                            controls_button_start_x_pos = main_menu_wizard_rect.centerx
+                            controls_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT) + controls_buttons_y_pos_offset * controls_button_index
+                            controls_button_start_pos = (controls_button_start_x_pos,controls_button_start_y_pos)
                             control_name_underscore_removed = control_name.replace("_", " ")
                             control_name_capitalized = control_name_underscore_removed.title()
                             controls_button_surf = test_font.render(f"{control_name_capitalized}: {edited_controls_display_names_dict[control_name]}",False,"#FCDC4D")
@@ -794,7 +841,7 @@ while True:
                     # Display Controls Update
                     if display_controls_update:
                         controls_displayed = get_edited_options_file_dict()["edited_display_controls"]
-                        display_show_controls_button_surf = test_font.render(f"Show Controls: {controls_displayed}",False,"#FCDC4D")
+                        display_show_controls_button_surf = test_font.render(f"Display Controls: {controls_displayed}",False,"#FCDC4D")
                         display_show_controls_button_scale = WINDOW_SCALAR * display_button_scalar
                         display_show_controls_button_surf = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_scale)
                         display_show_controls_button_rect = display_show_controls_button_surf.get_rect(center = (display_show_controls_button_start_pos))
@@ -805,7 +852,7 @@ while True:
                         display_controls_update = False
                     if display_in_game_stats_update:
                         in_game_stats_displayed = get_edited_options_file_dict()["edited_display_in_game_stats"]
-                        display_show_in_game_stats_button_surf = test_font.render(f"Show In Game Stats: {in_game_stats_displayed}",False,"#FCDC4D")
+                        display_show_in_game_stats_button_surf = test_font.render(f"Display Stats: {in_game_stats_displayed}",False,"#FCDC4D")
                         display_show_in_game_stats_button_scale = WINDOW_SCALAR * display_button_scalar
                         display_show_in_game_stats_button_surf = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_scale)
                         display_show_in_game_stats_button_rect = display_show_in_game_stats_button_surf.get_rect(center = (display_show_in_game_stats_button_start_pos))
@@ -814,12 +861,43 @@ while True:
                         display_show_in_game_stats_button_surf_big = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_big_scale)
                         display_show_in_game_stats_button_rect_big = display_show_in_game_stats_button_surf_big.get_rect(center = (display_show_in_game_stats_button_start_pos))
                         display_in_game_stats_update = False
+                    if display_in_game_health_update:
+                        in_game_health_displayed = get_edited_options_file_dict()["edited_display_in_game_health"]
+                        display_show_in_game_health_button_surf = test_font.render(f"Display Health: {in_game_health_displayed}",False,"#FCDC4D")
+                        display_show_in_game_health_button_scale = WINDOW_SCALAR * display_button_scalar
+                        display_show_in_game_health_button_surf = pygame.transform.scale_by(display_show_in_game_health_button_surf,display_show_in_game_health_button_scale)
+                        display_show_in_game_health_button_rect = display_show_in_game_health_button_surf.get_rect(center = (display_show_in_game_health_button_start_pos))
+                        mouse_on_display_show_in_game_health_button = False
+                        display_show_in_game_health_button_big_scale = button_when_big_scale
+                        display_show_in_game_health_button_surf_big = pygame.transform.scale_by(display_show_in_game_health_button_surf,display_show_in_game_health_button_big_scale)
+                        display_show_in_game_health_button_rect_big = display_show_in_game_health_button_surf_big.get_rect(center = (display_show_in_game_health_button_start_pos))
+                        display_in_game_health_update = False
+                    if display_in_game_buffs_update:
+                        in_game_buffs_displayed = get_edited_options_file_dict()["edited_display_in_game_buffs"]
+                        display_show_in_game_buffs_button_surf = test_font.render(f"Display Buffs: {in_game_buffs_displayed}",False,"#FCDC4D")
+                        display_show_in_game_buffs_button_scale = WINDOW_SCALAR * display_button_scalar
+                        display_show_in_game_buffs_button_surf = pygame.transform.scale_by(display_show_in_game_buffs_button_surf,display_show_in_game_buffs_button_scale)
+                        display_show_in_game_buffs_button_rect = display_show_in_game_buffs_button_surf.get_rect(center = (display_show_in_game_buffs_button_start_pos))
+                        mouse_on_display_show_in_game_buffs_button = False
+                        display_show_in_game_buffs_button_big_scale = button_when_big_scale
+                        display_show_in_game_buffs_button_surf_big = pygame.transform.scale_by(display_show_in_game_buffs_button_surf,display_show_in_game_buffs_button_big_scale)
+                        display_show_in_game_buffs_button_rect_big = display_show_in_game_buffs_button_surf_big.get_rect(center = (display_show_in_game_buffs_button_start_pos))
+                        display_in_game_buffs_update = False
                     # Show Controls Button
                     if not mouse_on_display_show_controls_button: screen.blit(display_show_controls_button_surf,display_show_controls_button_rect)
                     else: screen.blit(display_show_controls_button_surf_big,display_show_controls_button_rect_big)
                     # Show In Game Stats Button
                     if not mouse_on_display_show_in_game_stats_button: screen.blit(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_rect)
                     else: screen.blit(display_show_in_game_stats_button_surf_big,display_show_in_game_stats_button_rect_big)
+                    # Show In Game Health Button
+                    if not mouse_on_display_show_in_game_health_button: screen.blit(display_show_in_game_health_button_surf,display_show_in_game_health_button_rect)
+                    else: screen.blit(display_show_in_game_health_button_surf_big,display_show_in_game_health_button_rect_big)
+                    # Show In Game Buffs Button
+                    if not mouse_on_display_show_in_game_buffs_button: screen.blit(display_show_in_game_buffs_button_surf,display_show_in_game_buffs_button_rect)
+                    else: screen.blit(display_show_in_game_buffs_button_surf_big,display_show_in_game_buffs_button_rect_big)
+                    # Reset Button
+                    if not mouse_on_display_reset_button: screen.blit(display_reset_button_surf,display_reset_button_rect)
+                    else: screen.blit(display_reset_button_surf_big,display_reset_button_rect_big)
                     # Back Button
                     if not mouse_on_display_back_button: screen.blit(display_back_button_surf,display_back_button_rect)
                     else: screen.blit(display_back_button_surf_big,display_back_button_rect_big)
@@ -876,12 +954,14 @@ while True:
             screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
             # Stat Image Postions
             score = display_score()
-            display_in_game_health() # Add to display options
-            display_in_game_buffs() # Add to display options
+            if get_edited_options_file_dict()["edited_display_in_game_health"]:
+                display_in_game_health() # Displays and updates in game health
+            if get_edited_options_file_dict()["edited_display_in_game_buffs"]:
+                display_in_game_buffs() # Displays and updates in game buffs
             if get_edited_options_file_dict()["edited_display_in_game_stats"]:
-                display_in_game_stats() # Updating stats
+                display_in_game_stats() # Displays and updates in game stats
             if get_edited_options_file_dict()["edited_display_controls"]:
-                display_controls() # Maintaining controls on bottom right of screen
+                display_controls() # Displays controls on bottom right of screen
 
             for sprite in moving_sprites: # Holds all things to be drawn
                 sprite.draw(screen)
