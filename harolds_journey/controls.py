@@ -183,7 +183,15 @@ def reset_controls():
     default_controls_file_dict = get_default_controls_file_dict()
     edited_controls_file_dict = get_edited_controls_file_dict()
     for default_controls_section_name, default_controls_section in default_controls_file_dict.items():
-        controls_section_name = default_controls_section_name.lstrip("default_")
-        edited_controls_section_name = "edited_" + controls_section_name
+        edited_controls_section_name = default_controls_section_name.replace("default_", "edited_")
         edited_controls_file_dict.update({edited_controls_section_name: default_controls_section})
     set_edited_controls_file_dict(edited_controls_file_dict)
+
+
+def reset_display_options():
+    default_options_file_dict = get_default_options_file_dict()
+    edited_options_file_dict = get_edited_options_file_dict()
+    for default_options_section_name, default_options_section in default_options_file_dict.items():
+        edited_options_section_name = default_options_section_name.replace("default_", "edited_")
+        edited_options_file_dict.update({edited_options_section_name: default_options_section})
+    set_edited_options_file_dict(edited_options_file_dict)
