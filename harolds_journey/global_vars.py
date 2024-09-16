@@ -102,3 +102,5 @@ jump_button,jump_button_is_mouse = get_control("jump_button")
 left_button,left_button_is_mouse = get_control("left_button")
 right_button,right_button_is_mouse = get_control("right_button")
 shoot_button,shoot_button_is_mouse = get_control("shoot_button")
+
+can_edit_controls = False
