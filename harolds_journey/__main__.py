@@ -586,8 +586,27 @@ while True:
                             exit()
                 # Statistics Menu
                 elif menu_section == STATISTICS_MENU:
-                    # Back Button
+                    # Left Side
+                    # Skeletons Killed Tracker
+                    mouse_on_statistics_skeletons_killed_tracker = statistics_skeletons_killed_tracker_rect_big.collidepoint(mouse_pos)
+                    # Skeleton Birds Killed Tracker
+                    mouse_on_statistics_skeleton_birds_killed_tracker = statistics_skeleton_birds_killed_tracker_rect_big.collidepoint(mouse_pos)
+                    # Time Played Tracker
+                    mouse_on_statistics_time_played_tracker = statistics_time_played_tracker_rect_big.collidepoint(mouse_pos)
+                    # High Score Tracker
+                    mouse_on_statistics_high_score_tracker = statistics_high_score_tracker_rect_big.collidepoint(mouse_pos)
+                    # Fireballs Shot Tracker
+                    mouse_on_statistics_fireballs_shot_tracker = statistics_fireballs_shot_tracker_rect_big.collidepoint(mouse_pos)
+                    # Jumps Tracker
+                    mouse_on_statistics_jumps_tracker = statistics_jumps_tracker_rect_big.collidepoint(mouse_pos)
+                    # Distance Traveled Tracker
+                    mouse_on_statistics_distance_traveled_tracker = statistics_distance_traveled_tracker_rect_big.collidepoint(mouse_pos)
+                    # Right Side
+                    # Highest Speed Tracker
+                    mouse_on_statistics_highest_speed_tracker = statistics_highest_speed_tracker_rect_big.collidepoint(mouse_pos)
+                    # Bottom
                     mouse_on_statistics_back_button = statistics_back_button_rect_big.collidepoint(mouse_pos)
+                    # Back Button
                     if mouse_on_statistics_back_button:
                         if clicking_with_left_mouse:
                             menu_section = MAIN_MENU
@@ -771,6 +790,33 @@ while True:
                     else: screen.blit(main_menu_exit_button_surf_big,main_menu_exit_button_rect_big)
                 # Statistics Menu Button Blits
                 elif menu_section == STATISTICS_MENU:
+                    # Left Side
+                    # Skeletons Killed Tracker
+                    if not mouse_on_statistics_skeletons_killed_tracker: screen.blit(statistics_skeletons_killed_tracker_surf,statistics_skeletons_killed_tracker_rect)
+                    else: screen.blit(statistics_skeletons_killed_tracker_surf_big,statistics_skeletons_killed_tracker_rect_big)
+                    # Skeleton Birds Killed Tracker
+                    if not mouse_on_statistics_skeleton_birds_killed_tracker: screen.blit(statistics_skeleton_birds_killed_tracker_surf,statistics_skeleton_birds_killed_tracker_rect)
+                    else: screen.blit(statistics_skeleton_birds_killed_tracker_surf_big,statistics_skeleton_birds_killed_tracker_rect_big)
+                    # Time Played Tracker
+                    if not mouse_on_statistics_time_played_tracker: screen.blit(statistics_time_played_tracker_surf,statistics_time_played_tracker_rect)
+                    else: screen.blit(statistics_time_played_tracker_surf_big,statistics_time_played_tracker_rect_big)
+                    # High Score Tracker
+                    if not mouse_on_statistics_high_score_tracker: screen.blit(statistics_high_score_tracker_surf,statistics_high_score_tracker_rect)
+                    else: screen.blit(statistics_high_score_tracker_surf_big,statistics_high_score_tracker_rect_big)
+                    # Fireballs Shot Tracker
+                    if not mouse_on_statistics_fireballs_shot_tracker: screen.blit(statistics_fireballs_shot_tracker_surf,statistics_fireballs_shot_tracker_rect)
+                    else: screen.blit(statistics_fireballs_shot_tracker_surf_big,statistics_fireballs_shot_tracker_rect_big)
+                    # Jumps Tracker
+                    if not mouse_on_statistics_jumps_tracker: screen.blit(statistics_jumps_tracker_surf,statistics_jumps_tracker_rect)
+                    else: screen.blit(statistics_jumps_tracker_surf_big,statistics_jumps_tracker_rect_big)
+                    # Distance Traveled Tracker
+                    if not mouse_on_statistics_distance_traveled_tracker: screen.blit(statistics_distance_traveled_tracker_surf,statistics_distance_traveled_tracker_rect)
+                    else: screen.blit(statistics_distance_traveled_tracker_surf_big,statistics_distance_traveled_tracker_rect_big)
+                    # Right Side
+                    # Highest Speed Tracker
+                    if not mouse_on_statistics_highest_speed_tracker: screen.blit(statistics_highest_speed_tracker_surf,statistics_highest_speed_tracker_rect)
+                    else: screen.blit(statistics_highest_speed_tracker_surf_big,statistics_highest_speed_tracker_rect_big)
+                    # Bottom
                     # Back Button
                     if not mouse_on_statistics_back_button: screen.blit(statistics_back_button_surf,statistics_back_button_rect)
                     else: screen.blit(statistics_back_button_surf_big,statistics_back_button_rect_big)
