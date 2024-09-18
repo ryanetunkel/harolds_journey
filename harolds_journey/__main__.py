@@ -617,8 +617,8 @@ while True:
                     # Shield Buff Tracker
                     mouse_on_statistics_shield_buff_tracker = statistics_shield_buff_tracker_rect_big.collidepoint(mouse_pos)
                     # Bottom
-                    mouse_on_statistics_back_button = statistics_back_button_rect_big.collidepoint(mouse_pos)
                     # Back Button
+                    mouse_on_statistics_back_button = statistics_back_button_rect_big.collidepoint(mouse_pos)
                     if mouse_on_statistics_back_button:
                         if clicking_with_left_mouse:
                             menu_section = MAIN_MENU
