@@ -604,6 +604,18 @@ while True:
                     # Right Side
                     # Highest Speed Tracker
                     mouse_on_statistics_highest_speed_tracker = statistics_highest_speed_tracker_rect_big.collidepoint(mouse_pos)
+                    # Highest Damage Tracker
+                    mouse_on_statistics_highest_damage_tracker = statistics_highest_damage_tracker_rect_big.collidepoint(mouse_pos)
+                    # Highest Piercing Tracker
+                    mouse_on_statistics_highest_piercing_tracker = statistics_highest_piercing_tracker_rect_big.collidepoint(mouse_pos)
+                    # Lowest Cooldown Tracker
+                    mouse_on_statistics_lowest_cooldown_tracker = statistics_lowest_cooldown_tracker_rect_big.collidepoint(mouse_pos)
+                    # Double Jump Buff Tracker
+                    mouse_on_statistics_double_jump_buff_tracker = statistics_double_jump_buff_tracker_rect_big.collidepoint(mouse_pos)
+                    # Knockback Buff Tracker
+                    mouse_on_statistics_knockback_buff_tracker = statistics_knockback_buff_tracker_rect_big.collidepoint(mouse_pos)
+                    # Shield Buff Tracker
+                    mouse_on_statistics_shield_buff_tracker = statistics_shield_buff_tracker_rect_big.collidepoint(mouse_pos)
                     # Bottom
                     mouse_on_statistics_back_button = statistics_back_button_rect_big.collidepoint(mouse_pos)
                     # Back Button
@@ -816,6 +828,24 @@ while True:
                     # Highest Speed Tracker
                     if not mouse_on_statistics_highest_speed_tracker: screen.blit(statistics_highest_speed_tracker_surf,statistics_highest_speed_tracker_rect)
                     else: screen.blit(statistics_highest_speed_tracker_surf_big,statistics_highest_speed_tracker_rect_big)
+                    # Highest Damage Tracker
+                    if not mouse_on_statistics_highest_damage_tracker: screen.blit(statistics_highest_damage_tracker_surf,statistics_highest_damage_tracker_rect)
+                    else: screen.blit(statistics_highest_damage_tracker_surf_big,statistics_highest_damage_tracker_rect_big)
+                    # Highest Piercing Tracker
+                    if not mouse_on_statistics_highest_piercing_tracker: screen.blit(statistics_highest_piercing_tracker_surf,statistics_highest_piercing_tracker_rect)
+                    else: screen.blit(statistics_highest_piercing_tracker_surf_big,statistics_highest_piercing_tracker_rect_big)
+                    # Lowest Cooldown Tracker
+                    if not mouse_on_statistics_lowest_cooldown_tracker: screen.blit(statistics_lowest_cooldown_tracker_surf,statistics_lowest_cooldown_tracker_rect)
+                    else: screen.blit(statistics_lowest_cooldown_tracker_surf_big,statistics_lowest_cooldown_tracker_rect_big)
+                    # Double Jump Buff Tracker
+                    if not mouse_on_statistics_double_jump_buff_tracker: screen.blit(statistics_double_jump_buff_tracker_surf,statistics_double_jump_buff_tracker_rect)
+                    else: screen.blit(statistics_double_jump_buff_tracker_surf_big,statistics_double_jump_buff_tracker_rect_big)
+                    # Knockback Buff Tracker
+                    if not mouse_on_statistics_knockback_buff_tracker: screen.blit(statistics_knockback_buff_tracker_surf,statistics_knockback_buff_tracker_rect)
+                    else: screen.blit(statistics_knockback_buff_tracker_surf_big,statistics_knockback_buff_tracker_rect_big)
+                    # Shield Buff Tracker
+                    if not mouse_on_statistics_shield_buff_tracker: screen.blit(statistics_shield_buff_tracker_surf,statistics_shield_buff_tracker_rect)
+                    else: screen.blit(statistics_shield_buff_tracker_surf_big,statistics_shield_buff_tracker_rect_big)
                     # Bottom
                     # Back Button
                     if not mouse_on_statistics_back_button: screen.blit(statistics_back_button_surf,statistics_back_button_rect)
