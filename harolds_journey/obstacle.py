@@ -6,8 +6,10 @@ from graphics.enemies.bird.bird_animation_holder import *
 from graphics.enemies.skeleton.skeleton_animation_holder import *
 
 class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, type: str, time_at_spawn: int):
+    def __init__(self, obstacle_type: str, time_at_spawn: int):
         super().__init__()
+
+        self.obstacle_type = obstacle_type
 
         self.ROUND_DIFFICULTY_INCREASE_INCREMENT = 20 # frequency in seconds the difficulty increases
         self.time_scalar = int(time_at_spawn / self.ROUND_DIFFICULTY_INCREASE_INCREMENT) + 1 # Should mean every 20 seconds goes up by 1 
@@ -46,7 +48,7 @@ class Obstacle(pygame.sprite.Sprite):
             self.x_pos = randint(-300,-100)
             self.enemy_looking_right = True
 
-        if type == 'skeleton':
+        if self.obstacle_type == 'skeleton':
             self.points = self.skeleton_value
             self.max_health = self.skeleton_max_health * self.time_scalar
             self.current_health = self.max_health
@@ -62,7 +64,7 @@ class Obstacle(pygame.sprite.Sprite):
             self.move_sound.set_volume(OBSTACLE_MOVE_VOLUME)
             self.move_limit = 60
             self.move_timer = self.move_limit
-        elif type == 'bird':
+        elif self.obstacle_type == 'bird':
             self.points = self.bird_value
             self.max_health = self.bird_max_health * self.time_scalar
             self.current_health = self.max_health
@@ -89,6 +91,13 @@ class Obstacle(pygame.sprite.Sprite):
 
         # Outside Source
         self.knockback_direction_multiplier = 0
+
+    # Type
+    def get_obstacle_type(self):
+        return self.obstacle_type
+
+    def set_obstacle_type(self, new_obstacle_type: str):
+        self.obstacle_type = new_obstacle_type
 
     # Position
     def get_x_pos(self):
