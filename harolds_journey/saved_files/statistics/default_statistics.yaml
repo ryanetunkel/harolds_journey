@@ -1,18 +1,18 @@
-kills:
-  skeletons_killed: 0
-  skeleton_birds_killed: 0
-interactivity:
-  time_played: 0
-  high_score: 0
-  fireballs_shot: 0
-  jumps: 0
-  distance_traveled: 0
-in_game_stat_records:
-  highest_speed: 0
-  highest_damage: 0
-  highest_piercing: 0
-  lowest_cooldown: 0
 buffs:
   double_jump_buff: 0
   knockback_buff: 0
   shield_buff: 0
+interactivity:
+  distance_traveled: 0
+  fireballs_shot: 0
+  high_score: 0
+  jumps: 0
+  time_played: 0
+in_game_stat_records:
+  highest_damage: 0
+  highest_speed: 0
+  highest_piercing: 0
+  lowest_cooldown: 0
+kills:
+  skeletons_killed: 0
+  skeleton_birds_killed: 0
