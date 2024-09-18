@@ -16,6 +16,9 @@ display_names_path = "harolds_journey/display_names.csv"
 default_options_path = "harolds_journey/saved_files/options/default_options.yaml"
 edited_options_path = "harolds_journey/saved_files/options/edited_options.yaml"
 
+default_stats_path = "harolds_journey/saved_files/statistics/default_statistics.yaml"
+edited_stats_path = "harolds_journey/saved_files/statistics/edited_statistics.yaml"
+
 held_control_name = ""
 held_control_display_name = "Unbound"
 
@@ -54,6 +57,29 @@ def write_dict_to_yaml(yaml_dict: dict, yaml_file: str):
     with open(yaml_file, "w") as file:
         yaml.dump(yaml_dict,file)
     file.close()
+
+# Stats Functions
+# Default Stats Functions
+def get_default_stats_path() -> str:
+    return default_stats_path
+
+
+def get_default_stats_file_dict() -> dict:
+    return read_yaml_to_dict(get_default_stats_path())
+
+
+# Edited Stats Functions
+def get_edited_stats_path() -> str:
+    return edited_stats_path
+
+
+def get_edited_stats_file_dict() -> dict:
+    return read_yaml_to_dict(get_edited_stats_path())
+
+
+def set_edited_stats_file_dict(yaml_dict: dict):
+    write_dict_to_yaml(yaml_dict,get_edited_stats_path())
+
 
 # Options Functions
 # Default Options Functions
@@ -195,3 +221,8 @@ def reset_display_options():
         edited_options_section_name = default_options_section_name.replace("default_", "edited_")
         edited_options_file_dict.update({edited_options_section_name: default_options_section})
     set_edited_options_file_dict(edited_options_file_dict)
+
+
+def reset_stats():
+    default_stats_file_dict = get_default_stats_file_dict()
+    set_edited_stats_file_dict(default_stats_file_dict)
