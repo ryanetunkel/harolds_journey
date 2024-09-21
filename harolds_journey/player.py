@@ -1,5 +1,6 @@
 """Player Class"""
 from controls import *
+from menu import jumps_made, distance_traveled
 from global_vars import *
 from graphics.wizard.wizard_animation_holder import *
 
@@ -12,6 +13,10 @@ class Player(pygame.sprite.Sprite):
         self.left_button,self.left_button_is_mouse = get_control("left_button")
         self.right_button,self.right_button_is_mouse = get_control("right_button")
         self.shoot_button,self.shoot_button_is_mouse = get_control("shoot_button")
+
+        # Stat Tracking
+        self.jumps_made = jumps_made
+        self.distance_traveled = distance_traveled
 
         # Start
         self.WIZARD_START_X_POS = WINDOW_WIDTH / 2
@@ -130,6 +135,19 @@ class Player(pygame.sprite.Sprite):
         self.secret_sound_timer = 0
         self.secret_sound_length = self.WIZARD_SECRET_ANIMATION_LIMIT
         # self.death_sound = pygame.mixer.Sound('placeholder') # Find Death Sound
+
+    # Stats Tacker Functions
+    def get_jumps_made(self):
+        return self.jumps_made
+
+    def set_jumps_made(self, new_jumps_made):
+        self.jumps_made = new_jumps_made
+
+    def get_distance_traveled(self):
+        return self.distance_traveled
+
+    def set_distance_traveled(self, new_distance_traveled):
+        self.distance_traveled = new_distance_traveled
 
     # Positions
     def get_wizard_pos(self):
@@ -504,15 +522,18 @@ class Player(pygame.sprite.Sprite):
                     self.set_double_jump_used(True)
                 self.wizard_jumping = True
                 self.set_wizard_y_velocity(self.jump_speed)
+                self.jumps_made += 1
                 # Jump Sound
                 pygame.mixer.Channel(JUMP_SOUND_CHANNEL).play(self.jump_sound)
             if right_button_press and self.rect.x + WIZARD_WIDTH + self.wizard_speed < WINDOW_WIDTH: # event.type == right_button
                 self.wizard_x_velocity = self.wizard_speed
                 self.rect.x += self.wizard_x_velocity
+                self.distance_traveled += self.wizard_speed
                 self.wizard_moving = True
             if left_button_press and self.rect.x - self.wizard_speed > 0: # event.type == left_button
                 self.wizard_x_velocity = self.wizard_speed
                 self.rect.x -= self.wizard_x_velocity
+                self.distance_traveled += self.wizard_speed
                 self.wizard_moving = True
             # (not event.type == left_button and not event.type == right_button and not event.type == jump_button)
             elif (not left_button_press and not right_button_press and not jump_button_press):
