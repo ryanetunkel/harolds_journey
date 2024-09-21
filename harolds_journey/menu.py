@@ -14,20 +14,20 @@ menu_section = MAIN_MENU
 CENTER_SCREEN = WINDOW_WIDTH / 2
 # Game Title
 main_menu_title_start_x_pos = CENTER_SCREEN
-main_menu_title_start_y_pos = 42/400 * WINDOW_HEIGHT
+main_menu_title_start_y_pos = 54/400 * WINDOW_HEIGHT
 main_menu_title_start_pos = (main_menu_title_start_x_pos,main_menu_title_start_y_pos)
 main_menu_title_scale = 1.25 * WINDOW_SCALAR
 main_menu_title_surf = test_font.render("Harold\'s Journey",False,"#FCDC4D")
 main_menu_title_surf = pygame.transform.scale_by(main_menu_title_surf,main_menu_title_scale)
-main_menu_title_rect = main_menu_title_surf.get_rect(center = main_menu_title_start_pos)
+main_menu_title_rect = main_menu_title_surf.get_rect(midbottom = main_menu_title_start_pos)
 
 # Wizard on Menu Screen
 main_menu_wizard_start_x_pos = CENTER_SCREEN
-main_menu_wizard_start_y_pos = main_menu_title_start_y_pos + 1.25 * (128 * WINDOW_SCALAR)
-main_menu_wizard_hat_size = 32 * WINDOW_SCALAR
+main_menu_wizard_start_y_pos = main_menu_title_start_y_pos + (1.5 * (96 * WINDOW_SCALAR))
+main_menu_wizard_hat_size = 24 * WINDOW_SCALAR
 main_menu_wizard_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png").convert_alpha()
-main_menu_wizard_height_by_scale = 128 * WINDOW_SCALAR
-main_menu_wizard_width_by_scale = 128 * WINDOW_SCALAR
+main_menu_wizard_height_by_scale = 96 * WINDOW_SCALAR
+main_menu_wizard_width_by_scale = 96 * WINDOW_SCALAR
 main_menu_wizard_size_by_scale = (main_menu_wizard_height_by_scale,main_menu_wizard_width_by_scale)
 main_menu_wizard_surf = pygame.transform.scale(main_menu_wizard_surf,main_menu_wizard_size_by_scale)
 main_menu_wizard_rect = main_menu_wizard_surf.get_rect(midbottom = (main_menu_wizard_start_x_pos,main_menu_wizard_start_y_pos))
