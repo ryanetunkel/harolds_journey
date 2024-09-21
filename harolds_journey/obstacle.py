@@ -26,6 +26,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.skeleton_walk_animation_speed =  0.32
         self.bird_fly_animation_speed = 0.2
 
+        (self.spawn_range_min,self.spawn_range_max) = (100,300) # 100-300 pixels beyond the edges of the screen, the obstacle will spawn
         self.despawn_range = 100 # 100 pixels beyond the edges of the screen, the obsacle will despawn
 
         # Skeleton Base Stats
@@ -44,10 +45,10 @@ class Obstacle(pygame.sprite.Sprite):
         self.immunity_timer = 0 # will need to eventually track what fireball id hit it
 
         if randint(0,1) == 1:
-            self.x_pos = randint(WINDOW_WIDTH + 100,WINDOW_WIDTH + 300)
+            self.x_pos = randint(WINDOW_WIDTH + self.spawn_range_min,WINDOW_WIDTH + self.spawn_range_max)
             self.enemy_looking_right = False
         else:
-            self.x_pos = randint(-300,-100)
+            self.x_pos = randint(-self.spawn_range_max,-self.spawn_range_min)
             self.enemy_looking_right = True
 
         if self.obstacle_type == 'skeleton':
