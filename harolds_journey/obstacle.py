@@ -26,6 +26,8 @@ class Obstacle(pygame.sprite.Sprite):
         self.skeleton_walk_animation_speed =  0.32
         self.bird_fly_animation_speed = 0.2
 
+        self.despawn_range = 100 # 100 pixels beyond the edges of the screen, the obsacle will despawn
+
         # Skeleton Base Stats
         self.skeleton_value = 2
         self.skeleton_max_health = 1
@@ -253,7 +255,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.destroy()
 
     def destroy(self):
-        if self.rect.x <= -100 and not self.enemy_looking_right:
+        if self.rect.x <= -self.despawn_range and not self.enemy_looking_right:
             self.kill()
-        if self.rect.x >= WINDOW_WIDTH + 100 and self.enemy_looking_right:
+        if self.rect.x >= WINDOW_WIDTH + self.despawn_range and self.enemy_looking_right:
             self.kill()
