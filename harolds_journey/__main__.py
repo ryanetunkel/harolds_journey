@@ -1334,15 +1334,15 @@ while True:
         screen.blit(harold_intro_surf,harold_intro_rect)
         if not wizard_walk_in_animation_complete:
             if wizard_intro_rect.right < WINDOW_WIDTH / 2 - wizard_intro_width_by_scale/2:
-                wizard_intro_rect.centerx += wizard.sprite.get_wizard_speed()
+                wizard_intro_rect.centerx += (wizard.sprite.get_wizard_speed() / GLOBAL_SCALAR)
             else:
                 wizard_walk_in_animation_complete = True
         elif not harold_jump_on_hat_animation_complete:
             if harold_intro_rect.centerx > wizard_intro_rect.centerx:
-                harold_intro_rect.centerx -= (harold.sprite.get_harold_speed() * 2)
+                harold_intro_rect.centerx -= ((harold.sprite.get_harold_speed() * 2) / GLOBAL_SCALAR)
             else:
                 x_lineup = True
-            intro_jump_speed += intro_gravity_acceleration
+            intro_jump_speed += (intro_gravity_acceleration / GLOBAL_SCALAR)
             harold_intro_rect.centery += intro_jump_speed
             if not fall:
                 if harold_intro_rect.bottom >= wizard_intro_rect.top:
@@ -1354,14 +1354,14 @@ while True:
             harold_turn_animation_complete = True
         elif not wizard_and_harold_center_animation_complete:
             if wizard_intro_rect.centerx < main_menu_wizard_start_x_pos:
-                wizard_intro_rect.centerx += wizard.sprite.get_wizard_speed()
-                harold_intro_rect.centerx += harold.sprite.get_harold_speed()
+                wizard_intro_rect.centerx += (wizard.sprite.get_wizard_speed() / GLOBAL_SCALAR)
+                harold_intro_rect.centerx += (harold.sprite.get_harold_speed() / GLOBAL_SCALAR)
             else:
                 wizard_and_harold_center_animation_complete = True
         elif not wizard_and_harold_center_with_title_animation_complete:
             if wizard_intro_rect.bottom > main_menu_wizard_start_y_pos:
-                wizard_intro_rect.centery -= wizard.sprite.get_wizard_speed()
-                harold_intro_rect.centery -= harold.sprite.get_harold_speed()
+                wizard_intro_rect.centery -= (wizard.sprite.get_wizard_speed() / GLOBAL_SCALAR)
+                harold_intro_rect.centery -= (harold.sprite.get_harold_speed() / GLOBAL_SCALAR)
             else:
                 intro_played = True
 
