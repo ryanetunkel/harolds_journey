@@ -34,7 +34,9 @@ WINDOW_WIDTH = 800 * 3/2
 WINDOW_HEIGHT = 400 * 3/2
 # WINDOW_WIDTH = 800
 # WINDOW_HEIGHT = 400
-PIXEL_SIZE = 4 # Create a slider for this - will be zoom essentially
+PIXEL_SIZE = 2 # Create a slider for this - will be zoom essentially.
+# PIXEL_SIZE currently can only be even numbers else creates .5 addition and rects can only do integer-based moves
+# Will need to transition to using math.Vector2 to do all collision and stuff and then render it after as a rect to get subpixel movement
 GLOBAL_SCALAR = PIXEL_SIZE/4
 WINDOW_SIZE = (WINDOW_WIDTH,WINDOW_HEIGHT) # Create a set of options for this, fullscreen maybe in future, gets tricky
 WINDOW_SCALAR = ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
