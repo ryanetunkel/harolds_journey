@@ -1,12 +1,12 @@
 buffs:
-  double_jump_buff: 0
-  knockback_buff: 0
-  shield_buff: 0
+  double_jump_buff: false
+  knockback_buff: false
+  shield_buff: false
 in_game_stat_records:
-  highest_damage: 0
-  highest_piercing: 0
-  highest_speed: 0
-  lowest_cooldown: 0
+  highest_damage: 1
+  highest_piercing: 1
+  highest_speed: 5.0
+  lowest_cooldown: 60
 interactivity:
   distance_traveled: 0
   fireballs_shot: 0
