@@ -243,7 +243,7 @@ def display_in_game_stats():
     fireball_cooldown_stat_image_surf = pygame.transform.scale_by(fireball_cooldown_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
     fireball_cooldown_stat_image_rect = fireball_cooldown_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,fireball_cooldown_stat_image_y_pos))
 
-    fireball_cooldown_stat_surf = test_font.render(f"Cooldown: {round(wizard.sprite.get_max_fireball_cooldown_time()/60, 2)}", False, "#FCDC4D")
+    fireball_cooldown_stat_surf = test_font.render(f"Cooldown: {round(wizard.sprite.get_max_fireball_cooldown_time()/60, 2)}s", False, "#FCDC4D")
     fireball_cooldown_stat_surf = pygame.transform.scale_by(fireball_cooldown_stat_surf, 0.9)
     fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (fireball_cooldown_stat_x_pos,fireball_cooldown_stat_y_pos))
 
@@ -271,7 +271,7 @@ def display_in_game_stats():
     speed_stat_image_surf = pygame.transform.scale_by(speed_stat_image_surf,4 * (WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
     speed_stat_image_rect = speed_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,speed_stat_image_y_pos))
 
-    speed_stat_surf = test_font.render("Speed: " + str(wizard.sprite.get_wizard_speed() / GLOBAL_SCALAR), False, "#FCDC4D")
+    speed_stat_surf = test_font.render("Speed: " + str(round((wizard.sprite.get_wizard_speed()/WIZARD_WIDTH)*60, 2)), False, "#FCDC4D")
     speed_stat_surf = pygame.transform.scale_by(speed_stat_surf, 0.9)
     speed_stat_rect = speed_stat_surf.get_rect(center = (speed_stat_x_pos,speed_stat_y_pos))
 
@@ -326,6 +326,51 @@ def player_and_obstacle_collision():
                         wizard.sprite.set_wizard_immunity_frames(wizard.sprite.get_wizard_max_immunity_frames())
                     # Wizard dies
                     else:
+                        # Updating Stats
+                        wizard_jumps = wizard.sprite.get_jumps_made()
+                        distance_traveled = wizard.sprite.get_distance_traveled()
+                        current_wizard_speed = wizard.sprite.get_wizard_speed()
+                        current_wizard_damage = wizard.sprite.get_wizard_damage_total()
+                        current_wizard_piercing = wizard.sprite.get_wizard_piercing_total()
+                        current_wizard_fireball_cooldown = wizard.sprite.get_max_fireball_cooldown_time()
+                        current_wizard_double_jump_buff = wizard.sprite.get_double_jump()
+                        current_wizard_knockback_buff = wizard.sprite.get_knockback()
+                        current_wizard_shield_buff = wizard.sprite.get_shield()
+                        edited_stats_file_dict = get_edited_stats_file_dict()
+                        edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+                        edited_stats_in_game_stat_records_file_dict = edited_stats_file_dict.get("in_game_stat_records")
+                        edited_stats_buffs_file_dict = edited_stats_file_dict.get("buffs")
+                        time_played_total = edited_stats_interactivity_file_dict.get("time_played")
+                        jumps_total = edited_stats_interactivity_file_dict.get("jumps")
+                        distance_traveled_total = edited_stats_interactivity_file_dict.get("distance_traveled")
+                        highest_speed = edited_stats_in_game_stat_records_file_dict.get("highest_speed")
+                        highest_damage = edited_stats_in_game_stat_records_file_dict.get("highest_damage")
+                        highest_piercing = edited_stats_in_game_stat_records_file_dict.get("highest_piercing")
+                        lowest_cooldown = edited_stats_in_game_stat_records_file_dict.get("lowest_cooldown")
+                        double_jump_buff_found = edited_stats_buffs_file_dict.get("double_jump_buff")
+                        knockback_buff_found = edited_stats_buffs_file_dict.get("knockback_buff")
+                        shield_buff_found = edited_stats_buffs_file_dict.get("shield_buff")
+                        updated_speed = highest_speed if highest_speed > current_wizard_speed else current_wizard_speed
+                        updated_damage = highest_damage if highest_damage > current_wizard_damage else current_wizard_damage
+                        updated_piercing = highest_piercing if highest_piercing > current_wizard_piercing else current_wizard_piercing
+                        updated_cooldown = lowest_cooldown if lowest_cooldown < current_wizard_fireball_cooldown else current_wizard_fireball_cooldown
+                        current_time = int(pygame.time.get_ticks() / 1000) - start_time
+                        new_time_played_total = time_played_total + current_time
+                        edited_stats_interactivity_file_dict.update({"time_played":new_time_played_total})
+                        edited_stats_interactivity_file_dict.update({"jumps":jumps_total + wizard_jumps })
+                        edited_stats_interactivity_file_dict.update({"distance_traveled":distance_traveled_total + distance_traveled })
+                        edited_stats_in_game_stat_records_file_dict.update({"highest_speed":updated_speed})
+                        edited_stats_in_game_stat_records_file_dict.update({"highest_damage":updated_damage})
+                        edited_stats_in_game_stat_records_file_dict.update({"highest_piercing":updated_piercing})
+                        edited_stats_in_game_stat_records_file_dict.update({"lowest_cooldown":updated_cooldown})
+                        if current_wizard_double_jump_buff and not double_jump_buff_found:
+                            edited_stats_buffs_file_dict.update({"double_jump_buff":current_wizard_double_jump_buff})
+                        if current_wizard_knockback_buff and not knockback_buff_found:
+                            edited_stats_buffs_file_dict.update({"knockback_buff":current_wizard_knockback_buff})
+                        if current_wizard_shield_buff and not shield_buff_found:
+                            edited_stats_buffs_file_dict.update({"shield_buff":current_wizard_shield_buff})
+                        set_edited_stats_file_dict(edited_stats_file_dict)
+                        # Other Death Stuff
                         wizard.sprite.set_wizard_current_health(0)
                         temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
                         wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
@@ -370,6 +415,17 @@ def obstacle_and_player_owned_projectile_collision():
                             old_outline_health_bar = outline_health_bar_ownership_group[old_health_bar]
                             old_outline_health_bar.kill()
                             old_health_bar.kill()
+                            # Tracking Kills
+                            if obstacle.get_obstacle_type() == "skeleton":
+                                name = "skeletons"
+                            elif obstacle.get_obstacle_type() == "bird":
+                                name = "skeleton_birds"
+                            edited_stats_file_dict = get_edited_stats_file_dict()
+                            edited_stats_kills_file_dict = edited_stats_file_dict.get("kills")
+                            obstacle_killed_total = int(edited_stats_kills_file_dict.get(f"{name}_killed"))
+                            obstacle_killed_total += 1
+                            edited_stats_kills_file_dict.update({f"{name}_killed":obstacle_killed_total})
+                            set_edited_stats_file_dict(edited_stats_file_dict)
                             dead_obstacle_group.add(obstacle)
                             pygame.mixer.Channel(OBSTACLE_DEATH_CHANNEL).play(obstacle_death_sound)
                             wizard.sprite.set_additional_score(temp_additional_score)
@@ -409,7 +465,7 @@ def do_drop_spawns(obstacle):
     if randint(1,25) == 25: # 1/25
         pickup_group.add(Pickup("piercing",temp_obstacle_x_pos,temp_obstacle_y_pos))
     # Speed
-    if randint(1,20) == 20: # 1/20
+    if randint(1,15) == 15: # 1/15
         pickup_group.add(Pickup("speed",temp_obstacle_x_pos,temp_obstacle_y_pos))
     # Health
     if wizard.sprite.get_wizard_current_health() < wizard.sprite.get_wizard_max_health():
@@ -417,13 +473,13 @@ def do_drop_spawns(obstacle):
             pickup_group.add(Pickup("health",temp_obstacle_x_pos,temp_obstacle_y_pos))
     # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
     # Double Jump
-    if not wizard.sprite.get_double_jump() and randint(1,50) == 50: # 1/50
+    if not wizard.sprite.get_double_jump() and randint(1,2) == 2: # 1/50
         buff_group.add(Buff("double_jump",temp_obstacle_x_pos,temp_obstacle_y_pos))
     # Shield
-    if not wizard.sprite.get_shield() and randint(1,50) == 50: # 1/50
+    elif not wizard.sprite.get_shield() and randint(1,2) == 2: # 1/50
         buff_group.add(Buff("shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
     # Knockback
-    if not wizard.sprite.get_knockback() and randint(1,50) == 50: # 1/50
+    elif not wizard.sprite.get_knockback() and randint(1,2) == 2: # 1/50
         buff_group.add(Buff("knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
 
 
@@ -527,7 +583,7 @@ while True:
                 if not wizard.sprite.get_wizard_dead():
                     edited_controls_are_mouse_buttons = get_edited_controls_file_dict().get("edited_controls_are_mouse_buttons")
                     # Spacebar Release Event Detection
-                    if wizard.sprite.get_double_jump() and not wizard.sprite.get_double_jump_used() and event.type == pygame.KEYUP:
+                    if wizard.sprite.get_double_jump() and not wizard.sprite.get_double_jump_used() and ((not jump_button_is_mouse and event.type == pygame.KEYUP) or (jump_button_is_mouse and event.type == pygame.MOUSEBUTTONUP)):
                         if jump_button_press:
                             wizard.sprite.set_first_jump_used(True)
                     # Obstacle Timer Event Detection
@@ -545,6 +601,7 @@ while True:
                     # Player Shooting
                     if shoot_button_press and int(pygame.time.get_ticks() / 1000) - start_time > 2/60:
                         if wizard.sprite.get_current_fireball_cooldown() == 0: # or wizard.sprite.get_fireball_hit(): # causes fireball_cooldown refresh on hit
+                            fireballs_shot += 1
                             wizard.sprite.play_fireball_sound()
                             wizard.sprite.set_fireball_shot(True)
                             temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
@@ -571,6 +628,7 @@ while True:
                             wizard_alive = True
                             start_time = int(pygame.time.get_ticks() / 1000)
                             additional_score = 0
+                            pre_stat_update_edited_stats_file_dict.update(get_edited_stats_file_dict())
                     # Statistics Button
                     elif mouse_on_main_menu_statistics_button:
                         if clicking_with_left_mouse:
@@ -587,10 +645,12 @@ while True:
                 # Statistics Menu
                 elif menu_section == STATISTICS_MENU:
                     # Left Side
+                    # Kills
                     # Skeletons Killed Tracker
                     mouse_on_statistics_skeletons_killed_tracker = statistics_skeletons_killed_tracker_rect_big.collidepoint(mouse_pos)
                     # Skeleton Birds Killed Tracker
                     mouse_on_statistics_skeleton_birds_killed_tracker = statistics_skeleton_birds_killed_tracker_rect_big.collidepoint(mouse_pos)
+                    # Interactivity
                     # Time Played Tracker
                     mouse_on_statistics_time_played_tracker = statistics_time_played_tracker_rect_big.collidepoint(mouse_pos)
                     # High Score Tracker
@@ -602,6 +662,7 @@ while True:
                     # Distance Traveled Tracker
                     mouse_on_statistics_distance_traveled_tracker = statistics_distance_traveled_tracker_rect_big.collidepoint(mouse_pos)
                     # Right Side
+                    # In-Game Stat Records
                     # Highest Speed Tracker
                     mouse_on_statistics_highest_speed_tracker = statistics_highest_speed_tracker_rect_big.collidepoint(mouse_pos)
                     # Highest Damage Tracker
@@ -610,6 +671,7 @@ while True:
                     mouse_on_statistics_highest_piercing_tracker = statistics_highest_piercing_tracker_rect_big.collidepoint(mouse_pos)
                     # Lowest Cooldown Tracker
                     mouse_on_statistics_lowest_cooldown_tracker = statistics_lowest_cooldown_tracker_rect_big.collidepoint(mouse_pos)
+                    # Buffs
                     # Double Jump Buff Tracker
                     mouse_on_statistics_double_jump_buff_tracker = statistics_double_jump_buff_tracker_rect_big.collidepoint(mouse_pos)
                     # Knockback Buff Tracker
@@ -781,6 +843,12 @@ while True:
                 score_message_surf = test_font.render("Score: " + str(score),False,"#FCDC4D")
                 score_message_surf = pygame.transform.scale_by(score_message_surf,WINDOW_SCALAR)
                 score_message_rect = score_message_surf.get_rect(center = (WINDOW_WIDTH/2,(84/800 * WINDOW_HEIGHT)))
+                edited_stats_file_dict = get_edited_stats_file_dict()
+                edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+                high_score = edited_stats_interactivity_file_dict.get("high_score")
+                if score > high_score:
+                    edited_stats_interactivity_file_dict.update({"high_score":score})
+                    set_edited_stats_file_dict(edited_stats_file_dict)
                 # Main Menu Score vs. Title Blit
                 if score == 0: screen.blit(main_menu_title_surf,main_menu_title_rect)
                 else: screen.blit(score_message_surf,score_message_rect)
@@ -802,6 +870,279 @@ while True:
                     else: screen.blit(main_menu_exit_button_surf_big,main_menu_exit_button_rect_big)
                 # Statistics Menu Button Blits
                 elif menu_section == STATISTICS_MENU:
+                    # Extra Stat Checks
+                    if fireballs_shot != 0:
+                        edited_stats_file_dict = get_edited_stats_file_dict()
+                        edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+                        fireballs_shot_total = edited_stats_interactivity_file_dict.get("fireballs_shot")
+                        fireballs_shot_total += fireballs_shot
+                        edited_stats_interactivity_file_dict.update({"fireballs_shot":fireballs_shot_total})
+                        set_edited_stats_file_dict(edited_stats_file_dict)
+                        fireballs_shot = 0
+                    if jumps_made != 0:
+                        edited_stats_file_dict = get_edited_stats_file_dict()
+                        edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+                        jumps_total = edited_stats_interactivity_file_dict.get("jumps")
+                        jumps_total += jumps_made
+                        edited_stats_interactivity_file_dict.update({"jumps":jumps_total})
+                        set_edited_stats_file_dict(edited_stats_file_dict)
+                        jumps_made = 0
+                    if distance_traveled != 0:
+                        edited_stats_file_dict = get_edited_stats_file_dict()
+                        edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+                        distance_traveled_total = edited_stats_interactivity_file_dict.get("distance_traveled")
+                        distance_traveled_total += distance_traveled
+                        edited_stats_interactivity_file_dict.update({"distance_traveled":distance_traveled_total})
+                        set_edited_stats_file_dict(edited_stats_file_dict)
+                        jumps_made = 0
+                    # Stats Updates
+                    if pre_stat_update_edited_stats_file_dict and pre_stat_update_edited_stats_file_dict != get_edited_stats_file_dict():
+                        pre_stat_update_edited_stats_kills_file_dict = pre_stat_update_edited_stats_file_dict.get("kills")
+                        pre_stat_update_edited_stats_interactivity_file_dict = pre_stat_update_edited_stats_file_dict.get("interactivity")
+                        pre_stat_update_edited_stats_in_game_stat_records_file_dict = pre_stat_update_edited_stats_file_dict.get("in_game_stat_records")
+                        pre_stat_update_edited_stats_buffs_file_dict = pre_stat_update_edited_stats_file_dict.get("buffs")
+                        edited_stats_file_dict = get_edited_stats_file_dict()
+                        edited_stats_kills_file_dict = edited_stats_file_dict.get("kills")
+                        edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+                        edited_stats_in_game_stat_records_file_dict = edited_stats_file_dict.get("in_game_stat_records")
+                        edited_stats_buffs_file_dict = edited_stats_file_dict.get("buffs")
+                        # Left Side Updates
+                        # Kills
+                        if pre_stat_update_edited_stats_kills_file_dict != edited_stats_kills_file_dict:
+                            pre_stat_update_skeletons_killed_total = pre_stat_update_edited_stats_kills_file_dict.get("skeletons_killed")
+                            skeletons_killed_total = edited_stats_kills_file_dict.get("skeletons_killed")
+                            pre_stat_update_skeleton_birds_killed_total = pre_stat_update_edited_stats_kills_file_dict.get("skeleton_birds_killed")
+                            skeleton_birds_killed_total = edited_stats_kills_file_dict.get("skeleton_birds_killed")
+                            # Skeletons Killed Update
+                            if pre_stat_update_skeletons_killed_total != skeletons_killed_total:
+                                statistics_skeletons_killed_tracker_surf = test_font.render(f"Skeletons Killed: {skeletons_killed_total}",False,"#FCDC4D")
+                                statistics_skeletons_killed_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_skeletons_killed_tracker_surf = pygame.transform.scale_by(statistics_skeletons_killed_tracker_surf,statistics_skeletons_killed_tracker_scale)
+                                statistics_skeletons_killed_tracker_rect = statistics_skeletons_killed_tracker_surf.get_rect(center = (statistics_skeletons_killed_tracker_start_pos))
+                                mouse_on_statistics_skeletons_killed_tracker = False
+                                statistics_skeletons_killed_tracker_big_scale = button_when_big_scale
+                                statistics_skeletons_killed_tracker_surf_big = pygame.transform.scale_by(statistics_skeletons_killed_tracker_surf,statistics_skeletons_killed_tracker_big_scale)
+                                statistics_skeletons_killed_tracker_rect_big = statistics_skeletons_killed_tracker_surf_big.get_rect(center = (statistics_skeletons_killed_tracker_start_pos))
+                                statistics_skeletons_killed_tracker_new_x_pos = statistics_skeletons_killed_tracker_start_x_pos - ((statistics_skeletons_killed_tracker_rect_big.width)/2)
+                                statistics_skeletons_killed_tracker_new_pos = (statistics_skeletons_killed_tracker_new_x_pos,statistics_skeletons_killed_tracker_start_y_pos)
+                                statistics_skeletons_killed_tracker_rect = statistics_skeletons_killed_tracker_surf.get_rect(center = (statistics_skeletons_killed_tracker_new_pos))
+                                statistics_skeletons_killed_tracker_rect_big = statistics_skeletons_killed_tracker_surf_big.get_rect(center = (statistics_skeletons_killed_tracker_new_pos))
+                            # Skeleton Birds Killed Update
+                            if pre_stat_update_skeleton_birds_killed_total != skeleton_birds_killed_total:
+                                statistics_skeleton_birds_killed_tracker_surf = test_font.render(f"Skeleton Birds Killed: {skeleton_birds_killed_total}",False,"#FCDC4D")
+                                statistics_skeleton_birds_killed_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_skeleton_birds_killed_tracker_surf = pygame.transform.scale_by(statistics_skeleton_birds_killed_tracker_surf,statistics_skeleton_birds_killed_tracker_scale)
+                                statistics_skeleton_birds_killed_tracker_rect = statistics_skeleton_birds_killed_tracker_surf.get_rect(center = (statistics_skeleton_birds_killed_tracker_start_pos))
+                                mouse_on_statistics_skeleton_birds_killed_tracker = False
+                                statistics_skeleton_birds_killed_tracker_big_scale = button_when_big_scale
+                                statistics_skeleton_birds_killed_tracker_surf_big = pygame.transform.scale_by(statistics_skeleton_birds_killed_tracker_surf,statistics_skeleton_birds_killed_tracker_big_scale)
+                                statistics_skeleton_birds_killed_tracker_rect_big = statistics_skeleton_birds_killed_tracker_surf_big.get_rect(center = (statistics_skeleton_birds_killed_tracker_start_pos))
+                                statistics_skeleton_birds_killed_tracker_new_x_pos = statistics_skeleton_birds_killed_tracker_start_x_pos - ((statistics_skeleton_birds_killed_tracker_rect_big.width)/2)
+                                statistics_skeleton_birds_killed_tracker_new_pos = (statistics_skeleton_birds_killed_tracker_new_x_pos,statistics_skeleton_birds_killed_tracker_start_y_pos)
+                                statistics_skeleton_birds_killed_tracker_rect = statistics_skeleton_birds_killed_tracker_surf.get_rect(center = (statistics_skeleton_birds_killed_tracker_new_pos))
+                                statistics_skeleton_birds_killed_tracker_rect_big = statistics_skeleton_birds_killed_tracker_surf_big.get_rect(center = (statistics_skeleton_birds_killed_tracker_new_pos))
+                        # Interactivity
+                        if pre_stat_update_edited_stats_interactivity_file_dict != edited_stats_interactivity_file_dict:
+                            pre_stat_update_time_played_total = pre_stat_update_edited_stats_interactivity_file_dict.get("time_played")
+                            time_played_total = edited_stats_interactivity_file_dict.get("time_played")
+                            pre_stat_update_high_score_total = pre_stat_update_edited_stats_interactivity_file_dict.get("high_score")
+                            high_score_total = edited_stats_interactivity_file_dict.get("high_score")
+                            pre_stat_update_fireballs_shot_total = pre_stat_update_edited_stats_interactivity_file_dict.get("fireballs_shot")
+                            fireballs_shot_total = edited_stats_interactivity_file_dict.get("fireballs_shot")
+                            pre_stat_update_jumps_total = pre_stat_update_edited_stats_interactivity_file_dict.get("jumps")
+                            jumps_total = edited_stats_interactivity_file_dict.get("jumps")
+                            pre_stat_update_distance_traveled_total = pre_stat_update_edited_stats_interactivity_file_dict.get("distance_traveled")
+                            distance_traveled_total = edited_stats_interactivity_file_dict.get("distance_traveled")
+                            # Time Played Update
+                            if pre_stat_update_time_played_total != time_played_total:
+                                time_played_total = edited_stats_interactivity_file_dict.get("time_played")
+                                units = {"weeks":3600 * 24 * 7,"days":3600 * 24,"hours": 3600, "minutes": 60, "seconds": 1}
+                                final_displayed_time = ""
+                                for unit, value in units.items():
+                                    count = time_played_total // value
+                                    time_played_total -= count * value
+                                    if count > 0:
+                                        final_displayed_time += f"{count}{unit[0]} "
+                                if not final_displayed_time:
+                                    final_displayed_time = "0"
+                                statistics_time_played_tracker_surf = test_font.render(f"Time Played: {final_displayed_time.strip()}",False,"#FCDC4D")
+                                statistics_time_played_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_time_played_tracker_surf = pygame.transform.scale_by(statistics_time_played_tracker_surf,statistics_time_played_tracker_scale)
+                                statistics_time_played_tracker_rect = statistics_time_played_tracker_surf.get_rect(center = (statistics_time_played_tracker_start_pos))
+                                mouse_on_statistics_time_played_tracker = False
+                                statistics_time_played_tracker_big_scale = button_when_big_scale
+                                statistics_time_played_tracker_surf_big = pygame.transform.scale_by(statistics_time_played_tracker_surf,statistics_time_played_tracker_big_scale)
+                                statistics_time_played_tracker_rect_big = statistics_time_played_tracker_surf_big.get_rect(center = (statistics_time_played_tracker_start_pos))
+                                statistics_time_played_tracker_new_x_pos = statistics_time_played_tracker_start_x_pos - ((statistics_time_played_tracker_rect_big.width)/2)
+                                statistics_time_played_tracker_new_pos = (statistics_time_played_tracker_new_x_pos,statistics_time_played_tracker_start_y_pos)
+                                statistics_time_played_tracker_rect = statistics_time_played_tracker_surf.get_rect(center = (statistics_time_played_tracker_new_pos))
+                                statistics_time_played_tracker_rect_big = statistics_time_played_tracker_surf_big.get_rect(center = (statistics_time_played_tracker_new_pos))
+                            # High Score Update
+                            if pre_stat_update_high_score_total != high_score_total:
+                                statistics_high_score_tracker_surf = test_font.render(f"High Score: {high_score}",False,"#FCDC4D")
+                                statistics_high_score_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_high_score_tracker_surf = pygame.transform.scale_by(statistics_high_score_tracker_surf,statistics_high_score_tracker_scale)
+                                statistics_high_score_tracker_rect = statistics_high_score_tracker_surf.get_rect(center = (statistics_high_score_tracker_start_pos))
+                                mouse_on_statistics_high_score_tracker = False
+                                statistics_high_score_tracker_big_scale = button_when_big_scale
+                                statistics_high_score_tracker_surf_big = pygame.transform.scale_by(statistics_high_score_tracker_surf,statistics_high_score_tracker_big_scale)
+                                statistics_high_score_tracker_rect_big = statistics_high_score_tracker_surf_big.get_rect(center = (statistics_high_score_tracker_start_pos))
+                                statistics_high_score_tracker_new_x_pos = statistics_high_score_tracker_start_x_pos - ((statistics_high_score_tracker_rect_big.width)/2)
+                                statistics_high_score_tracker_new_pos = (statistics_high_score_tracker_new_x_pos,statistics_high_score_tracker_start_y_pos)
+                                statistics_high_score_tracker_rect = statistics_high_score_tracker_surf.get_rect(center = (statistics_high_score_tracker_new_pos))
+                                statistics_high_score_tracker_rect_big = statistics_high_score_tracker_surf_big.get_rect(center = (statistics_high_score_tracker_new_pos))
+                            # Fireballs Shot Update
+                            if pre_stat_update_fireballs_shot_total != fireballs_shot_total:
+                                statistics_fireballs_shot_tracker_surf = test_font.render(f"Fireballs Shot: {fireballs_shot_total}",False,"#FCDC4D")
+                                statistics_fireballs_shot_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_fireballs_shot_tracker_surf = pygame.transform.scale_by(statistics_fireballs_shot_tracker_surf,statistics_fireballs_shot_tracker_scale)
+                                statistics_fireballs_shot_tracker_rect = statistics_fireballs_shot_tracker_surf.get_rect(center = (statistics_fireballs_shot_tracker_start_pos))
+                                mouse_on_statistics_fireballs_shot_tracker = False
+                                statistics_fireballs_shot_tracker_big_scale = button_when_big_scale
+                                statistics_fireballs_shot_tracker_surf_big = pygame.transform.scale_by(statistics_fireballs_shot_tracker_surf,statistics_fireballs_shot_tracker_big_scale)
+                                statistics_fireballs_shot_tracker_rect_big = statistics_fireballs_shot_tracker_surf_big.get_rect(center = (statistics_fireballs_shot_tracker_start_pos))
+                                statistics_fireballs_shot_tracker_new_x_pos = statistics_fireballs_shot_tracker_start_x_pos - ((statistics_fireballs_shot_tracker_rect_big.width)/2)
+                                statistics_fireballs_shot_tracker_new_pos = (statistics_fireballs_shot_tracker_new_x_pos,statistics_fireballs_shot_tracker_start_y_pos)
+                                statistics_fireballs_shot_tracker_rect = statistics_fireballs_shot_tracker_surf.get_rect(center = (statistics_fireballs_shot_tracker_new_pos))
+                                statistics_fireballs_shot_tracker_rect_big = statistics_fireballs_shot_tracker_surf_big.get_rect(center = (statistics_fireballs_shot_tracker_new_pos))
+                            # Jumps Update
+                            if pre_stat_update_jumps_total != jumps_total:
+                                statistics_jumps_tracker_surf = test_font.render(f"Jumps: {jumps_total}",False,"#FCDC4D")
+                                statistics_jumps_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_jumps_tracker_surf = pygame.transform.scale_by(statistics_jumps_tracker_surf,statistics_jumps_tracker_scale)
+                                statistics_jumps_tracker_rect = statistics_jumps_tracker_surf.get_rect(center = (statistics_jumps_tracker_start_pos))
+                                mouse_on_statistics_jumps_tracker = False
+                                statistics_jumps_tracker_big_scale = button_when_big_scale
+                                statistics_jumps_tracker_surf_big = pygame.transform.scale_by(statistics_jumps_tracker_surf,statistics_jumps_tracker_big_scale)
+                                statistics_jumps_tracker_rect_big = statistics_jumps_tracker_surf_big.get_rect(center = (statistics_jumps_tracker_start_pos))
+                                statistics_jumps_tracker_new_x_pos = statistics_jumps_tracker_start_x_pos - ((statistics_jumps_tracker_rect_big.width)/2)
+                                statistics_jumps_tracker_new_pos = (statistics_jumps_tracker_new_x_pos,statistics_jumps_tracker_start_y_pos)
+                                statistics_jumps_tracker_rect = statistics_jumps_tracker_surf.get_rect(center = (statistics_jumps_tracker_new_pos))
+                                statistics_jumps_tracker_rect_big = statistics_jumps_tracker_surf_big.get_rect(center = (statistics_jumps_tracker_new_pos))
+                            # Distance Traveled Update
+                            if pre_stat_update_distance_traveled_total != distance_traveled_total:
+                                statistics_distance_traveled_tracker_surf = test_font.render(f"Distance Traveled: {int(distance_traveled_total/WIZARD_WIDTH)}m",False,"#FCDC4D")
+                                statistics_distance_traveled_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_distance_traveled_tracker_surf = pygame.transform.scale_by(statistics_distance_traveled_tracker_surf,statistics_distance_traveled_tracker_scale)
+                                statistics_distance_traveled_tracker_rect = statistics_distance_traveled_tracker_surf.get_rect(center = (statistics_distance_traveled_tracker_start_pos))
+                                mouse_on_statistics_distance_traveled_tracker = False
+                                statistics_distance_traveled_tracker_big_scale = button_when_big_scale
+                                statistics_distance_traveled_tracker_surf_big = pygame.transform.scale_by(statistics_distance_traveled_tracker_surf,statistics_distance_traveled_tracker_big_scale)
+                                statistics_distance_traveled_tracker_rect_big = statistics_distance_traveled_tracker_surf_big.get_rect(center = (statistics_distance_traveled_tracker_start_pos))
+                                statistics_distance_traveled_tracker_new_x_pos = statistics_distance_traveled_tracker_start_x_pos - ((statistics_distance_traveled_tracker_rect_big.width)/2)
+                                statistics_distance_traveled_tracker_new_pos = (statistics_distance_traveled_tracker_new_x_pos,statistics_distance_traveled_tracker_start_y_pos)
+                                statistics_distance_traveled_tracker_rect = statistics_distance_traveled_tracker_surf.get_rect(center = (statistics_distance_traveled_tracker_new_pos))
+                                statistics_distance_traveled_tracker_rect_big = statistics_distance_traveled_tracker_surf_big.get_rect(center = (statistics_distance_traveled_tracker_new_pos))
+                        # Right Side Updates
+                        # In-Game Stat Records
+                        if pre_stat_update_edited_stats_in_game_stat_records_file_dict != edited_stats_in_game_stat_records_file_dict:
+                            pre_stat_update_highest_speed = pre_stat_update_edited_stats_in_game_stat_records_file_dict.get("highest_speed")
+                            highest_speed = edited_stats_in_game_stat_records_file_dict.get("highest_speed")
+                            pre_stat_update_highest_damage = pre_stat_update_edited_stats_in_game_stat_records_file_dict.get("highest_damage")
+                            highest_damage = edited_stats_in_game_stat_records_file_dict.get("highest_damage")
+                            pre_stat_update_highest_piercing = pre_stat_update_edited_stats_in_game_stat_records_file_dict.get("highest_piercing")
+                            highest_piercing = edited_stats_in_game_stat_records_file_dict.get("highest_piercing")
+                            pre_stat_update_lowest_cooldown = pre_stat_update_edited_stats_in_game_stat_records_file_dict.get("lowest_cooldown")
+                            lowest_cooldown = edited_stats_in_game_stat_records_file_dict.get("lowest_cooldown")
+                            # Highest Speed Update
+                            if pre_stat_update_highest_speed != highest_speed:
+                                statistics_highest_speed_tracker_surf = test_font.render(f"Highest Speed: {round((highest_speed/WIZARD_WIDTH)*60,2)}m/s",False,"#FCDC4D")
+                                statistics_highest_speed_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_highest_speed_tracker_surf = pygame.transform.scale_by(statistics_highest_speed_tracker_surf,statistics_highest_speed_tracker_scale)
+                                statistics_highest_speed_tracker_rect = statistics_highest_speed_tracker_surf.get_rect(center = (statistics_highest_speed_tracker_start_pos))
+                                mouse_on_statistics_highest_speed_tracker = False
+                                statistics_highest_speed_tracker_big_scale = button_when_big_scale
+                                statistics_highest_speed_tracker_surf_big = pygame.transform.scale_by(statistics_highest_speed_tracker_surf,statistics_highest_speed_tracker_big_scale)
+                                statistics_highest_speed_tracker_rect_big = statistics_highest_speed_tracker_surf_big.get_rect(center = (statistics_highest_speed_tracker_start_pos))
+                                statistics_highest_speed_tracker_new_x_pos = statistics_highest_speed_tracker_start_x_pos + ((statistics_highest_speed_tracker_rect_big.width)/2)
+                                statistics_highest_speed_tracker_new_pos = (statistics_highest_speed_tracker_new_x_pos,statistics_highest_speed_tracker_start_y_pos)
+                                statistics_highest_speed_tracker_rect = statistics_highest_speed_tracker_surf.get_rect(center = (statistics_highest_speed_tracker_new_pos))
+                                statistics_highest_speed_tracker_rect_big = statistics_highest_speed_tracker_surf_big.get_rect(center = (statistics_highest_speed_tracker_new_pos))
+                            # Highest Damage Update
+                            if pre_stat_update_highest_damage != highest_damage:
+                                statistics_highest_damage_tracker_surf = test_font.render(f"Highest Damage: {highest_damage}",False,"#FCDC4D")
+                                statistics_highest_damage_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_highest_damage_tracker_surf = pygame.transform.scale_by(statistics_highest_damage_tracker_surf,statistics_highest_damage_tracker_scale)
+                                statistics_highest_damage_tracker_rect = statistics_highest_damage_tracker_surf.get_rect(center = (statistics_highest_damage_tracker_start_pos))
+                                mouse_on_statistics_highest_damage_tracker = False
+                                statistics_highest_damage_tracker_big_scale = button_when_big_scale
+                                statistics_highest_damage_tracker_surf_big = pygame.transform.scale_by(statistics_highest_damage_tracker_surf,statistics_highest_damage_tracker_big_scale)
+                                statistics_highest_damage_tracker_rect_big = statistics_highest_damage_tracker_surf_big.get_rect(center = (statistics_highest_damage_tracker_start_pos))
+                                statistics_highest_damage_tracker_new_x_pos = statistics_highest_damage_tracker_start_x_pos + ((statistics_highest_damage_tracker_rect_big.width)/2)
+                                statistics_highest_damage_tracker_new_pos = (statistics_highest_damage_tracker_new_x_pos,statistics_highest_damage_tracker_start_y_pos)
+                                statistics_highest_damage_tracker_rect = statistics_highest_damage_tracker_surf.get_rect(center = (statistics_highest_damage_tracker_new_pos))
+                                statistics_highest_damage_tracker_rect_big = statistics_highest_damage_tracker_surf_big.get_rect(center = (statistics_highest_damage_tracker_new_pos))
+                            # Highest Piercing Update
+                            if pre_stat_update_highest_piercing != highest_piercing:
+                                statistics_highest_piercing_tracker_surf = test_font.render(f"Highest Piercing: {highest_piercing - 1}",False,"#FCDC4D")
+                                statistics_highest_piercing_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_highest_piercing_tracker_surf = pygame.transform.scale_by(statistics_highest_piercing_tracker_surf,statistics_highest_piercing_tracker_scale)
+                                statistics_highest_piercing_tracker_rect = statistics_highest_piercing_tracker_surf.get_rect(center = (statistics_highest_piercing_tracker_start_pos))
+                                mouse_on_statistics_highest_piercing_tracker = False
+                                statistics_highest_piercing_tracker_big_scale = button_when_big_scale
+                                statistics_highest_piercing_tracker_surf_big = pygame.transform.scale_by(statistics_highest_piercing_tracker_surf,statistics_highest_piercing_tracker_big_scale)
+                                statistics_highest_piercing_tracker_rect_big = statistics_highest_piercing_tracker_surf_big.get_rect(center = (statistics_highest_piercing_tracker_start_pos))
+                                statistics_highest_piercing_tracker_new_x_pos = statistics_highest_piercing_tracker_start_x_pos + ((statistics_highest_piercing_tracker_rect_big.width)/2)
+                                statistics_highest_piercing_tracker_new_pos = (statistics_highest_piercing_tracker_new_x_pos,statistics_highest_piercing_tracker_start_y_pos)
+                                statistics_highest_piercing_tracker_rect = statistics_highest_piercing_tracker_surf.get_rect(center = (statistics_highest_piercing_tracker_new_pos))
+                                statistics_highest_piercing_tracker_rect_big = statistics_highest_piercing_tracker_surf_big.get_rect(center = (statistics_highest_piercing_tracker_new_pos))
+                            # Lowest Cooldown Update
+                            if pre_stat_update_lowest_cooldown != lowest_cooldown:
+                                statistics_lowest_cooldown_tracker_surf = test_font.render(f"Lowest Cooldown: {round(lowest_cooldown/60, 2)}s",False,"#FCDC4D")
+                                statistics_lowest_cooldown_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_lowest_cooldown_tracker_surf = pygame.transform.scale_by(statistics_lowest_cooldown_tracker_surf,statistics_lowest_cooldown_tracker_scale)
+                                statistics_lowest_cooldown_tracker_rect = statistics_lowest_cooldown_tracker_surf.get_rect(center = (statistics_lowest_cooldown_tracker_start_pos))
+                                mouse_on_statistics_lowest_cooldown_tracker = False
+                                statistics_lowest_cooldown_tracker_big_scale = button_when_big_scale
+                                statistics_lowest_cooldown_tracker_surf_big = pygame.transform.scale_by(statistics_lowest_cooldown_tracker_surf,statistics_lowest_cooldown_tracker_big_scale)
+                                statistics_lowest_cooldown_tracker_rect_big = statistics_lowest_cooldown_tracker_surf_big.get_rect(center = (statistics_lowest_cooldown_tracker_start_pos))
+                                statistics_lowest_cooldown_tracker_new_x_pos = statistics_lowest_cooldown_tracker_start_x_pos + ((statistics_lowest_cooldown_tracker_rect_big.width)/2)
+                                statistics_lowest_cooldown_tracker_new_pos = (statistics_lowest_cooldown_tracker_new_x_pos,statistics_lowest_cooldown_tracker_start_y_pos)
+                                statistics_lowest_cooldown_tracker_rect = statistics_lowest_cooldown_tracker_surf.get_rect(center = (statistics_lowest_cooldown_tracker_new_pos))
+                                statistics_lowest_cooldown_tracker_rect_big = statistics_lowest_cooldown_tracker_surf_big.get_rect(center = (statistics_lowest_cooldown_tracker_new_pos))
+                        # Buffs
+                        # Double Jump Buff Update
+                        if edited_stats_buffs_file_dict.get("double_jump_buff"):
+                            statistics_double_jump_buff_tracker_surf = test_font.render("Double Jump Buff: Found",False,"#FCDC4D")
+                            statistics_double_jump_buff_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                            statistics_double_jump_buff_tracker_surf = pygame.transform.scale_by(statistics_double_jump_buff_tracker_surf,statistics_double_jump_buff_tracker_scale)
+                            statistics_double_jump_buff_tracker_rect = statistics_double_jump_buff_tracker_surf.get_rect(center = (statistics_double_jump_buff_tracker_start_pos))
+                            mouse_on_statistics_double_jump_buff_tracker = False
+                            statistics_double_jump_buff_tracker_big_scale = button_when_big_scale
+                            statistics_double_jump_buff_tracker_surf_big = pygame.transform.scale_by(statistics_double_jump_buff_tracker_surf,statistics_double_jump_buff_tracker_big_scale)
+                            statistics_double_jump_buff_tracker_rect_big = statistics_double_jump_buff_tracker_surf_big.get_rect(center = (statistics_double_jump_buff_tracker_start_pos))
+                            statistics_double_jump_buff_tracker_new_x_pos = statistics_double_jump_buff_tracker_start_x_pos + ((statistics_double_jump_buff_tracker_rect_big.width)/2)
+                            statistics_double_jump_buff_tracker_new_pos = (statistics_double_jump_buff_tracker_new_x_pos,statistics_double_jump_buff_tracker_start_y_pos)
+                            statistics_double_jump_buff_tracker_rect = statistics_double_jump_buff_tracker_surf.get_rect(center = (statistics_double_jump_buff_tracker_new_pos))
+                            statistics_double_jump_buff_tracker_rect_big = statistics_double_jump_buff_tracker_surf_big.get_rect(center = (statistics_double_jump_buff_tracker_new_pos))
+                        # Knockback Buff Update
+                        if edited_stats_buffs_file_dict.get("knockback_buff"):
+                            statistics_knockback_buff_tracker_surf = test_font.render("Knockback Buff: Found",False,"#FCDC4D")
+                            statistics_knockback_buff_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                            statistics_knockback_buff_tracker_surf = pygame.transform.scale_by(statistics_knockback_buff_tracker_surf,statistics_knockback_buff_tracker_scale)
+                            statistics_knockback_buff_tracker_rect = statistics_knockback_buff_tracker_surf.get_rect(center = (statistics_knockback_buff_tracker_start_pos))
+                            mouse_on_statistics_knockback_buff_tracker = False
+                            statistics_knockback_buff_tracker_big_scale = button_when_big_scale
+                            statistics_knockback_buff_tracker_surf_big = pygame.transform.scale_by(statistics_knockback_buff_tracker_surf,statistics_knockback_buff_tracker_big_scale)
+                            statistics_knockback_buff_tracker_rect_big = statistics_knockback_buff_tracker_surf_big.get_rect(center = (statistics_knockback_buff_tracker_start_pos))
+                            statistics_knockback_buff_tracker_new_x_pos = statistics_knockback_buff_tracker_start_x_pos + ((statistics_knockback_buff_tracker_rect_big.width)/2)
+                            statistics_knockback_buff_tracker_new_pos = (statistics_knockback_buff_tracker_new_x_pos,statistics_knockback_buff_tracker_start_y_pos)
+                            statistics_knockback_buff_tracker_rect = statistics_knockback_buff_tracker_surf.get_rect(center = (statistics_knockback_buff_tracker_new_pos))
+                            statistics_knockback_buff_tracker_rect_big = statistics_knockback_buff_tracker_surf_big.get_rect(center = (statistics_knockback_buff_tracker_new_pos))
+                        # Shield Buff Update
+                        if edited_stats_buffs_file_dict.get("shield_buff"):
+                                statistics_shield_buff_tracker_surf = test_font.render("Magic Shield Buff: Found",False,"#FCDC4D")
+                                statistics_shield_buff_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                                statistics_shield_buff_tracker_surf = pygame.transform.scale_by(statistics_shield_buff_tracker_surf,statistics_shield_buff_tracker_scale)
+                                statistics_shield_buff_tracker_rect = statistics_shield_buff_tracker_surf.get_rect(center = (statistics_shield_buff_tracker_start_pos))
+                                mouse_on_statistics_shield_buff_tracker = False
+                                statistics_shield_buff_tracker_big_scale = button_when_big_scale
+                                statistics_shield_buff_tracker_surf_big = pygame.transform.scale_by(statistics_shield_buff_tracker_surf,statistics_shield_buff_tracker_big_scale)
+                                statistics_shield_buff_tracker_rect_big = statistics_shield_buff_tracker_surf_big.get_rect(center = (statistics_shield_buff_tracker_start_pos))
+                                statistics_shield_buff_tracker_new_x_pos = statistics_shield_buff_tracker_start_x_pos + ((statistics_shield_buff_tracker_rect_big.width)/2)
+                                statistics_shield_buff_tracker_new_pos = (statistics_shield_buff_tracker_new_x_pos,statistics_shield_buff_tracker_start_y_pos)
+                                statistics_shield_buff_tracker_rect = statistics_shield_buff_tracker_surf.get_rect(center = (statistics_shield_buff_tracker_new_pos))
+                                statistics_shield_buff_tracker_rect_big = statistics_shield_buff_tracker_surf_big.get_rect(center = (statistics_shield_buff_tracker_new_pos))
                     # Left Side
                     # Skeletons Killed Tracker
                     if not mouse_on_statistics_skeletons_killed_tracker: screen.blit(statistics_skeletons_killed_tracker_surf,statistics_skeletons_killed_tracker_rect)
@@ -850,6 +1191,7 @@ while True:
                     # Back Button
                     if not mouse_on_statistics_back_button: screen.blit(statistics_back_button_surf,statistics_back_button_rect)
                     else: screen.blit(statistics_back_button_surf_big,statistics_back_button_rect_big)
+                    pre_stat_update_edited_stats_file_dict = {}
                 # Settings Menu Button Blits
                 elif menu_section == SETTINGS_MENU:
                     # Sounds Button
