@@ -551,6 +551,7 @@ while True:
     for event in pygame.event.get(): # Gets all the events
         # mouse_buttons_pressed = pygame.mouse.get_pressed(5) # 5 means 5 mouse buttons, only supports 3 or 5
         # keys_pressed = pygame.key.get_pressed()
+        # Updates Control Vars
         if controls_update:
             jump_button,jump_button_is_mouse = get_control("jump_button")
             left_button,left_button_is_mouse = get_control("left_button")
@@ -558,6 +559,7 @@ while True:
             shoot_button,shoot_button_is_mouse = get_control("shoot_button")
             controls_update = False
 
+        # Quitting the Game
         if event.type == pygame.QUIT:
             edited_controls_file_dict = get_edited_controls_file_dict()
             edited_controls_display_names_dict = edited_controls_file_dict.get("edited_controls_display_names_dict")
@@ -569,9 +571,11 @@ while True:
                 edited_controls_file_dict.update({"edited_controls_display_names_dict":edited_controls_display_names_dict})
             pygame.quit() # Opposite of pygame.init()
             exit() # Breaks out of the while True loop
-        # Skips Intro
+
+        # Skipping Intro
         elif not intro_played and event.type == pygame.KEYUP:
             intro_played = True
+
         # Intro Played
         elif intro_played:
             # Jumping, Obstacle Timer, and Player Shooting
