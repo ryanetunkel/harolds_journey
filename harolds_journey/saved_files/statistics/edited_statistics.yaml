@@ -5,7 +5,7 @@ buffs:
 in_game_stat_records:
   highest_damage: 1
   highest_piercing: 1
-  highest_speed: 5.0
+  highest_speed: 4.0
   lowest_cooldown: 60
 interactivity:
   distance_traveled: 0
