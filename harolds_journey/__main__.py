@@ -42,15 +42,32 @@ objects_to_be_removed = [
 
 # Functions
 def display_score():
+    # Score
     temp_additional_score = wizard.sprite.get_additional_score()
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
     score_title_surf = test_font.render("SCORE", False, "#FCDC4D")
     score_title_rect = score_title_surf.get_rect(center = (WINDOW_WIDTH/2,WINDOW_HEIGHT*1/16))
     score_surf = test_font.render(str(current_time + temp_additional_score), False, "#FCDC4D")
     score_rect = score_surf.get_rect(center = (WINDOW_WIDTH/2,WINDOW_HEIGHT/8))
+    # Score Blit
     screen.blit(score_title_surf,score_title_rect)
     screen.blit(score_surf,score_rect)
     return current_time + temp_additional_score
+
+
+def display_high_score(score_rect):
+    # High Score
+    score_y_offset = WINDOW_HEIGHT * 1/44
+    high_score = edited_stats_interactivity_file_dict.get("high_score")
+    high_score_start_x_pos = CENTER_SCREEN
+    high_score_start_y_pos = score_rect.bottom + score_y_offset
+    high_score_start_pos = (high_score_start_x_pos,high_score_start_y_pos)
+    high_score_surf = test_font.render(f"High Score: {high_score}",False,"#FCDC4D")
+    high_score_scale = 0.4 * WINDOW_SCALAR
+    high_score_surf = pygame.transform.scale_by(high_score_surf,high_score_scale)
+    high_score_rect = high_score_surf.get_rect(center = (high_score_start_pos))
+    # High Score Blit
+    screen.blit(high_score_surf,high_score_rect)
 
 
 def display_controls():
@@ -855,7 +872,9 @@ while True:
                     set_edited_stats_file_dict(edited_stats_file_dict)
                 # Main Menu Score vs. Title Blit
                 if score == 0: screen.blit(main_menu_title_surf,main_menu_title_rect)
-                else: screen.blit(score_message_surf,score_message_rect)
+                else:
+                    screen.blit(score_message_surf,score_message_rect)
+                    display_high_score(score_message_rect)
 
                 # Menu Blits
                 # Main Menu Button Blits
