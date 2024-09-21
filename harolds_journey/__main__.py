@@ -473,13 +473,13 @@ def do_drop_spawns(obstacle):
             pickup_group.add(Pickup("health",temp_obstacle_x_pos,temp_obstacle_y_pos))
     # Temporary Placement for buffs, will eventually be in the world, not dropped by enemies
     # Double Jump
-    if not wizard.sprite.get_double_jump() and randint(1,2) == 2: # 1/50
+    if not wizard.sprite.get_double_jump() and randint(1,50) == 50: # 1/50
         buff_group.add(Buff("double_jump",temp_obstacle_x_pos,temp_obstacle_y_pos))
     # Shield
-    elif not wizard.sprite.get_shield() and randint(1,2) == 2: # 1/50
+    elif not wizard.sprite.get_shield() and randint(1,50) == 50: # 1/50
         buff_group.add(Buff("shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
     # Knockback
-    elif not wizard.sprite.get_knockback() and randint(1,2) == 2: # 1/50
+    elif not wizard.sprite.get_knockback() and randint(1,50) == 50: # 1/50
         buff_group.add(Buff("knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
 
 
