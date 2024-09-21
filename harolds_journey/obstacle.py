@@ -12,7 +12,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.obstacle_type = obstacle_type
 
         self.ROUND_DIFFICULTY_INCREASE_INCREMENT = 20 # frequency in seconds the difficulty increases
-        self.time_scalar = int(time_at_spawn / self.ROUND_DIFFICULTY_INCREASE_INCREMENT) + 1 # Should mean every 20 seconds goes up by 1 
+        self.time_scalar = int(time_at_spawn / self.ROUND_DIFFICULTY_INCREASE_INCREMENT) + 1 # Should mean every 20 seconds goes up by 1
 
         self.enemy_looking_right = False
         self.knockback_value = 8 * GLOBAL_SCALAR
