@@ -1,4 +1,4 @@
-"""Contains all menu-related items"""
+"""Contains all menu-related vars"""
 from controls import *
 from global_vars import *
 
@@ -12,6 +12,7 @@ CONTROLS_MENU = 5
 DISPLAY_MENU = 6
 menu_section = MAIN_MENU
 CENTER_SCREEN = WINDOW_WIDTH / 2
+rect_bigs = {}
 # Game Title
 main_menu_title_start_x_pos = CENTER_SCREEN
 main_menu_title_start_y_pos = 54/400 * WINDOW_HEIGHT
@@ -57,6 +58,7 @@ mouse_on_main_menu_start_button = False
 main_menu_start_button_big_scale = button_when_big_scale
 main_menu_start_button_surf_big = pygame.transform.scale_by(main_menu_start_button_surf,main_menu_start_button_big_scale)
 main_menu_start_button_rect_big = main_menu_start_button_surf_big.get_rect(center = (main_menu_start_button_start_pos))
+rect_bigs.update({"main_menu_start_button_rect_big":main_menu_start_button_rect_big})
 # Statistics Button
 main_menu_statistics_button_start_x_pos = CENTER_SCREEN
 main_menu_statistics_button_start_y_pos = main_menu_start_button_rect_big.bottom + ((32/400) * WINDOW_HEIGHT)
@@ -69,6 +71,7 @@ mouse_on_main_menu_statistics_button = False
 main_menu_statistics_button_big_scale = button_when_big_scale
 main_menu_statistics_button_surf_big = pygame.transform.scale_by(main_menu_statistics_button_surf,main_menu_statistics_button_big_scale)
 main_menu_statistics_button_rect_big = main_menu_statistics_button_surf_big.get_rect(center = (main_menu_statistics_button_start_pos))
+rect_bigs.update({"main_menu_statistics_button_rect_big":main_menu_statistics_button_rect_big})
 # Settings Button
 main_menu_settings_button_start_x_pos = CENTER_SCREEN
 main_menu_settings_button_start_y_pos = main_menu_statistics_button_rect_big.bottom + ((32/400) * WINDOW_HEIGHT)
@@ -81,6 +84,7 @@ mouse_on_main_menu_settings_button = False
 main_menu_settings_button_big_scale = button_when_big_scale
 main_menu_settings_button_surf_big = pygame.transform.scale_by(main_menu_settings_button_surf,main_menu_settings_button_big_scale)
 main_menu_settings_button_rect_big = main_menu_settings_button_surf_big.get_rect(center = (main_menu_settings_button_start_pos))
+rect_bigs.update({"main_menu_settings_button_rect_big":main_menu_settings_button_rect_big})
 # Exit Button
 main_menu_exit_button_start_x_pos = CENTER_SCREEN
 main_menu_exit_button_start_y_pos = main_menu_settings_button_rect_big.bottom + ((32/400) * WINDOW_HEIGHT)
@@ -93,6 +97,7 @@ mouse_on_main_menu_exit_button = False
 main_menu_exit_button_big_scale = button_when_big_scale
 main_menu_exit_button_surf_big = pygame.transform.scale_by(main_menu_exit_button_surf,main_menu_exit_button_big_scale)
 main_menu_exit_button_rect_big = main_menu_exit_button_surf_big.get_rect(center = (main_menu_exit_button_start_pos))
+rect_bigs.update({"main_menu_exit_button_rect_big":main_menu_exit_button_rect_big})
 
 # Statistics Menu
 statistics_tracker_scalar = 0.4
@@ -126,6 +131,7 @@ statistics_skeletons_killed_tracker_new_x_pos = statistics_skeletons_killed_trac
 statistics_skeletons_killed_tracker_new_pos = (statistics_skeletons_killed_tracker_new_x_pos,statistics_skeletons_killed_tracker_start_y_pos)
 statistics_skeletons_killed_tracker_rect = statistics_skeletons_killed_tracker_surf.get_rect(center = (statistics_skeletons_killed_tracker_new_pos))
 statistics_skeletons_killed_tracker_rect_big = statistics_skeletons_killed_tracker_surf_big.get_rect(center = (statistics_skeletons_killed_tracker_new_pos))
+rect_bigs.update({"statistics_skeletons_killed_tracker_rect_big":statistics_skeletons_killed_tracker_rect_big})
 # Skeleton Birds Killed Tracker
 skeleton_birds_killed_total = edited_stats_kills_file_dict.get("skeleton_birds_killed")
 statistics_skeleton_birds_killed_tracker_start_x_pos = CENTER_SCREEN - statistics_trackers_y_pos_offset
@@ -143,6 +149,7 @@ statistics_skeleton_birds_killed_tracker_new_x_pos = statistics_skeleton_birds_k
 statistics_skeleton_birds_killed_tracker_new_pos = (statistics_skeleton_birds_killed_tracker_new_x_pos,statistics_skeleton_birds_killed_tracker_start_y_pos)
 statistics_skeleton_birds_killed_tracker_rect = statistics_skeleton_birds_killed_tracker_surf.get_rect(center = (statistics_skeleton_birds_killed_tracker_new_pos))
 statistics_skeleton_birds_killed_tracker_rect_big = statistics_skeleton_birds_killed_tracker_surf_big.get_rect(center = (statistics_skeleton_birds_killed_tracker_new_pos))
+rect_bigs.update({"statistics_skeleton_birds_killed_tracker_rect_big":statistics_skeleton_birds_killed_tracker_rect_big})
 # Interactivity
 # Time Played Tracker
 time_played_total = edited_stats_interactivity_file_dict.get("time_played")
@@ -170,6 +177,7 @@ statistics_time_played_tracker_new_x_pos = statistics_time_played_tracker_start_
 statistics_time_played_tracker_new_pos = (statistics_time_played_tracker_new_x_pos,statistics_time_played_tracker_start_y_pos)
 statistics_time_played_tracker_rect = statistics_time_played_tracker_surf.get_rect(center = (statistics_time_played_tracker_new_pos))
 statistics_time_played_tracker_rect_big = statistics_time_played_tracker_surf_big.get_rect(center = (statistics_time_played_tracker_new_pos))
+rect_bigs.update({"statistics_time_played_tracker_rect_big":statistics_time_played_tracker_rect_big})
 # High Score Tracker
 high_score = edited_stats_interactivity_file_dict.get("high_score")
 statistics_high_score_tracker_start_x_pos = CENTER_SCREEN - statistics_trackers_y_pos_offset
@@ -187,6 +195,7 @@ statistics_high_score_tracker_new_x_pos = statistics_high_score_tracker_start_x_
 statistics_high_score_tracker_new_pos = (statistics_high_score_tracker_new_x_pos,statistics_high_score_tracker_start_y_pos)
 statistics_high_score_tracker_rect = statistics_high_score_tracker_surf.get_rect(center = (statistics_high_score_tracker_new_pos))
 statistics_high_score_tracker_rect_big = statistics_high_score_tracker_surf_big.get_rect(center = (statistics_high_score_tracker_new_pos))
+rect_bigs.update({"statistics_high_score_tracker_rect_big":statistics_high_score_tracker_rect_big})
 # Fireballs Shot Tracker
 fireballs_shot_total = edited_stats_interactivity_file_dict.get("fireballs_shot")
 statistics_fireballs_shot_tracker_start_x_pos = CENTER_SCREEN - statistics_trackers_y_pos_offset
@@ -204,6 +213,7 @@ statistics_fireballs_shot_tracker_new_x_pos = statistics_fireballs_shot_tracker_
 statistics_fireballs_shot_tracker_new_pos = (statistics_fireballs_shot_tracker_new_x_pos,statistics_fireballs_shot_tracker_start_y_pos)
 statistics_fireballs_shot_tracker_rect = statistics_fireballs_shot_tracker_surf.get_rect(center = (statistics_fireballs_shot_tracker_new_pos))
 statistics_fireballs_shot_tracker_rect_big = statistics_fireballs_shot_tracker_surf_big.get_rect(center = (statistics_fireballs_shot_tracker_new_pos))
+rect_bigs.update({"statistics_fireballs_shot_tracker_rect_big":statistics_fireballs_shot_tracker_rect_big})
 # Jumps Tracker
 jumps_total = edited_stats_interactivity_file_dict.get("jumps")
 statistics_jumps_tracker_start_x_pos = CENTER_SCREEN - statistics_trackers_y_pos_offset
@@ -221,6 +231,7 @@ statistics_jumps_tracker_new_x_pos = statistics_jumps_tracker_start_x_pos - ((st
 statistics_jumps_tracker_new_pos = (statistics_jumps_tracker_new_x_pos,statistics_jumps_tracker_start_y_pos)
 statistics_jumps_tracker_rect = statistics_jumps_tracker_surf.get_rect(center = (statistics_jumps_tracker_new_pos))
 statistics_jumps_tracker_rect_big = statistics_jumps_tracker_surf_big.get_rect(center = (statistics_jumps_tracker_new_pos))
+rect_bigs.update({"statistics_jumps_tracker_rect_big":statistics_jumps_tracker_rect_big})
 # Distance Traveled Tracker
 distance_traveled_total = edited_stats_interactivity_file_dict.get("distance_traveled")
 statistics_distance_traveled_tracker_start_x_pos = CENTER_SCREEN - statistics_trackers_y_pos_offset
@@ -238,6 +249,7 @@ statistics_distance_traveled_tracker_new_x_pos = statistics_distance_traveled_tr
 statistics_distance_traveled_tracker_new_pos = (statistics_distance_traveled_tracker_new_x_pos,statistics_distance_traveled_tracker_start_y_pos)
 statistics_distance_traveled_tracker_rect = statistics_distance_traveled_tracker_surf.get_rect(center = (statistics_distance_traveled_tracker_new_pos))
 statistics_distance_traveled_tracker_rect_big = statistics_distance_traveled_tracker_surf_big.get_rect(center = (statistics_distance_traveled_tracker_new_pos))
+rect_bigs.update({"statistics_distance_traveled_tracker_rect_big":statistics_distance_traveled_tracker_rect_big})
 # Right Side
 # In-Game Stat Records
 # Highest Speed Tracker
@@ -257,6 +269,7 @@ statistics_highest_speed_tracker_new_x_pos = statistics_highest_speed_tracker_st
 statistics_highest_speed_tracker_new_pos = (statistics_highest_speed_tracker_new_x_pos,statistics_highest_speed_tracker_start_y_pos)
 statistics_highest_speed_tracker_rect = statistics_highest_speed_tracker_surf.get_rect(center = (statistics_highest_speed_tracker_new_pos))
 statistics_highest_speed_tracker_rect_big = statistics_highest_speed_tracker_surf_big.get_rect(center = (statistics_highest_speed_tracker_new_pos))
+rect_bigs.update({"statistics_highest_speed_tracker_rect_big":statistics_highest_speed_tracker_rect_big})
 # Highest Damage Tracker
 highest_damage = edited_stats_in_game_stat_records_file_dict.get("highest_damage")
 statistics_highest_damage_tracker_start_x_pos = CENTER_SCREEN + statistics_trackers_y_pos_offset
@@ -274,6 +287,7 @@ statistics_highest_damage_tracker_new_x_pos = statistics_highest_damage_tracker_
 statistics_highest_damage_tracker_new_pos = (statistics_highest_damage_tracker_new_x_pos,statistics_highest_damage_tracker_start_y_pos)
 statistics_highest_damage_tracker_rect = statistics_highest_damage_tracker_surf.get_rect(center = (statistics_highest_damage_tracker_new_pos))
 statistics_highest_damage_tracker_rect_big = statistics_highest_damage_tracker_surf_big.get_rect(center = (statistics_highest_damage_tracker_new_pos))
+rect_bigs.update({"statistics_highest_damage_tracker_rect_big":statistics_highest_damage_tracker_rect_big})
 # Highest Piercing Tracker
 highest_piercing = edited_stats_in_game_stat_records_file_dict.get("highest_piercing")
 statistics_highest_piercing_tracker_start_x_pos = CENTER_SCREEN + statistics_trackers_y_pos_offset
@@ -291,6 +305,7 @@ statistics_highest_piercing_tracker_new_x_pos = statistics_highest_piercing_trac
 statistics_highest_piercing_tracker_new_pos = (statistics_highest_piercing_tracker_new_x_pos,statistics_highest_piercing_tracker_start_y_pos)
 statistics_highest_piercing_tracker_rect = statistics_highest_piercing_tracker_surf.get_rect(center = (statistics_highest_piercing_tracker_new_pos))
 statistics_highest_piercing_tracker_rect_big = statistics_highest_piercing_tracker_surf_big.get_rect(center = (statistics_highest_piercing_tracker_new_pos))
+rect_bigs.update({"statistics_highest_piercing_tracker_rect_big":statistics_highest_piercing_tracker_rect_big})
 # Lowest Cooldown Tracker
 lowest_cooldown = edited_stats_in_game_stat_records_file_dict.get("lowest_cooldown")
 statistics_lowest_cooldown_tracker_start_x_pos = CENTER_SCREEN + statistics_trackers_y_pos_offset
@@ -308,6 +323,7 @@ statistics_lowest_cooldown_tracker_new_x_pos = statistics_lowest_cooldown_tracke
 statistics_lowest_cooldown_tracker_new_pos = (statistics_lowest_cooldown_tracker_new_x_pos,statistics_lowest_cooldown_tracker_start_y_pos)
 statistics_lowest_cooldown_tracker_rect = statistics_lowest_cooldown_tracker_surf.get_rect(center = (statistics_lowest_cooldown_tracker_new_pos))
 statistics_lowest_cooldown_tracker_rect_big = statistics_lowest_cooldown_tracker_surf_big.get_rect(center = (statistics_lowest_cooldown_tracker_new_pos))
+rect_bigs.update({"statistics_lowest_cooldown_tracker_rect_big":statistics_lowest_cooldown_tracker_rect_big})
 # Buffs
 # Double Jump Buff Tracker
 double_jump_buff_found = edited_stats_buffs_file_dict.get("double_jump_buff")
@@ -327,6 +343,7 @@ statistics_double_jump_buff_tracker_new_x_pos = statistics_double_jump_buff_trac
 statistics_double_jump_buff_tracker_new_pos = (statistics_double_jump_buff_tracker_new_x_pos,statistics_double_jump_buff_tracker_start_y_pos)
 statistics_double_jump_buff_tracker_rect = statistics_double_jump_buff_tracker_surf.get_rect(center = (statistics_double_jump_buff_tracker_new_pos))
 statistics_double_jump_buff_tracker_rect_big = statistics_double_jump_buff_tracker_surf_big.get_rect(center = (statistics_double_jump_buff_tracker_new_pos))
+rect_bigs.update({"statistics_double_jump_buff_tracker_rect_big":statistics_double_jump_buff_tracker_rect_big})
 # Knockback Buff Tracker
 knockback_buff_found = edited_stats_buffs_file_dict.get("knockback_buff")
 knockback_buff_string = "???: Not Yet Found" if not knockback_buff_found else "Knockback Buff: Found"
@@ -345,6 +362,7 @@ statistics_knockback_buff_tracker_new_x_pos = statistics_knockback_buff_tracker_
 statistics_knockback_buff_tracker_new_pos = (statistics_knockback_buff_tracker_new_x_pos,statistics_knockback_buff_tracker_start_y_pos)
 statistics_knockback_buff_tracker_rect = statistics_knockback_buff_tracker_surf.get_rect(center = (statistics_knockback_buff_tracker_new_pos))
 statistics_knockback_buff_tracker_rect_big = statistics_knockback_buff_tracker_surf_big.get_rect(center = (statistics_knockback_buff_tracker_new_pos))
+rect_bigs.update({"statistics_knockback_buff_tracker_rect_big":statistics_knockback_buff_tracker_rect_big})
 # Shield Buff Tracker
 shield_buff_found = edited_stats_buffs_file_dict.get("shield_buff")
 shield_buff_string = "???: Not Yet Found" if not shield_buff_found else "Magic Shield Buff: Found"
@@ -363,6 +381,7 @@ statistics_shield_buff_tracker_new_x_pos = statistics_shield_buff_tracker_start_
 statistics_shield_buff_tracker_new_pos = (statistics_shield_buff_tracker_new_x_pos,statistics_shield_buff_tracker_start_y_pos)
 statistics_shield_buff_tracker_rect = statistics_shield_buff_tracker_surf.get_rect(center = (statistics_shield_buff_tracker_new_pos))
 statistics_shield_buff_tracker_rect_big = statistics_shield_buff_tracker_surf_big.get_rect(center = (statistics_shield_buff_tracker_new_pos))
+rect_bigs.update({"statistics_shield_buff_tracker_rect_big":statistics_shield_buff_tracker_rect_big})
 # Bottom
 # Back Button
 statistics_back_button_start_x_pos = CENTER_SCREEN
@@ -376,6 +395,7 @@ mouse_on_statistics_back_button = False
 statistics_back_button_big_scale = button_when_big_scale
 statistics_back_button_surf_big = pygame.transform.scale_by(statistics_back_button_surf,statistics_back_button_big_scale)
 statistics_back_button_rect_big = statistics_back_button_surf_big.get_rect(center = (statistics_back_button_start_pos))
+rect_bigs.update({"statistics_back_button_rect_big":statistics_back_button_rect_big})
 
 # Settings
 # Sounds Button
@@ -390,6 +410,7 @@ mouse_on_settings_sounds_button = False
 settings_sounds_button_big_scale = button_when_big_scale
 settings_sounds_button_surf_big = pygame.transform.scale_by(settings_sounds_button_surf,settings_sounds_button_big_scale)
 settings_sounds_button_rect_big = settings_sounds_button_surf_big.get_rect(center = (settings_sounds_button_start_pos))
+rect_bigs.update({"settings_sounds_button_rect_big":settings_sounds_button_rect_big})
 # Controls Button
 settings_controls_button_start_x_pos = CENTER_SCREEN
 settings_controls_button_start_y_pos = settings_sounds_button_rect_big.bottom + ((32/400) * WINDOW_HEIGHT)
@@ -402,6 +423,7 @@ mouse_on_settings_controls_button = False
 settings_controls_button_big_scale = button_when_big_scale
 settings_controls_button_surf_big = pygame.transform.scale_by(settings_controls_button_surf,settings_controls_button_big_scale)
 settings_controls_button_rect_big = settings_controls_button_surf_big.get_rect(center = (settings_controls_button_start_pos))
+rect_bigs.update({"settings_controls_button_rect_big":settings_controls_button_rect_big})
 # Display Button
 settings_display_button_start_x_pos = CENTER_SCREEN
 settings_display_button_start_y_pos = settings_controls_button_rect_big.bottom + ((32/400) * WINDOW_HEIGHT)
@@ -414,6 +436,7 @@ mouse_on_settings_display_button = False
 settings_display_button_big_scale = button_when_big_scale
 settings_display_button_surf_big = pygame.transform.scale_by(settings_display_button_surf,settings_display_button_big_scale)
 settings_display_button_rect_big = settings_display_button_surf_big.get_rect(center = (settings_display_button_start_pos))
+rect_bigs.update({"settings_display_button_rect_big":settings_display_button_rect_big})
 # Back Button
 settings_back_button_start_x_pos = CENTER_SCREEN
 settings_back_button_start_y_pos = settings_display_button_rect_big.bottom + ((32/400) * WINDOW_HEIGHT)
@@ -426,6 +449,7 @@ mouse_on_settings_back_button = False
 settings_back_button_big_scale = button_when_big_scale
 settings_back_button_surf_big = pygame.transform.scale_by(settings_back_button_surf,settings_back_button_big_scale)
 settings_back_button_rect_big = settings_back_button_surf_big.get_rect(center = (settings_back_button_start_pos))
+rect_bigs.update({"settings_back_button_rect_big":settings_back_button_rect_big})
 
 # Sounds Menu
 # Back Button
@@ -440,6 +464,7 @@ mouse_on_sounds_back_button = False
 sounds_back_button_big_scale = button_when_big_scale
 sounds_back_button_surf_big = pygame.transform.scale_by(sounds_back_button_surf,sounds_back_button_big_scale)
 sounds_back_button_rect_big = sounds_back_button_surf_big.get_rect(center = (sounds_back_button_start_pos))
+rect_bigs.update({"sounds_back_button_rect_big":sounds_back_button_rect_big})
 
 # Controls Menu
 controls_update = False
@@ -476,6 +501,8 @@ for control_name, control in default_controls_pygame_constants_names_dict.items(
     controls_button_rect_big = controls_button_surf_big.get_rect(center = (controls_button_start_pos))
     controls_button_rect_big_dict.update({control_name: controls_button_rect_big})
     controls_button_index += 1
+# for controls_button_rect_big_from_dict_name, controls_button_rect_big_from_dict in controls_button_rect_big_dict.items():
+#     rect_bigs.update({controls_button_rect_big_from_dict_name:controls_button_rect_big_from_dict})
 # Reset Button
 controls_reset_button_start_x_pos = CENTER_SCREEN
 controls_reset_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT) + (controls_buttons_y_pos_offset * (len(default_controls_pygame_constants_names_dict)))
@@ -488,6 +515,7 @@ mouse_on_controls_reset_button = False
 controls_reset_button_big_scale = button_when_big_scale
 controls_reset_button_surf_big = pygame.transform.scale_by(controls_reset_button_surf,controls_reset_button_big_scale)
 controls_reset_button_rect_big = controls_reset_button_surf_big.get_rect(center = (controls_reset_button_start_pos))
+rect_bigs.update({"controls_reset_button_rect_big":controls_reset_button_rect_big})
 # Back Button
 controls_back_button_start_x_pos = CENTER_SCREEN
 controls_back_button_start_y_pos = main_menu_settings_button_rect_big.bottom + ((32/400) * WINDOW_HEIGHT)
@@ -500,6 +528,7 @@ mouse_on_controls_back_button = False
 controls_back_button_big_scale = button_when_big_scale
 controls_back_button_surf_big = pygame.transform.scale_by(controls_back_button_surf,controls_back_button_big_scale)
 controls_back_button_rect_big = controls_back_button_surf_big.get_rect(center = (controls_back_button_start_pos))
+rect_bigs.update({"controls_back_button_rect_big":controls_back_button_rect_big})
 
 # Display Menu
 display_button_scalar = 0.5
@@ -521,6 +550,7 @@ mouse_on_display_show_controls_button = False
 display_show_controls_button_big_scale = button_when_big_scale
 display_show_controls_button_surf_big = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_big_scale)
 display_show_controls_button_rect_big = display_show_controls_button_surf_big.get_rect(center = (display_show_controls_button_start_pos))
+rect_bigs.update({"display_show_controls_button_rect_big":display_show_controls_button_rect_big})
 # Show In Game Stats Button
 in_game_stats_displayed = get_edited_options_file_dict()["edited_display_in_game_stats"]
 display_show_in_game_stats_button_start_x_pos = CENTER_SCREEN
@@ -534,6 +564,7 @@ mouse_on_display_show_in_game_stats_button = False
 display_show_in_game_stats_button_big_scale = button_when_big_scale
 display_show_in_game_stats_button_surf_big = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_big_scale)
 display_show_in_game_stats_button_rect_big = display_show_in_game_stats_button_surf_big.get_rect(center = (display_show_in_game_stats_button_start_pos))
+rect_bigs.update({"display_show_in_game_stats_button_rect_big":display_show_in_game_stats_button_rect_big})
 # Show In Game Health Button
 in_game_health_displayed = get_edited_options_file_dict()["edited_display_in_game_health"]
 display_show_in_game_health_button_start_x_pos = CENTER_SCREEN
@@ -547,6 +578,7 @@ mouse_on_display_show_in_game_health_button = False
 display_show_in_game_health_button_big_scale = button_when_big_scale
 display_show_in_game_health_button_surf_big = pygame.transform.scale_by(display_show_in_game_health_button_surf,display_show_in_game_health_button_big_scale)
 display_show_in_game_health_button_rect_big = display_show_in_game_health_button_surf_big.get_rect(center = (display_show_in_game_health_button_start_pos))
+rect_bigs.update({"display_show_in_game_health_button_rect_big":display_show_in_game_health_button_rect_big})
 # Show In Game Buffs Button
 in_game_buffs_displayed = get_edited_options_file_dict()["edited_display_in_game_buffs"]
 display_show_in_game_buffs_button_start_x_pos = CENTER_SCREEN
@@ -560,6 +592,7 @@ mouse_on_display_show_in_game_buffs_button = False
 display_show_in_game_buffs_button_big_scale = button_when_big_scale
 display_show_in_game_buffs_button_surf_big = pygame.transform.scale_by(display_show_in_game_buffs_button_surf,display_show_in_game_buffs_button_big_scale)
 display_show_in_game_buffs_button_rect_big = display_show_in_game_buffs_button_surf_big.get_rect(center = (display_show_in_game_buffs_button_start_pos))
+rect_bigs.update({"display_show_in_game_buffs_button_rect_big":display_show_in_game_buffs_button_rect_big})
 # Reset Button
 display_reset_button_start_x_pos = CENTER_SCREEN
 display_reset_button_start_y_pos = display_show_in_game_buffs_button_rect_big.bottom + display_buttons_y_pos_offset
@@ -572,6 +605,7 @@ mouse_on_display_reset_button = False
 display_reset_button_big_scale = button_when_big_scale
 display_reset_button_surf_big = pygame.transform.scale_by(display_reset_button_surf,display_reset_button_big_scale)
 display_reset_button_rect_big = display_reset_button_surf_big.get_rect(center = (display_reset_button_start_pos))
+rect_bigs.update({"display_reset_button_rect_big":display_reset_button_rect_big})
 # Back Button
 display_back_button_start_x_pos = CENTER_SCREEN
 display_back_button_start_y_pos = main_menu_settings_button_rect_big.bottom + ((32/400) * WINDOW_HEIGHT)
@@ -584,3 +618,4 @@ mouse_on_display_back_button = False
 display_back_button_big_scale = button_when_big_scale
 display_back_button_surf_big = pygame.transform.scale_by(display_back_button_surf,display_back_button_big_scale)
 display_back_button_rect_big = display_back_button_surf_big.get_rect(center = (display_back_button_start_pos))
+rect_bigs.update({"display_back_button_rect_big":display_back_button_rect_big})

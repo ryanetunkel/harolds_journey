@@ -1,6 +1,6 @@
 """Player Class"""
 from controls import *
-from menu import jumps_made, distance_traveled
+from menu_vars import jumps_made, distance_traveled
 from global_vars import *
 from graphics.wizard.wizard_animation_holder import *
 
