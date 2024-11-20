@@ -73,7 +73,7 @@ class Buff(pygame.sprite.Sprite):
 
     def off_screen_recovery(self):
         # If when readjusting the camera to follow player the buffs come with it, this is why
-        if self.rect.x >= WINDOW_WIDTH:
+        if self.rect.x >= window_width:
             self.rect.x -= self.speed
         if self.rect.y <= 0:
             self.rect.x += self.speed
@@ -81,7 +81,7 @@ class Buff(pygame.sprite.Sprite):
     def apply_gravity(self):
         self.y_velocity += self.gravity_acceleration
         self.rect.y += self.y_velocity
-        if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
+        if self.rect.bottom >= grass_top_y: self.rect.bottom = grass_top_y
 
     def animation_state(self):
         self.animation_index += self.BUFF_ANIMATION_SPEED

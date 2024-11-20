@@ -45,7 +45,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.immunity_timer = 0 # will need to eventually track what fireball id hit it
 
         if randint(0,1) == 1:
-            self.x_pos = randint(WINDOW_WIDTH + self.spawn_range_min,WINDOW_WIDTH + self.spawn_range_max)
+            self.x_pos = randint(window_width + self.spawn_range_min,window_width + self.spawn_range_max)
             self.enemy_looking_right = False
         else:
             self.x_pos = randint(-self.spawn_range_max,-self.spawn_range_min)
@@ -56,7 +56,7 @@ class Obstacle(pygame.sprite.Sprite):
             self.max_health = self.skeleton_max_health * self.time_scalar
             self.current_health = self.max_health
             self.damage = self.skeleton_damage * self.time_scalar
-            self.y_pos = GRASS_TOP_Y
+            self.y_pos = grass_top_y
             self.obstacle_speed = self.skeleton_speed
             self.obstacle_animation_speed = self.skeleton_walk_animation_speed
 
@@ -73,7 +73,7 @@ class Obstacle(pygame.sprite.Sprite):
             self.current_health = self.max_health
             self.damage = self.skeleton_damage * self.time_scalar
 
-            self.y_pos = GRASS_TOP_Y - (WIZARD_HEIGHT + (WIZARD_HEIGHT / 4))
+            self.y_pos = grass_top_y - (WIZARD_HEIGHT + (WIZARD_HEIGHT / 4))
             self.obstacle_speed = self.bird_speed
             self.obstacle_animation_speed = self.bird_fly_animation_speed
 
@@ -258,5 +258,5 @@ class Obstacle(pygame.sprite.Sprite):
     def destroy(self):
         if self.rect.x <= -self.despawn_range and not self.enemy_looking_right:
             self.kill()
-        if self.rect.x >= WINDOW_WIDTH + self.despawn_range and self.enemy_looking_right:
+        if self.rect.x >= window_width + self.despawn_range and self.enemy_looking_right:
             self.kill()

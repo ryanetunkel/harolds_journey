@@ -63,7 +63,7 @@ class Pickup(pygame.sprite.Sprite):
     def apply_gravity(self):
         self.y_velocity += self.gravity_acceleration
         self.rect.y += self.y_velocity
-        if self.rect.bottom >= GRASS_TOP_Y: self.rect.bottom = GRASS_TOP_Y
+        if self.rect.bottom >= grass_top_y: self.rect.bottom = grass_top_y
 
     def animation_state(self):
         self.animation_index += self.PICKUP_ANIMATION_SPEED

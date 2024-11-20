@@ -118,7 +118,7 @@ class Harold(pygame.sprite.Sprite):
         if not self.player.sprite.get_wizard_dead() and not self.player.sprite.get_wizard_start_death():
             if jump_button_press and self.rect.bottom >= self.harold_start_y_pos:
                 self.harold_y_velocity = self.jump_speed
-            if right_button_press and self.player.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < WINDOW_WIDTH:
+            if right_button_press and self.player.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < window_width:
                 self.harold_x_velocity = self.harold_speed
                 self.rect.x += self.harold_x_velocity
             if left_button_press and self.player.sprite.get_wizard_rect().x - self.harold_speed > 0:
@@ -142,9 +142,9 @@ class Harold(pygame.sprite.Sprite):
                 self.rect.y += self.harold_y_velocity
             else:
                 self.rect.y += math.ceil(0.5 * GLOBAL_SCALAR)
-            if self.rect.bottom >= GRASS_TOP_Y - self.DEAD_WIZARD_HAT_SIZE:
+            if self.rect.bottom >= grass_top_y - self.DEAD_WIZARD_HAT_SIZE:
                 self.set_harold_y_velocity(0)
-                self.rect.bottom = GRASS_TOP_Y - self.DEAD_WIZARD_HAT_SIZE
+                self.rect.bottom = grass_top_y - self.DEAD_WIZARD_HAT_SIZE
 
     def animation_state(self):
         self.harold_index += self.HAROLD_IDLE_ANIMATION_SPEED # speed of animation, adjust as needed

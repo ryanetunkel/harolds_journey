@@ -162,9 +162,9 @@ class Projectile(pygame.sprite.Sprite):
     def destroy(self):
         if self.rect.centerx <= -100 and not self.wizard_was_looking_right:
             self.kill()
-        elif self.rect.centerx >= WINDOW_WIDTH + 100 and self.wizard_was_looking_right:
+        elif self.rect.centerx >= window_width + 100 and self.wizard_was_looking_right:
             self.kill()
         if self.rect.centery <= -100:
             self.kill()
-        elif self.rect.centery >= GRASS_TOP_Y:
+        elif self.rect.centery >= grass_top_y:
             self.kill()

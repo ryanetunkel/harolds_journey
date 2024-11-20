@@ -30,24 +30,24 @@ pygame.init()
 # WINDOW_WIDTH = screenInfo.current_w
 # WINDOW_HEIGHT = screenInfo.current_h
 
-WINDOW_WIDTH = 800 * 3/2
-WINDOW_HEIGHT = 400 * 3/2
+window_width = 800 * 3/2
+window_height = 400 * 3/2
 # WINDOW_WIDTH = 800
 # WINDOW_HEIGHT = 400
 PIXEL_SIZE = 2 # Create a slider for this - will be zoom essentially.
 # PIXEL_SIZE currently can only be even numbers else creates .5 addition and rects can only do integer-based moves
 # Will need to transition to using math.Vector2 to do all collision and stuff and then render it after as a rect to get subpixel movement
 GLOBAL_SCALAR = PIXEL_SIZE/4
-WINDOW_SIZE = (WINDOW_WIDTH,WINDOW_HEIGHT) # Create a set of options for this, fullscreen maybe in future, gets tricky
-WINDOW_SCALAR = ((WINDOW_WIDTH + WINDOW_HEIGHT)/1200)
+window_size = (window_width,window_height) # Create a set of options for this, fullscreen maybe in future, gets tricky
+window_scalar = ((window_width + window_height)/1200)
 WIZARD_WIDTH = 32 * PIXEL_SIZE
 WIZARD_HEIGHT = 32 * PIXEL_SIZE
 WIZARD_PIXEL_SIZE = (WIZARD_HEIGHT,WIZARD_WIDTH)
-GRASS_TOP_Y = int((379 / 400) * WINDOW_HEIGHT)
+grass_top_y = int((379 / 400) * window_height)
 GLOBAL_GRAVITY = 1 * GLOBAL_SCALAR
 OBSTACLE_SPAWN_FREQUENCY = 1500 # In milliseconds, 1000 = 1 sec, should be 1500
 
-screen = pygame.display.set_mode(WINDOW_SIZE)
+screen = pygame.display.set_mode(window_size,pygame.RESIZABLE)
 pygame.display.set_caption("Harold\'s Journey")
 pygame_icon = pygame.image.load("harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png").convert_alpha()
 pygame.display.set_icon(pygame_icon)
@@ -86,15 +86,15 @@ outline_health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Spri
 
 
 # Background Elements
-bg_surf = pygame.image.load("harolds_journey/graphics/bg_images/Background.png").convert_alpha()
-bg_height = bg_surf.get_height()
-bg_width = bg_surf.get_width()
-bg_height_scalar = WINDOW_HEIGHT / bg_height
-bg_width_scalar = WINDOW_WIDTH / bg_width
-if WINDOW_WIDTH > bg_width or WINDOW_HEIGHT > bg_height:
+bg_image_path = "harolds_journey/graphics/bg_images/Background.png"
+bg_surf = pygame.image.load(bg_image_path).convert_alpha()
+bg_height = bg_surf.get_height()  # 640
+bg_width = bg_surf.get_width()  # 640
+bg_height_scalar = window_height / bg_height  # WINDOW_HEIGHT = 400 * 3/2 / 640 = 600 / 640 = 60/64
+bg_width_scalar = window_width / bg_width  # WINDOW_WIDTH = 800 * 3/2 / 640 = 1200 / 640 = 120/64
+if window_width > bg_width or window_height > bg_height: # WINDOW_WIDTH > bg_width
     bg_scalar = bg_width_scalar if bg_width_scalar >= bg_height_scalar else bg_height_scalar
-    bg_surf = pygame.transform.scale_by(bg_surf,bg_scalar)
-
+    bg_surf = pygame.transform.scale_by(bg_surf,bg_scalar) # bg_scalar = bg_width_scalar = 120/64
 
 # Timer
 obstacle_timer = pygame.USEREVENT + 1 # + 1 to avoid events taking previous numbers by default
@@ -106,3 +106,18 @@ right_button,right_button_is_mouse = get_control("right_button")
 shoot_button,shoot_button_is_mouse = get_control("shoot_button")
 
 can_edit_controls = False
+
+
+def set_game_active(new_game_active:bool):
+    global game_active
+    game_active = new_game_active
+
+
+def set_wizard_alive(new_wizard_alive:bool):
+    global wizard_alive
+    wizard_alive = new_wizard_alive
+
+
+def set_start_time(new_start_time:int):
+    global start_time
+    start_time = new_start_time

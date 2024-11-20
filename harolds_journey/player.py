@@ -19,8 +19,8 @@ class Player(pygame.sprite.Sprite):
         self.distance_traveled = distance_traveled
 
         # Start
-        self.WIZARD_START_X_POS = WINDOW_WIDTH / 2
-        self.WIZARD_START_Y_POS = GRASS_TOP_Y
+        self.WIZARD_START_X_POS = window_width / 2
+        self.WIZARD_START_Y_POS = grass_top_y
 
         # X Directions
         self.wizard_x_pos = self.WIZARD_START_X_POS
@@ -516,8 +516,8 @@ class Player(pygame.sprite.Sprite):
             (mouse_x,mouse_y) = pygame.mouse.get_pos()
             self.looking_right = mouse_x >= self.rect.centerx
             self.looking_down = mouse_y <= self.rect.centery
-            double_jump_bool = self.get_double_jump() and self.rect.bottom < GRASS_TOP_Y and not self.double_jump_used and self.get_first_jump_used()
-            if jump_button_press and (self.rect.bottom >= GRASS_TOP_Y or double_jump_bool): # event.type == jump_button
+            double_jump_bool = self.get_double_jump() and self.rect.bottom < grass_top_y and not self.double_jump_used and self.get_first_jump_used()
+            if jump_button_press and (self.rect.bottom >= grass_top_y or double_jump_bool): # event.type == jump_button
                 if double_jump_bool:
                     self.set_double_jump_used(True)
                 self.wizard_jumping = True
@@ -525,7 +525,7 @@ class Player(pygame.sprite.Sprite):
                 self.jumps_made += 1
                 # Jump Sound
                 pygame.mixer.Channel(JUMP_SOUND_CHANNEL).play(self.jump_sound)
-            if right_button_press and self.rect.x + WIZARD_WIDTH + self.wizard_speed < WINDOW_WIDTH: # event.type == right_button
+            if right_button_press and self.rect.x + WIZARD_WIDTH + self.wizard_speed < window_width: # event.type == right_button
                 self.wizard_x_velocity = self.wizard_speed
                 self.rect.x += self.wizard_x_velocity
                 self.distance_traveled += self.wizard_speed
@@ -539,7 +539,7 @@ class Player(pygame.sprite.Sprite):
             elif (not left_button_press and not right_button_press and not jump_button_press):
                 self.wizard_x_velocity = 0
                 self.wizard_moving = False
-            if self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y and self.walk_sound_timer >= self.walk_sound_length:
+            if self.wizard_moving and self.rect.bottom >= grass_top_y and self.walk_sound_timer >= self.walk_sound_length:
                 # Walk Sound
                 pygame.mixer.Channel(WALK_SOUND_CHANNEL).play(self.walk_sound)
                 self.walk_sound_timer = 0
@@ -549,9 +549,9 @@ class Player(pygame.sprite.Sprite):
     def apply_gravity(self):
         self.wizard_y_velocity += self.gravity_acceleration
         self.rect.y += self.wizard_y_velocity
-        if self.rect.bottom >= GRASS_TOP_Y:
+        if self.rect.bottom >= grass_top_y:
             self.set_wizard_y_velocity(0)
-            self.rect.bottom = GRASS_TOP_Y
+            self.rect.bottom = grass_top_y
             self.set_double_jump_used(False)
             self.set_first_jump_used(False)
             self.set_wizard_jumping(False)
@@ -575,7 +575,7 @@ class Player(pygame.sprite.Sprite):
                     self.fireball_shot = False
                 self.image = self.wizard_fireball[int(self.wizard_index)]
             # Jumping Animation
-            elif self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping: # and add landing tracker this would be if it is off
+            elif self.rect.bottom < grass_top_y and self.wizard_jumping: # and add landing tracker this would be if it is off
                 # jump (first half)
                 self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
                 self.secret_sound_timer = 0
@@ -605,7 +605,7 @@ class Player(pygame.sprite.Sprite):
                 # print("y_velocity_frame_equivalent: ",y_velocity_frame_equivalent)
                 falling_frame_index = 15
                 settling_frame_index = 16
-                if GRASS_TOP_Y - ending_y_velocity < self.rect.bottom < GRASS_TOP_Y and self.wizard_jumping:
+                if grass_top_y - ending_y_velocity < self.rect.bottom < grass_top_y and self.wizard_jumping:
                     self.image = self.wizard_jump[settling_frame_index]
                 elif y_velocity <= ending_y_velocity:
                     self.image = self.wizard_jump[y_velocity_frame_equivalent]
@@ -634,14 +634,14 @@ class Player(pygame.sprite.Sprite):
                 # and add landing tracker this would be if landed
                 # landing animation for a few frames via timer and then when ends revert to idle
             # Walking Animation
-            elif self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
+            elif self.wizard_moving and self.rect.bottom >= grass_top_y:
                 self.wizard_secret_animation_timer = self.WIZARD_SECRET_ANIMATION_LIMIT
                 self.secret_sound_timer = 0
                 self.wizard_index += self.WIZARD_WALK_ANIMATION_SPEED # speed of animation, adjust as needed
                 if self.wizard_index >= len(self.wizard_walk): self.wizard_index = 0
                 self.image = self.wizard_walk[int(self.wizard_index)]
             # Idle Animation
-            elif not self.wizard_moving and self.rect.bottom >= GRASS_TOP_Y:
+            elif not self.wizard_moving and self.rect.bottom >= grass_top_y:
                 if self.wizard_secret_animation_timer != 0:
                     self.wizard_index += self.WIZARD_IDLE_ANIMATION_SPEED # speed of animation, adjust as needed
                     if self.wizard_index >= len(self.wizard_idle): self.wizard_index = 0
