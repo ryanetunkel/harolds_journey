@@ -629,6 +629,29 @@ while True:
                             wizard.sprite.set_current_fireball_cooldown(temp_max_fireball_cooldown_time)
                             wizard.sprite.set_fireball_hit(False)
                             projectile_group.add(Projectile("fireball", wizard))
+                    # Pausing the Game
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                        pause_menu.enable()
+                        on_resize(pause_menu)
+                        sub_screen = screen.subsurface(0,0,window_width,window_height)
+
+                        screenshot = pygame.Surface((window_size))
+                        screenshot.blit(sub_screen, (0,0))
+                        screen.fill((50,50,50,100))
+                        screenshot.blit(sub_screen,(0,0))
+                        screenshot.set_alpha(50)
+
+                        pygame.image.save(screenshot, "screenshot.jpg")
+
+                        new_bg = pygame_menu.BaseImage(
+                            image_path="screenshot.jpg",
+                        )
+                        pause_menu = update_pause_menu(new_bg)
+
+                        pause_time_1 = int(pygame.time.get_ticks() / 1000)
+                        pause_menu.mainloop(screen,clear_surface=True)
+                        pause_time_2 = int(pygame.time.get_ticks() / 1000)
+                        pause_time = pause_time_2 - pause_time_1
             # Main Menu (Game Inactive)
             else:
                 # Menu Interactivity
