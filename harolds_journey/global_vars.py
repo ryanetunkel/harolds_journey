@@ -1,5 +1,7 @@
 """Global Variables"""
+
 import pygame
+
 from controls import *
 
 # Sounds
@@ -24,14 +26,14 @@ SECRET_SOUND_CHANNEL = 7
 score = 0
 
 pygame.init()
-# Experimental - works though if do this, take out other WINDOW_WIDTH and HEIGHT, and take out other screen
-# screenInfo = pygame.display.Info()
-# screen = pygame.display.set_mode((screenInfo.current_w, screenInfo.current_h))
-# WINDOW_WIDTH = screenInfo.current_w
-# WINDOW_HEIGHT = screenInfo.current_h
 
+screenInfo = pygame.display.Info()
 window_width = 800 * 3/2
 window_height = 400 * 3/2
+min_window_width = 320
+min_window_height = 240
+max_window_width = screenInfo.current_w
+max_window_height = screenInfo.current_h
 # WINDOW_WIDTH = 800
 # WINDOW_HEIGHT = 400
 PIXEL_SIZE = 2 # Create a slider for this - will be zoom essentially.
@@ -46,6 +48,7 @@ WIZARD_PIXEL_SIZE = (WIZARD_HEIGHT,WIZARD_WIDTH)
 grass_top_y = int((379 / 400) * window_height)
 GLOBAL_GRAVITY = 1 * GLOBAL_SCALAR
 OBSTACLE_SPAWN_FREQUENCY = 1500 # In milliseconds, 1000 = 1 sec, should be 1500
+FPS = 60
 
 screen = pygame.display.set_mode(window_size,pygame.RESIZABLE)
 pygame.display.set_caption("Harold\'s Journey")
@@ -57,6 +60,7 @@ game_active = False
 intro_played = False
 wizard_alive = False
 start_time = 0
+pause_time = 0
 death_timer = 0
 
 # Music
