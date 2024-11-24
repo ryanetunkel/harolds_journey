@@ -110,18 +110,3 @@ right_button,right_button_is_mouse = get_control("right_button")
 shoot_button,shoot_button_is_mouse = get_control("shoot_button")
 
 can_edit_controls = False
-
-
-def set_game_active(new_game_active:bool):
-    global game_active
-    game_active = new_game_active
-
-
-def set_wizard_alive(new_wizard_alive:bool):
-    global wizard_alive
-    wizard_alive = new_wizard_alive
-
-
-def set_start_time(new_start_time:int):
-    global start_time
-    start_time = new_start_time
