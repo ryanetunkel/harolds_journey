@@ -289,10 +289,6 @@ def update_main_menu_and_submenus() -> pygame_menu.Menu:
         font_color=font_color,
         font_name=font_name,
     )
-    print(f"controls_update:{controls_update}")
-    print(f"game_active:{game_active}")
-    print(f"wizard_alive:{wizard_alive}")
-    print(f"start_time:{start_time}")
     # start_game() happens right away and then can't be clicked again
     # start_game never starts no matter what even though it should be what works
     main_menu_statistics_button = main_menu.add.button(
@@ -335,13 +331,13 @@ def update_main_menu_and_submenus() -> pygame_menu.Menu:
     # Extra Draws
     # Extra Main Menu Draws
     # WIP
-    # main_menu_wizard_rect = main_menu_wizard.get_rect()
-    # main_menu_harold_rect = main_menu_harold.get_rect()
-    # main_menu_wizard.draw(screen,area=)
-    # main_menu_harold.draw(screen,area=)
-    # Don't work
-    main_menu_wizard.draw(screen)
-    main_menu_harold.draw(screen)
+    main_menu_wizard_rect = main_menu_wizard.get_rect()
+    main_menu_harold_rect = main_menu_harold.get_rect()
+    main_menu_wizard.draw(screen,area=main_menu_wizard_rect)
+    main_menu_harold.draw(screen,area=main_menu_harold_rect)
+    # Don't work - old attempt
+    # main_menu_wizard.draw(screen)
+    # main_menu_harold.draw(screen)
 
     return main_menu
 
@@ -441,6 +437,12 @@ def update_pause_menu_and_submenus(new_background_color=None) -> pygame_menu.Men
         font_color=font_color,
         font_name=font_name,
     )
+    pause_menu_exit_game_button = pause_menu.add.button(
+        title="End Current Game",
+        action=end_game,
+        font_color=font_color,
+        font_name=font_name,
+    )
 
     # Pause Statistics Menu Buttons
     pause_statistics_menu_back_button = pause_statistics_menu.add.button(
@@ -461,6 +463,11 @@ def update_pause_menu_and_submenus(new_background_color=None) -> pygame_menu.Men
     return pause_menu
 
 
+def end_game():
+    global wizard
+    wizard.sprite.set_wizard_dead(True)
+
+
 # Creating Full Main and Pause Menus via Functions
 main_menu = update_main_menu_and_submenus()
 pause_menu = update_pause_menu_and_submenus((50,50,50,50))
@@ -474,6 +481,8 @@ on_resize(main_menu)
 on_resize(pause_menu)
 
 
+
+# Old Code
 # Main Menu
 # Start Button
 main_menu_start_button_start_x_pos = center_screen
