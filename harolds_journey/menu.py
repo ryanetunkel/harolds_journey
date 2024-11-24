@@ -419,6 +419,12 @@ def update_pause_menu_and_submenus(new_background_color=None) -> pygame_menu.Men
 
     # Buttons
     # Pause Menu Buttons
+    pause_menu_back_button = pause_menu.add.button(
+        title="Back to Game",
+        action=pause_menu.disable,
+        font_color=font_color,
+        font_name=font_name,
+    )
     pause_menu_statistics_button = pause_menu.add.button(
         title="Statistics",
         action=pause_statistics_menu,
@@ -428,12 +434,6 @@ def update_pause_menu_and_submenus(new_background_color=None) -> pygame_menu.Men
     pause_menu_settings_button = pause_menu.add.button(
         title="Settings",
         action=pause_settings_menu,
-        font_color=font_color,
-        font_name=font_name,
-    )
-    pause_menu_back_button = pause_menu.add.button(
-        title="Back to Game",
-        action=pause_menu.disable,
         font_color=font_color,
         font_name=font_name,
     )
