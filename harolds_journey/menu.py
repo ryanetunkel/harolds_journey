@@ -465,7 +465,9 @@ def update_pause_menu_and_submenus(new_background_color=None) -> pygame_menu.Men
 
 def end_game():
     global wizard
+    global pause_menu
     wizard.sprite.set_wizard_dead(True)
+    pause_menu.disable()
 
 
 # Creating Full Main and Pause Menus via Functions
