@@ -437,7 +437,8 @@ def update_pause_menu_and_submenus(new_background_color=None) -> pygame_menu.Men
         font_color=font_color,
         font_name=font_name,
     )
-    pause_menu_exit_game_button = pause_menu.add.button(
+    pause_menu_padding = pause_menu.add.vertical_margin(window_height/16)
+    pause_menu_end_game_button = pause_menu.add.button(
         title="End Current Game",
         action=end_game,
         font_color=font_color,
