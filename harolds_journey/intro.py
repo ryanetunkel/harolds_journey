@@ -17,11 +17,11 @@ harold_flipped = False
 wizard_and_harold_center_animation_complete = False
 wizard_and_harold_center_with_title_animation_complete = False
 
-wizard_intro_start_x_pos = -(128 * window_scalar)
+wizard_intro_start_x_pos = -(128 * (window_width/800))
 wizard_intro_start_y_pos = grass_top_y
 wizard_intro_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png").convert_alpha()
-wizard_intro_height_by_scale = 96 * window_scalar
-wizard_intro_width_by_scale = 96 * window_scalar
+wizard_intro_height_by_scale = 96 * (window_height/400)
+wizard_intro_width_by_scale = 96 * (window_width/800)
 wizard_intro_size_by_scale = (wizard_intro_height_by_scale,wizard_intro_width_by_scale)
 wizard_intro_surf = pygame.transform.scale(wizard_intro_surf,wizard_intro_size_by_scale)
 wizard_intro_rect = wizard_intro_surf.get_rect(midbottom = (wizard_intro_start_x_pos,wizard_intro_start_y_pos))
