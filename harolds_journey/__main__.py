@@ -59,11 +59,11 @@ def display_high_score(score_rect):
     # High Score
     score_y_offset = window_height * 1/44
     high_score = edited_stats_interactivity_file_dict.get("high_score")
-    high_score_start_x_pos = center_screen
+    high_score_start_x_pos = center_screen_width
     high_score_start_y_pos = score_rect.bottom + score_y_offset
     high_score_start_pos = (high_score_start_x_pos,high_score_start_y_pos)
     high_score_surf = test_font.render(f"High Score: {high_score}",False,"#FCDC4D")
-    high_score_scale = 0.4 * window_scalar
+    high_score_scale = 0.4 * 3/2
     high_score_surf = pygame.transform.scale_by(high_score_surf,high_score_scale)
     high_score_rect = high_score_surf.get_rect(center = (high_score_start_pos))
     # High Score Blit
@@ -83,6 +83,7 @@ def display_controls():
     biggest_rect = None
     displayed_control_surf_dict = {}
     displayed_control_rect_dict = {}
+    button_scalar = 3/2
     for displayed_control_name in edited_controls_display_names_dict.keys():
         displayed_control_start_x_pos = window_width * 7/8
         displayed_control_start_y_pos = (25/32 * window_height) + displayed_control_y_pos_offset * displayed_control_index
@@ -91,7 +92,7 @@ def display_controls():
         displayed_control_name_button_removed = displayed_control_name_underscore_removed.replace(" button", "")
         displayed_control_name_capitalized = displayed_control_name_button_removed.title()
         displayed_control_surf = test_font.render(f"{displayed_control_name_capitalized}: {edited_controls_display_names_dict[displayed_control_name]}",False,"#FCDC4D")
-        displayed_control_scale = window_scalar * displayed_control_scalar
+        displayed_control_scale = button_scalar * displayed_control_scalar
         displayed_control_surf = pygame.transform.scale_by(displayed_control_surf,displayed_control_scale)
         displayed_control_surf_dict.update({displayed_control_name:displayed_control_surf})
         displayed_control_rect = displayed_control_surf.get_rect(center = (displayed_control_start_pos))
@@ -105,14 +106,14 @@ def display_controls():
             control_board_end_y_pos = displayed_control_rect.bottom
         displayed_control_index += 1
 
-    control_board_padding = window_scalar * 2
+    control_board_padding = button_scalar * 2
     control_board_width = biggest_width + control_board_padding * 4
     control_board_height = (control_board_end_y_pos - control_board_start_y_pos) + control_board_padding * 2
     control_board_start_x_pos = biggest_rect.left - (control_board_padding * 2)
     control_board_start_y_pos = control_board_start_y_pos - control_board_padding
     control_board_rect = pygame.Rect(control_board_start_x_pos, control_board_start_y_pos, control_board_width, control_board_height)
     control_board_color = "#442211"
-    control_board_stand_height = window_scalar * 4
+    control_board_stand_height = button_scalar * 4
     control_board_stand_width = control_board_width/16
     control_board_stand_start_x_pos = (control_board_start_x_pos + (control_board_width/2)) - (control_board_stand_width/2)
     control_board_stand_start_y_pos = control_board_rect.bottom
@@ -908,7 +909,7 @@ while True:
                 # screen.blit(main_menu_harold_surf,main_menu_harold_rect)
                 # Main Menu Score
                 score_message_surf = test_font.render("Score: " + str(score),False,"#FCDC4D")
-                score_message_surf = pygame.transform.scale_by(score_message_surf,window_scalar)
+                score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
                 score_message_rect = score_message_surf.get_rect(center = (window_width/2,(84/800 * window_height)))
                 edited_stats_file_dict = get_edited_stats_file_dict()
                 edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
@@ -930,6 +931,7 @@ while True:
                 wizard_alive = True
                 start_time = int(pygame.time.get_ticks() / 1000)
                 pre_stat_update_edited_stats_file_dict.update(get_edited_stats_file_dict())
+                # button_scalar = 3/2  # Added recently
                 # # Menu Blits
                 # # Main Menu Button Blits
                 # if menu_section == MAIN_MENU:
@@ -993,7 +995,7 @@ while True:
                 #             # Skeletons Killed Update
                 #             if pre_stat_update_skeletons_killed_total != skeletons_killed_total:
                 #                 statistics_skeletons_killed_tracker_surf = test_font.render(f"Skeletons Killed: {skeletons_killed_total}",False,"#FCDC4D")
-                #                 statistics_skeletons_killed_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_skeletons_killed_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_skeletons_killed_tracker_surf = pygame.transform.scale_by(statistics_skeletons_killed_tracker_surf,statistics_skeletons_killed_tracker_scale)
                 #                 statistics_skeletons_killed_tracker_rect = statistics_skeletons_killed_tracker_surf.get_rect(center = (statistics_skeletons_killed_tracker_start_pos))
                 #                 mouse_on_statistics_skeletons_killed_tracker = False
@@ -1007,7 +1009,7 @@ while True:
                 #             # Skeleton Birds Killed Update
                 #             if pre_stat_update_skeleton_birds_killed_total != skeleton_birds_killed_total:
                 #                 statistics_skeleton_birds_killed_tracker_surf = test_font.render(f"Skeleton Birds Killed: {skeleton_birds_killed_total}",False,"#FCDC4D")
-                #                 statistics_skeleton_birds_killed_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_skeleton_birds_killed_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_skeleton_birds_killed_tracker_surf = pygame.transform.scale_by(statistics_skeleton_birds_killed_tracker_surf,statistics_skeleton_birds_killed_tracker_scale)
                 #                 statistics_skeleton_birds_killed_tracker_rect = statistics_skeleton_birds_killed_tracker_surf.get_rect(center = (statistics_skeleton_birds_killed_tracker_start_pos))
                 #                 mouse_on_statistics_skeleton_birds_killed_tracker = False
@@ -1043,7 +1045,7 @@ while True:
                 #                 if not final_displayed_time:
                 #                     final_displayed_time = "0"
                 #                 statistics_time_played_tracker_surf = test_font.render(f"Time Played: {final_displayed_time.strip()}",False,"#FCDC4D")
-                #                 statistics_time_played_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_time_played_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_time_played_tracker_surf = pygame.transform.scale_by(statistics_time_played_tracker_surf,statistics_time_played_tracker_scale)
                 #                 statistics_time_played_tracker_rect = statistics_time_played_tracker_surf.get_rect(center = (statistics_time_played_tracker_start_pos))
                 #                 mouse_on_statistics_time_played_tracker = False
@@ -1057,7 +1059,7 @@ while True:
                 #             # High Score Update
                 #             if pre_stat_update_high_score_total != high_score_total:
                 #                 statistics_high_score_tracker_surf = test_font.render(f"High Score: {high_score}",False,"#FCDC4D")
-                #                 statistics_high_score_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_high_score_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_high_score_tracker_surf = pygame.transform.scale_by(statistics_high_score_tracker_surf,statistics_high_score_tracker_scale)
                 #                 statistics_high_score_tracker_rect = statistics_high_score_tracker_surf.get_rect(center = (statistics_high_score_tracker_start_pos))
                 #                 mouse_on_statistics_high_score_tracker = False
@@ -1071,7 +1073,7 @@ while True:
                 #             # Fireballs Shot Update
                 #             if pre_stat_update_fireballs_shot_total != fireballs_shot_total:
                 #                 statistics_fireballs_shot_tracker_surf = test_font.render(f"Fireballs Shot: {fireballs_shot_total}",False,"#FCDC4D")
-                #                 statistics_fireballs_shot_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_fireballs_shot_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_fireballs_shot_tracker_surf = pygame.transform.scale_by(statistics_fireballs_shot_tracker_surf,statistics_fireballs_shot_tracker_scale)
                 #                 statistics_fireballs_shot_tracker_rect = statistics_fireballs_shot_tracker_surf.get_rect(center = (statistics_fireballs_shot_tracker_start_pos))
                 #                 mouse_on_statistics_fireballs_shot_tracker = False
@@ -1085,7 +1087,7 @@ while True:
                 #             # Jumps Update
                 #             if pre_stat_update_jumps_total != jumps_total:
                 #                 statistics_jumps_tracker_surf = test_font.render(f"Jumps: {jumps_total}",False,"#FCDC4D")
-                #                 statistics_jumps_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_jumps_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_jumps_tracker_surf = pygame.transform.scale_by(statistics_jumps_tracker_surf,statistics_jumps_tracker_scale)
                 #                 statistics_jumps_tracker_rect = statistics_jumps_tracker_surf.get_rect(center = (statistics_jumps_tracker_start_pos))
                 #                 mouse_on_statistics_jumps_tracker = False
@@ -1099,7 +1101,7 @@ while True:
                 #             # Distance Traveled Update
                 #             if pre_stat_update_distance_traveled_total != distance_traveled_total:
                 #                 statistics_distance_traveled_tracker_surf = test_font.render(f"Distance Traveled: {int(distance_traveled_total/WIZARD_WIDTH)}m",False,"#FCDC4D")
-                #                 statistics_distance_traveled_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_distance_traveled_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_distance_traveled_tracker_surf = pygame.transform.scale_by(statistics_distance_traveled_tracker_surf,statistics_distance_traveled_tracker_scale)
                 #                 statistics_distance_traveled_tracker_rect = statistics_distance_traveled_tracker_surf.get_rect(center = (statistics_distance_traveled_tracker_start_pos))
                 #                 mouse_on_statistics_distance_traveled_tracker = False
@@ -1124,7 +1126,7 @@ while True:
                 #             # Highest Speed Update
                 #             if pre_stat_update_highest_speed != highest_speed:
                 #                 statistics_highest_speed_tracker_surf = test_font.render(f"Highest Speed: {round((highest_speed/WIZARD_WIDTH)*60,2)}m/s",False,"#FCDC4D")
-                #                 statistics_highest_speed_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_highest_speed_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_highest_speed_tracker_surf = pygame.transform.scale_by(statistics_highest_speed_tracker_surf,statistics_highest_speed_tracker_scale)
                 #                 statistics_highest_speed_tracker_rect = statistics_highest_speed_tracker_surf.get_rect(center = (statistics_highest_speed_tracker_start_pos))
                 #                 mouse_on_statistics_highest_speed_tracker = False
@@ -1138,7 +1140,7 @@ while True:
                 #             # Highest Damage Update
                 #             if pre_stat_update_highest_damage != highest_damage:
                 #                 statistics_highest_damage_tracker_surf = test_font.render(f"Highest Damage: {highest_damage}",False,"#FCDC4D")
-                #                 statistics_highest_damage_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_highest_damage_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_highest_damage_tracker_surf = pygame.transform.scale_by(statistics_highest_damage_tracker_surf,statistics_highest_damage_tracker_scale)
                 #                 statistics_highest_damage_tracker_rect = statistics_highest_damage_tracker_surf.get_rect(center = (statistics_highest_damage_tracker_start_pos))
                 #                 mouse_on_statistics_highest_damage_tracker = False
@@ -1152,7 +1154,7 @@ while True:
                 #             # Highest Piercing Update
                 #             if pre_stat_update_highest_piercing != highest_piercing:
                 #                 statistics_highest_piercing_tracker_surf = test_font.render(f"Highest Piercing: {highest_piercing - 1}",False,"#FCDC4D")
-                #                 statistics_highest_piercing_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_highest_piercing_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_highest_piercing_tracker_surf = pygame.transform.scale_by(statistics_highest_piercing_tracker_surf,statistics_highest_piercing_tracker_scale)
                 #                 statistics_highest_piercing_tracker_rect = statistics_highest_piercing_tracker_surf.get_rect(center = (statistics_highest_piercing_tracker_start_pos))
                 #                 mouse_on_statistics_highest_piercing_tracker = False
@@ -1166,7 +1168,7 @@ while True:
                 #             # Lowest Cooldown Update
                 #             if pre_stat_update_lowest_cooldown != lowest_cooldown:
                 #                 statistics_lowest_cooldown_tracker_surf = test_font.render(f"Lowest Cooldown: {round(lowest_cooldown/60, 2)}s",False,"#FCDC4D")
-                #                 statistics_lowest_cooldown_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_lowest_cooldown_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_lowest_cooldown_tracker_surf = pygame.transform.scale_by(statistics_lowest_cooldown_tracker_surf,statistics_lowest_cooldown_tracker_scale)
                 #                 statistics_lowest_cooldown_tracker_rect = statistics_lowest_cooldown_tracker_surf.get_rect(center = (statistics_lowest_cooldown_tracker_start_pos))
                 #                 mouse_on_statistics_lowest_cooldown_tracker = False
@@ -1181,7 +1183,7 @@ while True:
                 #         # Double Jump Buff Update
                 #         if edited_stats_buffs_file_dict.get("double_jump_buff"):
                 #             statistics_double_jump_buff_tracker_surf = test_font.render("Double Jump Buff: Found",False,"#FCDC4D")
-                #             statistics_double_jump_buff_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #             statistics_double_jump_buff_tracker_scale = button_scalar * statistics_tracker_scalar
                 #             statistics_double_jump_buff_tracker_surf = pygame.transform.scale_by(statistics_double_jump_buff_tracker_surf,statistics_double_jump_buff_tracker_scale)
                 #             statistics_double_jump_buff_tracker_rect = statistics_double_jump_buff_tracker_surf.get_rect(center = (statistics_double_jump_buff_tracker_start_pos))
                 #             mouse_on_statistics_double_jump_buff_tracker = False
@@ -1195,7 +1197,7 @@ while True:
                 #         # Knockback Buff Update
                 #         if edited_stats_buffs_file_dict.get("knockback_buff"):
                 #             statistics_knockback_buff_tracker_surf = test_font.render("Knockback Buff: Found",False,"#FCDC4D")
-                #             statistics_knockback_buff_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #             statistics_knockback_buff_tracker_scale = button_scalar * statistics_tracker_scalar
                 #             statistics_knockback_buff_tracker_surf = pygame.transform.scale_by(statistics_knockback_buff_tracker_surf,statistics_knockback_buff_tracker_scale)
                 #             statistics_knockback_buff_tracker_rect = statistics_knockback_buff_tracker_surf.get_rect(center = (statistics_knockback_buff_tracker_start_pos))
                 #             mouse_on_statistics_knockback_buff_tracker = False
@@ -1209,7 +1211,7 @@ while True:
                 #         # Shield Buff Update
                 #         if edited_stats_buffs_file_dict.get("shield_buff"):
                 #                 statistics_shield_buff_tracker_surf = test_font.render("Magic Shield Buff: Found",False,"#FCDC4D")
-                #                 statistics_shield_buff_tracker_scale = WINDOW_SCALAR * statistics_tracker_scalar
+                #                 statistics_shield_buff_tracker_scale = button_scalar * statistics_tracker_scalar
                 #                 statistics_shield_buff_tracker_surf = pygame.transform.scale_by(statistics_shield_buff_tracker_surf,statistics_shield_buff_tracker_scale)
                 #                 statistics_shield_buff_tracker_rect = statistics_shield_buff_tracker_surf.get_rect(center = (statistics_shield_buff_tracker_start_pos))
                 #                 mouse_on_statistics_shield_buff_tracker = False
@@ -1308,7 +1310,7 @@ while True:
                 #             control_name_underscore_removed = control_name.replace("_", " ")
                 #             control_name_capitalized = control_name_underscore_removed.title()
                 #             controls_button_surf = test_font.render(f"{control_name_capitalized}: {edited_controls_display_names_dict[control_name]}",False,"#FCDC4D")
-                #             controls_button_scale = WINDOW_SCALAR * controls_button_scalar
+                #             controls_button_scale = button_scalar * controls_button_scalar
                 #             controls_button_surf = pygame.transform.scale_by(controls_button_surf,controls_button_scale)
                 #             controls_button_surf_dict.update({control_name: controls_button_surf})
                 #             controls_button_rect = controls_button_surf.get_rect(center = (controls_button_start_pos))
@@ -1337,7 +1339,7 @@ while True:
                 #     if display_controls_update:
                 #         controls_displayed = get_edited_options_file_dict()["edited_display_controls"]
                 #         display_show_controls_button_surf = test_font.render(f"Display Controls: {controls_displayed}",False,"#FCDC4D")
-                #         display_show_controls_button_scale = WINDOW_SCALAR * display_button_scalar
+                #         display_show_controls_button_scale = button_scalar * display_button_scalar
                 #         display_show_controls_button_surf = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_scale)
                 #         display_show_controls_button_rect = display_show_controls_button_surf.get_rect(center = (display_show_controls_button_start_pos))
                 #         mouse_on_display_show_controls_button = False
@@ -1348,7 +1350,7 @@ while True:
                 #     if display_in_game_stats_update:
                 #         in_game_stats_displayed = get_edited_options_file_dict()["edited_display_in_game_stats"]
                 #         display_show_in_game_stats_button_surf = test_font.render(f"Display Stats: {in_game_stats_displayed}",False,"#FCDC4D")
-                #         display_show_in_game_stats_button_scale = WINDOW_SCALAR * display_button_scalar
+                #         display_show_in_game_stats_button_scale = button_scalar * display_button_scalar
                 #         display_show_in_game_stats_button_surf = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_scale)
                 #         display_show_in_game_stats_button_rect = display_show_in_game_stats_button_surf.get_rect(center = (display_show_in_game_stats_button_start_pos))
                 #         mouse_on_display_show_in_game_stats_button = False
@@ -1359,7 +1361,7 @@ while True:
                 #     if display_in_game_health_update:
                 #         in_game_health_displayed = get_edited_options_file_dict()["edited_display_in_game_health"]
                 #         display_show_in_game_health_button_surf = test_font.render(f"Display Health: {in_game_health_displayed}",False,"#FCDC4D")
-                #         display_show_in_game_health_button_scale = WINDOW_SCALAR * display_button_scalar
+                #         display_show_in_game_health_button_scale = button_scalar * display_button_scalar
                 #         display_show_in_game_health_button_surf = pygame.transform.scale_by(display_show_in_game_health_button_surf,display_show_in_game_health_button_scale)
                 #         display_show_in_game_health_button_rect = display_show_in_game_health_button_surf.get_rect(center = (display_show_in_game_health_button_start_pos))
                 #         mouse_on_display_show_in_game_health_button = False
@@ -1370,7 +1372,7 @@ while True:
                 #     if display_in_game_buffs_update:
                 #         in_game_buffs_displayed = get_edited_options_file_dict()["edited_display_in_game_buffs"]
                 #         display_show_in_game_buffs_button_surf = test_font.render(f"Display Buffs: {in_game_buffs_displayed}",False,"#FCDC4D")
-                #         display_show_in_game_buffs_button_scale = WINDOW_SCALAR * display_button_scalar
+                #         display_show_in_game_buffs_button_scale = button_scalar * display_button_scalar
                 #         display_show_in_game_buffs_button_surf = pygame.transform.scale_by(display_show_in_game_buffs_button_surf,display_show_in_game_buffs_button_scale)
                 #         display_show_in_game_buffs_button_rect = display_show_in_game_buffs_button_surf.get_rect(center = (display_show_in_game_buffs_button_start_pos))
                 #         mouse_on_display_show_in_game_buffs_button = False
