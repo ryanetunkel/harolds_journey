@@ -28,8 +28,8 @@ score = 0
 pygame.init()
 
 screenInfo = pygame.display.Info()
-window_width = 800 * 3/2
-window_height = 400 * 3/2
+window_width = 800 * 3/2  # 800 * 3/2 = 1200
+window_height = 400 * 3/2  # 400 * 3/2 = 600
 min_window_width = 320
 min_window_height = 240
 max_window_width = screenInfo.current_w
@@ -41,7 +41,7 @@ PIXEL_SIZE = 2 # Create a slider for this - will be zoom essentially.
 # Will need to transition to using math.Vector2 to do all collision and stuff and then render it after as a rect to get subpixel movement
 GLOBAL_SCALAR = PIXEL_SIZE/4
 window_size = (window_width,window_height) # Create a set of options for this, fullscreen maybe in future, gets tricky
-window_scalar = ((window_width + window_height)/1200)
+# window_scalar = ((window_width + window_height)/1200) # 1200 + 600 /1200 = 3/2, not needed currently - should be reworked to be useful
 WIZARD_WIDTH = 32 * PIXEL_SIZE
 WIZARD_HEIGHT = 32 * PIXEL_SIZE
 WIZARD_PIXEL_SIZE = (WIZARD_HEIGHT,WIZARD_WIDTH)
