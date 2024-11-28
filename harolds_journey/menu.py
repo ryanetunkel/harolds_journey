@@ -220,6 +220,53 @@ def update_main_menu_and_submenus() -> pygame_menu.Menu:
     global main_settings_menu
     global main_menu_start_button
 
+    edited_stats_file_dict = get_edited_stats_file_dict()
+    edited_stats_kills_file_dict = edited_stats_file_dict.get("kills")
+    edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+    edited_stats_in_game_stat_records_file_dict = edited_stats_file_dict.get("in_game_stat_records")
+    edited_stats_buffs_file_dict = edited_stats_file_dict.get("buffs")
+
+    skeletons_killed_total = edited_stats_kills_file_dict.get("skeletons_killed")
+    skeleton_birds_killed_total = edited_stats_kills_file_dict.get("skeleton_birds_killed")
+    time_played_total = edited_stats_interactivity_file_dict.get("time_played")
+    high_score = edited_stats_interactivity_file_dict.get("high_score")
+    fireballs_shot_total = edited_stats_interactivity_file_dict.get("fireballs_shot")
+    jumps_total = edited_stats_interactivity_file_dict.get("jumps")
+    distance_traveled_total = edited_stats_interactivity_file_dict.get("distance_traveled")
+    highest_speed = edited_stats_in_game_stat_records_file_dict.get("highest_speed")
+    highest_damage = edited_stats_in_game_stat_records_file_dict.get("highest_damage")
+    highest_piercing = edited_stats_in_game_stat_records_file_dict.get("highest_piercing")
+    lowest_cooldown = edited_stats_in_game_stat_records_file_dict.get("lowest_cooldown")
+    double_jump_buff_found = edited_stats_buffs_file_dict.get("double_jump_buff")
+    knockback_buff_found = edited_stats_buffs_file_dict.get("knockback_buff")
+    shield_buff_found = edited_stats_buffs_file_dict.get("shield_buff")
+
+
+    if fireballs_shot != 0: # Not working
+        print("Here")
+        edited_stats_file_dict = get_edited_stats_file_dict()
+        edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+        fireballs_shot_total = edited_stats_interactivity_file_dict.get("fireballs_shot")
+        fireballs_shot_total += fireballs_shot
+        edited_stats_interactivity_file_dict.update({"fireballs_shot":fireballs_shot_total})
+        set_edited_stats_file_dict(edited_stats_file_dict)
+        fireballs_shot = 0
+    if jumps_made != 0:
+        edited_stats_file_dict = get_edited_stats_file_dict()
+        edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+        jumps_total = edited_stats_interactivity_file_dict.get("jumps")
+        jumps_total += jumps_made
+        edited_stats_interactivity_file_dict.update({"jumps":jumps_total})
+        set_edited_stats_file_dict(edited_stats_file_dict)
+        jumps_made = 0
+    if distance_traveled != 0:
+        edited_stats_file_dict = get_edited_stats_file_dict()
+        edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+        distance_traveled_total = edited_stats_interactivity_file_dict.get("distance_traveled")
+        distance_traveled_total += distance_traveled
+        edited_stats_interactivity_file_dict.update({"distance_traveled":distance_traveled_total})
+        set_edited_stats_file_dict(edited_stats_file_dict)
+        jumps_made = 0
     # Main Menu Theme
     main_menu_theme = base_menu_theme.copy()
 
@@ -272,7 +319,125 @@ def update_main_menu_and_submenus() -> pygame_menu.Menu:
         font_color=font_color,
         font_name=font_name,
         font_size=title_font_size,
-    ).translate(0,title_y_pos_center_offset)
+    ).translate(0,-title_font_size)
+    # Main Statistics Menu Sublabels
+    # Left Side
+    # Kills
+    # Skeletons Killed
+    main_statistics_menu_skeletons_killed_label = main_statistics_menu.add.label(
+        title=f"Skeletons Killed: {skeletons_killed_total}",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(-center_screen_width/4,0)
+    # Birds Killed
+    main_statistics_menu_birds_killed_label = main_statistics_menu.add.label(
+        title=f"Skeleton Birds Killed: {skeleton_birds_killed_total}",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(-center_screen_width/4,0)
+    # Interactivity
+    # Time Played
+    units = {"weeks":3600 * 24 * 7,"days":3600 * 24,"hours": 3600, "minutes": 60, "seconds": 1}
+    final_displayed_time = ""
+    for unit, value in units.items():
+        count = time_played_total // value
+        time_played_total -= count * value
+        if count > 0:
+            final_displayed_time += f"{count}{unit[0]} "
+    if not final_displayed_time:
+        final_displayed_time = "0s"
+    main_statistics_menu_time_played_label = main_statistics_menu.add.label(
+        title=f"Time Played: {final_displayed_time.strip()}",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(-center_screen_width/4,0)
+    # High Score
+    main_statistics_menu_high_score_label = main_statistics_menu.add.label(
+        title=f"High Score: {high_score}",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(-center_screen_width/4,0)
+    # Fireballs Shot
+    main_statistics_menu_fireballs_shot_label = main_statistics_menu.add.label(
+        title=f"Fireballs Shot: {fireballs_shot_total}",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(-center_screen_width/4,0)
+    # Jumps
+    main_statistics_menu_jumps_label = main_statistics_menu.add.label(
+        title=f"Jumps: {jumps_total}",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(-center_screen_width/4,0)
+    # Distance Traveled
+    main_statistics_menu_distance_traveled_label = main_statistics_menu.add.label(
+        title=f"Distance Traveled: {int(distance_traveled_total/WIZARD_WIDTH)}m",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(-center_screen_width/4,0)
+    # Right Side
+    right_side_y_offset = -int(title_font_size/2)*10
+    # In-Game Stat Records
+    # Highest Speed
+    main_statistics_menu_highest_speed_label = main_statistics_menu.add.label(
+        title=f"Highest Speed: {round((highest_speed/WIZARD_WIDTH)*60,2)}m/s",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(center_screen_width/4,right_side_y_offset)
+    # Highest Damage
+    main_statistics_menu_highest_damage_label = main_statistics_menu.add.label(
+        title=f"Highest Damage: {highest_damage}",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(center_screen_width/4,right_side_y_offset)
+    # Highest Piercing
+    main_statistics_menu_highest_piercing_label = main_statistics_menu.add.label(
+        title=f"Highest Piercing: {highest_piercing - 1}",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(center_screen_width/4,right_side_y_offset)
+    # Lowest Cooldown
+    main_statistics_menu_lowest_cooldown_label = main_statistics_menu.add.label(
+        title=f"Lowest Cooldown: {round(lowest_cooldown/60, 2)}s",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(center_screen_width/4,right_side_y_offset)
+    # Buffs
+    # Double Jump Buff
+    double_jump_buff_string = "???: Not Yet Found" if not double_jump_buff_found else "Double Jump Buff: Found"
+    main_statistics_menu_double_jump_buff_label = main_statistics_menu.add.label(
+        title=double_jump_buff_string,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(center_screen_width/4,right_side_y_offset)
+    # Knockback Buff
+    knockback_buff_string = "???: Not Yet Found" if not knockback_buff_found else "Knockback Buff: Found"
+    main_statistics_menu_knockback_buff_label = main_statistics_menu.add.label(
+        title=knockback_buff_string,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(center_screen_width/4,right_side_y_offset)
+    # Shield Buff
+    shield_buff_string = "???: Not Yet Found" if not shield_buff_found else "Magic Shield Buff: Found"
+    main_statistics_menu_shield_buff_label = main_statistics_menu.add.label(
+        title=shield_buff_string,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(title_font_size/2),
+    ).translate(center_screen_width/4,right_side_y_offset)
 
     # Main Settings Menu Label
     main_settings_menu_label = main_settings_menu.add.label(
