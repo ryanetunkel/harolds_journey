@@ -638,8 +638,76 @@ def update_pause_menu_and_submenus(new_background_color=None) -> pygame_menu.Men
 def end_game():
     global wizard
     global pause_menu
-    wizard.sprite.set_wizard_dead(True)
+    wizard_death_calls()
     pause_menu.disable()
+
+
+def wizard_death_calls():
+    global main_menu
+    global objects_to_be_removed
+    global wizard
+    # Updating Stats
+    wizard_jumps = wizard.sprite.get_jumps_made()
+    distance_traveled = wizard.sprite.get_distance_traveled()
+    current_wizard_speed = wizard.sprite.get_wizard_speed()
+    current_wizard_damage = wizard.sprite.get_wizard_damage_total()
+    current_wizard_piercing = wizard.sprite.get_wizard_piercing_total()
+    current_wizard_fireball_cooldown = wizard.sprite.get_max_fireball_cooldown_time()
+    current_wizard_double_jump_buff = wizard.sprite.get_double_jump()
+    current_wizard_knockback_buff = wizard.sprite.get_knockback()
+    current_wizard_shield_buff = wizard.sprite.get_shield()
+    edited_stats_file_dict = get_edited_stats_file_dict()
+    edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+    edited_stats_in_game_stat_records_file_dict = edited_stats_file_dict.get("in_game_stat_records")
+    edited_stats_buffs_file_dict = edited_stats_file_dict.get("buffs")
+    time_played_total = edited_stats_interactivity_file_dict.get("time_played")
+    jumps_total = edited_stats_interactivity_file_dict.get("jumps")
+    distance_traveled_total = edited_stats_interactivity_file_dict.get("distance_traveled")
+    highest_speed = edited_stats_in_game_stat_records_file_dict.get("highest_speed")
+    highest_damage = edited_stats_in_game_stat_records_file_dict.get("highest_damage")
+    highest_piercing = edited_stats_in_game_stat_records_file_dict.get("highest_piercing")
+    lowest_cooldown = edited_stats_in_game_stat_records_file_dict.get("lowest_cooldown")
+    double_jump_buff_found = edited_stats_buffs_file_dict.get("double_jump_buff")
+    knockback_buff_found = edited_stats_buffs_file_dict.get("knockback_buff")
+    shield_buff_found = edited_stats_buffs_file_dict.get("shield_buff")
+    updated_speed = highest_speed if highest_speed > current_wizard_speed else current_wizard_speed
+    updated_damage = highest_damage if highest_damage > current_wizard_damage else current_wizard_damage
+    updated_piercing = highest_piercing if highest_piercing > current_wizard_piercing else current_wizard_piercing
+    updated_cooldown = lowest_cooldown if lowest_cooldown < current_wizard_fireball_cooldown else current_wizard_fireball_cooldown
+    current_time = int((pygame.time.get_ticks() - start_time) / 1000)
+    new_time_played_total = time_played_total + current_time
+    edited_stats_interactivity_file_dict.update({"time_played":new_time_played_total})
+    edited_stats_interactivity_file_dict.update({"jumps":jumps_total + wizard_jumps })
+    edited_stats_interactivity_file_dict.update({"distance_traveled":distance_traveled_total + distance_traveled })
+    edited_stats_in_game_stat_records_file_dict.update({"highest_speed":updated_speed})
+    edited_stats_in_game_stat_records_file_dict.update({"highest_damage":updated_damage})
+    edited_stats_in_game_stat_records_file_dict.update({"highest_piercing":updated_piercing})
+    edited_stats_in_game_stat_records_file_dict.update({"lowest_cooldown":updated_cooldown})
+    if current_wizard_double_jump_buff and not double_jump_buff_found:
+        edited_stats_buffs_file_dict.update({"double_jump_buff":current_wizard_double_jump_buff})
+    if current_wizard_knockback_buff and not knockback_buff_found:
+        edited_stats_buffs_file_dict.update({"knockback_buff":current_wizard_knockback_buff})
+    if current_wizard_shield_buff and not shield_buff_found:
+        edited_stats_buffs_file_dict.update({"shield_buff":current_wizard_shield_buff})
+    set_edited_stats_file_dict(edited_stats_file_dict)
+    main_menu = update_main_menu_and_submenus()
+    # Other Death Stuff
+    wizard.sprite.set_wizard_current_health(0)
+    temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
+    wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
+    for objects in objects_to_be_removed:
+        for object in objects:
+            object.kill()
+        objects.empty()
+    outline_health_bar_ownership_group.clear()
+    health_bar_ownership_group.clear()
+    for outline_health_bar in outline_health_bar_group:
+        outline_health_bar.kill()
+    for health_bar in health_bar_group:
+        health_bar.kill()
+    outline_health_bar_group.empty()
+    health_bar_group.empty()
+    wizard.sprite.set_wizard_dead(True)
 
 
 # Creating Full Main and Pause Menus via Functions
