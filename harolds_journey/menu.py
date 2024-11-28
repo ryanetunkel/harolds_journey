@@ -46,6 +46,11 @@ distance_traveled = 0
 highest_speed = 0
 pre_stat_update_edited_stats_file_dict = {}
 
+
+def increase_fireballs_shot():
+    global fireballs_shot
+    fireballs_shot += 1
+
 # Wizard on Menu Screen
 wizard_path = "harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png"
 main_menu_wizard_hat_size = 24 * (window_height/400)

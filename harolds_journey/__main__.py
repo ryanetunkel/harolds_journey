@@ -312,6 +312,7 @@ def display_in_game_stats():
 
 
 def player_and_obstacle_collision():
+    global main_menu
     if obstacles_overlapping:=pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
         wizard_shield = wizard.sprite.get_shield()
         temp_shield_health = wizard.sprite.get_current_shield_health()
@@ -388,6 +389,7 @@ def player_and_obstacle_collision():
                         if current_wizard_shield_buff and not shield_buff_found:
                             edited_stats_buffs_file_dict.update({"shield_buff":current_wizard_shield_buff})
                         set_edited_stats_file_dict(edited_stats_file_dict)
+                        main_menu = update_main_menu_and_submenus()
                         # Other Death Stuff
                         wizard.sprite.set_wizard_current_health(0)
                         temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
@@ -641,7 +643,7 @@ while True:
                     # Player Shooting
                     if shoot_button_press and int(pygame.time.get_ticks() / 1000) - start_time > 2/60:
                         if wizard.sprite.get_current_fireball_cooldown() == 0: # or wizard.sprite.get_fireball_hit(): # causes fireball_cooldown refresh on hit
-                            fireballs_shot += 1
+                            increase_fireballs_shot()
                             wizard.sprite.play_fireball_sound()
                             wizard.sprite.set_fireball_shot(True)
                             temp_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
@@ -923,6 +925,7 @@ while True:
                 #     screen.blit(score_message_surf,score_message_rect)
                 #     display_high_score(score_message_rect)
                 # Starts Main Menu
+                main_menu = update_main_menu_and_submenus()
                 main_menu.enable()
                 main_menu.mainloop(screen,clear_surface=True)
                 # When exits main menu through only way other than quitting, runs this code which starts the game
