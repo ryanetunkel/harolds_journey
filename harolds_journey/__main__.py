@@ -1,6 +1,7 @@
 """Main Gameloop"""
-from sys import exit
+from math import ceil
 from random import randint, choice
+from sys import exit
 
 import pygame
 
@@ -21,30 +22,12 @@ from projectile import *
 wizard.add(Player())
 harold.add(Harold(wizard))
 
-moving_sprites = [
-    wizard,
-    harold,
-    obstacle_group,
-    projectile_group,
-    pickup_group,
-    buff_group,
-    outline_health_bar_group,
-    health_bar_group,
-]
-
-objects_to_be_removed = [
-    obstacle_group,
-    dead_obstacle_group,
-    projectile_group,
-    pickup_group,
-    buff_group,
-]
-
 # Functions
 def display_score():
+    global pause_time
     # Score
     temp_additional_score = wizard.sprite.get_additional_score()
-    current_time = int(pygame.time.get_ticks() / 1000) - start_time - pause_time
+    current_time = ceil((pygame.time.get_ticks() - start_time - pause_time) / 1000)
     score_title_surf = test_font.render("SCORE", False, "#FCDC4D")
     score_title_rect = score_title_surf.get_rect(center = (window_width/2,window_height*1/16))
     score_surf = test_font.render(str(current_time + temp_additional_score), False, "#FCDC4D")
@@ -345,68 +328,7 @@ def player_and_obstacle_collision():
                         wizard.sprite.set_wizard_immunity_frames(wizard.sprite.get_wizard_max_immunity_frames())
                     # Wizard dies
                     else:
-                        # Updating Stats
-                        wizard_jumps = wizard.sprite.get_jumps_made()
-                        distance_traveled = wizard.sprite.get_distance_traveled()
-                        current_wizard_speed = wizard.sprite.get_wizard_speed()
-                        current_wizard_damage = wizard.sprite.get_wizard_damage_total()
-                        current_wizard_piercing = wizard.sprite.get_wizard_piercing_total()
-                        current_wizard_fireball_cooldown = wizard.sprite.get_max_fireball_cooldown_time()
-                        current_wizard_double_jump_buff = wizard.sprite.get_double_jump()
-                        current_wizard_knockback_buff = wizard.sprite.get_knockback()
-                        current_wizard_shield_buff = wizard.sprite.get_shield()
-                        edited_stats_file_dict = get_edited_stats_file_dict()
-                        edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
-                        edited_stats_in_game_stat_records_file_dict = edited_stats_file_dict.get("in_game_stat_records")
-                        edited_stats_buffs_file_dict = edited_stats_file_dict.get("buffs")
-                        time_played_total = edited_stats_interactivity_file_dict.get("time_played")
-                        jumps_total = edited_stats_interactivity_file_dict.get("jumps")
-                        distance_traveled_total = edited_stats_interactivity_file_dict.get("distance_traveled")
-                        highest_speed = edited_stats_in_game_stat_records_file_dict.get("highest_speed")
-                        highest_damage = edited_stats_in_game_stat_records_file_dict.get("highest_damage")
-                        highest_piercing = edited_stats_in_game_stat_records_file_dict.get("highest_piercing")
-                        lowest_cooldown = edited_stats_in_game_stat_records_file_dict.get("lowest_cooldown")
-                        double_jump_buff_found = edited_stats_buffs_file_dict.get("double_jump_buff")
-                        knockback_buff_found = edited_stats_buffs_file_dict.get("knockback_buff")
-                        shield_buff_found = edited_stats_buffs_file_dict.get("shield_buff")
-                        updated_speed = highest_speed if highest_speed > current_wizard_speed else current_wizard_speed
-                        updated_damage = highest_damage if highest_damage > current_wizard_damage else current_wizard_damage
-                        updated_piercing = highest_piercing if highest_piercing > current_wizard_piercing else current_wizard_piercing
-                        updated_cooldown = lowest_cooldown if lowest_cooldown < current_wizard_fireball_cooldown else current_wizard_fireball_cooldown
-                        current_time = int(pygame.time.get_ticks() / 1000) - start_time
-                        new_time_played_total = time_played_total + current_time
-                        edited_stats_interactivity_file_dict.update({"time_played":new_time_played_total})
-                        edited_stats_interactivity_file_dict.update({"jumps":jumps_total + wizard_jumps })
-                        edited_stats_interactivity_file_dict.update({"distance_traveled":distance_traveled_total + distance_traveled })
-                        edited_stats_in_game_stat_records_file_dict.update({"highest_speed":updated_speed})
-                        edited_stats_in_game_stat_records_file_dict.update({"highest_damage":updated_damage})
-                        edited_stats_in_game_stat_records_file_dict.update({"highest_piercing":updated_piercing})
-                        edited_stats_in_game_stat_records_file_dict.update({"lowest_cooldown":updated_cooldown})
-                        if current_wizard_double_jump_buff and not double_jump_buff_found:
-                            edited_stats_buffs_file_dict.update({"double_jump_buff":current_wizard_double_jump_buff})
-                        if current_wizard_knockback_buff and not knockback_buff_found:
-                            edited_stats_buffs_file_dict.update({"knockback_buff":current_wizard_knockback_buff})
-                        if current_wizard_shield_buff and not shield_buff_found:
-                            edited_stats_buffs_file_dict.update({"shield_buff":current_wizard_shield_buff})
-                        set_edited_stats_file_dict(edited_stats_file_dict)
-                        main_menu = update_main_menu_and_submenus()
-                        # Other Death Stuff
-                        wizard.sprite.set_wizard_current_health(0)
-                        temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
-                        wizard.sprite.set_current_fireball_cooldown(temp_wizard_max_fireball_cooldown_time)
-                        for objects in objects_to_be_removed:
-                            for object in objects:
-                                object.kill()
-                            objects.empty()
-                        outline_health_bar_ownership_group.clear()
-                        health_bar_ownership_group.clear()
-                        for outline_health_bar in outline_health_bar_group:
-                            outline_health_bar.kill()
-                        for health_bar in health_bar_group:
-                            health_bar.kill()
-                        outline_health_bar_group.empty()
-                        health_bar_group.empty()
-                        wizard.sprite.set_wizard_dead(True)
+                        wizard_death_calls()
 
 
 def obstacle_and_player_owned_projectile_collision():
@@ -630,7 +552,8 @@ while True:
                             wizard.sprite.set_first_jump_used(True)
                     # Obstacle Timer Event Detection
                     if event.type == obstacle_timer:
-                        new_obstacle = Obstacle(choice(["bird","skeleton","skeleton","skeleton"]),int(pygame.time.get_ticks() / 1000) - start_time)
+                        current_time = int((pygame.time.get_ticks() - start_time) / 1000)
+                        new_obstacle = Obstacle(choice(["bird","skeleton","skeleton","skeleton"]),current_time)
                         obstacle_group.add(new_obstacle)
                         # Health Bar
                         new_health_bar = HealthBar(new_obstacle, new_obstacle.get_current_health(), new_obstacle.get_max_health())
@@ -641,7 +564,7 @@ while True:
                         outline_health_bar_group.add(new_outline_health_bar)
                         outline_health_bar_ownership_group[new_health_bar] = new_outline_health_bar
                     # Player Shooting
-                    if shoot_button_press and int(pygame.time.get_ticks() / 1000) - start_time > 2/60:
+                    if shoot_button_press and int((pygame.time.get_ticks() - start_time) / 1000) > 2/60:
                         if wizard.sprite.get_current_fireball_cooldown() == 0: # or wizard.sprite.get_fireball_hit(): # causes fireball_cooldown refresh on hit
                             increase_fireballs_shot()
                             wizard.sprite.play_fireball_sound()
@@ -669,9 +592,9 @@ while True:
                         )
                         pause_menu = update_pause_menu_and_submenus(new_bg)
 
-                        pause_time_1 = int(pygame.time.get_ticks() / 1000)
+                        pause_time_1 = pygame.time.get_ticks()
                         pause_menu.mainloop(screen,clear_surface=True)
-                        pause_time_2 = int(pygame.time.get_ticks() / 1000)
+                        pause_time_2 = pygame.time.get_ticks()
                         pause_time = pause_time_2 - pause_time_1
 
             # Main Menu (Game Inactive)
@@ -932,7 +855,7 @@ while True:
                 controls_update = True
                 game_active = True
                 wizard_alive = True
-                start_time = int(pygame.time.get_ticks() / 1000)
+                start_time = pygame.time.get_ticks()
                 pre_stat_update_edited_stats_file_dict.update(get_edited_stats_file_dict())
                 # button_scalar = 3/2  # Added recently
                 # # Menu Blits
@@ -1495,8 +1418,8 @@ while True:
                 game_active = False
 
         # May need for resizing - before fixing black border issue it wasn't needed
-        if pause_menu.is_enabled():
-            pause_menu.update(events)
+        # if pause_menu.is_enabled():
+        #     pause_menu.update(events)
             # pause_menu.draw(screen)
             # pygame.display.flip()
 
