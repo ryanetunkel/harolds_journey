@@ -89,6 +89,26 @@ health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
 outline_health_bar_ownership_group = {pygame.sprite.Sprite(): pygame.sprite.Sprite()}
 
 
+moving_sprites = [
+    wizard,
+    harold,
+    obstacle_group,
+    projectile_group,
+    pickup_group,
+    buff_group,
+    outline_health_bar_group,
+    health_bar_group,
+]
+
+objects_to_be_removed = [
+    obstacle_group,
+    dead_obstacle_group,
+    projectile_group,
+    pickup_group,
+    buff_group,
+]
+
+
 # Background Elements
 bg_image_path = "harolds_journey/graphics/bg_images/Background.png"
 bg_surf = pygame.image.load(bg_image_path).convert_alpha()
