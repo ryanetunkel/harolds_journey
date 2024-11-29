@@ -581,7 +581,7 @@ while True:
 
                         screenshot = pygame.Surface((window_size))
                         screenshot.blit(sub_screen, (0,0))
-                        screen.fill((50,50,50,100))
+                        screen.fill((50,50,50,200))
                         screenshot.blit(sub_screen,(0,0))
                         screenshot.set_alpha(50)
 
@@ -590,7 +590,7 @@ while True:
                         new_bg = pygame_menu.BaseImage(
                             image_path="screenshot.jpg",
                         )
-                        pause_menu = update_pause_menu_and_submenus(new_bg)
+                        pause_menu = update_pause_menu(new_bg)
 
                         pause_time_1 = pygame.time.get_ticks()
                         pause_menu.mainloop(screen,clear_surface=True)
@@ -604,28 +604,6 @@ while True:
                 mouse_pos = (mouse_x,mouse_y)
                 clicking_with_left_mouse = event.type == pygame.MOUSEBUTTONDOWN and event.button == 1
 
-                # # Settings Menu
-                # elif menu_section == SETTINGS_MENU:
-                #     mouse_on_settings_sounds_button = settings_sounds_button_rect_big.collidepoint(mouse_pos)
-                #     mouse_on_settings_controls_button = settings_controls_button_rect_big.collidepoint(mouse_pos)
-                #     mouse_on_settings_display_button = settings_display_button_rect_big.collidepoint(mouse_pos)
-                #     mouse_on_settings_back_button = settings_back_button_rect_big.collidepoint(mouse_pos)
-                #     # Sounds Button
-                #     if mouse_on_settings_sounds_button:
-                #         if clicking_with_left_mouse:
-                #             menu_section = SOUNDS_MENU
-                #     # Controls Button
-                #     elif mouse_on_settings_controls_button:
-                #         if clicking_with_left_mouse:
-                #             menu_section = CONTROLS_MENU
-                #     # Display Button
-                #     elif mouse_on_settings_display_button:
-                #         if clicking_with_left_mouse:
-                #             menu_section = DISPLAY_MENU
-                #     # Back Button
-                #     elif mouse_on_settings_back_button:
-                #         if clicking_with_left_mouse:
-                #             menu_section = MAIN_MENU
                 # # Sounds Menu
                 # elif menu_section == SOUNDS_MENU:
                 #     mouse_on_sounds_back_button = sounds_back_button_rect_big.collidepoint(mouse_pos)
@@ -778,7 +756,7 @@ while True:
                 #     screen.blit(score_message_surf,score_message_rect)
                 #     display_high_score(score_message_rect)
                 # Starts Main Menu
-                main_menu = update_main_menu_and_submenus()
+                main_menu = update_main_menu()
                 main_menu.enable()
                 main_menu.mainloop(screen,clear_surface=True)
                 # When exits main menu through only way other than quitting, runs this code which starts the game
