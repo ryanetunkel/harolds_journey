@@ -1,6 +1,8 @@
 """Contains all menu-related items"""
 import pygame_menu
 import pygame_menu.locals
+import pygame_menu.widgets
+import pygame_menu.widgets.widget
 
 from controls import *
 from global_vars import *
@@ -29,9 +31,7 @@ title_padding = int(window_height/64)
 title_y_pos_center_offset = -center_screen_height+title_font_size
 widget_y_offset = center_screen_height
 
-# Statistics Menu Vars
-statistics_tracker_scalar = 0.4
-statistics_trackers_y_pos_offset = window_height * 1/44
+# Stats Vars
 edited_stats_file_dict = get_edited_stats_file_dict()
 edited_stats_kills_file_dict = edited_stats_file_dict.get("kills")
 edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
@@ -51,28 +51,28 @@ def increase_fireballs_shot():
     global fireballs_shot
     fireballs_shot += 1
 
+
+def update_score(new_score:int):
+    global score
+    score = new_score
+
+
 # Wizard on Menu Screen
 wizard_path = "harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png"
-main_menu_wizard_hat_size = 24 * (window_height/400)
-main_menu_wizard_start_x_pos = center_screen_width
-main_menu_wizard_start_y_pos = widget_y_offset-title_font_size/2
+main_menu_wizard_hat_size = 24 * (window_height/400) # Needs to stay in menu
 main_menu_wizard_surf = pygame.image.load(wizard_path).convert_alpha()
 main_menu_wizard_height_by_scale = 96 * (window_height/400)
 main_menu_wizard_width_by_scale = 96 * (window_width/800)
 main_menu_wizard_size_by_scale = (main_menu_wizard_height_by_scale,main_menu_wizard_width_by_scale)
 main_menu_wizard_surf = pygame.transform.scale(main_menu_wizard_surf,main_menu_wizard_size_by_scale)
-# main_menu_wizard_rect = main_menu_wizard_surf.get_rect(midbottom = (main_menu_wizard_start_x_pos,main_menu_wizard_start_y_pos))
 
 # Harold on Menu Screen
 harold_path = "harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png"
-# main_menu_harold_start_x_pos = center_screen_width
-# main_menu_harold_start_y_pos = main_menu_wizard_rect.top + main_menu_wizard_hat_size
 main_menu_harold_surf = pygame.image.load(harold_path).convert_alpha()
 main_menu_harold_height_by_scale = main_menu_wizard_height_by_scale * 3/8
 main_menu_harold_width_by_scale = main_menu_wizard_width_by_scale * 3/8
 main_menu_harold_size_by_scale = (main_menu_harold_height_by_scale,main_menu_harold_width_by_scale)
 main_menu_harold_surf = pygame.transform.scale(main_menu_harold_surf,main_menu_harold_size_by_scale)
-# main_menu_harold_rect = main_menu_harold_surf.get_rect(midbottom = (main_menu_harold_start_x_pos,main_menu_harold_start_y_pos))
 
 button_when_big_scale = 1.1
 
@@ -99,11 +99,10 @@ def on_resize(menu:pygame_menu.Menu) -> None:
     menu.resize(new_w, new_h)
 
 
-# Selections
+# Base Menu Selection
 base_menu_selection = pygame_menu.widgets.SimpleSelection()
 
-# Base Images
-# Background
+# Main Menu Background Base Image
 main_menu_bg = pygame_menu.BaseImage(
     image_path=bg_image_path,
 )
@@ -115,8 +114,6 @@ main_menu_bg = main_menu_bg.crop_rect((0,bg_surf.get_height()-window_height,wind
     # onselect is callback when selected
     # action is when "clicked" - unsure exact but that is what happens usually
 
-
-# Themes
 # Base Menu Theme
 base_menu_theme = pygame_menu.Theme(
     title_bar_style=pygame_menu.widgets.MENUBAR_STYLE_NONE,
@@ -141,6 +138,7 @@ def update_main_menu() -> pygame_menu.Menu:
     global main_menu
     global main_statistics_menu
     global main_settings_menu
+    global score
 
     # Main Menu Theme
     main_menu_theme = base_menu_theme.copy()
@@ -171,6 +169,7 @@ def update_main_menu() -> pygame_menu.Menu:
         theme=main_statistics_menu_theme,
         center_content=False,
     )
+    main_statistics_menu = update_statistics_menu(main_statistics_menu)
 
     # Settings Menu
     main_settings_menu = pygame_menu.Menu(
@@ -181,22 +180,31 @@ def update_main_menu() -> pygame_menu.Menu:
         theme=main_settings_menu_theme,
         center_content=False,
     )
+    main_settings_menu = update_settings_menu(main_settings_menu)
 
     # Labels
+    main_menu_title = (
+        "Harold\'s Journey" if score == 0 else f"Score: {score}"
+    )
     # Main Menu Label
     main_menu_label = main_menu.add.label(
-        title="Harold\'s Journey",
+        title=main_menu_title,
         float=True,
         font_color=font_color,
         font_name=font_name,
         font_size=int(title_font_size*2),
     ).translate(0,title_y_pos_center_offset-title_font_size)
-
-    # Main Statistics
-    main_statistics_menu = update_statistics_menu(main_statistics_menu)
-
-    # Main Settings
-    main_settings_menu = update_settings_menu(main_settings_menu)
+    edited_stats_file_dict = get_edited_stats_file_dict()
+    edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+    high_score = edited_stats_interactivity_file_dict.get("high_score")
+    # Main Menu High Score Label
+    main_menu_high_score_label = main_menu.add.label(
+        title=f"High Score: {high_score}",
+        float=True,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=title_font_size,
+    ).translate(0,title_y_pos_center_offset+title_font_size)
 
     # Buttons
     # Main Menu Buttons
@@ -279,6 +287,7 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         theme=pause_statistics_menu_theme,
         center_content=False,
     )
+    pause_statistics_menu = update_statistics_menu(pause_statistics_menu)
 
     # Pause Settings Menu
     pause_settings_menu = pygame_menu.Menu(
@@ -289,6 +298,7 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         theme=pause_settings_menu_theme,
         center_content=False,
     )
+    pause_settings_menu = update_settings_menu(pause_settings_menu)
 
     # Labels
     # Pause Menu Label
@@ -299,12 +309,6 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         font_name=font_name,
         font_size=title_font_size,
     ).translate(0,title_y_pos_center_offset)
-
-    # Statistics Menu
-    pause_statistics_menu = update_statistics_menu(pause_statistics_menu)
-
-    # Settings Menu
-    pause_settings_menu = update_settings_menu(pause_settings_menu)
 
     # Pause Menu Buttons
     pause_menu_back_button = pause_menu.add.button(
@@ -342,7 +346,6 @@ def update_statistics_menu(menu:pygame_menu.Menu):
     global fireballs_shot
     global jumps_made
     global distance_traveled
-    global pre_stat_update_edited_stats_file_dict
 
     edited_stats_file_dict = get_edited_stats_file_dict()
     edited_stats_kills_file_dict = edited_stats_file_dict.get("kills")
@@ -365,6 +368,9 @@ def update_statistics_menu(menu:pygame_menu.Menu):
     knockback_buff_found = edited_stats_buffs_file_dict.get("knockback_buff")
     shield_buff_found = edited_stats_buffs_file_dict.get("shield_buff")
 
+    if score > high_score:
+        edited_stats_interactivity_file_dict.update({"high_score":score})
+        set_edited_stats_file_dict(edited_stats_file_dict)
     if fireballs_shot != 0:
         edited_stats_file_dict = get_edited_stats_file_dict()
         edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
@@ -531,6 +537,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
 
 # Settings Menu
 def update_settings_menu(menu:pygame_menu.Menu):
+    # Themes
     # Sounds Menu Theme
     sounds_menu_theme = menu.get_theme().copy()
     # Controls Menu Theme
@@ -538,6 +545,7 @@ def update_settings_menu(menu:pygame_menu.Menu):
     # Display Menu Theme
     display_menu_theme = menu.get_theme().copy()
 
+    # Menus
     # Sounds Menu
     sounds_menu = pygame_menu.Menu(
         title="",
@@ -547,6 +555,7 @@ def update_settings_menu(menu:pygame_menu.Menu):
         theme=sounds_menu_theme,
         center_content=False,
     )
+    sounds_menu = update_sounds_menu(sounds_menu)
 
     # Controls Menu
     controls_menu = pygame_menu.Menu(
@@ -557,6 +566,7 @@ def update_settings_menu(menu:pygame_menu.Menu):
         theme=controls_menu_theme,
         center_content=False,
     )
+    controls_menu = update_controls_menu(controls_menu)
 
     # Display Menu
     display_menu = pygame_menu.Menu(
@@ -567,12 +577,6 @@ def update_settings_menu(menu:pygame_menu.Menu):
         theme=display_menu_theme,
         center_content=False,
     )
-
-    # Sounds Menu
-    sounds_menu = update_sounds_menu(sounds_menu)
-    # Controls Menu
-    controls_menu = update_controls_menu(controls_menu)
-    # Display Menu
     display_menu = update_display_menu(display_menu)
 
     # Settings Menu Label
@@ -716,6 +720,7 @@ def end_game():
 def wizard_death_calls():
     global main_menu
     global objects_to_be_removed
+    global score
     global wizard
     # Updating Stats
     wizard_jumps = wizard.sprite.get_jumps_made()
@@ -761,6 +766,7 @@ def wizard_death_calls():
     if current_wizard_shield_buff and not shield_buff_found:
         edited_stats_buffs_file_dict.update({"shield_buff":current_wizard_shield_buff})
     set_edited_stats_file_dict(edited_stats_file_dict)
+    update_score(score)
     main_menu = update_main_menu()
     # Other Death Stuff
     wizard.sprite.set_wizard_current_health(0)

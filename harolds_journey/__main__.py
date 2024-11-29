@@ -23,19 +23,27 @@ wizard.add(Player())
 harold.add(Harold(wizard))
 
 # Functions
-def display_score():
+def calculate_score() -> int:
     global pause_time
-    # Score
+
     temp_additional_score = wizard.sprite.get_additional_score()
     current_time = ceil((pygame.time.get_ticks() - start_time - pause_time) / 1000)
+
+    return current_time + temp_additional_score
+
+
+def display_score():
+    global pause_time
+    temp_score = calculate_score()
+    # Score
     score_title_surf = test_font.render("SCORE", False, "#FCDC4D")
     score_title_rect = score_title_surf.get_rect(center = (window_width/2,window_height*1/16))
-    score_surf = test_font.render(str(current_time + temp_additional_score), False, "#FCDC4D")
+    score_surf = test_font.render(str(temp_score), False, "#FCDC4D")
     score_rect = score_surf.get_rect(center = (window_width/2,window_height/8))
     # Score Blit
     screen.blit(score_title_surf,score_title_rect)
     screen.blit(score_surf,score_rect)
-    return current_time + temp_additional_score
+    return temp_score
 
 
 def display_high_score(score_rect):
@@ -741,15 +749,15 @@ while True:
                 # screen.blit(main_menu_wizard_surf,main_menu_wizard_rect)
                 # screen.blit(main_menu_harold_surf,main_menu_harold_rect)
                 # Main Menu Score
-                score_message_surf = test_font.render("Score: " + str(score),False,"#FCDC4D")
-                score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
-                score_message_rect = score_message_surf.get_rect(center = (window_width/2,(84/800 * window_height)))
-                edited_stats_file_dict = get_edited_stats_file_dict()
-                edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
-                high_score = edited_stats_interactivity_file_dict.get("high_score")
-                if score > high_score:
-                    edited_stats_interactivity_file_dict.update({"high_score":score})
-                    set_edited_stats_file_dict(edited_stats_file_dict)
+                # score_message_surf = test_font.render("Score: " + str(score),False,"#FCDC4D")
+                # score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
+                # score_message_rect = score_message_surf.get_rect(center = (window_width/2,(84/800 * window_height)))
+                # edited_stats_file_dict = get_edited_stats_file_dict()
+                # edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
+                # high_score = edited_stats_interactivity_file_dict.get("high_score")
+                # if score > high_score:
+                #     edited_stats_interactivity_file_dict.update({"high_score":score})
+                #     set_edited_stats_file_dict(edited_stats_file_dict)
                 # Main Menu Score vs. Title Blit
                 # if score == 0: screen.blit(main_menu_title_surf,main_menu_title_rect)
                 # else:
@@ -902,6 +910,8 @@ while True:
     if not intro_played:
         screen.blit(bg_surf,(0,window_height-bg_surf.get_height()))
         screen.blit(wizard_intro_surf,wizard_intro_rect)
+        main_menu_wizard_start_x_pos = center_screen_width
+        main_menu_wizard_start_y_pos = widget_y_offset-title_font_size/2
         if harold_turn_animation_complete and not harold_flipped:
             harold_intro_surf = pygame.transform.flip(harold_intro_surf,True,False)
             harold_flipped = True
@@ -953,7 +963,7 @@ while True:
             bg_music_timer += 1
             screen.blit(bg_surf,(0,-bg_surf.get_height() + window_height))
             # Stat Image Postions
-            score = display_score()
+            update_score(display_score())
             if get_edited_options_file_dict()["edited_display_in_game_health"]:
                 display_in_game_health() # Displays and updates in game health
             if get_edited_options_file_dict()["edited_display_in_game_buffs"]:
