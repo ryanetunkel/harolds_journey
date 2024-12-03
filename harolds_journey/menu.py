@@ -45,17 +45,104 @@ highest_speed = 0
 pre_stat_update_edited_stats_file_dict = {}
 
 # Settings Menu Vars
+# Controls Vars
 controls_update = False
 
+# Display Vars
+# Resolution Vars
+# fps one
+# pixel_size = zoom
 
+# Gameplay Vars
+display_controls_bool = False
+display_in_game_stats_bool = False
+display_in_game_health_bool = False
+display_in_game_buffs_bool = False
+
+
+# Statistics Vars Functions
 def increase_fireballs_shot():
     global fireballs_shot
     fireballs_shot += 1
 
 
-def update_score(new_score:int):
+def set_score(new_score:int):
     global score
     score = new_score
+
+
+# Display Vars Functions
+# Resolution Vars Functions
+def update_pixel_size(new_pixel_size:int):
+    global pixel_size
+    global global_scalar
+    global wizard_width
+    global wizard_height
+    global wizard_pixel_size
+    global grass_top_y
+
+    pixel_size = new_pixel_size
+    global_scalar = pixel_size/4
+    wizard_width = 32 * pixel_size
+    wizard_height = 32 * pixel_size
+    wizard_pixel_size = (wizard_height,wizard_width)
+    grass_top_y = int((379 / 400) * window_height)
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_options_file_dict.update({"pixel_size":new_pixel_size})
+    set_edited_options_file_dict(edited_options_file_dict)
+
+
+def update_fps(new_fps:int):
+    global fps
+    fps = new_fps
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_options_file_dict.update({"fps":new_fps})
+    set_edited_options_file_dict(edited_options_file_dict)
+
+
+def update_window_width(new_window_width:int):
+    global window_width
+    window_width = new_window_width
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_options_file_dict.update({"window_width":new_window_width})
+    set_edited_options_file_dict(edited_options_file_dict)
+
+
+def update_window_height(new_window_height:int):
+    global window_height
+    window_height = new_window_height
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_options_file_dict.update({"window_height":new_window_height})
+    set_edited_options_file_dict(edited_options_file_dict)
+
+
+# Gameplay Vars Functions
+def update_display_controls_bool():
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_display_controls = edited_options_file_dict.get("display_controls")
+    edited_options_file_dict.update({"display_controls":(not edited_display_controls)})
+    set_edited_options_file_dict(edited_options_file_dict)
+
+
+def update_display_in_game_stats_bool():
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_display_in_game_stats = edited_options_file_dict.get("display_in_game_stats")
+    edited_options_file_dict.update({"display_in_game_stats":(not edited_display_in_game_stats)})
+    set_edited_options_file_dict(edited_options_file_dict)
+
+
+def update_display_in_game_health_bool():
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_display_in_game_health = edited_options_file_dict.get("display_in_game_health")
+    edited_options_file_dict.update({"display_in_game_health":(not edited_display_in_game_health)})
+    set_edited_options_file_dict(edited_options_file_dict)
+
+
+def update_display_in_game_buffs_bool():
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_display_in_game_buffs = edited_options_file_dict.get("display_in_game_buffs")
+    edited_options_file_dict.update({"display_in_game_buffs":(not edited_display_in_game_buffs)})
+    set_edited_options_file_dict(edited_options_file_dict)
 
 
 # Wizard on Menu Screen
@@ -91,10 +178,17 @@ def on_resize(menu:pygame_menu.Menu) -> None:
     new_w, new_h = current_window_size[0], current_window_size[1]
 
     new_w = max(new_w,min_window_width)
+    new_w = min(new_w,max_window_width)
     new_h = max(new_h,min_window_height)
+    new_h = min(new_h,max_window_height)
 
     window_width = new_w
     window_height = new_h
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_options_file_dict.update({"window_width":new_w})
+    edited_options_file_dict.update({"window_height":new_h})
+    set_edited_options_file_dict(edited_options_file_dict)
+
     window_size = (window_width,window_height)
     grass_top_y = int((379 / 400) * window_height)
     menu.resize(new_w, new_h)
