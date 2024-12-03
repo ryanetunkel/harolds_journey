@@ -853,6 +853,66 @@ def update_display_menu(menu:pygame_menu.Menu):
     ).translate(0,-title_font_size)
 
     display_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    # Display Menu Sliders
+    # Zoom Slider
+    zoom_values = {0: "2", 1: "4", 2: "6", 3: "8"}
+    edited_pixel_size = get_edited_options_file_dict().get("pixel_size")
+    default_zoom = list(zoom_values.values()).index(str(edited_pixel_size))
+    display_menu_zoom_slider = menu.add.range_slider(
+        title="Zoom:",
+        default=default_zoom,
+        range_values=list(zoom_values.keys()),
+        increment=1,
+        width=int(center_screen_width/4),
+        value_format=lambda x: zoom_values[x],
+        font_color=font_color,
+        font_name=font_name,
+        range_box_color=font_color,
+        range_line_color=font_color,
+        range_line_height=2,
+        range_text_value_color=font_color,
+        range_text_value_enabled=True,
+        range_text_value_tick_color=font_color,
+        range_text_value_tick_enabled=True,
+        range_text_value_tick_number=4,
+        range_text_value_tick_thick=2,
+        slider_color=font_color,
+        slider_sel_highlight_color=pygame.Color("#FFFFFF"),
+        slider_selected_color=pygame.Color("#FFFFFF"),
+        slider_text_value_color=font_color,
+        slider_text_value_enabled=False,
+        rangeslider_id="display_menu_zoom_slider",
+    )
+    update_pixel_size(int(zoom_values[display_menu_zoom_slider.get_value()]))
+
+    # Framerate Slider
+    range_values = list(num for num in range(0,121))
+    display_menu_framerate_slider = menu.add.range_slider(
+        title="Framerate Cap:",
+        default=60,
+        range_values=range_values,
+        increment=1,
+        width=int(center_screen_width/4),
+        value_format=lambda x: str(range_values[x]),
+        font_color=font_color,
+        font_name=font_name,
+        repeat_keys=True,
+        repeat_keys_interval_ms=5,
+        range_box_color=font_color,
+        range_line_color=font_color,
+        range_line_height=2,
+        range_text_value_color=font_color,
+        range_text_value_enabled=False,
+        range_text_value_tick_enabled=False,
+        slider_color=font_color,
+        slider_sel_highlight_color=pygame.Color("#FFFFFF"),
+        slider_selected_color=pygame.Color("#FFFFFF"),
+        slider_text_value_color=font_color,
+        slider_text_value_enabled=True,
+        rangeslider_id="display_menu_framerate_slider",
+    )
+    update_fps(display_menu_framerate_slider.get_value())
+
     # Display Menu Buttons
     display_menu_resolution_button = menu.add.button(
         title="Resolution",
