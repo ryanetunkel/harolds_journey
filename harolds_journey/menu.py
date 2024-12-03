@@ -27,6 +27,7 @@ font_color = "#FCDC4D"
 font_name = pygame_menu.font.FONT_MUNRO
 # Title Vars
 title_font_size = int(window_height/16)
+stat_font_size = int(title_font_size/2)
 title_padding = int(window_height/64)
 title_y_pos_center_offset = -center_screen_height+title_font_size
 widget_y_offset = center_screen_height
