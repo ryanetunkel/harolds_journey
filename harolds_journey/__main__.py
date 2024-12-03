@@ -1007,4 +1007,4 @@ while True:
     # Global Clock and Display Update
     pygame.display.flip()
     # pygame.display.update()
-    clock.tick(FPS)
+    clock.tick(fps)
