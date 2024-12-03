@@ -15,7 +15,7 @@ class Obstacle(pygame.sprite.Sprite):
         self.time_scalar = int(time_at_spawn / self.ROUND_DIFFICULTY_INCREASE_INCREMENT) + 1 # Should mean every 20 seconds goes up by 1
 
         self.enemy_looking_right = False
-        self.knockback_value = 8 * GLOBAL_SCALAR
+        self.knockback_value = 8 * global_scalar
         self.knockback_vector = 0
         self.knockback_timer_max = 8
         self.knockback_timer = self.knockback_timer_max
@@ -32,13 +32,13 @@ class Obstacle(pygame.sprite.Sprite):
         # Skeleton Base Stats
         self.skeleton_value = 2
         self.skeleton_max_health = 1
-        self.skeleton_speed = 2 * GLOBAL_SCALAR
+        self.skeleton_speed = 2 * global_scalar
         self.skeleton_damage = 1
 
         # Flying Enemy Base Stats
         self.bird_value = 5
         self.bird_max_health = 1
-        self.bird_speed = 2 * GLOBAL_SCALAR
+        self.bird_speed = 2 * global_scalar
         self.bird_damage = 1
         self.immunity = False
         self.IMMUNITY_LIMIT = 50
@@ -73,7 +73,7 @@ class Obstacle(pygame.sprite.Sprite):
             self.current_health = self.max_health
             self.damage = self.skeleton_damage * self.time_scalar
 
-            self.y_pos = grass_top_y - (WIZARD_HEIGHT + (WIZARD_HEIGHT / 4))
+            self.y_pos = grass_top_y - (wizard_height + (wizard_height / 4))
             self.obstacle_speed = self.bird_speed
             self.obstacle_animation_speed = self.bird_fly_animation_speed
 
@@ -88,7 +88,7 @@ class Obstacle(pygame.sprite.Sprite):
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
-        self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
+        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
         self.rect = self.image.get_rect(midbottom = (self.x_pos,self.y_pos))
         self.direction_multiplier = 1 if self.enemy_looking_right else -1
 
@@ -234,7 +234,7 @@ class Obstacle(pygame.sprite.Sprite):
         if self.animation_index >= len(self.frames): self.animation_index = 0
 
         self.image = self.frames[int(self.animation_index)]
-        self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
+        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
 
         if self.enemy_looking_right:
             self.image = pygame.transform.flip(self.image,True,False)

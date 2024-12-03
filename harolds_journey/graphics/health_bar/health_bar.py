@@ -8,14 +8,14 @@ class HealthBar(pygame.sprite.Sprite):
 
         self.source = source
         self.x_pos = self.source.get_x_pos()
-        self.INNER_WIDTH = 4 * PIXEL_SIZE
-        self.INNER_HEIGHT = PIXEL_SIZE
+        self.INNER_WIDTH = 4 * pixel_size
+        self.INNER_HEIGHT = pixel_size
         self.y_pos = self.source.get_y_pos() + (source.get_height() / 2) + self.INNER_HEIGHT
         self.current_health = current_health
         self.max_health = max_health
         self.health_percentage = current_health / self.max_health
         self.inner_centerx = self.x_pos
-        self.inner_centery = self.y_pos + (WIZARD_HEIGHT / 2) + (self.INNER_HEIGHT * 2) # Just to move it up a bit
+        self.inner_centery = self.y_pos + (wizard_height / 2) + (self.INNER_HEIGHT * 2) # Just to move it up a bit
         self.image = get_green_health_bar()
         self.image = pygame.transform.scale(self.image,(self.INNER_WIDTH * 4, self.INNER_HEIGHT * 2))
         self.rect = self.image.get_rect(center = (self.inner_centerx,self.inner_centery))
@@ -63,7 +63,7 @@ class HealthBar(pygame.sprite.Sprite):
 
     def animation_state(self):
         inner_centerx = self.source.get_x_pos()
-        inner_centery = self.source.get_y_pos() + (WIZARD_HEIGHT / 2) + (self.INNER_HEIGHT * 2)
+        inner_centery = self.source.get_y_pos() + (wizard_height / 2) + (self.INNER_HEIGHT * 2)
         if self.health_percentage > 0.5:
             self.image = get_green_health_bar()
         elif self.health_percentage <= 0.5 and self.health_percentage > 0.25:

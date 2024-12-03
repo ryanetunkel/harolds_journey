@@ -12,7 +12,7 @@ class Projectile(pygame.sprite.Sprite):
         # Projectiles
         # These might not all be universal, especially damage and speed, will be varied
 
-        self.projectile_speed = 5 * GLOBAL_SCALAR
+        self.projectile_speed = 5 * global_scalar
         self.projectile_damage = 1
 
         (self.mouse_x,self.mouse_y) = pygame.mouse.get_pos()
@@ -33,8 +33,8 @@ class Projectile(pygame.sprite.Sprite):
             self.knockback = source.sprite.get_knockback()
 
             # Start position
-            self.fireball_x_start = self.temp_wizard_rect.centerx + ((WIZARD_WIDTH/2) * self.x_direction_multiplier)
-            self.fireball_y_start = self.temp_wizard_rect.centery + (6 * PIXEL_SIZE)
+            self.fireball_x_start = self.temp_wizard_rect.centerx + ((wizard_width/2) * self.x_direction_multiplier)
+            self.fireball_y_start = self.temp_wizard_rect.centery + (6 * pixel_size)
 
             # Position
             self.fireball_x_pos = self.fireball_x_start
@@ -46,7 +46,7 @@ class Projectile(pygame.sprite.Sprite):
             self.angle = math.atan2(self.y_dif,self.x_dif)
 
             # Speed
-            self.speed = 5 * GLOBAL_SCALAR
+            self.speed = 5 * global_scalar
             self.fireball_x_start_speed = 0
             self.fireball_x_speed = self.projectile_speed
             self.fireball_y_start_speed = 0
@@ -74,7 +74,7 @@ class Projectile(pygame.sprite.Sprite):
             # self.image = pygame.transform.scale_by(self.image,1)
             if not self.wizard_was_looking_right:
                 self.image = pygame.transform.flip(self.image,True,False)
-            self.scale = GLOBAL_SCALAR
+            self.scale = global_scalar
             self.image = pygame.transform.scale_by(self.image,self.scale)
             self.rect = self.image.get_rect(center = (self.fireball_x_pos,self.fireball_y_pos))
 

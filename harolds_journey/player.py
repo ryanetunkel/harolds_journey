@@ -24,7 +24,7 @@ class Player(pygame.sprite.Sprite):
 
         # X Directions
         self.wizard_x_pos = self.WIZARD_START_X_POS
-        self.wizard_speed = 4 * GLOBAL_SCALAR
+        self.wizard_speed = 4 * global_scalar
         self.wizard_x_velocity = 0
         self.looking_right = True
         self.looking_down = True
@@ -33,8 +33,8 @@ class Player(pygame.sprite.Sprite):
         # Y Directions
         self.wizard_y_pos = self.WIZARD_START_Y_POS
         self.wizard_y_velocity = 0
-        self.jump_speed = -20 * GLOBAL_SCALAR
-        self.gravity_acceleration = GLOBAL_GRAVITY # How quickly gravity accelerates the player
+        self.jump_speed = -20 * global_scalar
+        self.gravity_acceleration = global_gravity # How quickly gravity accelerates the player
         self.wizard_gravity = 0
         self.wizard_jumping = False
 
@@ -106,7 +106,7 @@ class Player(pygame.sprite.Sprite):
 
         self.wizard_index = 0
         self.image = self.wizard_walk[self.wizard_index]
-        self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
+        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
 
         # Animation Speeds
@@ -525,7 +525,7 @@ class Player(pygame.sprite.Sprite):
                 self.jumps_made += 1
                 # Jump Sound
                 pygame.mixer.Channel(JUMP_SOUND_CHANNEL).play(self.jump_sound)
-            if right_button_press and self.rect.x + WIZARD_WIDTH + self.wizard_speed < window_width: # event.type == right_button
+            if right_button_press and self.rect.x + wizard_width + self.wizard_speed < window_width: # event.type == right_button
                 self.wizard_x_velocity = self.wizard_speed
                 self.rect.x += self.wizard_x_velocity
                 self.distance_traveled += self.wizard_speed
@@ -592,7 +592,7 @@ class Player(pygame.sprite.Sprite):
 
                 # Numbers listed were only the case when self.jump_speed was -20 and len(self.wizard_jump) was 23
                 starting_y_velocity = self.get_jump_speed() # -20
-                ending_y_velocity = 2 * GLOBAL_SCALAR # 2
+                ending_y_velocity = 2 * global_scalar # 2
                 y_velocity_range = ending_y_velocity - starting_y_velocity # 22
                 y_velocity = self.get_wizard_y_velocity()
                 # [-20,2] + 20 = [0, 22] / 22 = [0,1] in 22nds
@@ -673,7 +673,7 @@ class Player(pygame.sprite.Sprite):
             if self.wizard_index + self.WIZARD_DEATH_ANIMATION_SPEED < len(self.wizard_death):
                 self.wizard_index += self.WIZARD_DEATH_ANIMATION_SPEED
             self.image = self.wizard_death[int(self.wizard_index)]
-        self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
+        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
         if not self.looking_right:
             self.image = pygame.transform.flip(self.image,True,False)
         # Death animation if game was ended - rn game ends instantly so can't be implemented
@@ -714,7 +714,7 @@ class Player(pygame.sprite.Sprite):
 
         # X Directions
         self.wizard_x_pos = self.WIZARD_START_X_POS
-        self.wizard_speed = 4 * GLOBAL_SCALAR
+        self.wizard_speed = 4 * global_scalar
         self.wizard_x_velocity = 0
         self.looking_right = True
         self.looking_down = True
@@ -723,8 +723,8 @@ class Player(pygame.sprite.Sprite):
         # Y Directions
         self.wizard_y_pos = self.WIZARD_START_Y_POS
         self.wizard_y_velocity = 0
-        self.jump_speed = -20 * GLOBAL_SCALAR
-        self.gravity_acceleration = GLOBAL_GRAVITY # How quickly gravity accelerates the player
+        self.jump_speed = -20 * global_scalar
+        self.gravity_acceleration = global_gravity # How quickly gravity accelerates the player
         self.wizard_gravity = 0
         self.wizard_jumping = False
 
@@ -796,7 +796,7 @@ class Player(pygame.sprite.Sprite):
 
         self.wizard_index = 0
         self.image = self.wizard_walk[self.wizard_index]
-        self.image = pygame.transform.scale(self.image,WIZARD_PIXEL_SIZE)
+        self.image = pygame.transform.scale(self.image,wizard_pixel_size)
         self.rect = self.image.get_rect(midbottom = (self.wizard_x_pos,self.wizard_y_pos))
 
         # Animation Speeds

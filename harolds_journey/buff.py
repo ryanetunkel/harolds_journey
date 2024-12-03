@@ -9,12 +9,12 @@ class Buff(pygame.sprite.Sprite):
 
         self.x_pos = x_pos
         self.y_pos = y_pos
-        self.gravity_acceleration = GLOBAL_GRAVITY
-        self.y_velocity = -20 * GLOBAL_SCALAR
+        self.gravity_acceleration = global_gravity
+        self.y_velocity = -20 * global_scalar
         self.BUFF_ANIMATION_SPEED = 0.2
-        self.LIFETIME_LIMIT = 10 * 60 / GLOBAL_SCALAR
+        self.LIFETIME_LIMIT = 10 * 60 / global_scalar
         self.lifetime = self.LIFETIME_LIMIT
-        self.speed = 2 * GLOBAL_SCALAR
+        self.speed = 2 * global_scalar
         self.default_animation_timer_max = 60
         self.default_animation_timer = self.default_animation_timer_max
 
@@ -61,7 +61,7 @@ class Buff(pygame.sprite.Sprite):
             self.frames = self.sprite_sheet.images_at(self.image_coords, colorkey=(0, 0, 0))
         self.image = self.default_image
         self.animation_index = 0
-        self.scale = 3 * GLOBAL_SCALAR
+        self.scale = 3 * global_scalar
         self.image = pygame.transform.scale_by(self.image,self.scale)
         self.rect = self.image.get_rect(center = (self.x_pos,self.y_pos))
 

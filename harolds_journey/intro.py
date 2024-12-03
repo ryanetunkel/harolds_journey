@@ -7,8 +7,8 @@ from global_vars import *
 # Intro
 wizard_walk_in_animation_complete = False
 harold_jump_on_hat_animation_complete = False
-intro_jump_speed = -14 * GLOBAL_SCALAR
-intro_gravity_acceleration = GLOBAL_GRAVITY
+intro_jump_speed = -14 * global_scalar
+intro_gravity_acceleration = global_gravity
 x_lineup = False
 y_lineup = False
 fall = False

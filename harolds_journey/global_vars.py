@@ -3,6 +3,7 @@
 import pygame
 
 from controls import *
+from menu_vars import *
 
 # Sounds
 BG_MUSIC_VOLUME = 0.4
@@ -26,31 +27,15 @@ SECRET_SOUND_CHANNEL = 7
 score = 0
 
 pygame.init()
-
-screenInfo = pygame.display.Info()
-window_width = 800 * 3/2  # 800 * 3/2 = 1200
-window_height = 400 * 3/2  # 400 * 3/2 = 600
-min_window_width = 320
-min_window_height = 240
-max_window_width = screenInfo.current_w
-max_window_height = screenInfo.current_h
-# WINDOW_WIDTH = 800
-# WINDOW_HEIGHT = 400
-PIXEL_SIZE = 2 # Create a slider for this - will be zoom essentially.
-# PIXEL_SIZE currently can only be even numbers else creates .5 addition and rects can only do integer-based moves
-# Will need to transition to using math.Vector2 to do all collision and stuff and then render it after as a rect to get subpixel movement
-GLOBAL_SCALAR = PIXEL_SIZE/4
 window_size = (window_width,window_height) # Create a set of options for this, fullscreen maybe in future, gets tricky
-# window_scalar = ((window_width + window_height)/1200) # 1200 + 600 /1200 = 3/2, not needed currently - should be reworked to be useful
-WIZARD_WIDTH = 32 * PIXEL_SIZE
-WIZARD_HEIGHT = 32 * PIXEL_SIZE
-WIZARD_PIXEL_SIZE = (WIZARD_HEIGHT,WIZARD_WIDTH)
+global_scalar = pixel_size/4
+wizard_width = 32 * pixel_size
+wizard_height = 32 * pixel_size
+wizard_pixel_size = (wizard_height,wizard_width)
 grass_top_y = int((379 / 400) * window_height)
-GLOBAL_GRAVITY = 1 * GLOBAL_SCALAR
+global_gravity = 1 * global_scalar
 OBSTACLE_SPAWN_FREQUENCY = 1500 # In milliseconds, 1000 = 1 sec, should be 1500
-FPS = 60
 
-screen = pygame.display.set_mode(window_size,pygame.RESIZABLE)
 pygame.display.set_caption("Harold\'s Journey")
 pygame_icon = pygame.image.load("harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png").convert_alpha()
 pygame.display.set_icon(pygame_icon)

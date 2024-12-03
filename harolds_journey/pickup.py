@@ -9,10 +9,10 @@ class Pickup(pygame.sprite.Sprite):
 
         self.x_pos = x_pos
         self.y_pos = y_pos
-        self.gravity_acceleration = GLOBAL_GRAVITY
-        self.y_velocity = -20 * GLOBAL_SCALAR
+        self.gravity_acceleration = global_gravity
+        self.y_velocity = -20 * global_scalar
         self.PICKUP_ANIMATION_SPEED = 0.2
-        self.LIFETIME_LIMIT = 10 * 60 / GLOBAL_SCALAR
+        self.LIFETIME_LIMIT = 10 * 60 / global_scalar
         self.lifetime = self.LIFETIME_LIMIT
 
         if type == "damage": # Percentages
@@ -35,7 +35,7 @@ class Pickup(pygame.sprite.Sprite):
 
         elif type == "speed": # Flat increases
             self.type = "speed"
-            self.bonus = 0.5 * GLOBAL_SCALAR
+            self.bonus = 0.5 * global_scalar
             speed_pickup = pygame.image.load("harolds_journey/graphics/pickups/speed/speed_pickup.png").convert_alpha()
             self.frames = [speed_pickup]
 
@@ -47,7 +47,7 @@ class Pickup(pygame.sprite.Sprite):
 
         self.animation_index = 0
         self.image = self.frames[self.animation_index]
-        self.scale = 3 * GLOBAL_SCALAR
+        self.scale = 3 * global_scalar
         self.image = pygame.transform.scale_by(self.image,self.scale)
         self.rect = self.image.get_rect(center = (self.x_pos,self.y_pos))
 

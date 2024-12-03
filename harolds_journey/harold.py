@@ -20,8 +20,8 @@ class Harold(pygame.sprite.Sprite):
         # Temp Wizard Attribute
         self.player = player
         temp_wizard_rect = self.player.sprite.get_wizard_rect()
-        self.DEAD_WIZARD_HAT_SIZE = 5 * PIXEL_SIZE
-        self.ALIVE_WIZARD_HAT_SIZE = 7 * PIXEL_SIZE
+        self.DEAD_WIZARD_HAT_SIZE = 5 * pixel_size
+        self.ALIVE_WIZARD_HAT_SIZE = 7 * pixel_size
         self.wizard_was_jumping = False
 
         # Harold Start
@@ -36,8 +36,8 @@ class Harold(pygame.sprite.Sprite):
         # Harold Y Values
         self.harold_y_pos = self.harold_start_y_pos
         self.harold_y_velocity = 0
-        self.jump_speed = -20 * GLOBAL_SCALAR
-        self.gravity_acceleration = GLOBAL_GRAVITY # How quickly gravity accelerates the player
+        self.jump_speed = -20 * global_scalar
+        self.gravity_acceleration = global_gravity # How quickly gravity accelerates the player
 
         # Harold Animation Speed
         self.HAROLD_IDLE_ANIMATION_SPEED = 0.1
@@ -47,7 +47,7 @@ class Harold(pygame.sprite.Sprite):
 
         self.harold_index = 0
         self.image = self.harold_idle[self.harold_index]
-        self.scale = (WIZARD_HEIGHT * 3/8,WIZARD_WIDTH * 3/8)
+        self.scale = (wizard_height * 3/8,wizard_width * 3/8)
         # Harold: 32x32 * 3/2 = 48x48
         # Wizard: 32x32 * 4 = 128x128
         # 128/48 = 32/12 = 8/3
@@ -105,6 +105,12 @@ class Harold(pygame.sprite.Sprite):
     def get_height(self):
         return self.rect.bottom - self.rect.top
 
+    def get_image(self):
+        return self.image
+
+    def set_image(self,new_image):
+        self.image = new_image
+
     def harold_input(self):
         mouse_buttons_pressed = pygame.mouse.get_pressed(5)
         keys = pygame.key.get_pressed()
@@ -118,7 +124,7 @@ class Harold(pygame.sprite.Sprite):
         if not self.player.sprite.get_wizard_dead() and not self.player.sprite.get_wizard_start_death():
             if jump_button_press and self.rect.bottom >= self.harold_start_y_pos:
                 self.harold_y_velocity = self.jump_speed
-            if right_button_press and self.player.sprite.get_wizard_rect().x + WIZARD_WIDTH + self.harold_speed < window_width:
+            if right_button_press and self.player.sprite.get_wizard_rect().x + wizard_width + self.harold_speed < window_width:
                 self.harold_x_velocity = self.harold_speed
                 self.rect.x += self.harold_x_velocity
             if left_button_press and self.player.sprite.get_wizard_rect().x - self.harold_speed > 0:
@@ -138,10 +144,10 @@ class Harold(pygame.sprite.Sprite):
             self.set_wizard_was_jumping(temp_player.get_wizard_jumping())
         else:
             if wizard_was_jumping:
-                self.harold_y_velocity += (0.4 * GLOBAL_SCALAR)
+                self.harold_y_velocity += (0.4 * global_scalar)
                 self.rect.y += self.harold_y_velocity
             else:
-                self.rect.y += math.ceil(0.5 * GLOBAL_SCALAR)
+                self.rect.y += math.ceil(0.5 * global_scalar)
             if self.rect.bottom >= grass_top_y - self.DEAD_WIZARD_HAT_SIZE:
                 self.set_harold_y_velocity(0)
                 self.rect.bottom = grass_top_y - self.DEAD_WIZARD_HAT_SIZE
@@ -169,8 +175,8 @@ class Harold(pygame.sprite.Sprite):
 
         # Temp Wizard Attribute
         temp_wizard_rect = self.player.sprite.get_wizard_rect()
-        self.DEAD_WIZARD_HAT_SIZE = 5 * PIXEL_SIZE
-        self.ALIVE_WIZARD_HAT_SIZE = 7 * PIXEL_SIZE
+        self.DEAD_WIZARD_HAT_SIZE = 5 * pixel_size
+        self.ALIVE_WIZARD_HAT_SIZE = 7 * pixel_size
         self.wizard_was_jumping = False
 
         # Harold Start
@@ -185,8 +191,8 @@ class Harold(pygame.sprite.Sprite):
         # Harold Y Values
         self.harold_y_pos = self.harold_start_y_pos
         self.harold_y_velocity = 0
-        self.jump_speed = -20 * GLOBAL_SCALAR
-        self.gravity_acceleration = GLOBAL_GRAVITY # How quickly gravity accelerates the player
+        self.jump_speed = -20 * global_scalar
+        self.gravity_acceleration = global_gravity # How quickly gravity accelerates the player
 
         # Harold Animation Speed
         self.HAROLD_IDLE_ANIMATION_SPEED = 0.1
@@ -196,7 +202,7 @@ class Harold(pygame.sprite.Sprite):
 
         self.harold_index = 0
         self.image = self.harold_idle[self.harold_index]
-        self.scale = (WIZARD_HEIGHT * 3/8,WIZARD_WIDTH * 3/8)
+        self.scale = (wizard_height * 3/8,wizard_width * 3/8)
         # Harold: 32x32 * 3/2 = 48x48
         # Wizard: 32x32 * 4 = 128x128
         # 128/48 = 32/12 = 8/3
