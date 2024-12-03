@@ -936,7 +936,7 @@ def wizard_death_calls():
     if current_wizard_shield_buff and not shield_buff_found:
         edited_stats_buffs_file_dict.update({"shield_buff":current_wizard_shield_buff})
     set_edited_stats_file_dict(edited_stats_file_dict)
-    update_score(score)
+    set_score(score)
     main_menu = update_main_menu()
     # Other Death Stuff
     wizard.sprite.set_wizard_current_health(0)
