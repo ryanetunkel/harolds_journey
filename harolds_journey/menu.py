@@ -5,9 +5,9 @@ import pygame_menu.widgets
 import pygame_menu.widgets.widget
 
 from controls import *
-from global_vars import *
 from harold import *
 from player import *
+from menu_vars import *
 
 # Global Variables
 center_screen_width = window_width / 2
