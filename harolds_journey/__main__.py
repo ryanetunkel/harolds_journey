@@ -280,7 +280,7 @@ def display_in_game_stats():
     speed_stat_image_surf = pygame.transform.scale_by(speed_stat_image_surf,4 * (window_width + window_height)/1200)
     speed_stat_image_rect = speed_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,speed_stat_image_y_pos))
 
-    speed_stat_surf = test_font.render("Speed: " + str(round((wizard.sprite.get_wizard_speed()/WIZARD_WIDTH)*60, 2)), False, "#FCDC4D")
+    speed_stat_surf = test_font.render("Speed: " + str(round((wizard.sprite.get_wizard_speed()/wizard_width)*60, 2)), False, "#FCDC4D")
     speed_stat_surf = pygame.transform.scale_by(speed_stat_surf, 0.9)
     speed_stat_rect = speed_stat_surf.get_rect(center = (speed_stat_x_pos,speed_stat_y_pos))
 
@@ -771,6 +771,7 @@ while True:
                 controls_update = True
                 game_active = True
                 wizard_alive = True
+                set_score(0)
                 start_time = pygame.time.get_ticks()
                 pre_stat_update_edited_stats_file_dict.update(get_edited_stats_file_dict())
                 # button_scalar = 3/2  # Added recently
@@ -918,15 +919,15 @@ while True:
         screen.blit(harold_intro_surf,harold_intro_rect)
         if not wizard_walk_in_animation_complete:
             if wizard_intro_rect.right < window_width / 2 - wizard_intro_width_by_scale/2:
-                wizard_intro_rect.centerx += (wizard.sprite.get_wizard_speed() / GLOBAL_SCALAR)
+                wizard_intro_rect.centerx += (wizard.sprite.get_wizard_speed() / global_scalar)
             else:
                 wizard_walk_in_animation_complete = True
         elif not harold_jump_on_hat_animation_complete:
             if harold_intro_rect.centerx > wizard_intro_rect.centerx:
-                harold_intro_rect.centerx -= ((harold.sprite.get_harold_speed() * 2) / GLOBAL_SCALAR)
+                harold_intro_rect.centerx -= ((harold.sprite.get_harold_speed() * 2) / global_scalar)
             else:
                 x_lineup = True
-            intro_jump_speed += (intro_gravity_acceleration / GLOBAL_SCALAR)
+            intro_jump_speed += (intro_gravity_acceleration / global_scalar)
             harold_intro_rect.centery += intro_jump_speed
             if not fall:
                 if harold_intro_rect.bottom >= wizard_intro_rect.top:
@@ -938,14 +939,14 @@ while True:
             harold_turn_animation_complete = True
         elif not wizard_and_harold_center_animation_complete:
             if wizard_intro_rect.centerx < main_menu_wizard_start_x_pos:
-                wizard_intro_rect.centerx += (wizard.sprite.get_wizard_speed() / GLOBAL_SCALAR)
-                harold_intro_rect.centerx += (harold.sprite.get_harold_speed() / GLOBAL_SCALAR)
+                wizard_intro_rect.centerx += (wizard.sprite.get_wizard_speed() / global_scalar)
+                harold_intro_rect.centerx += (harold.sprite.get_harold_speed() / global_scalar)
             else:
                 wizard_and_harold_center_animation_complete = True
         elif not wizard_and_harold_center_with_title_animation_complete:
             if wizard_intro_rect.bottom > main_menu_wizard_start_y_pos:
-                wizard_intro_rect.centery -= (wizard.sprite.get_wizard_speed() / GLOBAL_SCALAR)
-                harold_intro_rect.centery -= (harold.sprite.get_harold_speed() / GLOBAL_SCALAR)
+                wizard_intro_rect.centery -= (wizard.sprite.get_wizard_speed() / global_scalar)
+                harold_intro_rect.centery -= (harold.sprite.get_harold_speed() / global_scalar)
             else:
                 intro_played = True
 
@@ -963,14 +964,14 @@ while True:
             bg_music_timer += 1
             screen.blit(bg_surf,(0,-bg_surf.get_height() + window_height))
             # Stat Image Postions
-            update_score(display_score())
-            if get_edited_options_file_dict()["edited_display_in_game_health"]:
+            set_score(display_score())
+            if get_edited_options_file_dict()["display_in_game_health"]:
                 display_in_game_health() # Displays and updates in game health
-            if get_edited_options_file_dict()["edited_display_in_game_buffs"]:
+            if get_edited_options_file_dict()["display_in_game_buffs"]:
                 display_in_game_buffs() # Displays and updates in game buffs
-            if get_edited_options_file_dict()["edited_display_in_game_stats"]:
+            if get_edited_options_file_dict()["display_in_game_stats"]:
                 display_in_game_stats() # Displays and updates in game stats
-            if get_edited_options_file_dict()["edited_display_controls"]:
+            if get_edited_options_file_dict()["display_controls"]:
                 display_controls() # Displays controls on bottom right of screen
 
             for sprite in moving_sprites: # Holds all things to be drawn
@@ -984,7 +985,7 @@ while True:
         else: # Work on death animation
             wizard.sprite.set_wizard_dead(True)
             screen.blit(bg_surf,(0,-bg_surf.get_height() + window_height))
-            if get_edited_options_file_dict()["edited_display_controls"]:
+            if get_edited_options_file_dict()["display_controls"]:
                 display_controls() # Maintaining controls on bottom right of screen
 
 
