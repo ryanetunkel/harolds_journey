@@ -9,10 +9,6 @@ from harold import *
 from player import *
 from menu_vars import *
 
-# Global Variables
-center_screen_width = window_width / 2
-center_screen_height = window_height / 2
-
 # Main Menu Screen
 MAIN_MENU = 1
 STATISTICS_MENU = 2
