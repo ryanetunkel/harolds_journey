@@ -1,4 +1,10 @@
-default_display_controls: true
-default_display_in_game_buffs: true
-default_display_in_game_health: true
-default_display_in_game_stats: true
+display_controls: true
+display_in_game_buffs: true
+display_in_game_fps: false
+display_in_game_health: true
+display_in_game_stats: true
+fps: 60
+pixel_size: 2
+window_height: 720
+window_width: 1280
+zoom: 100
