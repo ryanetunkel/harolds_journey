@@ -92,6 +92,13 @@ def update_pixel_size(new_pixel_size:int):
     set_edited_options_file_dict(edited_options_file_dict)
 
 
+def update_zoom(new_zoom:int):
+    global zoom
+    zoom = new_zoom
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_options_file_dict.update({"zoom":new_zoom})
+    set_edited_options_file_dict(edited_options_file_dict)
+
 def update_fps(new_fps:int):
     global fps
     fps = new_fps
