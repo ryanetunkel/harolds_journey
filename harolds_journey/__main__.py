@@ -1032,6 +1032,8 @@ while True:
             # pause_menu.draw(screen)
             # pygame.display.flip()
 
+        # Take screenshot every frame and show it scaled to zoom
+
     # Global Clock and Display Update
     pygame.display.flip()
     # pygame.display.update()
