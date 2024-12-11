@@ -792,6 +792,9 @@ while True:
                 main_menu = update_main_menu()
                 main_menu.enable()
                 main_menu.mainloop(screen,clear_surface=True)
+                update_main_menu() # Unsure if needed, probably do
+                # wizard.update()
+                # harold.update()
                 # When exits main menu through only way other than quitting, runs this code which starts the game
                 controls_update = True
                 game_active = True
