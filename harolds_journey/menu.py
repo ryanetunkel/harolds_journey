@@ -1112,10 +1112,6 @@ controls_back_button_rect_big = controls_back_button_surf_big.get_rect(center = 
 # Display Menu
 display_button_scalar = 0.5
 display_buttons_y_pos_offset = window_height * 1/36
-display_controls_update = False
-display_in_game_stats_update = False
-display_in_game_health_update = False
-display_in_game_buffs_update = False
 # Show Controls Button
 controls_displayed = get_edited_options_file_dict()["display_controls"]
 display_show_controls_button_start_x_pos = center_screen_width
