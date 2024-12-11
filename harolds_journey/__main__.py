@@ -1001,6 +1001,8 @@ while True:
                 display_in_game_stats() # Displays and updates in game stats
             if get_edited_options_file_dict()["display_controls"]:
                 display_controls() # Displays controls on bottom right of screen
+            if get_edited_options_file_dict()["display_in_game_fps"]:
+                display_in_game_fps()
 
             for sprite in moving_sprites: # Holds all things to be drawn
                 sprite.draw(screen)
