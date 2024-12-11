@@ -614,15 +614,11 @@ while True:
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         pause_menu.enable()
                         on_resize(pause_menu)
-                        sub_screen = screen.subsurface(0,0,window_width,window_height)
 
-                        screenshot = pygame.Surface((window_size))
-                        screenshot.blit(sub_screen, (0,0))
-                        screen.fill((50,50,50,200))
-                        screenshot.blit(sub_screen,(0,0))
-                        screenshot.set_alpha(50)
+                        screenshot = screenshot_screen()
+                        screenshot.fill((150,150,150),special_flags=pygame.BLEND_MULT)
 
-                        pygame.image.save(screenshot, "screenshot.jpg")
+                        pygame.image.save(screenshot,"screenshot.jpg")
 
                         new_bg = pygame_menu.BaseImage(
                             image_path="screenshot.jpg",
