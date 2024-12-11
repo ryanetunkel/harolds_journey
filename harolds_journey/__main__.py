@@ -610,6 +610,23 @@ while True:
 
                         pause_time_1 = pygame.time.get_ticks()
                         pause_menu.mainloop(screen,clear_surface=True)
+                        pause_menu = update_pause_menu(new_bg) # Unsure if needed
+                        # for sprite in moving_sprites:
+                        #     if type(sprite) is pygame.sprite.Group():
+                        #         sprite.update()
+                        #     elif sprite is wizard:
+                        #         temp_image = wizard.sprite.get_wizard_image()
+                        #         temp_image = pygame.transform.scale(temp_image,wizard_pixel_size)
+                        #         wizard.sprite.set_wizard_image(temp_image)
+                        #     elif sprite is harold:
+                        #         temp_image = harold.sprite.get_image()
+                        #         temp_wizard_rect = wizard.sprite.get_wizard_rect()
+                        #         temp_hat_size = 7 * pixel_size
+                        #         temp_harold_start_x_pos = temp_wizard_rect.centerx
+                        #         temp_harold_start_y_pos = temp_wizard_rect.top + temp_hat_size
+                        #         temp_scale = (wizard_height * 3/8,wizard_width * 3/8)
+                        #         temp_image = pygame.transform.scale(temp_image,temp_scale)
+                        #         harold.sprite.set_image(temp_image)
                         pause_time_2 = pygame.time.get_ticks()
                         pause_time = pause_time_2 - pause_time_1
 
