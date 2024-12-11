@@ -302,6 +302,14 @@ def display_in_game_stats():
     screen.blit(speed_stat_surf,speed_stat_rect)
 
 
+def display_in_game_fps():
+    edited_fps = get_edited_options_file_dict().get("fps")
+    # FPS
+    fps_surf = test_font.render(f"FPS: {edited_fps}", False, "#FCDC4D")
+    fps_rect = fps_surf.get_rect(center = (window_width*9/16,window_height*1/16))
+    screen.blit(fps_surf,fps_rect)
+
+
 def player_and_obstacle_collision():
     global main_menu
     if obstacles_overlapping:=pygame.sprite.spritecollide(wizard.sprite,obstacle_group,False):
