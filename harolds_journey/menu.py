@@ -1117,7 +1117,7 @@ display_in_game_stats_update = False
 display_in_game_health_update = False
 display_in_game_buffs_update = False
 # Show Controls Button
-controls_displayed = get_edited_options_file_dict()["edited_display_controls"]
+controls_displayed = get_edited_options_file_dict()["display_controls"]
 display_show_controls_button_start_x_pos = center_screen_width
 display_show_controls_button_start_y_pos = 0  # main_menu_wizard_rect.bottom + ((32/400) * window_height)
 display_show_controls_button_start_pos = (display_show_controls_button_start_x_pos,display_show_controls_button_start_y_pos)
@@ -1130,7 +1130,7 @@ display_show_controls_button_big_scale = button_when_big_scale
 display_show_controls_button_surf_big = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_big_scale)
 display_show_controls_button_rect_big = display_show_controls_button_surf_big.get_rect(center = (display_show_controls_button_start_pos))
 # Show In Game Stats Button
-in_game_stats_displayed = get_edited_options_file_dict()["edited_display_in_game_stats"]
+in_game_stats_displayed = get_edited_options_file_dict()["display_in_game_stats"]
 display_show_in_game_stats_button_start_x_pos = center_screen_width
 display_show_in_game_stats_button_start_y_pos = display_show_controls_button_rect_big.bottom + display_buttons_y_pos_offset
 display_show_in_game_stats_button_start_pos = (display_show_in_game_stats_button_start_x_pos,display_show_in_game_stats_button_start_y_pos)
@@ -1143,7 +1143,7 @@ display_show_in_game_stats_button_big_scale = button_when_big_scale
 display_show_in_game_stats_button_surf_big = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_big_scale)
 display_show_in_game_stats_button_rect_big = display_show_in_game_stats_button_surf_big.get_rect(center = (display_show_in_game_stats_button_start_pos))
 # Show In Game Health Button
-in_game_health_displayed = get_edited_options_file_dict()["edited_display_in_game_health"]
+in_game_health_displayed = get_edited_options_file_dict()["display_in_game_health"]
 display_show_in_game_health_button_start_x_pos = center_screen_width
 display_show_in_game_health_button_start_y_pos = display_show_in_game_stats_button_rect_big.bottom + display_buttons_y_pos_offset
 display_show_in_game_health_button_start_pos = (display_show_in_game_health_button_start_x_pos,display_show_in_game_health_button_start_y_pos)
@@ -1156,7 +1156,7 @@ display_show_in_game_health_button_big_scale = button_when_big_scale
 display_show_in_game_health_button_surf_big = pygame.transform.scale_by(display_show_in_game_health_button_surf,display_show_in_game_health_button_big_scale)
 display_show_in_game_health_button_rect_big = display_show_in_game_health_button_surf_big.get_rect(center = (display_show_in_game_health_button_start_pos))
 # Show In Game Buffs Button
-in_game_buffs_displayed = get_edited_options_file_dict()["edited_display_in_game_buffs"]
+in_game_buffs_displayed = get_edited_options_file_dict()["display_in_game_buffs"]
 display_show_in_game_buffs_button_start_x_pos = center_screen_width
 display_show_in_game_buffs_button_start_y_pos = display_show_in_game_health_button_rect_big.bottom + display_buttons_y_pos_offset
 display_show_in_game_buffs_button_start_pos = (display_show_in_game_buffs_button_start_x_pos,display_show_in_game_buffs_button_start_y_pos)
