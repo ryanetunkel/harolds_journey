@@ -520,8 +520,6 @@ def screenshot_screen(left=0,top=0,width=window_width,height=window_height):
     sub_screen = screen.subsurface(left+zoom_x_offset,top+zoom_y_offset,zoom_width,zoom_height)
     screenshot = pygame.transform.scale(sub_screen,(window_size),screen)
 
-    pygame.image.save(screenshot, "screenshot_pre.jpg")
-
     return screenshot
 
 
