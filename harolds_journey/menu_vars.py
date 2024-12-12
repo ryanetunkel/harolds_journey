@@ -32,8 +32,6 @@ center_screen_height = window_height / 2
 # Surface Sizing
 pixel_size = edited_options_file_dict.get("pixel_size") # can be 1
 zoom = edited_options_file_dict.get("zoom")
-zoom_x_limit = center_screen_width / 2
-zoom_y_limit = center_screen_height / 2
 # PIXEL_SIZE currently can only be even numbers else creates .5 addition and rects can only do integer-based moves
 # Will need to transition to using math.Vector2 to do all collision and stuff and then render it after as a rect to get subpixel movement
 
