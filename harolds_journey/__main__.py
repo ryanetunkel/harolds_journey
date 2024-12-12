@@ -506,17 +506,11 @@ def do_collisions():
 
 def screenshot_screen(left=0,top=0,width=window_width,height=window_height):
     global zoom
-    screen_ratio = window_height/window_width
-    # Zoom is (0,200) 100 being normal
-    zoom_x_offset = int(((zoom - 100)/100) * zoom_x_limit)
-    zoom_y_offset = int(((zoom - 100)/100) * zoom_y_limit)
-    print("zoom_x_offset:",zoom_x_offset)
-    print("zoom_y_offset:",zoom_y_offset)
-    print(height-(zoom_y_offset))
-    print(screen_ratio)
-    zoom_width = width-2*zoom_x_offset
-    zoom_height = height-2*zoom_y_offset
-    print(zoom_height/zoom_width)
+    # Zoom is (0,200) 100 being normal, this is made to focus on the bottom middle of the screen
+    zoom_width = int(((zoom - 100)/100) * width/2)
+    zoom_height = int(((zoom - 100)/100) * height/2)
+    zoom_x_offset = (width - zoom_width)/2
+    zoom_y_offset = (height - zoom_height)
     sub_screen = screen.subsurface(left+zoom_x_offset,top+zoom_y_offset,zoom_width,zoom_height)
     screenshot = pygame.transform.scale(sub_screen,(window_size),screen)
 
