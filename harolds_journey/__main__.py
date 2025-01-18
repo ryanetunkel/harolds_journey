@@ -33,7 +33,6 @@ def calculate_score() -> int:
 
 
 def display_score():
-    global pause_time
     temp_score = calculate_score()
     # Score
     score_title_surf = test_font.render("SCORE", False, "#FCDC4D")
