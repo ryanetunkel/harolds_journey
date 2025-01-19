@@ -22,6 +22,7 @@ from projectile import *
 wizard.add(Player())
 harold.add(Harold(wizard))
 
+
 # Functions
 def calculate_score() -> int:
     global pause_time
