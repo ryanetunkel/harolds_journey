@@ -1045,6 +1045,8 @@ while True:
             # pygame.display.flip()
 
         # Take screenshot every frame and show it scaled to zoom
+        screenshot = screenshot_screen()
+        screenshot.blit(screen,(0,0,window_width,window_height))
 
     # Global Clock and Display Update
     pygame.display.flip()
