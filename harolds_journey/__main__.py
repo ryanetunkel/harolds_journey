@@ -809,6 +809,7 @@ while True:
                 game_active = True
                 wizard_alive = True
                 set_score(0)
+                pause_time = 0
                 start_time = pygame.time.get_ticks()
                 pre_stat_update_edited_stats_file_dict.update(get_edited_stats_file_dict())
                 # button_scalar = 3/2  # Added recently
