@@ -954,6 +954,7 @@ def end_game():
 def wizard_death_calls():
     global main_menu
     global objects_to_be_removed
+    global pause_time
     global score
     global wizard
     # Updating Stats
