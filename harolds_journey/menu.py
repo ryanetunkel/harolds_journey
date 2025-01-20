@@ -466,7 +466,7 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
     return pause_menu
 
 
-# Other Menus
+# Sub Menus
 # Statistics Menu
 def update_statistics_menu(menu:pygame_menu.Menu):
     global fireballs_shot
