@@ -988,12 +988,46 @@ def update_resolution_menu(menu:pygame_menu.Menu):
 
     resolution_menu_padding_1 = menu.add.vertical_margin(window_height/16)
     # Resolution Menu Buttons
-    resolution_menu_placeholder_button = menu.add.button(
-        title="Placeholder",
-        action=pygame_menu.events.BACK,
+    window_sizes = [
+        ("2560x1440",(2560,1440)),
+        ("1920x1080",(1920,1080)),
+        ("1920x1200",(1920,1200)),
+        ("1680x1050",(1680,1050)),
+        ("1440x900",(1440,900)),
+        ("1366x768",(1366,768)),
+        ("1280x800",(1280,800)),
+        ("1280x720",(1280,720)),
+        ("1024x768",(1024,768)),
+        ("800x600",(800,600)),
+        ("640x480",(640,480)),
+        ("320x240",(320,240)),
+    ]
+    default_window_width_value = get_edited_options_file_dict().get("window_width")
+    default_window_height_value = get_edited_options_file_dict().get("window_height")
+    default_window_size_value = (default_window_width_value,default_window_height_value)
+    default_window_size_with_x = f"{default_window_width_value}x{default_window_height_value}"
+    default_window_size_idx = window_sizes.index((default_window_size_with_x,default_window_size_value))
+    resolution_menu_window_size_dropselect = menu.add.dropselect(
+        title="Window Size",
+        items=window_sizes,
+        default=default_window_size_idx,
         font_color=font_color,
         font_name=font_name,
-        button_id="resolution_menu_placeholder_button",
+        placeholder_add_to_selection_box=False,
+        scrollbar_color="#22222277",
+        scrollbar_slider_color="#66666677",
+        scrollbar_slider_hover_color="#BBBBBB66",
+        selection_box_arrow_color="#55555599", # For some reason this affects selection_box_bgcolor
+        selection_effect=base_menu_selection,
+        selection_option_padding=4,
+        selection_box_height=8,
+        selection_box_bgcolor="#22222277",
+        selection_option_border_color="#000000",
+        selection_option_font_color=font_color,
+        selection_option_font_size=stat_font_size,
+        selection_option_selected_font_color="#FFFFFF",
+        selection_option_selected_bgcolor="#99999966",
+        button_id="resolution_menu_window_size_dropselect",
     )
     resolution_menu_padding_2 = menu.add.vertical_margin(window_height/16)
     resolution_menu_back_button = menu.add.button(
