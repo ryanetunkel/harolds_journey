@@ -1023,7 +1023,7 @@ def update_resolution_menu(menu:pygame_menu.Menu):
         scrollbar_color="#22222277",
         scrollbar_slider_color="#66666677",
         scrollbar_slider_hover_color="#BBBBBB66",
-        selection_box_arrow_color="#55555599", # For some reason this affects selection_box_bgcolor
+        selection_box_arrow_color="#55555599", # For some reason this affects selection_box_bgcolor - bug in pygame-menu
         selection_effect=base_menu_selection,
         selection_option_padding=4,
         selection_box_height=8,
