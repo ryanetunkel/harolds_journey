@@ -120,6 +120,12 @@ def update_window_height(new_window_height:int):
     set_edited_options_file_dict(edited_options_file_dict)
 
 
+def update_window_size(new_window_size_tuple:tuple):
+    new_window_size = new_window_size_tuple[0][1]
+    update_window_width(new_window_size[0])
+    update_window_height(new_window_size[1])
+
+
 # Gameplay Vars Functions
 def update_display_controls_bool():
     edited_options_file_dict = get_edited_options_file_dict()
