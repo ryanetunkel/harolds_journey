@@ -997,21 +997,11 @@ while True:
             pygame.mixer.Channel(BG_MUSIC_CHANNEL).play(bg_music)
         elif bg_music_timer >= (25 * 60):
             bg_music_timer = -1
+
+        screen.blit(bg_surf,(0,-bg_surf.get_height() + window_height))
+
         if wizard_alive:
             bg_music_timer += 1
-            screen.blit(bg_surf,(0,-bg_surf.get_height() + window_height))
-            # Stat Image Postions
-            set_score(display_score())
-            if get_edited_options_file_dict()["display_in_game_health"]:
-                display_in_game_health() # Displays and updates in game health
-            if get_edited_options_file_dict()["display_in_game_buffs"]:
-                display_in_game_buffs() # Displays and updates in game buffs
-            if get_edited_options_file_dict()["display_in_game_stats"]:
-                display_in_game_stats() # Displays and updates in game stats
-            if get_edited_options_file_dict()["display_controls"]:
-                display_controls() # Displays controls on bottom right of screen
-            if get_edited_options_file_dict()["display_in_game_fps"]:
-                display_in_game_fps()
 
             for sprite in moving_sprites: # Holds all things to be drawn
                 sprite.draw(screen)
@@ -1023,10 +1013,6 @@ while True:
 
         else: # Work on death animation
             wizard.sprite.set_wizard_dead(True)
-            screen.blit(bg_surf,(0,-bg_surf.get_height() + window_height))
-            if get_edited_options_file_dict()["display_controls"]:
-                display_controls() # Maintaining controls on bottom right of screen
-
 
             wizard.draw(screen) # Draws sprites
             harold.draw(screen)
@@ -1048,6 +1034,21 @@ while True:
         new_zoom = edited_options_file_dict.get("zoom")
         screenshot = screenshot_screen(new_zoom)
         screenshot.blit(screen,(0,0,window_width,window_height))
+
+        # Overlay
+        if wizard_alive:
+            # Stat Image Postions
+            set_score(display_score())
+            if get_edited_options_file_dict()["display_in_game_health"]:
+                display_in_game_health() # Displays and updates in game health
+            if get_edited_options_file_dict()["display_in_game_buffs"]:
+                display_in_game_buffs() # Displays and updates in game buffs
+            if get_edited_options_file_dict()["display_in_game_stats"]:
+                display_in_game_stats() # Displays and updates in game stats
+            if get_edited_options_file_dict()["display_controls"]:
+                display_controls() # Displays controls on bottom right of screen, change from board to normal display
+            if get_edited_options_file_dict()["display_in_game_fps"]:
+                display_in_game_fps()
 
     # Global Clock and Display Update
     pygame.display.flip()
