@@ -1176,19 +1176,6 @@ on_resize(pause_menu)
 # Old Code
 # Main Menu
 button_scale = 3/2
-# Sounds Menu
-# Back Button
-sounds_back_button_start_x_pos = center_screen_width
-sounds_back_button_start_y_pos = 0  # main_menu_settings_button_rect_big.bottom + ((32/400) * window_height)
-sounds_back_button_start_pos = (sounds_back_button_start_x_pos,sounds_back_button_start_y_pos)
-sounds_back_button_surf = test_font.render("Back to Settings",False,font_color)
-sounds_back_button_scale = button_scale
-sounds_back_button_surf = pygame.transform.scale_by(sounds_back_button_surf,sounds_back_button_scale)
-sounds_back_button_rect = sounds_back_button_surf.get_rect(center = (sounds_back_button_start_pos))
-mouse_on_sounds_back_button = False
-sounds_back_button_big_scale = button_when_big_scale
-sounds_back_button_surf_big = pygame.transform.scale_by(sounds_back_button_surf,sounds_back_button_big_scale)
-sounds_back_button_rect_big = sounds_back_button_surf_big.get_rect(center = (sounds_back_button_start_pos))
 
 # Controls Buttons
 controls_first_button_start_x_pos = center_screen_width
