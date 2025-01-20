@@ -846,6 +846,36 @@ def update_controls_menu(menu:pygame_menu.Menu):
 
 # Display Menu
 def update_display_menu(menu:pygame_menu.Menu):
+    # Themes
+    # Resolution Menu Theme
+    resolution_menu_theme = menu.get_theme().copy()
+    # Gameplay Menu Theme
+    gameplay_menu_theme = menu.get_theme().copy()
+
+    # Menus
+    # Resolution Menu
+    resolution_menu = pygame_menu.Menu(
+        title="",
+        width=window_width,
+        height=window_height,
+        surface=screen,
+        theme=resolution_menu_theme,
+        center_content=False,
+        menu_id="resolution_menu",
+    )
+    resolution_menu = update_resolution_menu(resolution_menu)
+    # Gameplay Menu
+    gameplay_menu = pygame_menu.Menu(
+        title="",
+        width=window_width,
+        height=window_height,
+        surface=screen,
+        theme=gameplay_menu_theme,
+        center_content=False,
+        menu_id="gameplay_menu",
+    )
+    gameplay_menu = update_gameplay_menu(gameplay_menu)
+
     # Display Menu Label
     display_menu_label = menu.add.label(
         title="Display",
@@ -920,14 +950,14 @@ def update_display_menu(menu:pygame_menu.Menu):
     # Display Menu Buttons
     display_menu_resolution_button = menu.add.button(
         title="Resolution",
-        action=pygame_menu.events.BACK,
+        action=resolution_menu,
         font_color=font_color,
         font_name=font_name,
         button_id="display_menu_resolution_button",
     )
     display_menu_gameplay_button = menu.add.button(
         title="Gameplay",
-        action=pygame_menu.events.BACK,
+        action=gameplay_menu,
         font_color=font_color,
         font_name=font_name,
         button_id="display_menu_gameplay_button",
@@ -939,6 +969,72 @@ def update_display_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         button_id="display_menu_back_button",
+    )
+
+    return menu
+
+
+# Resolution Menu
+def update_resolution_menu(menu:pygame_menu.Menu):
+    # Resolution Menu Label
+    resolution_menu_label = menu.add.label(
+        title="Resolution",
+        float=True,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=title_font_size,
+        label_id="resolution_menu_label",
+    ).translate(0,-title_font_size)
+
+    resolution_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    # Resolution Menu Buttons
+    resolution_menu_placeholder_button = menu.add.button(
+        title="Placeholder",
+        action=pygame_menu.events.BACK,
+        font_color=font_color,
+        font_name=font_name,
+        button_id="resolution_menu_placeholder_button",
+    )
+    resolution_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    resolution_menu_back_button = menu.add.button(
+        title="Back to Settings",
+        action=pygame_menu.events.BACK,
+        font_color=font_color,
+        font_name=font_name,
+        button_id="resolution_menu_back_button",
+    )
+
+    return menu
+
+
+# Gameplay Menu
+def update_gameplay_menu(menu:pygame_menu.Menu):
+    # Gameplay Menu Label
+    gameplay_menu_label = menu.add.label(
+        title="Gameplay",
+        float=True,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=title_font_size,
+        label_id="gameplay_menu_label",
+    ).translate(0,-title_font_size)
+
+    gameplay_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    # Gameplay Menu Buttons
+    gameplay_menu_placeholder_button = menu.add.button(
+        title="Placeholder",
+        action=pygame_menu.events.BACK,
+        font_color=font_color,
+        font_name=font_name,
+        button_id="gameplay_menu_placeholder_button",
+    )
+    gameplay_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    gameplay_menu_back_button = menu.add.button(
+        title="Back to Settings",
+        action=pygame_menu.events.BACK,
+        font_color=font_color,
+        font_name=font_name,
+        button_id="gameplay_menu_back_button",
     )
 
     return menu
