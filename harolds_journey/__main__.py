@@ -504,9 +504,8 @@ def do_collisions():
     player_and_obstacle_collision()
 
 
-def screenshot_screen(left=0,top=0,width=window_width,height=window_height):
+def screenshot_screen(zoom=200,left=0,top=0,width=window_width,height=window_height):
     # zoom = 200 -> screen at 100%, zoom = 100 -> screen at 75%, zoom = 0 -> screen at 50%
-    global zoom
     zoom_width = int(((zoom/4 + 50)/100) * width)
     zoom_height = int(((zoom/4 + 50)/100) * height)
     zoom_x_offset = (width-zoom_width)/2 # Focuses on the center x of the screen
@@ -1045,7 +1044,9 @@ while True:
             # pygame.display.flip()
 
         # Take screenshot every frame and show it scaled to zoom
-        screenshot = screenshot_screen()
+        edited_options_file_dict = get_edited_options_file_dict()
+        new_zoom = edited_options_file_dict.get("zoom")
+        screenshot = screenshot_screen(new_zoom)
         screenshot.blit(screen,(0,0,window_width,window_height))
 
     # Global Clock and Display Update
