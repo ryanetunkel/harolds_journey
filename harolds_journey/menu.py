@@ -980,6 +980,7 @@ def update_display_menu(menu:pygame_menu.Menu):
     return menu
 
 
+# Display Menus
 # Resolution Menu
 def update_resolution_menu(menu:pygame_menu.Menu):
     # Resolution Menu Label
