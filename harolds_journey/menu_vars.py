@@ -14,8 +14,8 @@ min_window_height = 240
 max_window_width = screenInfo.current_w
 max_window_height = screenInfo.current_h
 # Width, Height, and Size
-window_width = edited_options_file_dict.get("window_width") # 800 * 3/2 = 1200
-window_height = edited_options_file_dict.get("window_height")  # 400 * 3/2 = 600
+window_width = edited_options_file_dict.get("window_width")
+window_height = edited_options_file_dict.get("window_height")
 window_width = max(window_width,min_window_width)
 window_width = min(window_width,max_window_width)
 window_height = max(window_height,min_window_height)
