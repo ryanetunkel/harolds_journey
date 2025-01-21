@@ -105,6 +105,8 @@ if window_width > bg_width or window_height > bg_height: # WINDOW_WIDTH > bg_wid
     bg_scalar = bg_width_scalar if bg_width_scalar >= bg_height_scalar else bg_height_scalar
     bg_surf = pygame.transform.scale_by(bg_surf,bg_scalar) # bg_scalar = bg_width_scalar = 120/64
 
+grass_top_y = int((628/640) * window_height) # Grass at 12/640 pixels when full size, 640-12=268
+
 # Timer
 obstacle_timer = pygame.USEREVENT + 1 # + 1 to avoid events taking previous numbers by default
 pygame.time.set_timer(obstacle_timer,OBSTACLE_SPAWN_FREQUENCY)

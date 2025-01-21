@@ -82,7 +82,7 @@ def update_pixel_size(new_pixel_size:int):
     wizard_width = 32 * pixel_size
     wizard_height = 32 * pixel_size
     wizard_pixel_size = (wizard_height,wizard_width)
-    grass_top_y = int((379 / 400) * window_height)
+    grass_top_y = int((628/640) * window_height)
     edited_options_file_dict = get_edited_options_file_dict()
     edited_options_file_dict.update({"pixel_size":new_pixel_size})
     set_edited_options_file_dict(edited_options_file_dict)
