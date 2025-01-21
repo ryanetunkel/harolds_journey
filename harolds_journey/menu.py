@@ -1081,51 +1081,51 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         title="Display Health: ",
         items=gameplay_menu_items,
         default=default_display_in_game_health,
+        onchange=update_display_in_game_health_bool,
         font_color=font_color,
         font_name=font_name,
         button_id="gameplay_menu_display_health_button",
     )
-    gameplay_menu_display_health_button.set_onchange(update_display_in_game_health_bool)
     default_display_in_game_buffs = gameplay_menu_items.index((f"{display_in_game_buffs}",display_in_game_buffs))
     gameplay_menu_display_buffs_button = menu.add.selector(
         title="Display Buffs: ",
         items=gameplay_menu_items,
         default=default_display_in_game_buffs,
+        onchange=update_display_in_game_buffs_bool,
         font_color=font_color,
         font_name=font_name,
         button_id="gameplay_menu_display_buffs_button",
     )
-    gameplay_menu_display_buffs_button.set_onchange(update_display_in_game_buffs_bool)
     default_display_in_game_stats = gameplay_menu_items.index((f"{display_in_game_stats}",display_in_game_stats))
     gameplay_menu_display_stats_button = menu.add.selector(
         title="Display Stats: ",
         items=gameplay_menu_items,
         default=default_display_in_game_stats,
+        onchange=update_display_in_game_stats_bool,
         font_color=font_color,
         font_name=font_name,
         button_id="gameplay_menu_display_stats_button",
     )
-    gameplay_menu_display_stats_button.set_onchange(update_display_in_game_stats_bool)
     default_display_controls = gameplay_menu_items.index((f"{display_controls}",display_controls))
     gameplay_menu_display_controls_button = menu.add.selector(
         title="Display Controls: ",
         items=gameplay_menu_items,
         default=default_display_controls,
+        onchange=update_display_controls_bool,
         font_color=font_color,
         font_name=font_name,
         button_id="gameplay_menu_display_controls_button",
     )
-    gameplay_menu_display_controls_button.set_onchange(update_display_controls_bool)
     default_display_in_game_fps = gameplay_menu_items.index((f"{display_in_game_fps}",display_in_game_fps))
     gameplay_menu_display_fps_button = menu.add.selector(
         title="Display FPS: ",
         items=gameplay_menu_items,
         default=default_display_in_game_fps,
+        onchange=update_display_in_game_fps_bool,
         font_color=font_color,
         font_name=font_name,
         button_id="gameplay_menu_display_fps_button",
     )
-    gameplay_menu_display_fps_button.set_onchange(update_display_in_game_fps_bool)
     gameplay_menu_padding_2 = menu.add.vertical_margin(window_height/16)
     gameplay_menu_back_button = menu.add.button(
         title="Back to Settings",
