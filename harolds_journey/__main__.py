@@ -928,7 +928,7 @@ while True:
         screen.blit(bg_surf,(0,window_height-bg_surf.get_height()))
         screen.blit(wizard_intro_surf,wizard_intro_rect)
         main_menu_wizard_start_x_pos = center_screen_width
-        main_menu_wizard_start_y_pos = widget_y_offset-title_font_size/2
+        main_menu_wizard_start_y_pos = main_menu_wizard_surf.get_rect().height + title_font_size * (7/2)
         if harold_turn_animation_complete and not harold_flipped:
             harold_intro_surf = pygame.transform.flip(harold_intro_surf,True,False)
             harold_flipped = True
