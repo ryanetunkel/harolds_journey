@@ -103,6 +103,8 @@ bg_width_scalar = window_width / bg_width  # WINDOW_WIDTH = 800 * 3/2 / 640 = 12
 if window_width > bg_width or window_height > bg_height: # WINDOW_WIDTH > bg_width
     bg_scalar = bg_width_scalar if bg_width_scalar >= bg_height_scalar else bg_height_scalar
     bg_surf = pygame.transform.scale_by(bg_surf,bg_scalar) # bg_scalar = bg_width_scalar = 120/64
+else:
+    bg_scalar = 1
 
 grass_top_y = int((628/640) * window_height) # Grass at 12/640 pixels when full size, 640-12=268
 
