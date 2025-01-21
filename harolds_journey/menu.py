@@ -23,6 +23,7 @@ font_color = "#FCDC4D"
 font_name = pygame_menu.font.FONT_MUNRO
 # Title Vars
 title_font_size = int(window_height/16)
+default_font_size = int(title_font_size*3/4)
 stat_font_size = int(title_font_size/2)
 title_padding = int(window_height/64)
 title_y_pos_center_offset = -center_screen_height+title_font_size
@@ -350,6 +351,7 @@ def update_main_menu() -> pygame_menu.Menu:
         action=main_menu.disable,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="main_menu_start_button",
     )
     main_menu_statistics_button = main_menu.add.button(
@@ -357,6 +359,7 @@ def update_main_menu() -> pygame_menu.Menu:
         action=main_statistics_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="main_menu_statistics_button",
     )
     main_menu_settings_button = main_menu.add.button(
@@ -364,6 +367,7 @@ def update_main_menu() -> pygame_menu.Menu:
         action=main_settings_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="main_menu_settings_button",
     )
     main_menu_exit_button = main_menu.add.button(
@@ -371,6 +375,7 @@ def update_main_menu() -> pygame_menu.Menu:
         action=pygame_menu.events.EXIT,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="main_menu_exit_button",
     )
 
@@ -451,6 +456,7 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         action=pause_menu.disable,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="pause_menu_back_button",
     ).translate(0,title_y_pos_center_offset/2)
     pause_menu_statistics_button = pause_menu.add.button(
@@ -458,6 +464,7 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         action=pause_statistics_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="pause_menu_statistics_button",
     ).translate(0,title_y_pos_center_offset/2)
     pause_menu_settings_button = pause_menu.add.button(
@@ -465,6 +472,7 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         action=pause_settings_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="pause_menu_settings_button",
     ).translate(0,title_y_pos_center_offset/2)
     pause_menu_padding = pause_menu.add.vertical_margin(window_height/16)
@@ -473,6 +481,7 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         action=end_game,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="pause_menu_end_game_button",
     ).translate(0,title_y_pos_center_offset/2)
 
@@ -631,6 +640,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="statistics_menu_back_button",
     ).translate(0,-int(title_font_size*3/2))
 
@@ -768,6 +778,7 @@ def update_settings_menu(menu:pygame_menu.Menu):
         action=sounds_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="settings_menu_sounds_button",
     )
     settings_menu_controls_button = menu.add.button(
@@ -775,6 +786,7 @@ def update_settings_menu(menu:pygame_menu.Menu):
         action=controls_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="settings_menu_controls_button",
     )
     settings_menu_display_button = menu.add.button(
@@ -782,6 +794,7 @@ def update_settings_menu(menu:pygame_menu.Menu):
         action=display_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="settings_menu_display_button",
     )
     settings_menu_padding_2 = menu.add.vertical_margin(window_height/16)
@@ -790,6 +803,7 @@ def update_settings_menu(menu:pygame_menu.Menu):
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="settings_menu_back_button",
     )
 
@@ -816,6 +830,7 @@ def update_sounds_menu(menu:pygame_menu.Menu):
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="sounds_menu_placeholder_button",
     )
     sounds_menu_padding_2 = menu.add.vertical_margin(window_height/16)
@@ -824,6 +839,7 @@ def update_sounds_menu(menu:pygame_menu.Menu):
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="sounds_menu_back_button",
     )
 
@@ -849,6 +865,7 @@ def update_controls_menu(menu:pygame_menu.Menu):
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="controls_menu_placeholder_button",
     )
     controls_menu_padding_2 = menu.add.vertical_margin(window_height/16)
@@ -857,6 +874,7 @@ def update_controls_menu(menu:pygame_menu.Menu):
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="controls_menu_back_buttons",
     )
 
@@ -919,6 +937,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         value_format=lambda x: str(zoom_range_values[x]),
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         range_box_color=font_color,
         range_line_color=font_color,
         range_line_height=2,
@@ -948,6 +967,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         value_format=lambda x: str(fps_range_values[x-1]),
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         repeat_keys=True,
         repeat_keys_interval_ms=5,
         range_box_color=font_color,
@@ -972,6 +992,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         action=resolution_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="display_menu_resolution_button",
     )
     display_menu_gameplay_button = menu.add.button(
@@ -979,6 +1000,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         action=gameplay_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="display_menu_gameplay_button",
     )
     display_menu_padding_2 = menu.add.vertical_margin(window_height/16)
@@ -987,6 +1009,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="display_menu_back_button",
     )
 
@@ -1035,6 +1058,7 @@ def update_resolution_menu(menu:pygame_menu.Menu):
         onchange=update_window_size,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         placeholder_add_to_selection_box=False,
         scrollbar_color="#22222277",
         scrollbar_slider_color="#66666677",
@@ -1057,7 +1081,7 @@ def update_resolution_menu(menu:pygame_menu.Menu):
         title="[Reload required to apply changes]",
         font_color=font_color,
         font_name=font_name,
-        font_size=int(stat_font_size*3/4),
+        font_size=int(default_font_size*3/4),
         label_id="resolution_menu_reload_label",
     ).translate(0,-title_font_size)
     resolution_menu_padding_3 = menu.add.vertical_margin(window_height/16)
@@ -1066,6 +1090,7 @@ def update_resolution_menu(menu:pygame_menu.Menu):
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="resolution_menu_back_button",
     )
 
@@ -1101,6 +1126,7 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         onchange=update_display_in_game_health_bool,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="gameplay_menu_display_health_button",
     )
     default_display_in_game_buffs = gameplay_menu_items.index((f"{display_in_game_buffs}",display_in_game_buffs))
@@ -1111,6 +1137,7 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         onchange=update_display_in_game_buffs_bool,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="gameplay_menu_display_buffs_button",
     )
     default_display_in_game_stats = gameplay_menu_items.index((f"{display_in_game_stats}",display_in_game_stats))
@@ -1121,6 +1148,7 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         onchange=update_display_in_game_stats_bool,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="gameplay_menu_display_stats_button",
     )
     default_display_controls = gameplay_menu_items.index((f"{display_controls}",display_controls))
@@ -1131,6 +1159,7 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         onchange=update_display_controls_bool,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="gameplay_menu_display_controls_button",
     )
     default_display_in_game_fps = gameplay_menu_items.index((f"{display_in_game_fps}",display_in_game_fps))
@@ -1141,6 +1170,7 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         onchange=update_display_in_game_fps_bool,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="gameplay_menu_display_fps_button",
     )
     gameplay_menu_padding_2 = menu.add.vertical_margin(window_height/16)
@@ -1149,6 +1179,7 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         button_id="gameplay_menu_back_button",
     )
 
