@@ -127,31 +127,38 @@ def update_window_size(new_window_size_tuple:tuple):
 
 
 # Gameplay Vars Functions
-def update_display_controls_bool():
+def update_display_controls_bool(value: tuple, enabled: bool,**kwargs):
     edited_options_file_dict = get_edited_options_file_dict()
     edited_display_controls = edited_options_file_dict.get("display_controls")
     edited_options_file_dict.update({"display_controls":(not edited_display_controls)})
     set_edited_options_file_dict(edited_options_file_dict)
 
 
-def update_display_in_game_stats_bool():
+def update_display_in_game_stats_bool(value: tuple, enabled: bool,**kwargs):
     edited_options_file_dict = get_edited_options_file_dict()
     edited_display_in_game_stats = edited_options_file_dict.get("display_in_game_stats")
     edited_options_file_dict.update({"display_in_game_stats":(not edited_display_in_game_stats)})
     set_edited_options_file_dict(edited_options_file_dict)
 
 
-def update_display_in_game_health_bool():
+def update_display_in_game_health_bool(value: tuple, enabled: bool,**kwargs):
     edited_options_file_dict = get_edited_options_file_dict()
     edited_display_in_game_health = edited_options_file_dict.get("display_in_game_health")
     edited_options_file_dict.update({"display_in_game_health":(not edited_display_in_game_health)})
     set_edited_options_file_dict(edited_options_file_dict)
 
 
-def update_display_in_game_buffs_bool():
+def update_display_in_game_buffs_bool(value: tuple, enabled: bool,**kwargs):
     edited_options_file_dict = get_edited_options_file_dict()
     edited_display_in_game_buffs = edited_options_file_dict.get("display_in_game_buffs")
     edited_options_file_dict.update({"display_in_game_buffs":(not edited_display_in_game_buffs)})
+    set_edited_options_file_dict(edited_options_file_dict)
+
+
+def update_display_in_game_fps_bool(value: tuple, enabled: bool,**kwargs):
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_display_in_game_fps = edited_options_file_dict.get("display_in_game_fps")
+    edited_options_file_dict.update({"display_in_game_fps":(not edited_display_in_game_fps)})
     set_edited_options_file_dict(edited_options_file_dict)
 
 
