@@ -23,7 +23,7 @@ font_color = "#FCDC4D"
 font_name = pygame_menu.font.FONT_MUNRO
 # Title Vars
 title_font_size = int(window_height/16)
-default_font_size = int(title_font_size/2)
+stat_font_size = int(title_font_size/2)
 title_padding = int(window_height/64)
 title_y_pos_center_offset = -center_screen_height+title_font_size
 widget_y_offset = center_screen_height
@@ -545,7 +545,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=f"Skeletons Killed: {skeletons_killed_total}",
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_skeletons_killed_label",
     ).translate(left_side_x_offset,0)
     # Birds Killed
@@ -553,7 +553,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=f"Skeleton Birds Killed: {skeleton_birds_killed_total}",
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_birds_killed_label",
     ).translate(left_side_x_offset,0)
     # Interactivity
@@ -571,7 +571,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=f"Time Played: {final_displayed_time.strip()}",
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_time_played_label",
     ).translate(left_side_x_offset,0)
     # High Score
@@ -579,7 +579,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=f"High Score: {high_score}",
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_high_score_label",
     ).translate(left_side_x_offset,0)
     # Fireballs Shot
@@ -587,7 +587,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=f"Fireballs Shot: {fireballs_shot_total}",
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_fireballs_shot_label",
     ).translate(left_side_x_offset,0)
     # Jumps
@@ -595,7 +595,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=f"Jumps: {jumps_total}",
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_jumps_label",
     ).translate(left_side_x_offset,0)
     # Distance Traveled
@@ -603,7 +603,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=f"Distance Traveled: {int(distance_traveled_total/wizard_width)}m",
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_distance_traveled_label",
     ).translate(left_side_x_offset,0)
     statistics_menu_left_padding_2 = menu.add.vertical_margin(window_height/16)
@@ -644,7 +644,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=f"Highest Speed: {round((highest_speed/wizard_width)*60,2)}m/s",
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_highest_speed_label",
     ).translate(right_side_x_offset,0)
     # Highest Damage
@@ -652,7 +652,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=f"Highest Damage: {highest_damage}",
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="main_statistics_menu_highest_damage_label",
     ).translate(right_side_x_offset,0)
     # Highest Piercing
@@ -660,7 +660,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=f"Highest Piercing: {highest_piercing - 1}",
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_highest_piercing_label",
     ).translate(right_side_x_offset,0)
     # Lowest Cooldown
@@ -668,7 +668,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=f"Lowest Cooldown: {round(lowest_cooldown/60, 2)}s",
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_lowest_cooldown_label",
     ).translate(right_side_x_offset,0)
     # Buffs
@@ -678,7 +678,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=double_jump_buff_string,
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_double_jump_buff_label",
     ).translate(right_side_x_offset,0)
     # Knockback Buff
@@ -687,7 +687,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=knockback_buff_string,
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_knockback_buff_label",
     ).translate(right_side_x_offset,0)
     # Shield Buff
@@ -696,7 +696,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         title=shield_buff_string,
         font_color=font_color,
         font_name=font_name,
-        font_size=default_font_size,
+        font_size=stat_font_size,
         label_id="statistics_menu_shield_buff_label",
     ).translate(right_side_x_offset,0)
     statistics_menu_center_right_padding_2 = menu.add.vertical_margin(window_height/16)
@@ -1044,10 +1044,10 @@ def update_resolution_menu(menu:pygame_menu.Menu):
         selection_option_padding=4,
         selection_box_height=8,
         selection_box_bgcolor="#22222277",
-        selection_box_width=default_font_size*10,
+        selection_box_width=stat_font_size*10,
         selection_option_border_color="#000000",
         selection_option_font_color=font_color,
-        selection_option_font_size=default_font_size,
+        selection_option_font_size=stat_font_size,
         selection_option_selected_font_color="#FFFFFF",
         selection_option_selected_bgcolor="#99999966",
         button_id="resolution_menu_window_size_dropselect",
@@ -1057,7 +1057,7 @@ def update_resolution_menu(menu:pygame_menu.Menu):
         title="[Reload required to apply changes]",
         font_color=font_color,
         font_name=font_name,
-        font_size=int(default_font_size*3/4),
+        font_size=int(stat_font_size*3/4),
         label_id="resolution_menu_reload_label",
     ).translate(0,-title_font_size)
     resolution_menu_padding_3 = menu.add.vertical_margin(window_height/16)
