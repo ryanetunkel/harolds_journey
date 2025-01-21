@@ -21,13 +21,15 @@ menu_section = MAIN_MENU
 # Text Vars
 font_color = "#FCDC4D"
 font_name = pygame_menu.font.FONT_MUNRO
-# Title Vars
 title_font_size = int(window_height/16)
 default_font_size = int(title_font_size*3/4)
 stat_font_size = int(title_font_size/2)
 title_padding = int(window_height/64)
 title_y_pos_center_offset = -center_screen_height+title_font_size
-widget_y_offset = center_screen_height
+submenu_widget_y_offset = int(center_screen_height/2)
+no_padding = 0
+default_padding = 2
+default_margin_padding = int(window_height/16)
 
 # Stats Vars
 edited_stats_file_dict = get_edited_stats_file_dict()
@@ -171,10 +173,10 @@ def update_display_in_game_fps_bool(value: tuple, enabled: bool,**kwargs):
 
 # Wizard on Menu Screen
 wizard_path = "harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png"
-main_menu_wizard_hat_size = 24 * (window_height/400) # Needs to stay in menu
 main_menu_wizard_surf = pygame.image.load(wizard_path).convert_alpha()
-main_menu_wizard_height_by_scale = 96 * (window_height/400)
-main_menu_wizard_width_by_scale = 96 * (window_width/800)
+main_menu_wizard_height_by_scale = window_height * (1/8)
+main_menu_wizard_width_by_scale = window_height * (1/8)
+main_menu_wizard_hat_size = main_menu_wizard_height_by_scale * (6/32) # Needs to stay in menu
 main_menu_wizard_size_by_scale = (main_menu_wizard_height_by_scale,main_menu_wizard_width_by_scale)
 main_menu_wizard_surf = pygame.transform.scale(main_menu_wizard_surf,main_menu_wizard_size_by_scale)
 
@@ -238,7 +240,7 @@ main_menu_bg = main_menu_bg.crop_rect((0,bg_surf.get_height()-window_height,wind
 base_menu_theme = pygame_menu.Theme(
     title_bar_style=pygame_menu.widgets.MENUBAR_STYLE_NONE,
     background_color=main_menu_bg,
-    widget_offset=(0,widget_y_offset),
+    widget_offset=(0,0),
     widget_selection_effect=base_menu_selection,
     title_font=font_name,
     title_font_color=font_color,
@@ -261,13 +263,13 @@ def update_main_menu() -> pygame_menu.Menu:
 
     # Main Menu Theme
     main_menu_theme = base_menu_theme.copy()
-    main_menu_theme.widget_offset = (0,0)
+    main_menu_theme.widget_offset = (0,0) # Already (0,0) but listed for ease of access
     # Main Statistics Menu Theme
     main_statistics_menu_theme = base_menu_theme.copy()
-    main_statistics_menu_theme.widget_offset = (0,int(widget_y_offset/2))
+    main_statistics_menu_theme.widget_offset = (0,submenu_widget_y_offset)
     # Main Settings Menu Theme
     main_settings_menu_theme = base_menu_theme.copy()
-    main_settings_menu_theme.widget_offset = (0,int(widget_y_offset/2))
+    main_settings_menu_theme.widget_offset = (0,submenu_widget_y_offset)
 
     # Menus
     # Main Menu
@@ -328,19 +330,23 @@ def update_main_menu() -> pygame_menu.Menu:
         font_color=font_color,
         font_name=font_name,
         font_size=title_font_size,
+        padding=no_padding,
         label_id="main_menu_high_score_label",
     )
 
     # Extra Draws
     # Extra Main Menu Draws
-    main_menu_wizard_y_offset = int(title_font_size/2)
+    half_wizard_width = main_menu_wizard_surf.get_rect().width/2
+    main_menu_wizard_y_offset = main_menu_harold_surf.get_rect().height/2
     main_menu_wizard_menu_surf = main_menu.add.surface(
         surface=main_menu_wizard_surf,
+        padding=no_padding,
         surface_id="main_menu_wizard_menu_surf",
     ).translate(0,main_menu_wizard_y_offset)
-    main_menu_harold_y_offset = main_menu_wizard_y_offset-main_menu_wizard_menu_surf.get_height()*11/8+(main_menu_wizard_hat_size)
+    main_menu_harold_y_offset = -main_menu_wizard_surf.get_rect().height
     main_menu_harold_menu_surf = main_menu.add.surface(
         surface=main_menu_harold_surf,
+        padding=no_padding,
         surface_id="main_menu_harold_menu_surf",
     ).translate(0,main_menu_harold_y_offset)
 
@@ -352,6 +358,7 @@ def update_main_menu() -> pygame_menu.Menu:
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="main_menu_start_button",
     )
     main_menu_statistics_button = main_menu.add.button(
@@ -360,6 +367,7 @@ def update_main_menu() -> pygame_menu.Menu:
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="main_menu_statistics_button",
     )
     main_menu_settings_button = main_menu.add.button(
@@ -368,6 +376,7 @@ def update_main_menu() -> pygame_menu.Menu:
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="main_menu_settings_button",
     )
     main_menu_exit_button = main_menu.add.button(
@@ -376,6 +385,7 @@ def update_main_menu() -> pygame_menu.Menu:
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="main_menu_exit_button",
     )
 
@@ -396,10 +406,10 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         pause_menu_theme.background_color = new_background_color
     # Main Statistics Menu Theme
     pause_statistics_menu_theme = pause_menu_theme.copy()
-    pause_statistics_menu_theme.widget_offset = (0,int(widget_y_offset/2))
+    pause_statistics_menu_theme.widget_offset = (0,submenu_widget_y_offset)
     # Main Settings Menu Theme
     pause_settings_menu_theme = pause_menu_theme.copy()
-    pause_settings_menu_theme.widget_offset = (0,int(widget_y_offset/2))
+    pause_settings_menu_theme.widget_offset = (0,submenu_widget_y_offset)
 
     # Menus
     # Pause Menu
@@ -457,6 +467,7 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="pause_menu_back_button",
     ).translate(0,title_y_pos_center_offset/2)
     pause_menu_statistics_button = pause_menu.add.button(
@@ -465,6 +476,7 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="pause_menu_statistics_button",
     ).translate(0,title_y_pos_center_offset/2)
     pause_menu_settings_button = pause_menu.add.button(
@@ -473,15 +485,17 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="pause_menu_settings_button",
     ).translate(0,title_y_pos_center_offset/2)
-    pause_menu_padding = pause_menu.add.vertical_margin(window_height/16)
+    pause_menu_padding = pause_menu.add.vertical_margin(default_margin_padding)
     pause_menu_end_game_button = pause_menu.add.button(
         title="End Current Game",
         action=end_game,
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="pause_menu_end_game_button",
     ).translate(0,title_y_pos_center_offset/2)
 
@@ -545,7 +559,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         jumps_made = 0
 
     # Statistics Menu Sublabels
-    statistics_menu_left_padding_1 = menu.add.vertical_margin(window_height/16)
+    statistics_menu_left_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Left Side
     left_side_x_offset = int(center_screen_width*5/12)
     # Kills
@@ -555,6 +569,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_skeletons_killed_label",
     ).translate(left_side_x_offset,0)
     # Birds Killed
@@ -563,6 +578,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_birds_killed_label",
     ).translate(left_side_x_offset,0)
     # Interactivity
@@ -581,6 +597,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_time_played_label",
     ).translate(left_side_x_offset,0)
     # High Score
@@ -589,6 +606,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_high_score_label",
     ).translate(left_side_x_offset,0)
     # Fireballs Shot
@@ -597,6 +615,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_fireballs_shot_label",
     ).translate(left_side_x_offset,0)
     # Jumps
@@ -605,6 +624,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_jumps_label",
     ).translate(left_side_x_offset,0)
     # Distance Traveled
@@ -613,10 +633,11 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_distance_traveled_label",
     ).translate(left_side_x_offset,0)
-    statistics_menu_left_padding_2 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_left_padding_3 = menu.add.vertical_margin(window_height/16)
+    statistics_menu_left_padding_2 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_left_padding_3 = menu.add.vertical_margin(default_margin_padding)
 
     # Statistics Menu Label
     statistics_menu_label = menu.add.label(
@@ -627,13 +648,13 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_size=title_font_size,
         label_id="statistics_menu_label",
     )#.translate(center_screen_width/2,-title_font_size)
-    statistics_menu_center_padding_1 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_2 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_3 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_4 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_5 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_6 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_7 = menu.add.vertical_margin(window_height/16)
+    statistics_menu_center_padding_1 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_2 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_3 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_4 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_5 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_6 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_7 = menu.add.vertical_margin(default_margin_padding)
     # Statistics Menu Buttons
     statistics_menu_back_button = menu.add.button(
         title="Back to Main Menu",
@@ -641,12 +662,13 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="statistics_menu_back_button",
     ).translate(0,-int(title_font_size*3/2))
 
 
     # Right Side
-    statistics_menu_center_right_padding_1 = menu.add.vertical_margin(window_height/16)
+    statistics_menu_center_right_padding_1 = menu.add.vertical_margin(default_margin_padding)
     right_side_x_offset = -int(center_screen_width*5/12)
     # In-Game Stat Records
     # Highest Speed
@@ -655,6 +677,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_highest_speed_label",
     ).translate(right_side_x_offset,0)
     # Highest Damage
@@ -663,6 +686,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="main_statistics_menu_highest_damage_label",
     ).translate(right_side_x_offset,0)
     # Highest Piercing
@@ -671,6 +695,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_highest_piercing_label",
     ).translate(right_side_x_offset,0)
     # Lowest Cooldown
@@ -679,6 +704,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_lowest_cooldown_label",
     ).translate(right_side_x_offset,0)
     # Buffs
@@ -689,6 +715,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_double_jump_buff_label",
     ).translate(right_side_x_offset,0)
     # Knockback Buff
@@ -698,6 +725,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_knockback_buff_label",
     ).translate(right_side_x_offset,0)
     # Shield Buff
@@ -707,9 +735,10 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_shield_buff_label",
     ).translate(right_side_x_offset,0)
-    statistics_menu_center_right_padding_2 = menu.add.vertical_margin(window_height/16)
+    statistics_menu_center_right_padding_2 = menu.add.vertical_margin(default_margin_padding)
 
     return menu
 
@@ -771,7 +800,7 @@ def update_settings_menu(menu:pygame_menu.Menu):
         label_id="settings_menu_label",
     ).translate(0,-title_font_size)
 
-    settings_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    settings_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Settings Menu Buttons
     settings_menu_sounds_button = menu.add.button(
         title="Sounds",
@@ -779,6 +808,7 @@ def update_settings_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="settings_menu_sounds_button",
     )
     settings_menu_controls_button = menu.add.button(
@@ -787,6 +817,7 @@ def update_settings_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="settings_menu_controls_button",
     )
     settings_menu_display_button = menu.add.button(
@@ -795,15 +826,17 @@ def update_settings_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="settings_menu_display_button",
     )
-    settings_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    settings_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
     settings_menu_back_button = menu.add.button(
         title="Back to Main Menu",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="settings_menu_back_button",
     )
 
@@ -823,7 +856,7 @@ def update_sounds_menu(menu:pygame_menu.Menu):
         label_id="sounds_menu_label",
     ).translate(0,-title_font_size)
 
-    sounds_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    sounds_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Sounds Menu Buttons
     sounds_menu_placeholder_button = menu.add.button(
         title="Placeholder",
@@ -831,15 +864,17 @@ def update_sounds_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="sounds_menu_placeholder_button",
     )
-    sounds_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    sounds_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
     sounds_menu_back_button = menu.add.button(
         title="Back to Settings",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="sounds_menu_back_button",
     )
 
@@ -858,7 +893,7 @@ def update_controls_menu(menu:pygame_menu.Menu):
         label_id="controls_menu_label",
     ).translate(0,-title_font_size)
 
-    controls_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    controls_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Controls Menu Buttons
     controls_menu_placeholder_button = menu.add.button(
         title="Placeholder",
@@ -866,15 +901,17 @@ def update_controls_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="controls_menu_placeholder_button",
     )
-    controls_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    controls_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
     controls_menu_back_button = menu.add.button(
         title="Back to Settings",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="controls_menu_back_buttons",
     )
 
@@ -923,7 +960,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         label_id="display_menu_label",
     ).translate(0,-title_font_size)
 
-    display_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    display_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Display Menu Sliders
     # Zoom Slider
     zoom_range_values = list(num for num in range(0,201))
@@ -951,6 +988,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         slider_thickness=4,
         slider_text_value_color=font_color,
         slider_text_value_enabled=True,
+        padding=default_padding,
         rangeslider_id="display_menu_zoom_slider",
     )
     update_zoom(display_menu_zoom_slider.get_value())
@@ -983,6 +1021,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         slider_thickness=4,
         slider_text_value_color=font_color,
         slider_text_value_enabled=True,
+        padding=default_padding,
         rangeslider_id="display_menu_framerate_slider",
     )
     update_fps(display_menu_framerate_slider.get_value())
@@ -995,6 +1034,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="display_menu_resolution_button",
     )
     display_menu_gameplay_button = menu.add.button(
@@ -1003,15 +1043,17 @@ def update_display_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="display_menu_gameplay_button",
     )
-    display_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    display_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
     display_menu_back_button = menu.add.button(
         title="Back to Settings",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="display_menu_back_button",
     )
 
@@ -1031,7 +1073,7 @@ def update_resolution_menu(menu:pygame_menu.Menu):
         label_id="resolution_menu_label",
     ).translate(0,-title_font_size)
 
-    resolution_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    resolution_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Resolution Menu Buttons
     edited_window_sizes = get_edited_options_file_dict().get("window_sizes")
     default_window_width_value = get_edited_options_file_dict().get("window_width")
@@ -1077,23 +1119,26 @@ def update_resolution_menu(menu:pygame_menu.Menu):
         selection_option_font_size=stat_font_size,
         selection_option_selected_font_color="#FFFFFF",
         selection_option_selected_bgcolor="#99999966",
+        padding=default_padding,
         button_id="resolution_menu_window_size_dropselect",
     )
-    resolution_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    resolution_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
     resolution_menu_reload_label = menu.add.label(
         title="[Reload required to apply changes]",
         font_color=font_color,
         font_name=font_name,
         font_size=int(default_font_size*3/4),
+        padding=default_padding,
         label_id="resolution_menu_reload_label",
     ).translate(0,-title_font_size)
-    resolution_menu_padding_3 = menu.add.vertical_margin(window_height/16)
+    resolution_menu_padding_3 = menu.add.vertical_margin(default_margin_padding)
     resolution_menu_back_button = menu.add.button(
         title="Back to Settings",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="resolution_menu_back_button",
     )
 
@@ -1115,10 +1160,11 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=title_font_size,
+        padding=default_padding,
         label_id="gameplay_menu_label",
     ).translate(0,-title_font_size)
 
-    gameplay_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    gameplay_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Gameplay Menu Buttons
     gameplay_menu_items = [("True",True),("False",False)]
     default_display_in_game_health = gameplay_menu_items.index((f"{display_in_game_health}",display_in_game_health))
@@ -1130,6 +1176,7 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="gameplay_menu_display_health_button",
     )
     default_display_in_game_buffs = gameplay_menu_items.index((f"{display_in_game_buffs}",display_in_game_buffs))
@@ -1141,6 +1188,7 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="gameplay_menu_display_buffs_button",
     )
     default_display_in_game_stats = gameplay_menu_items.index((f"{display_in_game_stats}",display_in_game_stats))
@@ -1152,6 +1200,7 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="gameplay_menu_display_stats_button",
     )
     default_display_controls = gameplay_menu_items.index((f"{display_controls}",display_controls))
@@ -1163,6 +1212,7 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="gameplay_menu_display_controls_button",
     )
     default_display_in_game_fps = gameplay_menu_items.index((f"{display_in_game_fps}",display_in_game_fps))
@@ -1174,15 +1224,17 @@ def update_gameplay_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="gameplay_menu_display_fps_button",
     )
-    gameplay_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    gameplay_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
     gameplay_menu_back_button = menu.add.button(
         title="Back to Settings",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
+        padding=default_padding,
         button_id="gameplay_menu_back_button",
     )
 
