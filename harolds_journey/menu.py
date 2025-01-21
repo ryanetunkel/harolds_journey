@@ -104,6 +104,12 @@ def update_fps(new_fps:int):
     set_edited_options_file_dict(edited_options_file_dict)
 
 
+def check_max_window(window_size:tuple[int,int])->tuple[int,int]:
+    global min_window_width, max_window_width
+    global min_window_height, max_window_height
+    return (max(min_window_width,min(window_size[0],max_window_width)), max(min_window_height,min(window_size[1],max_window_height)))
+
+
 def update_window_width(new_window_width:int):
     global window_width
     window_width = new_window_width
@@ -120,8 +126,8 @@ def update_window_height(new_window_height:int):
     set_edited_options_file_dict(edited_options_file_dict)
 
 
-def update_window_size(new_window_size_tuple:tuple):
-    new_window_size = new_window_size_tuple[0][1]
+def update_window_size(value: tuple, window_size: bool,**kwargs):
+    new_window_size = check_max_window(window_size)
     update_window_width(new_window_size[0])
     update_window_height(new_window_size[1])
 
@@ -1002,29 +1008,31 @@ def update_resolution_menu(menu:pygame_menu.Menu):
 
     resolution_menu_padding_1 = menu.add.vertical_margin(window_height/16)
     # Resolution Menu Buttons
-    window_sizes = [
-        ("2560x1440",(2560,1440)),
-        ("1920x1080",(1920,1080)),
-        ("1920x1200",(1920,1200)),
-        ("1680x1050",(1680,1050)),
-        ("1440x900",(1440,900)),
-        ("1366x768",(1366,768)),
-        ("1280x800",(1280,800)),
-        ("1280x720",(1280,720)),
-        ("1024x768",(1024,768)),
-        ("800x600",(800,600)),
-        ("640x480",(640,480)),
-        ("320x240",(320,240)),
-    ]
+    edited_window_sizes = get_edited_options_file_dict().get("window_sizes")
     default_window_width_value = get_edited_options_file_dict().get("window_width")
     default_window_height_value = get_edited_options_file_dict().get("window_height")
-    default_window_size_value = (default_window_width_value,default_window_height_value)
-    default_window_size_with_x = f"{default_window_width_value}x{default_window_height_value}"
-    default_window_size_idx = window_sizes.index((default_window_size_with_x,default_window_size_value))
+    default_window_sizes_list = []
+    window_sizes_int_list = []
+    default_window_size_idx = -1
+    for size in edited_window_sizes:
+        if size != "Custom":
+            values = size.split("x")
+            values_tuple = (int(values[0]),int(values[1]))
+            default_window_sizes_list.append((size,values_tuple))
+            window_sizes_int_list.append(values_tuple)
+        else:
+            values_tuple = (default_window_width_value,default_window_height_value)
+            default_window_sizes_list.append((
+                f"{size}: {values_tuple[0]}x{values_tuple[1]}",
+                values_tuple
+            ))
+            window_sizes_int_list.append(values_tuple)
+        default_window_size_idx = window_sizes_int_list.index(values_tuple)
     resolution_menu_window_size_dropselect = menu.add.dropselect(
         title="Window Size",
-        items=window_sizes,
+        items=default_window_sizes_list,
         default=default_window_size_idx,
+        onchange=update_window_size,
         font_color=font_color,
         font_name=font_name,
         placeholder_add_to_selection_box=False,
@@ -1036,14 +1044,23 @@ def update_resolution_menu(menu:pygame_menu.Menu):
         selection_option_padding=4,
         selection_box_height=8,
         selection_box_bgcolor="#22222277",
+        selection_box_width=default_font_size*10,
         selection_option_border_color="#000000",
         selection_option_font_color=font_color,
-        selection_option_font_size=stat_font_size,
+        selection_option_font_size=default_font_size,
         selection_option_selected_font_color="#FFFFFF",
         selection_option_selected_bgcolor="#99999966",
         button_id="resolution_menu_window_size_dropselect",
     )
     resolution_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    resolution_menu_reload_label = menu.add.label(
+        title="[Reload required to apply changes]",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(default_font_size*3/4),
+        label_id="resolution_menu_reload_label",
+    ).translate(0,-title_font_size)
+    resolution_menu_padding_3 = menu.add.vertical_margin(window_height/16)
     resolution_menu_back_button = menu.add.button(
         title="Back to Settings",
         action=pygame_menu.events.BACK,
