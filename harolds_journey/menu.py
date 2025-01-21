@@ -948,6 +948,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         slider_color=font_color,
         slider_sel_highlight_color=pygame.Color("#FFFFFF"),
         slider_selected_color=pygame.Color("#FFFFFF"),
+        slider_thickness=4,
         slider_text_value_color=font_color,
         slider_text_value_enabled=True,
         rangeslider_id="display_menu_zoom_slider",
@@ -979,6 +980,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         slider_color=font_color,
         slider_sel_highlight_color=pygame.Color("#FFFFFF"),
         slider_selected_color=pygame.Color("#FFFFFF"),
+        slider_thickness=4,
         slider_text_value_color=font_color,
         slider_text_value_enabled=True,
         rangeslider_id="display_menu_framerate_slider",
@@ -1063,6 +1065,7 @@ def update_resolution_menu(menu:pygame_menu.Menu):
         scrollbar_color="#22222277",
         scrollbar_slider_color="#66666677",
         scrollbar_slider_hover_color="#BBBBBB66",
+        scrollbar_thick=6,
         selection_box_arrow_color="#55555599", # For some reason this affects selection_box_bgcolor - bug in pygame-menu
         selection_effect=base_menu_selection,
         selection_option_padding=4,
