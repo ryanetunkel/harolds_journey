@@ -27,7 +27,7 @@ SECRET_SOUND_CHANNEL = 7
 score = 0
 
 pygame.init()
-window_size = (window_width,window_height) # Create a set of options for this, fullscreen maybe in future, gets tricky
+window_size = (window_width,window_height)
 global_scalar = pixel_size/4
 wizard_width = 32 * pixel_size
 wizard_height = 32 * pixel_size
