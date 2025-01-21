@@ -518,6 +518,7 @@ def screenshot_screen(zoom=200,left=0,top=0,width=window_width,height=window_hei
     return screenshot
 
 
+# Main Gameloop
 while True:
     # Voids screen each frame
     # screen.fill((0,0,0))  # Messes with screenshotting bg, remove this but fix resizing to snap to perfect resolutions
