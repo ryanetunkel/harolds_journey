@@ -37,7 +37,7 @@ bg_music_timer = 0
 obstacle_death_sound = pygame.mixer.Sound("harolds_journey/audio/FreeSFX/GameSFX/Explosion/Retro Explosion Short 01.wav")
 obstacle_death_sound.set_volume(OBSTACLE_DEATH_VOLUME)
 
-
+# Visuals
 # Sprites
 wizard = pygame.sprite.GroupSingle()
 harold = pygame.sprite.GroupSingle()
@@ -72,11 +72,6 @@ objects_to_be_removed = [
     buff_group,
 ]
 
-
-# Score
-score = 0
-
-
 # Background Elements
 bg_image_path = "harolds_journey/graphics/bg_images/Background.png"
 bg_surf = pygame.image.load(bg_image_path).convert_alpha()
@@ -89,7 +84,6 @@ if window_width > bg_width or window_height > bg_height: # WINDOW_WIDTH > bg_wid
     bg_surf = pygame.transform.scale_by(bg_surf,bg_scalar) # bg_scalar = bg_width_scalar = 120/64
 else:
     bg_scalar = 1
-
 
 # Displays
 window_size = (window_width,window_height)
@@ -126,3 +120,4 @@ pygame_icon = pygame.image.load("harolds_journey/graphics/harold/harold_idle_ani
 pygame.display.set_icon(pygame_icon)
 clock = pygame.time.Clock()
 test_font = pygame.font.Font("harolds_journey/font/Pixeltype.ttf",int(window_height/16))
+score = 0
