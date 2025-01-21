@@ -37,6 +37,7 @@ bg_music_timer = 0
 obstacle_death_sound = pygame.mixer.Sound("harolds_journey/audio/FreeSFX/GameSFX/Explosion/Retro Explosion Short 01.wav")
 obstacle_death_sound.set_volume(OBSTACLE_DEATH_VOLUME)
 
+
 # Visuals
 # Sprites
 wizard = pygame.sprite.GroupSingle()
