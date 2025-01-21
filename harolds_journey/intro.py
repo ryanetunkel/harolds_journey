@@ -27,7 +27,7 @@ wizard_intro_surf = pygame.transform.scale(wizard_intro_surf,wizard_intro_size_b
 wizard_intro_rect = wizard_intro_surf.get_rect(midbottom = (wizard_intro_start_x_pos,wizard_intro_start_y_pos))
 
 harold_intro_start_x_pos = window_width / 2
-harold_intro_start_y_pos = grass_top_y + 6/32 * (wizard_intro_width_by_scale * 3/8)
+harold_intro_start_y_pos = wizard_intro_start_y_pos + 6/32 * (wizard_intro_height_by_scale) * 3/8
 harold_intro_surf = pygame.image.load("harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png").convert_alpha()
 harold_intro_height_by_scale = wizard_intro_height_by_scale * 3/8
 harold_intro_width_by_scale = wizard_intro_width_by_scale * 3/8
