@@ -32,7 +32,6 @@ global_scalar = pixel_size/4
 wizard_width = 32 * pixel_size
 wizard_height = 32 * pixel_size
 wizard_pixel_size = (wizard_height,wizard_width)
-grass_top_y = int((379 / 400) * window_height)
 global_gravity = 1 * global_scalar
 OBSTACLE_SPAWN_FREQUENCY = 1500 # In milliseconds, 1000 = 1 sec, should be 1500
 
