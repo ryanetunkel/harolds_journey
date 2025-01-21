@@ -306,7 +306,7 @@ def display_in_game_fps():
     edited_fps = get_edited_options_file_dict().get("fps")
     # FPS
     fps_surf = test_font.render(f"FPS: {edited_fps}", False, "#FCDC4D")
-    fps_rect = fps_surf.get_rect(center = (window_width*9/16,window_height*1/16))
+    fps_rect = fps_surf.get_rect(center = (window_width*1/16,window_height*31/32))
     screen.blit(fps_surf,fps_rect)
 
 
