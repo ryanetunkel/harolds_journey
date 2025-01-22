@@ -62,56 +62,30 @@ def display_high_score(score_rect):
 
 
 def display_controls():
+    control_font = pygame.font.Font("harolds_journey/font/Pixeltype.ttf",int(window_height/8))
+
     edited_controls_file_dict = get_edited_controls_file_dict()
     edited_controls_display_names_dict = edited_controls_file_dict.get("edited_controls_display_names_dict")
-    displayed_control_y_pos_offset = window_height * 1/44
+    displayed_control_y_pos_offset = window_height * 1/32
     displayed_control_index = 0
     displayed_control_scalar = 0.3
-    edited_controls_display_names_dict_size = len(list(edited_controls_display_names_dict.keys()))
-    control_board_start_y_pos = 0
-    control_board_end_y_pos = 0
-    biggest_width = 0
-    biggest_rect = None
     displayed_control_surf_dict = {}
     displayed_control_rect_dict = {}
     button_scalar = 3/2
     for displayed_control_name in edited_controls_display_names_dict.keys():
         displayed_control_start_x_pos = window_width * 7/8
-        displayed_control_start_y_pos = (25/32 * window_height) + displayed_control_y_pos_offset * displayed_control_index
+        displayed_control_start_y_pos = (6/32 * window_height) + displayed_control_y_pos_offset * displayed_control_index
         displayed_control_start_pos = (displayed_control_start_x_pos,displayed_control_start_y_pos)
         displayed_control_name_underscore_removed = displayed_control_name.replace("_", " ")
         displayed_control_name_button_removed = displayed_control_name_underscore_removed.replace(" button", "")
         displayed_control_name_capitalized = displayed_control_name_button_removed.title()
-        displayed_control_surf = base_font.render(f"{displayed_control_name_capitalized}: {edited_controls_display_names_dict[displayed_control_name]}",False,"#FCDC4D")
+        displayed_control_surf = control_font.render(f"{displayed_control_name_capitalized}: {edited_controls_display_names_dict[displayed_control_name]}",False,"#FCDC4D")
         displayed_control_scale = button_scalar * displayed_control_scalar
         displayed_control_surf = pygame.transform.scale_by(displayed_control_surf,displayed_control_scale)
         displayed_control_surf_dict.update({displayed_control_name:displayed_control_surf})
         displayed_control_rect = displayed_control_surf.get_rect(center = (displayed_control_start_pos))
         displayed_control_rect_dict.update({displayed_control_name:displayed_control_rect})
-        if displayed_control_rect.width > biggest_width:
-            biggest_width = displayed_control_rect.width
-            biggest_rect = displayed_control_rect
-        if displayed_control_index == 0:
-            control_board_start_y_pos = displayed_control_rect.top
-        if displayed_control_index == edited_controls_display_names_dict_size - 1:
-            control_board_end_y_pos = displayed_control_rect.bottom
         displayed_control_index += 1
-
-    control_board_padding = button_scalar * 2
-    control_board_width = biggest_width + control_board_padding * 4
-    control_board_height = (control_board_end_y_pos - control_board_start_y_pos) + control_board_padding * 2
-    control_board_start_x_pos = biggest_rect.left - (control_board_padding * 2)
-    control_board_start_y_pos = control_board_start_y_pos - control_board_padding
-    control_board_rect = pygame.Rect(control_board_start_x_pos, control_board_start_y_pos, control_board_width, control_board_height)
-    control_board_color = "#442211"
-    control_board_stand_height = button_scalar * 4
-    control_board_stand_width = control_board_width/16
-    control_board_stand_start_x_pos = (control_board_start_x_pos + (control_board_width/2)) - (control_board_stand_width/2)
-    control_board_stand_start_y_pos = control_board_rect.bottom
-    control_board_stand_rect = pygame.Rect(control_board_stand_start_x_pos, control_board_stand_start_y_pos, control_board_stand_width, control_board_stand_height)
-    pygame.draw.rect(screen,control_board_color,control_board_rect)
-    pygame.draw.rect(screen,control_board_color,control_board_stand_rect)
-    # Drawing Rect
 
     for displayed_control_name in edited_controls_display_names_dict.keys():
         displayed_control_surf = displayed_control_surf_dict[displayed_control_name]
@@ -457,7 +431,7 @@ def do_drop_spawns(obstacle):
     elif not wizard.sprite.get_shield() and randint(1,50) == 50: # 1/50
         buff_group.add(Buff("shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
     # Knockback
-    elif not wizard.sprite.get_knockback() and randint(1,50) == 50: # 1/50
+    elif not wizard.sprite.get_knockback() and randint(1,1) == 1: # 1/50
         buff_group.add(Buff("knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
 
 
