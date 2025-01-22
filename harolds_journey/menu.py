@@ -9,14 +9,6 @@ from harold import *
 from player import *
 from menu_vars import *
 
-# Main Menu Screen
-MAIN_MENU = 1
-STATISTICS_MENU = 2
-SETTINGS_MENU = 3
-SOUNDS_MENU = 4
-CONTROLS_MENU = 5
-DISPLAY_MENU = 6
-menu_section = MAIN_MENU
 
 # Text Vars
 font_color = "#FCDC4D"
