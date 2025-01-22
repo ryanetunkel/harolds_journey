@@ -273,11 +273,11 @@ def display_in_game_stats():
     fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (fireball_cooldown_stat_x_pos+fireball_cooldown_stat_rect.width/2+fireball_cooldown_stat_image_rect.width,fireball_cooldown_stat_y_pos))
 
     # Fireball Cooldown Icon
-    fireball_cooldown_x_pos = window_width * 1/16 # Right of health: 11/64 # Below Health: 1/16
-    fireball_cooldown_y_pos_num = 7/32 if not wizard.sprite.get_shield() else 11/32
-    fireball_cooldown_y_pos = window_height * fireball_cooldown_y_pos_num # Right of health: 25/256 # Below Health: 7/32
+    fireball_cooldown_y_pos = window_height * 7/32
     fireball_cooldown_surf = pygame.image.load("harolds_journey/graphics/fireball/fireball_movement_animation/fireball_movement_00.png").convert_alpha()
     fireball_cooldown_surf = pygame.transform.scale_by(fireball_cooldown_surf,(window_width + window_height)/1200)
+    fireball_cooldown_rect = fireball_cooldown_surf.get_rect(center = (0,fireball_cooldown_y_pos))
+    fireball_cooldown_x_pos = fireball_cooldown_rect.width/2 + window_width/64
     fireball_cooldown_rect = fireball_cooldown_surf.get_rect(center = (fireball_cooldown_x_pos,fireball_cooldown_y_pos))
     # Fireball Cooldown Overlay
     current_fireball_cooldown = wizard.sprite.get_current_fireball_cooldown()
