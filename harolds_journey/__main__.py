@@ -215,19 +215,19 @@ def display_in_game_stats():
     # Fourth
     speed_stat_image_y_pos = fireball_cooldown_stat_image_y_pos + stat_image_surf_y_pos_offset
     # Stat text surfs
-    stat_surf_x_pos = window_width*43/128
+    stat_surf_x_pos = stat_image_surf_x_pos
     stat_surf_y_pos_offset = stat_image_surf_y_pos_offset
     # First
     damage_stat_x_pos = stat_surf_x_pos
     damage_stat_y_pos = damage_stat_image_y_pos + window_width/256
     # Second
-    piercing_stat_x_pos = stat_surf_x_pos + window_width/128
+    piercing_stat_x_pos = stat_surf_x_pos
     piercing_stat_y_pos = damage_stat_y_pos + stat_surf_y_pos_offset
     # Third
-    fireball_cooldown_stat_x_pos = stat_surf_x_pos + window_width*2/128
+    fireball_cooldown_stat_x_pos = stat_surf_x_pos
     fireball_cooldown_stat_y_pos = piercing_stat_y_pos + stat_surf_y_pos_offset
     # Fourth
-    speed_stat_x_pos = stat_surf_x_pos # + WINDOW_WIDTH*2/128
+    speed_stat_x_pos = stat_surf_x_pos
     speed_stat_y_pos = fireball_cooldown_stat_y_pos + stat_surf_y_pos_offset
     # Damage
     damage_stat_image_surf = pygame.image.load("harolds_journey/graphics/pickups/damage/damage_pickup.png").convert_alpha()
@@ -237,6 +237,7 @@ def display_in_game_stats():
     damage_stat_surf = test_font.render("Damage: " + str(wizard.sprite.get_wizard_damage_total()), False, "#FCDC4D")
     damage_stat_surf = pygame.transform.scale_by(damage_stat_surf, 0.9)
     damage_stat_rect = damage_stat_surf.get_rect(center = (damage_stat_x_pos,damage_stat_y_pos))
+    damage_stat_rect = damage_stat_surf.get_rect(center = (damage_stat_x_pos+damage_stat_rect.width/2+damage_stat_image_rect.width,damage_stat_y_pos))
 
     # Piercing
     piercing_stat_image_surf = pygame.image.load("harolds_journey/graphics/pickups/piercing/piercing_pickup.png").convert_alpha()
@@ -246,6 +247,7 @@ def display_in_game_stats():
     piercing_stat_surf = test_font.render("Piercing: " + str(wizard.sprite.get_wizard_piercing_total() - 1), False, "#FCDC4D")
     piercing_stat_surf = pygame.transform.scale_by(piercing_stat_surf, 0.9)
     piercing_stat_rect = piercing_stat_surf.get_rect(center = (piercing_stat_x_pos,piercing_stat_y_pos))
+    piercing_stat_rect = piercing_stat_surf.get_rect(center = (piercing_stat_x_pos+piercing_stat_rect.width/2+piercing_stat_image_rect.width,piercing_stat_y_pos))
 
     # Fireball Cooldown Stat
     fireball_cooldown_stat_image_surf = pygame.image.load("harolds_journey/graphics/pickups/fireball_cooldown/fireball_cooldown_pickup.png").convert_alpha()
@@ -255,6 +257,7 @@ def display_in_game_stats():
     fireball_cooldown_stat_surf = test_font.render(f"Cooldown: {round(wizard.sprite.get_max_fireball_cooldown_time()/60, 2)}s", False, "#FCDC4D")
     fireball_cooldown_stat_surf = pygame.transform.scale_by(fireball_cooldown_stat_surf, 0.9)
     fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (fireball_cooldown_stat_x_pos,fireball_cooldown_stat_y_pos))
+    fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (fireball_cooldown_stat_x_pos+fireball_cooldown_stat_rect.width/2+fireball_cooldown_stat_image_rect.width,fireball_cooldown_stat_y_pos))
 
     # Fireball Cooldown Icon
     fireball_cooldown_x_pos = window_width * 1/16 # Right of health: 11/64 # Below Health: 1/16
@@ -276,6 +279,7 @@ def display_in_game_stats():
     fireball_cooldown_overlay_surf.fill(fireball_cooldown_overlay_color)
     fireball_cooldown_overlay_surf.set_alpha(100)
     fireball_cooldown_overlay_rect = (fireball_cooldown_overlay_left, fireball_cooldown_overlay_top)
+
     # Speed
     speed_stat_image_surf = pygame.image.load("harolds_journey/graphics/pickups/speed/speed_pickup.png").convert_alpha()
     speed_stat_image_surf = pygame.transform.scale_by(speed_stat_image_surf,4 * (window_width + window_height)/1200)
@@ -284,6 +288,7 @@ def display_in_game_stats():
     speed_stat_surf = test_font.render("Speed: " + str(round((wizard.sprite.get_wizard_speed()/wizard_width)*60, 2)), False, "#FCDC4D")
     speed_stat_surf = pygame.transform.scale_by(speed_stat_surf, 0.9)
     speed_stat_rect = speed_stat_surf.get_rect(center = (speed_stat_x_pos,speed_stat_y_pos))
+    speed_stat_rect = speed_stat_surf.get_rect(center = (speed_stat_x_pos+speed_stat_rect.width/2+speed_stat_image_rect.width,speed_stat_y_pos))
 
     # Blits
     # Damage Blit
