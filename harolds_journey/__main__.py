@@ -120,14 +120,22 @@ def display_controls():
 
 
 def display_in_game_health():
+    health_font = pygame.font.Font("harolds_journey/font/Pixeltype.ttf",int(window_height/18))
+
     # Health
     health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/heart.png").convert_alpha()
     health_stat_image_surf = pygame.transform.scale_by(health_stat_image_surf,4 * (window_width + window_height)/1200)
-    health_stat_image_rect = health_stat_image_surf.get_rect(center = (window_width*1/16,window_height*3/32))
+    health_stat_image_rect = health_stat_image_surf.get_rect(center = (0,0))
+    health_stat_image_x_offset = health_stat_image_rect.width/2+window_width/64
+    health_stat_image_y_offset = health_stat_image_rect.height/2+window_width/64
+    health_stat_image_rect = health_stat_image_surf.get_rect(center = (health_stat_image_x_offset,health_stat_image_y_offset))
 
-    health_stat_surf = test_font.render(str(wizard.sprite.get_wizard_current_health()), False, "#FCDC4D")
+    health_stat_surf = health_font.render(str(wizard.sprite.get_wizard_current_health()), False, "#000000")
     health_stat_surf = pygame.transform.scale_by(health_stat_surf, 1.3)
-    health_stat_rect = health_stat_surf.get_rect(center = (window_width*7/64,window_height*13/128))
+    health_stat_rect = health_stat_surf.get_rect(center = (0,0))
+    health_stat_rect_x_offset = health_stat_image_x_offset + health_stat_rect.width/18
+    health_stat_rect_y_offset = health_stat_image_y_offset + health_stat_rect.height*3/18
+    health_stat_rect = health_stat_surf.get_rect(center = (health_stat_rect_x_offset,health_stat_rect_y_offset))
 
     # Shield Health
     shield_health_stat_x_pos_offset = window_width * 1/32
