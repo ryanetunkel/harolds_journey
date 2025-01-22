@@ -684,58 +684,6 @@ while True:
                 #     elif mouse_on_controls_back_button:
                 #         if clicking_with_left_mouse:
                 #             menu_section = SETTINGS_MENU
-                # # Display Menu
-                # elif menu_section == DISPLAY_MENU:
-                #     mouse_on_display_back_button = display_back_button_rect_big.collidepoint(mouse_pos)
-                #     mouse_on_display_show_controls_button = display_show_controls_button_rect_big.collidepoint(mouse_pos)
-                #     mouse_on_display_show_in_game_stats_button = display_show_in_game_stats_button_rect_big.collidepoint(mouse_pos)
-                #     mouse_on_display_show_in_game_health_button = display_show_in_game_health_button_rect_big.collidepoint(mouse_pos)
-                #     mouse_on_display_show_in_game_buffs_button = display_show_in_game_buffs_button_rect_big.collidepoint(mouse_pos)
-                #     mouse_on_display_reset_button = display_reset_button_rect_big.collidepoint(mouse_pos)
-                #     # Show Controls Button
-                #     if mouse_on_display_show_controls_button:
-                #         if clicking_with_left_mouse:
-                #             edited_options_file_dict = get_edited_options_file_dict()
-                #             edited_display_controls = edited_options_file_dict.get("edited_display_controls")
-                #             edited_options_file_dict.update({"edited_display_controls":(not edited_display_controls)})
-                #             set_edited_options_file_dict(edited_options_file_dict)
-                #             display_controls_update = True
-                #     # Show In Game Stats Button
-                #     if mouse_on_display_show_in_game_stats_button:
-                #         if clicking_with_left_mouse:
-                #             edited_options_file_dict = get_edited_options_file_dict()
-                #             edited_display_in_game_stats = edited_options_file_dict.get("edited_display_in_game_stats")
-                #             edited_options_file_dict.update({"edited_display_in_game_stats":(not edited_display_in_game_stats)})
-                #             set_edited_options_file_dict(edited_options_file_dict)
-                #             display_in_game_stats_update = True
-                #     # Show In Game Health Button
-                #     if mouse_on_display_show_in_game_health_button:
-                #         if clicking_with_left_mouse:
-                #             edited_options_file_dict = get_edited_options_file_dict()
-                #             edited_display_in_game_health = edited_options_file_dict.get("edited_display_in_game_health")
-                #             edited_options_file_dict.update({"edited_display_in_game_health":(not edited_display_in_game_health)})
-                #             set_edited_options_file_dict(edited_options_file_dict)
-                #             display_in_game_health_update = True
-                #     # Show In Game Buffs Button
-                #     if mouse_on_display_show_in_game_buffs_button:
-                #         if clicking_with_left_mouse:
-                #             edited_options_file_dict = get_edited_options_file_dict()
-                #             edited_display_in_game_buffs = edited_options_file_dict.get("edited_display_in_game_buffs")
-                #             edited_options_file_dict.update({"edited_display_in_game_buffs":(not edited_display_in_game_buffs)})
-                #             set_edited_options_file_dict(edited_options_file_dict)
-                #             display_in_game_buffs_update = True
-                #     # Reset Button
-                #     if mouse_on_display_reset_button:
-                #         if clicking_with_left_mouse:
-                #             reset_display_options()
-                #             display_controls_update = True
-                #             display_in_game_stats_update = True
-                #             display_in_game_health_update = True
-                #             display_in_game_buffs_update = True
-                #     # Back Button
-                #     if mouse_on_display_back_button:
-                #         if clicking_with_left_mouse:
-                #             menu_section = SETTINGS_MENU
 
                 # Main Menu Display
                 # Sprite Resets
@@ -747,27 +695,7 @@ while True:
                 # Timer Resets
                 death_timer = 0
                 bg_music_timer = 0
-                # Main Menu Background, Wizard, and Harold Blits
-                # if main_menu == main_menu.get_current():
-                #     main_menu.mainloop(screen,clear_surface=True,disable_loop=True)
-                # screen.blit(bg_surf,(0,-bg_surf.get_height() + WINDOW_HEIGHT))
-                # screen.blit(main_menu_wizard_surf,main_menu_wizard_rect)
-                # screen.blit(main_menu_harold_surf,main_menu_harold_rect)
-                # Main Menu Score
-                # score_message_surf = test_font.render("Score: " + str(score),False,"#FCDC4D")
-                # score_message_surf = pygame.transform.scale_by(score_message_surf,3/2)
-                # score_message_rect = score_message_surf.get_rect(center = (window_width/2,(84/800 * window_height)))
-                # edited_stats_file_dict = get_edited_stats_file_dict()
-                # edited_stats_interactivity_file_dict = edited_stats_file_dict.get("interactivity")
-                # high_score = edited_stats_interactivity_file_dict.get("high_score")
-                # if score > high_score:
-                #     edited_stats_interactivity_file_dict.update({"high_score":score})
-                #     set_edited_stats_file_dict(edited_stats_file_dict)
-                # Main Menu Score vs. Title Blit
-                # if score == 0: screen.blit(main_menu_title_surf,main_menu_title_rect)
-                # else:
-                #     screen.blit(score_message_surf,score_message_rect)
-                #     display_high_score(score_message_rect)
+
                 # Starts Main Menu
                 main_menu = update_main_menu()
                 main_menu.enable()
@@ -785,25 +713,6 @@ while True:
                 pre_stat_update_edited_stats_file_dict.update(get_edited_stats_file_dict())
                 # button_scalar = 3/2  # Added recently
                 # # Menu Blits
-                # # Settings Menu Button Blits
-                # elif menu_section == SETTINGS_MENU:
-                #     # Sounds Button
-                #     if not mouse_on_settings_sounds_button: screen.blit(settings_sounds_button_surf,settings_sounds_button_rect)
-                #     else: screen.blit(settings_sounds_button_surf_big,settings_sounds_button_rect_big)
-                #     # Controls Button
-                #     if not mouse_on_settings_controls_button: screen.blit(settings_controls_button_surf,settings_controls_button_rect)
-                #     else: screen.blit(settings_controls_button_surf_big,settings_controls_button_rect_big)
-                #     # Display Button
-                #     if not mouse_on_settings_display_button: screen.blit(settings_display_button_surf,settings_display_button_rect)
-                #     else: screen.blit(settings_display_button_surf_big,settings_display_button_rect_big)
-                #     # Back Button
-                #     if not mouse_on_settings_back_button: screen.blit(settings_back_button_surf,settings_back_button_rect)
-                #     else: screen.blit(settings_back_button_surf_big,settings_back_button_rect_big)
-                # # Sounds Menu Button Blits
-                # elif menu_section == SOUNDS_MENU:
-                #     # Back Button
-                #     if not mouse_on_sounds_back_button: screen.blit(sounds_back_button_surf,sounds_back_button_rect)
-                #     else: screen.blit(sounds_back_button_surf_big,sounds_back_button_rect_big)
                 # # Controls Menu Button Blits
                 # elif menu_section == CONTROLS_MENU:
                 #     # Controls Update
@@ -847,73 +756,6 @@ while True:
                 #     # Back Button
                 #     if not mouse_on_controls_back_button: screen.blit(controls_back_button_surf,controls_back_button_rect)
                 #     else: screen.blit(controls_back_button_surf_big,controls_back_button_rect_big)
-                # # Display Menu Button Blits
-                # elif menu_section == DISPLAY_MENU:
-                #     # Display Controls Update
-                #     if display_controls_update:
-                #         controls_displayed = get_edited_options_file_dict()["edited_display_controls"]
-                #         display_show_controls_button_surf = test_font.render(f"Display Controls: {controls_displayed}",False,"#FCDC4D")
-                #         display_show_controls_button_scale = button_scalar * display_button_scalar
-                #         display_show_controls_button_surf = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_scale)
-                #         display_show_controls_button_rect = display_show_controls_button_surf.get_rect(center = (display_show_controls_button_start_pos))
-                #         mouse_on_display_show_controls_button = False
-                #         display_show_controls_button_big_scale = button_when_big_scale
-                #         display_show_controls_button_surf_big = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_big_scale)
-                #         display_show_controls_button_rect_big = display_show_controls_button_surf_big.get_rect(center = (display_show_controls_button_start_pos))
-                #         display_controls_update = False
-                #     if display_in_game_stats_update:
-                #         in_game_stats_displayed = get_edited_options_file_dict()["edited_display_in_game_stats"]
-                #         display_show_in_game_stats_button_surf = test_font.render(f"Display Stats: {in_game_stats_displayed}",False,"#FCDC4D")
-                #         display_show_in_game_stats_button_scale = button_scalar * display_button_scalar
-                #         display_show_in_game_stats_button_surf = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_scale)
-                #         display_show_in_game_stats_button_rect = display_show_in_game_stats_button_surf.get_rect(center = (display_show_in_game_stats_button_start_pos))
-                #         mouse_on_display_show_in_game_stats_button = False
-                #         display_show_in_game_stats_button_big_scale = button_when_big_scale
-                #         display_show_in_game_stats_button_surf_big = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_big_scale)
-                #         display_show_in_game_stats_button_rect_big = display_show_in_game_stats_button_surf_big.get_rect(center = (display_show_in_game_stats_button_start_pos))
-                #         display_in_game_stats_update = False
-                #     if display_in_game_health_update:
-                #         in_game_health_displayed = get_edited_options_file_dict()["edited_display_in_game_health"]
-                #         display_show_in_game_health_button_surf = test_font.render(f"Display Health: {in_game_health_displayed}",False,"#FCDC4D")
-                #         display_show_in_game_health_button_scale = button_scalar * display_button_scalar
-                #         display_show_in_game_health_button_surf = pygame.transform.scale_by(display_show_in_game_health_button_surf,display_show_in_game_health_button_scale)
-                #         display_show_in_game_health_button_rect = display_show_in_game_health_button_surf.get_rect(center = (display_show_in_game_health_button_start_pos))
-                #         mouse_on_display_show_in_game_health_button = False
-                #         display_show_in_game_health_button_big_scale = button_when_big_scale
-                #         display_show_in_game_health_button_surf_big = pygame.transform.scale_by(display_show_in_game_health_button_surf,display_show_in_game_health_button_big_scale)
-                #         display_show_in_game_health_button_rect_big = display_show_in_game_health_button_surf_big.get_rect(center = (display_show_in_game_health_button_start_pos))
-                #         display_in_game_health_update = False
-                #     if display_in_game_buffs_update:
-                #         in_game_buffs_displayed = get_edited_options_file_dict()["edited_display_in_game_buffs"]
-                #         display_show_in_game_buffs_button_surf = test_font.render(f"Display Buffs: {in_game_buffs_displayed}",False,"#FCDC4D")
-                #         display_show_in_game_buffs_button_scale = button_scalar * display_button_scalar
-                #         display_show_in_game_buffs_button_surf = pygame.transform.scale_by(display_show_in_game_buffs_button_surf,display_show_in_game_buffs_button_scale)
-                #         display_show_in_game_buffs_button_rect = display_show_in_game_buffs_button_surf.get_rect(center = (display_show_in_game_buffs_button_start_pos))
-                #         mouse_on_display_show_in_game_buffs_button = False
-                #         display_show_in_game_buffs_button_big_scale = button_when_big_scale
-                #         display_show_in_game_buffs_button_surf_big = pygame.transform.scale_by(display_show_in_game_buffs_button_surf,display_show_in_game_buffs_button_big_scale)
-                #         display_show_in_game_buffs_button_rect_big = display_show_in_game_buffs_button_surf_big.get_rect(center = (display_show_in_game_buffs_button_start_pos))
-                #         display_in_game_buffs_update = False
-                #     # Show Controls Button
-                #     if not mouse_on_display_show_controls_button: screen.blit(display_show_controls_button_surf,display_show_controls_button_rect)
-                #     else: screen.blit(display_show_controls_button_surf_big,display_show_controls_button_rect_big)
-                #     # Show In Game Stats Button
-                #     if not mouse_on_display_show_in_game_stats_button: screen.blit(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_rect)
-                #     else: screen.blit(display_show_in_game_stats_button_surf_big,display_show_in_game_stats_button_rect_big)
-                #     # Show In Game Health Button
-                #     if not mouse_on_display_show_in_game_health_button: screen.blit(display_show_in_game_health_button_surf,display_show_in_game_health_button_rect)
-                #     else: screen.blit(display_show_in_game_health_button_surf_big,display_show_in_game_health_button_rect_big)
-                #     # Show In Game Buffs Button
-                #     if not mouse_on_display_show_in_game_buffs_button: screen.blit(display_show_in_game_buffs_button_surf,display_show_in_game_buffs_button_rect)
-                #     else: screen.blit(display_show_in_game_buffs_button_surf_big,display_show_in_game_buffs_button_rect_big)
-                #     # Reset Button
-                #     if not mouse_on_display_reset_button: screen.blit(display_reset_button_surf,display_reset_button_rect)
-                #     else: screen.blit(display_reset_button_surf_big,display_reset_button_rect_big)
-                #     # Back Button
-                #     if not mouse_on_display_back_button: screen.blit(display_back_button_surf,display_back_button_rect)
-                #     else: screen.blit(display_back_button_surf_big,display_back_button_rect_big)
-
-                    # Jumping, Obstacle Timer, and Player Shooting
 
 
     # Opening Cinematic (Intro)
