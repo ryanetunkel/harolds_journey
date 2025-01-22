@@ -120,5 +120,5 @@ pygame.display.set_caption("Harold\'s Journey")
 pygame_icon = pygame.image.load("harolds_journey/graphics/harold/harold_idle_animation/harold_idle_00.png").convert_alpha()
 pygame.display.set_icon(pygame_icon)
 clock = pygame.time.Clock()
-test_font = pygame.font.Font("harolds_journey/font/Pixeltype.ttf",int(window_height/16))
+base_font = pygame.font.Font("harolds_journey/font/Pixeltype.ttf",int(window_height/16))
 score = 0
