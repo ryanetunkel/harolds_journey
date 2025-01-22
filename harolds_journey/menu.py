@@ -1358,7 +1358,7 @@ for control_name, control in default_controls_pygame_constants_names_dict.items(
     controls_button_start_pos = (controls_button_start_x_pos,controls_button_start_y_pos)
     control_name_underscore_removed = control_name.replace("_", " ")
     control_name_capitalized = control_name_underscore_removed.title()
-    controls_button_surf = test_font.render(f"{control_name_capitalized}: {edited_controls_display_names_dict[control_name]}",False,font_color)
+    controls_button_surf = base_font.render(f"{control_name_capitalized}: {edited_controls_display_names_dict[control_name]}",False,font_color)
     controls_button_scale = button_scale * controls_button_scalar
     controls_button_surf = pygame.transform.scale_by(controls_button_surf,controls_button_scale)
     controls_button_surf_dict.update({control_name: controls_button_surf})
@@ -1375,7 +1375,7 @@ for control_name, control in default_controls_pygame_constants_names_dict.items(
 controls_reset_button_start_x_pos = center_screen_width
 controls_reset_button_start_y_pos = 0  # main_menu_wizard_rect.bottom + ((32/400) * window_height) + (controls_buttons_y_pos_offset * (len(default_controls_pygame_constants_names_dict)))
 controls_reset_button_start_pos = (controls_reset_button_start_x_pos,controls_reset_button_start_y_pos)
-controls_reset_button_surf = test_font.render("Reset Controls to Default",False,font_color)
+controls_reset_button_surf = base_font.render("Reset Controls to Default",False,font_color)
 controls_reset_button_scale = button_scale * controls_button_scalar
 controls_reset_button_surf = pygame.transform.scale_by(controls_reset_button_surf,controls_reset_button_scale)
 controls_reset_button_rect = controls_reset_button_surf.get_rect(center = (controls_reset_button_start_pos))
@@ -1387,7 +1387,7 @@ controls_reset_button_rect_big = controls_reset_button_surf_big.get_rect(center 
 controls_back_button_start_x_pos = center_screen_width
 controls_back_button_start_y_pos = 0  # main_menu_settings_button_rect_big.bottom + ((32/400) * window_height)
 controls_back_button_start_pos = (controls_back_button_start_x_pos,controls_back_button_start_y_pos)
-controls_back_button_surf = test_font.render("Back to Settings",False,font_color)
+controls_back_button_surf = base_font.render("Back to Settings",False,font_color)
 controls_back_button_scale = button_scale
 controls_back_button_surf = pygame.transform.scale_by(controls_back_button_surf,controls_back_button_scale)
 controls_back_button_rect = controls_back_button_surf.get_rect(center = (controls_back_button_start_pos))
@@ -1404,7 +1404,7 @@ controls_displayed = get_edited_options_file_dict()["display_controls"]
 display_show_controls_button_start_x_pos = center_screen_width
 display_show_controls_button_start_y_pos = 0  # main_menu_wizard_rect.bottom + ((32/400) * window_height)
 display_show_controls_button_start_pos = (display_show_controls_button_start_x_pos,display_show_controls_button_start_y_pos)
-display_show_controls_button_surf = test_font.render(f"Display Controls: {controls_displayed}",False,font_color)
+display_show_controls_button_surf = base_font.render(f"Display Controls: {controls_displayed}",False,font_color)
 display_show_controls_button_scale = button_scale * display_button_scalar
 display_show_controls_button_surf = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_scale)
 display_show_controls_button_rect = display_show_controls_button_surf.get_rect(center = (display_show_controls_button_start_pos))
@@ -1417,7 +1417,7 @@ in_game_stats_displayed = get_edited_options_file_dict()["display_in_game_stats"
 display_show_in_game_stats_button_start_x_pos = center_screen_width
 display_show_in_game_stats_button_start_y_pos = display_show_controls_button_rect_big.bottom + display_buttons_y_pos_offset
 display_show_in_game_stats_button_start_pos = (display_show_in_game_stats_button_start_x_pos,display_show_in_game_stats_button_start_y_pos)
-display_show_in_game_stats_button_surf = test_font.render(f"Display Stats: {in_game_stats_displayed}",False,font_color)
+display_show_in_game_stats_button_surf = base_font.render(f"Display Stats: {in_game_stats_displayed}",False,font_color)
 display_show_in_game_stats_button_scale = button_scale * display_button_scalar
 display_show_in_game_stats_button_surf = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_scale)
 display_show_in_game_stats_button_rect = display_show_in_game_stats_button_surf.get_rect(center = (display_show_in_game_stats_button_start_pos))
@@ -1430,7 +1430,7 @@ in_game_health_displayed = get_edited_options_file_dict()["display_in_game_healt
 display_show_in_game_health_button_start_x_pos = center_screen_width
 display_show_in_game_health_button_start_y_pos = display_show_in_game_stats_button_rect_big.bottom + display_buttons_y_pos_offset
 display_show_in_game_health_button_start_pos = (display_show_in_game_health_button_start_x_pos,display_show_in_game_health_button_start_y_pos)
-display_show_in_game_health_button_surf = test_font.render(f"Display Health: {in_game_health_displayed}",False,font_color)
+display_show_in_game_health_button_surf = base_font.render(f"Display Health: {in_game_health_displayed}",False,font_color)
 display_show_in_game_health_button_scale = button_scale * display_button_scalar
 display_show_in_game_health_button_surf = pygame.transform.scale_by(display_show_in_game_health_button_surf,display_show_in_game_health_button_scale)
 display_show_in_game_health_button_rect = display_show_in_game_health_button_surf.get_rect(center = (display_show_in_game_health_button_start_pos))
@@ -1443,7 +1443,7 @@ in_game_buffs_displayed = get_edited_options_file_dict()["display_in_game_buffs"
 display_show_in_game_buffs_button_start_x_pos = center_screen_width
 display_show_in_game_buffs_button_start_y_pos = display_show_in_game_health_button_rect_big.bottom + display_buttons_y_pos_offset
 display_show_in_game_buffs_button_start_pos = (display_show_in_game_buffs_button_start_x_pos,display_show_in_game_buffs_button_start_y_pos)
-display_show_in_game_buffs_button_surf = test_font.render(f"Display Buffs: {in_game_buffs_displayed}",False,font_color)
+display_show_in_game_buffs_button_surf = base_font.render(f"Display Buffs: {in_game_buffs_displayed}",False,font_color)
 display_show_in_game_buffs_button_scale = button_scale * display_button_scalar
 display_show_in_game_buffs_button_surf = pygame.transform.scale_by(display_show_in_game_buffs_button_surf,display_show_in_game_buffs_button_scale)
 display_show_in_game_buffs_button_rect = display_show_in_game_buffs_button_surf.get_rect(center = (display_show_in_game_buffs_button_start_pos))
@@ -1455,7 +1455,7 @@ display_show_in_game_buffs_button_rect_big = display_show_in_game_buffs_button_s
 display_reset_button_start_x_pos = center_screen_width
 display_reset_button_start_y_pos = display_show_in_game_buffs_button_rect_big.bottom + display_buttons_y_pos_offset
 display_reset_button_start_pos = (display_reset_button_start_x_pos,display_reset_button_start_y_pos)
-display_reset_button_surf = test_font.render("Reset Display Options to Default",False,font_color)
+display_reset_button_surf = base_font.render("Reset Display Options to Default",False,font_color)
 display_reset_button_scale = button_scale * display_button_scalar
 display_reset_button_surf = pygame.transform.scale_by(display_reset_button_surf,display_reset_button_scale)
 display_reset_button_rect = display_reset_button_surf.get_rect(center = (display_reset_button_start_pos))
@@ -1467,7 +1467,7 @@ display_reset_button_rect_big = display_reset_button_surf_big.get_rect(center = 
 display_back_button_start_x_pos = center_screen_width
 display_back_button_start_y_pos = 0  # main_menu_settings_button_rect_big.bottom + ((32/400) * window_height)
 display_back_button_start_pos = (display_back_button_start_x_pos,display_back_button_start_y_pos)
-display_back_button_surf = test_font.render("Back to Settings",False,font_color)
+display_back_button_surf = base_font.render("Back to Settings",False,font_color)
 display_back_button_scale = button_scale
 display_back_button_surf = pygame.transform.scale_by(display_back_button_surf,display_back_button_scale)
 display_back_button_rect = display_back_button_surf.get_rect(center = (display_back_button_start_pos))
