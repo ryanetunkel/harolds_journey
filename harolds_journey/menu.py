@@ -39,11 +39,6 @@ pre_stat_update_edited_stats_file_dict = {}
 # Controls Vars
 controls_update = False
 
-# Display Vars
-# Resolution Vars
-# fps one
-# pixel_size = zoom
-
 # Gameplay Vars
 display_controls_bool = False
 display_in_game_stats_bool = False
