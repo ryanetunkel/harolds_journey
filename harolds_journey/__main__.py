@@ -138,16 +138,21 @@ def display_in_game_health():
     health_stat_rect = health_stat_surf.get_rect(center = (health_stat_rect_x_offset,health_stat_rect_y_offset))
 
     # Shield Health
-    shield_health_stat_x_pos_offset = window_width * 1/32
-    shield_health_stat_x_pos_0 = window_width * 1/16
-    shield_health_stat_x_pos_1 = shield_health_stat_x_pos_0 + shield_health_stat_x_pos_offset
-    shield_health_stat_x_pos_2 = shield_health_stat_x_pos_1 + shield_health_stat_x_pos_offset
-    shield_health_stat_y_pos = window_height * 7/32
+    shield_health_stat_x_pos_offset = health_stat_image_x_offset + health_stat_image_rect.width
     shield_health_stat_image_surf = pygame.image.load("harolds_journey/graphics/wizard/wizard_health/shield_stat_display.png").convert_alpha()
     shield_health_stat_image_surf = pygame.transform.scale_by(shield_health_stat_image_surf,4 * (window_width + window_height)/1200)
-    shield_health_stat_image_rect_0 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_0,shield_health_stat_y_pos))
-    shield_health_stat_image_rect_1 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_1,shield_health_stat_y_pos))
-    shield_health_stat_image_rect_2 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_2,shield_health_stat_y_pos))
+    # Shield 1
+    shield_health_stat_image_rect_0 = shield_health_stat_image_surf.get_rect(center = (0,health_stat_image_y_offset))
+    shield_health_stat_x_pos_0 = shield_health_stat_x_pos_offset + shield_health_stat_image_rect_0.width*2
+    shield_health_stat_image_rect_0 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_0,health_stat_image_y_offset))
+    # Shield 2
+    shield_health_stat_image_rect_1 = shield_health_stat_image_surf.get_rect(center = (0,health_stat_image_y_offset))
+    shield_health_stat_x_pos_1 = shield_health_stat_x_pos_0 - shield_health_stat_image_rect_1.width
+    shield_health_stat_image_rect_1 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_1,health_stat_image_y_offset))
+    # Shield 3
+    shield_health_stat_image_rect_2 = shield_health_stat_image_surf.get_rect(center = (0,health_stat_image_y_offset))
+    shield_health_stat_x_pos_2 = shield_health_stat_x_pos_1 - shield_health_stat_image_rect_2.width
+    shield_health_stat_image_rect_2 = shield_health_stat_image_surf.get_rect(center = (shield_health_stat_x_pos_2,health_stat_image_y_offset))
 
     # Blits
     screen.blit(health_stat_image_surf,health_stat_image_rect)
