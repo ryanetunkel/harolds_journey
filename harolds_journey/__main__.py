@@ -36,9 +36,9 @@ def calculate_score() -> int:
 def display_score():
     temp_score = calculate_score()
     # Score
-    score_title_surf = test_font.render("SCORE", False, "#FCDC4D")
+    score_title_surf = base_font.render("SCORE", False, "#FCDC4D")
     score_title_rect = score_title_surf.get_rect(center = (window_width/2,window_height*1/16))
-    score_surf = test_font.render(str(temp_score), False, "#FCDC4D")
+    score_surf = base_font.render(str(temp_score), False, "#FCDC4D")
     score_rect = score_surf.get_rect(center = (window_width/2,window_height/8))
     # Score Blit
     screen.blit(score_title_surf,score_title_rect)
@@ -53,7 +53,7 @@ def display_high_score(score_rect):
     high_score_start_x_pos = center_screen_width
     high_score_start_y_pos = score_rect.bottom + score_y_offset
     high_score_start_pos = (high_score_start_x_pos,high_score_start_y_pos)
-    high_score_surf = test_font.render(f"High Score: {high_score}",False,"#FCDC4D")
+    high_score_surf = base_font.render(f"High Score: {high_score}",False,"#FCDC4D")
     high_score_scale = 0.4 * 3/2
     high_score_surf = pygame.transform.scale_by(high_score_surf,high_score_scale)
     high_score_rect = high_score_surf.get_rect(center = (high_score_start_pos))
@@ -82,7 +82,7 @@ def display_controls():
         displayed_control_name_underscore_removed = displayed_control_name.replace("_", " ")
         displayed_control_name_button_removed = displayed_control_name_underscore_removed.replace(" button", "")
         displayed_control_name_capitalized = displayed_control_name_button_removed.title()
-        displayed_control_surf = test_font.render(f"{displayed_control_name_capitalized}: {edited_controls_display_names_dict[displayed_control_name]}",False,"#FCDC4D")
+        displayed_control_surf = base_font.render(f"{displayed_control_name_capitalized}: {edited_controls_display_names_dict[displayed_control_name]}",False,"#FCDC4D")
         displayed_control_scale = button_scalar * displayed_control_scalar
         displayed_control_surf = pygame.transform.scale_by(displayed_control_surf,displayed_control_scale)
         displayed_control_surf_dict.update({displayed_control_name:displayed_control_surf})
@@ -242,7 +242,7 @@ def display_in_game_stats():
     damage_stat_image_surf = pygame.transform.scale_by(damage_stat_image_surf,4 * (window_width + window_height)/1200)
     damage_stat_image_rect = damage_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,damage_stat_image_y_pos))
 
-    damage_stat_surf = test_font.render("Damage: " + str(wizard.sprite.get_wizard_damage_total()), False, "#FCDC4D")
+    damage_stat_surf = base_font.render("Damage: " + str(wizard.sprite.get_wizard_damage_total()), False, "#FCDC4D")
     damage_stat_surf = pygame.transform.scale_by(damage_stat_surf, 0.9)
     damage_stat_rect = damage_stat_surf.get_rect(center = (damage_stat_x_pos,damage_stat_y_pos))
     damage_stat_rect = damage_stat_surf.get_rect(center = (damage_stat_x_pos+damage_stat_rect.width/2+damage_stat_image_rect.width,damage_stat_y_pos))
@@ -252,7 +252,7 @@ def display_in_game_stats():
     piercing_stat_image_surf = pygame.transform.scale_by(piercing_stat_image_surf,4 * (window_width + window_height)/1200)
     piercing_stat_image_rect = piercing_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,piercing_stat_image_y_pos))
 
-    piercing_stat_surf = test_font.render("Piercing: " + str(wizard.sprite.get_wizard_piercing_total() - 1), False, "#FCDC4D")
+    piercing_stat_surf = base_font.render("Piercing: " + str(wizard.sprite.get_wizard_piercing_total() - 1), False, "#FCDC4D")
     piercing_stat_surf = pygame.transform.scale_by(piercing_stat_surf, 0.9)
     piercing_stat_rect = piercing_stat_surf.get_rect(center = (piercing_stat_x_pos,piercing_stat_y_pos))
     piercing_stat_rect = piercing_stat_surf.get_rect(center = (piercing_stat_x_pos+piercing_stat_rect.width/2+piercing_stat_image_rect.width,piercing_stat_y_pos))
@@ -262,7 +262,7 @@ def display_in_game_stats():
     fireball_cooldown_stat_image_surf = pygame.transform.scale_by(fireball_cooldown_stat_image_surf,4 * (window_width + window_height)/1200)
     fireball_cooldown_stat_image_rect = fireball_cooldown_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,fireball_cooldown_stat_image_y_pos))
 
-    fireball_cooldown_stat_surf = test_font.render(f"Cooldown: {round(wizard.sprite.get_max_fireball_cooldown_time()/60, 2)}s", False, "#FCDC4D")
+    fireball_cooldown_stat_surf = base_font.render(f"Cooldown: {round(wizard.sprite.get_max_fireball_cooldown_time()/60, 2)}s", False, "#FCDC4D")
     fireball_cooldown_stat_surf = pygame.transform.scale_by(fireball_cooldown_stat_surf, 0.9)
     fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (fireball_cooldown_stat_x_pos,fireball_cooldown_stat_y_pos))
     fireball_cooldown_stat_rect = fireball_cooldown_stat_surf.get_rect(center = (fireball_cooldown_stat_x_pos+fireball_cooldown_stat_rect.width/2+fireball_cooldown_stat_image_rect.width,fireball_cooldown_stat_y_pos))
@@ -293,7 +293,7 @@ def display_in_game_stats():
     speed_stat_image_surf = pygame.transform.scale_by(speed_stat_image_surf,4 * (window_width + window_height)/1200)
     speed_stat_image_rect = speed_stat_image_surf.get_rect(center = (stat_image_surf_x_pos,speed_stat_image_y_pos))
 
-    speed_stat_surf = test_font.render("Speed: " + str(round((wizard.sprite.get_wizard_speed()/wizard_width)*60, 2)), False, "#FCDC4D")
+    speed_stat_surf = base_font.render("Speed: " + str(round((wizard.sprite.get_wizard_speed()/wizard_width)*60, 2)), False, "#FCDC4D")
     speed_stat_surf = pygame.transform.scale_by(speed_stat_surf, 0.9)
     speed_stat_rect = speed_stat_surf.get_rect(center = (speed_stat_x_pos,speed_stat_y_pos))
     speed_stat_rect = speed_stat_surf.get_rect(center = (speed_stat_x_pos+speed_stat_rect.width/2+speed_stat_image_rect.width,speed_stat_y_pos))
@@ -319,7 +319,7 @@ def display_in_game_stats():
 def display_in_game_fps():
     edited_fps = get_edited_options_file_dict().get("fps")
     # FPS
-    fps_surf = test_font.render(f"FPS: {edited_fps}", False, "#FCDC4D")
+    fps_surf = base_font.render(f"FPS: {edited_fps}", False, "#FCDC4D")
     fps_rect = fps_surf.get_rect(center = (0,0))
     fps_rect = fps_surf.get_rect(center = (fps_rect.width/2,window_height-fps_rect.height/2))
     screen.blit(fps_surf,fps_rect)
