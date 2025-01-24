@@ -598,6 +598,7 @@ while True:
                             projectile_group.add(Projectile("fireball", wizard))
                     # Pausing the Game
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                        pause_time_1 = pygame.time.get_ticks()
                         pause_menu.enable()
                         on_resize(pause_menu)
 
@@ -611,9 +612,7 @@ while True:
                         )
                         pause_menu = update_pause_menu(new_bg)
 
-                        pause_time_1 = pygame.time.get_ticks()
                         pause_menu.mainloop(screen,clear_surface=True)
-                        pause_menu = update_pause_menu(new_bg) # Unsure if needed
                         pause_time_2 = pygame.time.get_ticks()
                         pause_time = pause_time_2 - pause_time_1
 
