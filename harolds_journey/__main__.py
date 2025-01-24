@@ -431,7 +431,7 @@ def do_drop_spawns(obstacle):
     elif not wizard.sprite.get_shield() and randint(1,50) == 50: # 1/50
         buff_group.add(Buff("shield",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
     # Knockback
-    elif not wizard.sprite.get_knockback() and randint(1,1) == 1: # 1/50
+    elif not wizard.sprite.get_knockback() and randint(1,50) == 50: # 1/50
         buff_group.add(Buff("knockback",x_pos=temp_obstacle_x_pos,y_pos=temp_obstacle_y_pos))
 
 
