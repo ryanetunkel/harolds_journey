@@ -159,12 +159,13 @@ def get_pygame_constant_name(event: pygame.event.Event, is_mouse) -> str:
 def interpret_input(control_name: str, event: pygame.event.Event) -> bool:
     is_mouse = event.type == pygame.MOUSEBUTTONDOWN
     key_or_mouse_event = event.type == pygame.KEYDOWN or is_mouse
+
     if not key_or_mouse_event:
         return False
-    pygame_constant_name = get_pygame_constant_name(event, is_mouse)
 
-    if key_or_mouse_event:
-        set_control(control_name, pygame_constant_name, is_mouse)
+    pygame_constant_name = get_pygame_constant_name(event, is_mouse)
+    set_control(control_name, pygame_constant_name, is_mouse)
+
     return key_or_mouse_event
 
 
