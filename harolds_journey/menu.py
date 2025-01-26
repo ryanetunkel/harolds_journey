@@ -1903,11 +1903,7 @@ def wizard_death_calls():
 main_menu = update_main_menu()
 pause_menu = update_pause_menu()
 
-# Enabling Menus
-main_menu.enable()
-pause_menu.enable()
-
-# Initial Resizing
+# Initial Resizing - unsure if needed
 on_resize(main_menu)
 on_resize(pause_menu)
 
