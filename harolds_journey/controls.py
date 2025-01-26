@@ -155,6 +155,20 @@ def get_pygame_constant_name(event: pygame.event.Event, is_mouse) -> str:
     return pygame_constant_name
 
 
+def get_pygame_constant_name_from_constant(constant:int) -> str:
+    if constant in list(keyboard_strings_constants_dict.values()):
+        keyboard_strings_constants_dict_keys = list(keyboard_strings_constants_dict.keys())
+        keyboard_strings_constants_dict_value_index = list(keyboard_strings_constants_dict.values()).index(constant)
+        pygame_constant_name = keyboard_strings_constants_dict_keys[keyboard_strings_constants_dict_value_index]
+    elif constant in list(mouse_strings_constants_dict.values()):
+        mouse_strings_constants_dict_keys = list(mouse_strings_constants_dict.keys())
+        mouse_strings_constants_dict_value_index = list(mouse_strings_constants_dict.values()).index(constant)
+        pygame_constant_name = mouse_strings_constants_dict_keys[mouse_strings_constants_dict_value_index]
+    else:
+        pygame_constant_name = None
+    return pygame_constant_name
+
+
 # Controls Functions
 def interpret_input(control_name: str, event: pygame.event.Event) -> bool:
     is_mouse = event.type == pygame.MOUSEBUTTONDOWN
