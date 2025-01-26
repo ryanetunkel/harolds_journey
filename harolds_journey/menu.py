@@ -163,6 +163,73 @@ def update_display_in_game_fps_bool(value: tuple, enabled: bool,**kwargs):
     set_edited_options_file_dict(edited_options_file_dict)
 
 
+# Controls Vars Functions
+def update_jump_button_via_menu(value: tuple, enabled: bool,**kwargs):
+    global controls_update
+    display_name = value[0][0]
+    pygame_constant_name = value[0][1]
+    is_mouse = "Mouse" in display_name
+
+    set_control("jump_button",pygame_constant_name,is_mouse)
+    controls_update = True
+
+
+def update_left_button_via_menu(value: tuple, enabled: bool,**kwargs):
+    global controls_update
+    display_name = value[0][0]
+    pygame_constant_name = value[0][1]
+    is_mouse = "Mouse" in display_name
+
+    set_control("left_button",pygame_constant_name,is_mouse)
+    controls_update = True
+
+
+def update_right_button_via_menu(value: tuple, enabled: bool,**kwargs):
+    global controls_update
+    display_name = value[0][0]
+    pygame_constant_name = value[0][1]
+    is_mouse = "Mouse" in display_name
+
+    set_control("right_button",pygame_constant_name,is_mouse)
+    controls_update = True
+
+
+def update_shoot_button_via_menu(value: tuple, enabled: bool,**kwargs):
+    global controls_update
+    display_name = value[0][0]
+    pygame_constant_name = value[0][1]
+    is_mouse = "Mouse" in display_name
+
+    set_control("shoot_button",pygame_constant_name,is_mouse)
+    controls_update = True
+
+
+def update_jump_button(new_jump_button: int):
+    global jump_button
+    jump_button = new_jump_button
+
+
+def update_left_button(new_left_button: int):
+    global left_button
+    left_button = new_left_button
+
+
+def update_right_button(new_right_button: int):
+    global right_button
+    right_button = new_right_button
+
+
+def update_shoot_button(new_shoot_button: int):
+    global shoot_button
+    shoot_button = new_shoot_button
+
+
+def reset_controls_to_default():
+    global controls_update
+    reset_controls()
+    controls_update = True
+
+
 # Wizard on Menu Screen
 wizard_path = "harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png"
 main_menu_wizard_surf = pygame.image.load(wizard_path).convert_alpha()
