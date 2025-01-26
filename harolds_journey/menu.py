@@ -716,8 +716,10 @@ def update_statistics_menu(menu:pygame_menu.Menu):
     statistics_menu_center_padding_6 = menu.add.vertical_margin(default_margin_padding)
     statistics_menu_center_padding_7 = menu.add.vertical_margin(default_margin_padding)
     # Statistics Menu Buttons
+    statistics_menu_name = menu.get_id()
+    parent_menu_name = statistics_menu_name.split("_")[0].title() + " Menu"
     statistics_menu_back_button = menu.add.button(
-        title="Back to Main Menu",
+        title=f"Back to {parent_menu_name}",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
