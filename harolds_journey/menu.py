@@ -890,8 +890,10 @@ def update_settings_menu(menu:pygame_menu.Menu):
         button_id="settings_menu_display_button",
     )
     settings_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
+    settings_menu_name = menu.get_id()
+    parent_menu_name = settings_menu_name.split("_")[0].title() + " Menu"
     settings_menu_back_button = menu.add.button(
-        title="Back to Main Menu",
+        title=f"Back to {parent_menu_name}",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
