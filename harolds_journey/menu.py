@@ -452,7 +452,7 @@ def update_main_menu() -> pygame_menu.Menu:
 
 
 # Pause Menu
-def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
+def update_pause_menu() -> pygame_menu.Menu:
     global base_menu_theme
     global pause_menu_theme
     global pause_menu
