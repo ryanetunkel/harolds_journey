@@ -462,8 +462,10 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
     # Pause Menu Theme
     pause_menu_theme = base_menu_theme.copy()
     pause_menu_theme.widget_offset = (0,submenu_widget_y_offset*2)
-    if new_background_color:
-        pause_menu_theme.background_color = new_background_color
+    pause_menu_background_image = pygame_menu.BaseImage(
+        image_path="screenshot.jpg",
+    )
+    pause_menu_theme.background_color = pause_menu_background_image
     # Main Statistics Menu Theme
     pause_statistics_menu_theme = pause_menu_theme.copy()
     pause_statistics_menu_theme.widget_offset = (0,submenu_widget_y_offset)
