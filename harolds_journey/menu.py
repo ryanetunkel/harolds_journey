@@ -1834,7 +1834,6 @@ def wizard_death_calls():
     global main_menu
     global objects_to_be_removed
     global pause_time
-    global score
     global wizard
     # Updating Stats
     wizard_jumps = wizard.sprite.get_jumps_made()
@@ -1881,8 +1880,6 @@ def wizard_death_calls():
         edited_stats_buffs_file_dict.update({"shield_buff":current_wizard_shield_buff})
     set_edited_stats_file_dict(edited_stats_file_dict)
     pause_time = 0
-    set_score(0)
-    main_menu = update_main_menu()
     # Other Death Stuff
     wizard.sprite.set_wizard_current_health(0)
     temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
