@@ -12,5 +12,5 @@ default_controls_pygame_constants_names_dict: # old name = default_controls_dict
   jump_button: K_SPACE
   left_button: K_a
   right_button: K_d
-  shoot_button: M_1
+  shoot_button: M_LEFT
 # jump,right,left, etc. are referred to as control_name
