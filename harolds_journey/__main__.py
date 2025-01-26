@@ -696,12 +696,12 @@ while True:
                 bg_music_timer = 0
 
                 # Starts Main Menu
-                main_menu = update_main_menu()
                 main_menu.enable()
+                if get_score() != 0:
+                    main_menu = update_main_menu() # For score update and settings updates
+                # This goes somewhere VVVVV
+                # (main_menu.get_widget("main_menu_label",False)).set_title(f"Score: {score}")
                 main_menu.mainloop(screen,clear_surface=True)
-                update_main_menu() # Unsure if needed, probably do
-                # wizard.update()
-                # harold.update()
                 # When exits main menu through only way other than quitting, runs this code which starts the game
                 controls_update = True
                 game_active = True

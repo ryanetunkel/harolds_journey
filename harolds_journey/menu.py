@@ -57,6 +57,11 @@ def set_score(new_score:int):
     score = new_score
 
 
+def get_score() -> int:
+    global score
+    return score
+
+
 # Display Vars Functions
 # Resolution Vars Functions
 def update_pixel_size(new_pixel_size:int):
