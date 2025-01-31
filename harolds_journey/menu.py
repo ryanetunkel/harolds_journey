@@ -1914,40 +1914,7 @@ on_resize(pause_menu)
 # Old Code
 # Main Menu
 button_scale = 3/2
-
-# Controls Buttons
-controls_first_button_start_x_pos = center_screen_width
-controls_first_button_start_y_pos = 0  # main_menu_wizard_rect.bottom + ((32/400) * window_height)
-controls_first_button_start_pos = (controls_first_button_start_x_pos,controls_first_button_start_y_pos)
-controls_buttons_y_pos_offset = window_height * 1/18
-mouse_on_controls_button_dict = {}
-controls_button_surf_dict = {}
-controls_button_rect_dict = {}
-controls_button_surf_big_dict = {}
-controls_button_rect_big_dict = {}
-controls_button_index = 0
 controls_button_scalar = 0.5
-edited_controls_display_names_dict = get_edited_controls_file_dict().get("edited_controls_display_names_dict")
-default_controls_pygame_constants_names_dict = get_default_controls_file_dict().get("default_controls_pygame_constants_names_dict")
-for control_name, control in default_controls_pygame_constants_names_dict.items():
-    controls_button_start_x_pos = 0  # main_menu_wizard_rect.centerx
-    controls_button_start_y_pos = 0  # main_menu_wizard_rect.bottom + ((32/400) * window_height) + controls_buttons_y_pos_offset * controls_button_index
-    controls_button_start_pos = (controls_button_start_x_pos,controls_button_start_y_pos)
-    control_name_underscore_removed = control_name.replace("_", " ")
-    control_name_capitalized = control_name_underscore_removed.title()
-    controls_button_surf = base_font.render(f"{control_name_capitalized}: {edited_controls_display_names_dict[control_name]}",False,font_color)
-    controls_button_scale = button_scale * controls_button_scalar
-    controls_button_surf = pygame.transform.scale_by(controls_button_surf,controls_button_scale)
-    controls_button_surf_dict.update({control_name: controls_button_surf})
-    controls_button_rect = controls_button_surf.get_rect(center = (controls_button_start_pos))
-    controls_button_rect_dict.update({control_name: controls_button_rect})
-    mouse_on_controls_button_dict.update({control_name: False})
-    controls_button_big_scale = button_when_big_scale
-    controls_button_surf_big = pygame.transform.scale_by(controls_button_surf,controls_button_big_scale)
-    controls_button_surf_big_dict.update({control_name: controls_button_surf_big})
-    controls_button_rect_big = controls_button_surf_big.get_rect(center = (controls_button_start_pos))
-    controls_button_rect_big_dict.update({control_name: controls_button_rect_big})
-    controls_button_index += 1
 # Reset Button
 controls_reset_button_start_x_pos = center_screen_width
 controls_reset_button_start_y_pos = 0  # main_menu_wizard_rect.bottom + ((32/400) * window_height) + (controls_buttons_y_pos_offset * (len(default_controls_pygame_constants_names_dict)))
