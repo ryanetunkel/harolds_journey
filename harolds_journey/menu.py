@@ -633,6 +633,41 @@ def reset_controls_to_default():
     controls_update = True
 
 
+def get_background() -> pygame_menu.BaseImage:
+    global main_menu
+    global pause_menu
+    pause_menu_background_image = pygame_menu.BaseImage(
+        image_path="screenshot.jpg",
+    )
+    return main_menu_bg if main_menu.is_enabled() else pause_menu_background_image
+
+
+def get_window_size_values() -> tuple:
+    edited_window_sizes = get_edited_options_file_dict().get("window_sizes")
+    default_window_width_value = get_edited_options_file_dict().get("window_width")
+    default_window_height_value = get_edited_options_file_dict().get("window_height")
+
+    default_window_sizes_list = []
+    window_sizes_int_list = []
+    default_window_size_idx = -1
+
+    for size in edited_window_sizes:
+        if size != "Custom":
+            values = size.split("x")
+            values_tuple = (int(values[0]),int(values[1]))
+            default_window_sizes_list.append((size,values_tuple))
+            window_sizes_int_list.append(values_tuple)
+        else:
+            values_tuple = (default_window_width_value,default_window_height_value)
+            default_window_sizes_list.append((
+                f"{size}: {values_tuple[0]}x{values_tuple[1]}",
+                values_tuple
+            ))
+            window_sizes_int_list.append(values_tuple)
+        default_window_size_idx = window_sizes_int_list.index(values_tuple)
+
+    return (default_window_sizes_list,default_window_size_idx)
+
 # Wizard on Menu Screen
 wizard_path = "harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png"
 main_menu_wizard_surf = pygame.image.load(wizard_path).convert_alpha()
