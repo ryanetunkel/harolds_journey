@@ -525,6 +525,10 @@ while True:
             left_button,left_button_is_mouse = get_control("left_button")
             right_button,right_button_is_mouse = get_control("right_button")
             shoot_button,shoot_button_is_mouse = get_control("shoot_button")
+            update_jump_button(jump_button)
+            update_left_button(left_button)
+            update_right_button(right_button)
+            update_shoot_button(shoot_button)
             controls_update = False
 
         # Quitting the Game
@@ -559,6 +563,16 @@ while True:
 
         # Intro Played
         elif intro_played:
+            if controls_update:
+                jump_button,jump_button_is_mouse = get_control("jump_button")
+                left_button,left_button_is_mouse = get_control("left_button")
+                right_button,right_button_is_mouse = get_control("right_button")
+                shoot_button,shoot_button_is_mouse = get_control("shoot_button")
+                update_jump_button(jump_button)
+                update_left_button(left_button)
+                update_right_button(right_button)
+                update_shoot_button(shoot_button)
+                controls_update = False
             # Game (Game Active)
             if game_active:
                 # Controls
