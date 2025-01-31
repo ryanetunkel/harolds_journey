@@ -2015,7 +2015,6 @@ def update_menu_widget_with_other_menu_widget(current_menu:pygame_menu.Menu,othe
 def update_controls_menu_widgets_with_other_widgets(current_controls_menu:pygame_menu.Menu,other_controls_menu:pygame_menu.Menu,widget_names):
     for widget_name in widget_names:
         other_widget = other_controls_menu.get_widget(widget_name)
-        print(other_widget)
         # For some reason these menus can't get their widgets - maybe need to be active? It isn't the recursive kwarg
         # Maybe instead just directly get it again from the edited yamls? may be easier just need to format it right to update the values
         # Won't even work, need to be able to get the widget to update its value
