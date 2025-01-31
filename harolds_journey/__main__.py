@@ -660,9 +660,13 @@ while True:
                 # Starts Main Menu
                 main_menu.enable()
                 if get_score() != 0:
-                    main_menu = update_main_menu() # For score update and settings updates
-                # This goes somewhere VVVVV
-                # (main_menu.get_widget("main_menu_label",False)).set_title(f"Score: {score}")
+                    main_menu_label = main_menu.get_widget("main_menu_label")
+                    main_menu_label.set_title(f"Score: {get_score()}")
+                    main_menu.force_surface_update()
+                    pygame.display.update(main_menu_label.get_rect())
+                    # This stuff doesn't work unless can actually make them into submenus - figure it out
+                    # check_for_menu_updates(main_menu,pause_menu)
+                    main_menu = update_main_menu()
                 main_menu.mainloop(screen,clear_surface=True)
                 # When exits main menu through only way other than quitting, runs this code which starts the game
                 controls_update = True
