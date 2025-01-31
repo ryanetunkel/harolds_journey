@@ -1659,26 +1659,7 @@ def update_resolution_menu(menu:pygame_menu.Menu):
 
     resolution_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Resolution Menu Buttons
-    edited_window_sizes = get_edited_options_file_dict().get("window_sizes")
-    default_window_width_value = get_edited_options_file_dict().get("window_width")
-    default_window_height_value = get_edited_options_file_dict().get("window_height")
-    default_window_sizes_list = []
-    window_sizes_int_list = []
-    default_window_size_idx = -1
-    for size in edited_window_sizes:
-        if size != "Custom":
-            values = size.split("x")
-            values_tuple = (int(values[0]),int(values[1]))
-            default_window_sizes_list.append((size,values_tuple))
-            window_sizes_int_list.append(values_tuple)
-        else:
-            values_tuple = (default_window_width_value,default_window_height_value)
-            default_window_sizes_list.append((
-                f"{size}: {values_tuple[0]}x{values_tuple[1]}",
-                values_tuple
-            ))
-            window_sizes_int_list.append(values_tuple)
-        default_window_size_idx = window_sizes_int_list.index(values_tuple)
+    default_window_sizes_list,default_window_size_idx = get_window_size_values()
     resolution_menu_window_size_dropselect = menu.add.dropselect(
         title="Window Size",
         items=default_window_sizes_list,
