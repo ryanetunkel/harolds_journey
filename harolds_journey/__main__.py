@@ -620,8 +620,7 @@ while True:
                         screenshot.fill((150,150,150),special_flags=pygame.BLEND_MULT)
 
                         pygame.image.save(screenshot,"screenshot.jpg")
-
-                        new_bg = pygame_menu.BaseImage(
+                        pause_menu_background_image = pygame_menu.BaseImage(
                             image_path="screenshot.jpg",
                         )
                         pause_menu = update_pause_menu(new_bg)
