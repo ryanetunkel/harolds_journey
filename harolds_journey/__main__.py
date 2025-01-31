@@ -623,9 +623,27 @@ while True:
                         pause_menu_background_image = pygame_menu.BaseImage(
                             image_path="screenshot.jpg",
                         )
-                        pause_menu = update_pause_menu(new_bg)
+
+                        pause_menu = update_pause_menu() # For Background Update
+
+                        pre_edited_stats_file_dict = get_edited_stats_file_dict()
+                        pre_edited_options_file_dict = get_edited_options_file_dict()
+                        pre_edited_controls_file_dict = get_edited_options_file_dict()
 
                         pause_menu.mainloop(screen,clear_surface=True)
+
+                        post_edited_stats_file_dict = get_edited_stats_file_dict()
+                        post_edited_options_file_dict = get_edited_options_file_dict()
+                        post_edited_controls_file_dict = get_edited_options_file_dict()
+
+                        different_stats = post_edited_stats_file_dict != pre_edited_stats_file_dict
+                        different_options = post_edited_options_file_dict != pre_edited_options_file_dict
+                        different_controls = post_edited_controls_file_dict != pre_edited_controls_file_dict
+
+                        if different_stats or different_options or different_controls:
+                            pause_menu = update_pause_menu() # For In-Menu Selections
+                        controls_update = True
+
                         pause_time_2 = pygame.time.get_ticks()
                         pause_time = pause_time_2 - pause_time_1
 
