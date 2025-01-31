@@ -627,9 +627,37 @@ def update_shoot_button(new_shoot_button: int):
     shoot_button = new_shoot_button
 
 
-def reset_controls_to_default():
+
+
+def reset_controls_to_default_via_menu(controls_menu_dropselects: list):
+    reset_controls_to_default(controls_menu_dropselects)
+
+def reset_controls_to_default(controls_menu_dropselects: list):
     global controls_update
-    reset_controls()
+
+    default_controls_display_names_dict = get_default_controls_file_dict().get("default_controls_display_names_dict")
+    default_controls_pygame_constants_names_dict = get_default_controls_file_dict().get("default_controls_pygame_constants_names_dict")
+
+    jump_control_idx = DISPLAY_NAMES_LIST.index(default_controls_display_names_dict["jump_button"])
+    jump_constant_name = default_controls_pygame_constants_names_dict["jump_button"]
+    update_jump_button_via_menu((("Space",jump_constant_name),()),True)
+    controls_menu_dropselects[0].set_value(jump_control_idx)
+
+    left_constant_name = default_controls_pygame_constants_names_dict["left_button"]
+    left_control_idx = DISPLAY_NAMES_LIST.index(default_controls_display_names_dict["left_button"])
+    update_left_button_via_menu((("A",left_constant_name),()),True)
+    controls_menu_dropselects[1].set_value(left_control_idx)
+
+    right_constant_name = default_controls_pygame_constants_names_dict["right_button"]
+    right_control_idx = DISPLAY_NAMES_LIST.index(default_controls_display_names_dict["right_button"])
+    update_right_button_via_menu((("D",right_constant_name),()),True)
+    controls_menu_dropselects[2].set_value(right_control_idx)
+
+    shoot_constant_name = default_controls_pygame_constants_names_dict["shoot_button"]
+    shoot_control_idx = DISPLAY_NAMES_LIST.index(default_controls_display_names_dict["shoot_button"])
+    update_shoot_button_via_menu((("Left Mouse",shoot_constant_name),()),True)
+    controls_menu_dropselects[3].set_value(shoot_control_idx)
+
     controls_update = True
 
 
