@@ -1952,6 +1952,79 @@ def wizard_death_calls():
     wizard.sprite.set_wizard_dead(True)
 
 
+def check_for_menu_updates(current_menu:pygame_menu.Menu,other_menu:pygame_menu.Menu):
+    current_menu_submenus = current_menu.get_submenus()
+    other_menu_submenus = other_menu.get_submenus()
+    current_menu_statistics_menu = current_menu_submenus[0]
+    other_menu_statistics_menu = other_menu_submenus[0]
+    if current_menu_statistics_menu != other_menu_statistics_menu:
+        ...
+
+    current_menu_settings_menu = current_menu_submenus[1]
+    other_menu_settings_menu = other_menu_submenus[1]
+    if current_menu_settings_menu != other_menu_settings_menu:
+        current_menu_settings_submenus = current_menu_settings_menu.get_submenus()
+        other_menu_settings_submenus = other_menu_settings_menu.get_submenus()
+
+        current_menu_sounds_menu = current_menu_settings_submenus[0]
+        other_menu_sounds_menu = other_menu_settings_submenus[0]
+        if current_menu_sounds_menu!= other_menu_sounds_menu:
+            ...  # Update when sounds menu is made
+
+        current_menu_controls_menu = current_menu_settings_submenus[1]
+        other_menu_controls_menu = other_menu_settings_submenus[1]
+        if current_menu_controls_menu != other_menu_controls_menu:
+            control_widget_names_list = ["controls_menu_jump_dropselect","controls_menu_left_dropselect","controls_menu_right_dropselect","controls_menu_shoot_dropselect"]
+            update_controls_menu_widgets_with_other_widgets(current_menu_controls_menu,other_menu_controls_menu,control_widget_names_list)
+
+        current_menu_display_menu = current_menu_settings_submenus[2]
+        other_menu_display_menu = other_menu_settings_submenus[2]
+        if current_menu_display_menu != other_menu_display_menu:
+            update_menu_widget_with_other_menu_widget(current_menu_display_menu,other_menu_display_menu,"display_menu_zoom_slider")
+            update_menu_widget_with_other_menu_widget(current_menu_display_menu,other_menu_display_menu,"display_menu_framerate_slider")
+
+            current_menu_display_submenus = current_menu_display_menu.get_submenus()
+            other_menu_display_submenus = other_menu_display_menu.get_submenus()
+
+            current_menu_resolution_menu = current_menu_display_submenus[0]
+            other_menu_resolution_menu = other_menu_display_submenus[0]
+
+            if current_menu_resolution_menu != other_menu_resolution_menu:
+                update_menu_widget_with_other_menu_widget(current_menu_resolution_menu,other_menu_resolution_menu,"resolution_menu_window_size_dropselect",get_window_size_values()[1])
+
+            current_menu_gameplay_menu = current_menu_display_submenus[1]
+            other_menu_gameplay_menu = other_menu_display_submenus[1]
+            if current_menu_gameplay_menu != other_menu_gameplay_menu:
+                gameplay_widget_names_list = ["gameplay_menu_display_health_button","gameplay_menu_display_buffs_button","gameplay_menu_display_stats_button","gameplay_menu_display_controls_button","gameplay_menu_display_fps_button"]
+                update_menu_widgets_with_other_widgets(current_menu_gameplay_menu,other_menu_gameplay_menu,gameplay_widget_names_list)
+
+
+def update_menu_widgets_with_other_widgets(current_menu,other_menu,widget_names):
+    for widget_name in widget_names:
+        update_menu_widget_with_other_menu_widget(current_menu,other_menu,widget_name)
+
+
+def update_menu_widget_with_other_menu_widget(current_menu:pygame_menu.Menu,other_menu:pygame_menu.Menu,current_widget_name:str,new_value=None):
+    if (current_widget:=current_menu.get_widget(current_widget_name)) != (other_widget:=other_menu.get_widget(current_widget_name)):
+        value = new_value or other_widget.get_value()
+        current_widget.set_default_value(value)
+        current_menu.force_surface_update()
+        pygame.display.update(current_widget.get_rect())
+
+
+def update_controls_menu_widgets_with_other_widgets(current_controls_menu:pygame_menu.Menu,other_controls_menu:pygame_menu.Menu,widget_names):
+    for widget_name in widget_names:
+        other_widget = other_controls_menu.get_widget(widget_name)
+        print(other_widget)
+        # For some reason these menus can't get their widgets - maybe need to be active? It isn't the recursive kwarg
+        # Maybe instead just directly get it again from the edited yamls? may be easier just need to format it right to update the values
+        # Won't even work, need to be able to get the widget to update its value
+        # Technically all this can be contained in an "update_main_menu()" but we want to break it into its parts
+        if other_widget:
+            new_value = DISPLAY_NAMES_AND_CONSTANTS_TUPLE_LIST.index(other_widget)
+            update_menu_widget_with_other_menu_widget(current_controls_menu,other_controls_menu,widget_name,new_value)
+
+
 # Creating Full Main and Pause Menus via Functions
 main_menu = update_main_menu()
 pause_menu = update_pause_menu()
