@@ -1430,10 +1430,10 @@ def update_controls_menu(menu:pygame_menu.Menu):
     edited_controls_display_names_dict = get_edited_controls_file_dict().get("edited_controls_display_names_dict")
 
     # Controls Menu Buttons
-    current_jump_control_idx = display_names_list.index(edited_controls_display_names_dict["jump_button"])
+    current_jump_control_idx = DISPLAY_NAMES_LIST.index(edited_controls_display_names_dict["jump_button"])
     controls_menu_jump_dropselect = menu.add.dropselect(
         title="Jump: ",
-        items=display_names_and_constants_tuple_list,
+        items=DISPLAY_NAMES_AND_CONSTANTS_TUPLE_LIST,
         default=current_jump_control_idx,
         onchange=update_jump_button_via_menu,
         font_color=font_color,
@@ -1458,10 +1458,10 @@ def update_controls_menu(menu:pygame_menu.Menu):
         padding=default_padding,
         textinput_id="controls_menu_jump_dropselect",
     )
-    current_left_control_idx = display_names_list.index(edited_controls_display_names_dict["left_button"])
+    current_left_control_idx = DISPLAY_NAMES_LIST.index(edited_controls_display_names_dict["left_button"])
     controls_menu_left_dropselect = menu.add.dropselect(
         title="Left: ",
-        items=display_names_and_constants_tuple_list,
+        items=DISPLAY_NAMES_AND_CONSTANTS_TUPLE_LIST,
         default=current_left_control_idx,
         onchange=update_left_button_via_menu,
         font_color=font_color,
@@ -1486,10 +1486,10 @@ def update_controls_menu(menu:pygame_menu.Menu):
         padding=default_padding,
         textinput_id="controls_menu_left_dropselect",
     )
-    current_right_control_idx = display_names_list.index(edited_controls_display_names_dict["right_button"])
+    current_right_control_idx = DISPLAY_NAMES_LIST.index(edited_controls_display_names_dict["right_button"])
     controls_menu_right_dropselect = menu.add.dropselect(
         title="Right: ",
-        items=display_names_and_constants_tuple_list,
+        items=DISPLAY_NAMES_AND_CONSTANTS_TUPLE_LIST,
         default=current_right_control_idx,
         onchange=update_right_button_via_menu,
         font_color=font_color,
@@ -1514,10 +1514,10 @@ def update_controls_menu(menu:pygame_menu.Menu):
         padding=default_padding,
         textinput_id="controls_menu_right_dropselect",
     )
-    current_shoot_control_idx = display_names_list.index(edited_controls_display_names_dict["shoot_button"])
+    current_shoot_control_idx = DISPLAY_NAMES_LIST.index(edited_controls_display_names_dict["shoot_button"])
     controls_menu_shoot_dropselect = menu.add.dropselect(
         title="Shoot: ",
-        items=display_names_and_constants_tuple_list,
+        items=DISPLAY_NAMES_AND_CONSTANTS_TUPLE_LIST,
         default=current_shoot_control_idx,
         onchange=update_shoot_button_via_menu,
         font_color=font_color,
@@ -1542,10 +1542,16 @@ def update_controls_menu(menu:pygame_menu.Menu):
         padding=default_padding,
         textinput_id="controls_menu_shoot_dropselect",
     )
-    default_controls_pygame_constants_names_dict = get_default_controls_file_dict().get("default_controls_pygame_constants_names_dict")
+    controls_menu_dropselects = [
+        controls_menu_jump_dropselect,
+        controls_menu_left_dropselect,
+        controls_menu_right_dropselect,
+        controls_menu_shoot_dropselect,
+    ]
+    # Reset not working
     controls_menu_reset_button = menu.add.button(
         title="Reset Controls to Default",
-        action=reset_controls_to_default,
+        action=reset_controls_to_default_via_menu(controls_menu_dropselects),
         font_color=font_color,
         font_name=font_name,
         font_size=default_font_size,
