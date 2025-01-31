@@ -623,57 +623,6 @@ while True:
                 mouse_pos = (mouse_x,mouse_y)
                 clicking_with_left_mouse = event.type == pygame.MOUSEBUTTONDOWN and event.button == 1
 
-                # # Controls Menu
-                # elif menu_section == CONTROLS_MENU:
-                #     mouse_released = event.type == pygame.MOUSEBUTTONUP
-                #     # Controls Buttons
-                #     for control_name, mouse_on_controls_button in mouse_on_controls_button_dict.items():
-                #         controls_button_rect_big = controls_button_rect_big_dict[control_name]
-                #         mouse_on_controls_button = controls_button_rect_big.collidepoint(mouse_pos)
-                #         edited_controls_file_dict = get_edited_controls_file_dict()
-                #         edited_controls_display_names_dict = edited_controls_file_dict.get("edited_controls_display_names_dict")
-                #         edited_control_display_name = edited_controls_display_names_dict.get(control_name)
-                #         edited_controls_pygame_constants_names_dict = edited_controls_file_dict.get("edited_controls_pygame_constants_names_dict")
-                #         edited_control_pygame_constant_name = edited_controls_pygame_constants_names_dict.get(control_name)
-                #         edited_controls_are_mouse_buttons = edited_controls_file_dict.get("edited_controls_are_mouse_buttons")
-                #         edited_control_name_is_mouse = edited_controls_are_mouse_buttons.get(control_name)
-                #         unbound_display_name = get_display_name(list(unbound_constants_dict.keys())[0])
-                #         current_control_set_to_unbound = edited_control_display_name == unbound_display_name
-                #         held_control_filled = held_control_name != ""
-                #         if current_control_set_to_unbound and can_edit_controls:
-                #             MOUSE_WHEEL_UP = 4
-                #             MOUSE_WHEEL_DOWN = 5
-                #             if ((
-                #                 event.type == pygame.KEYDOWN and hasattr(event, "key") and event.key != pygame.K_ESCAPE
-                #             ) or (event.type == pygame.MOUSEBUTTONDOWN and hasattr(event, "button") and event.button != MOUSE_WHEEL_UP and event.button != MOUSE_WHEEL_DOWN)):
-                #                 interpret_input(control_name,event)
-                #                 held_control_name = ""
-                #                 held_control_display_name = unbound_display_name
-                #                 controls_update = True
-                #             can_edit_controls = False
-                #         elif unbound_display_name in edited_controls_display_names_dict and event.type == pygame.KEYDOWN and hasattr(event, "key") and event.key == pygame.K_ESCAPE:
-                #             edited_controls_display_names_dict_index = list(edited_controls_display_names_dict.values()).index(unbound_display_name)
-                #             edited_control_name = list(edited_controls_display_names_dict.keys())[edited_controls_display_names_dict_index]
-                #             edited_controls_display_names_dict.update({edited_control_name:held_control_display_name})
-                #             edited_controls_file_dict.update({"edited_controls_display_names_dict":edited_controls_display_names_dict})
-                #             set_control_display_name_to_other_display_name(control_name, held_control_display_name)
-                #             held_control_name = ""
-                #             held_control_display_name = unbound_display_name
-                #             controls_update = True
-                #             can_edit_controls = False
-                #         elif mouse_on_controls_button and clicking_with_left_mouse and not current_control_set_to_unbound:
-                #             if held_control_filled:
-                #                 set_control_display_name_to_other_display_name(held_control_name, held_control_display_name)
-                #             held_control_name = control_name
-                #             held_control_display_name = edited_control_display_name
-                #             set_control_display_name_to_unbound(control_name)
-                #             controls_update = True
-                #         elif mouse_released:
-                #             can_edit_controls = True
-                #         mouse_on_controls_button_dict.update({control_name: mouse_on_controls_button})
-
-                #     mouse_on_controls_reset_button = controls_reset_button_rect_big.collidepoint(mouse_pos)
-                #     mouse_on_controls_back_button = controls_back_button_rect_big.collidepoint(mouse_pos)
                 #     # Reset Button
                 #     if mouse_on_controls_reset_button:
                 #         if clicking_with_left_mouse:
@@ -710,45 +659,6 @@ while True:
                 pause_time = 0
                 start_time = pygame.time.get_ticks()
                 pre_stat_update_edited_stats_file_dict.update(get_edited_stats_file_dict())
-                # button_scalar = 3/2  # Added recently
-                # # Menu Blits
-                # # Controls Menu Button Blits
-                # elif menu_section == CONTROLS_MENU:
-                #     # Controls Update
-                #     if controls_update:
-                #         mouse_on_controls_button_dict = {}
-                #         controls_button_surf_dict = {}
-                #         controls_button_rect_dict = {}
-                #         controls_button_surf_big_dict = {}
-                #         controls_button_rect_big_dict = {}
-                #         controls_button_index = 0
-                #         controls_button_scalar = 0.5
-                #         edited_controls_display_names_dict = get_edited_controls_file_dict().get("edited_controls_display_names_dict")
-                #         default_controls_pygame_constants_names_dict = get_default_controls_file_dict().get("default_controls_pygame_constants_names_dict")
-                #         for control_name, control in default_controls_pygame_constants_names_dict.items():
-                #             controls_button_start_x_pos = main_menu_wizard_rect.centerx
-                #             controls_button_start_y_pos = main_menu_wizard_rect.bottom + ((32/400) * WINDOW_HEIGHT) + controls_buttons_y_pos_offset * controls_button_index
-                #             controls_button_start_pos = (controls_button_start_x_pos,controls_button_start_y_pos)
-                #             control_name_underscore_removed = control_name.replace("_", " ")
-                #             control_name_capitalized = control_name_underscore_removed.title()
-                #             controls_button_surf = test_font.render(f"{control_name_capitalized}: {edited_controls_display_names_dict[control_name]}",False,"#FCDC4D")
-                #             controls_button_scale = button_scalar * controls_button_scalar
-                #             controls_button_surf = pygame.transform.scale_by(controls_button_surf,controls_button_scale)
-                #             controls_button_surf_dict.update({control_name: controls_button_surf})
-                #             controls_button_rect = controls_button_surf.get_rect(center = (controls_button_start_pos))
-                #             controls_button_rect_dict.update({control_name: controls_button_rect})
-                #             mouse_on_controls_button_dict.update({control_name: False})
-                #             controls_button_big_scale = button_when_big_scale
-                #             controls_button_surf_big = pygame.transform.scale_by(controls_button_surf,controls_button_big_scale)
-                #             controls_button_surf_big_dict.update({control_name: controls_button_surf_big})
-                #             controls_button_rect_big = controls_button_surf_big.get_rect(center = (controls_button_start_pos))
-                #             controls_button_rect_big_dict.update({control_name: controls_button_rect_big})
-                #             controls_button_index += 1
-                #         controls_update = False
-                #     # Controls Buttons
-                #     for control_name, mouse_on_controls_button in mouse_on_controls_button_dict.items():
-                #         if not mouse_on_controls_button: screen.blit(controls_button_surf_dict[control_name],controls_button_rect_dict[control_name])
-                #         else: screen.blit(controls_button_surf_big_dict[control_name],controls_button_rect_big_dict[control_name])
                 #     # Reset Button
                 #     if not mouse_on_controls_reset_button: screen.blit(controls_reset_button_surf,controls_reset_button_rect)
                 #     else: screen.blit(controls_reset_button_surf_big,controls_reset_button_rect_big)
