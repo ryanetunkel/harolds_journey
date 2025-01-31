@@ -624,6 +624,8 @@ while True:
                             image_path="screenshot.jpg",
                         )
 
+                        # check_for_menu_updates(pause_menu,main_menu)
+
                         pause_menu = update_pause_menu() # For Background Update
 
                         pre_edited_stats_file_dict = get_edited_stats_file_dict()
