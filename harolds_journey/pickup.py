@@ -2,7 +2,6 @@
 import pygame
 
 from global_vars import global_gravity,global_scalar,grass_top_y
-from random import randint, choice
 
 
 class Pickup(pygame.sprite.Sprite):

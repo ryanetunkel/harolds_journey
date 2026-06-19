@@ -1,6 +1,7 @@
 import pygame
 
-from global_vars import pixel_size,wizard_height
+from global_vars import wizard_height
+from menu_vars import pixel_size
 from graphics.health_bar.health_bar_animation_holder import get_outline_health_bar
 class OutlineHealthBar(pygame.sprite.Sprite):
     def __init__(self, health_bar: pygame.sprite.Sprite, x_pos: int, y_pos: int):

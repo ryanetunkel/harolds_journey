@@ -9,7 +9,9 @@ from controls import (
     get_edited_stats_file_dict,
     set_edited_stats_file_dict,
     get_edited_controls_file_dict,
-    get_default_controls_file_dict)
+    get_default_controls_file_dict,
+    set_control,
+    )
 from global_vars import (
     bg_image_path,
     bg_scalar,
@@ -19,7 +21,7 @@ from global_vars import (
     outline_health_bar_ownership_group,
     health_bar_ownership_group,
     health_bar_group,
-    test_font
+    base_font
 )
 from menu_vars import (
     center_screen_height,

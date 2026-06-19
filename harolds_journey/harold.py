@@ -4,15 +4,14 @@ import math
 
 import pygame
 
+from controls import get_control
 from global_vars import (
-    get_control,
-    pixel_size,
     global_scalar,
     global_gravity,
     wizard_height,
     wizard_width,
-    window_width,
     grass_top_y)
+from menu_vars import pixel_size, window_width
 from graphics.harold.harold_animation_holder import get_harold_idle_arr
 
 class Harold(pygame.sprite.Sprite):

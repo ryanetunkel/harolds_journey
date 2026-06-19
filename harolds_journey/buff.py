@@ -1,7 +1,8 @@
 import pygame
 import spritesheet
 
-from global_vars import global_gravity,global_scalar,grass_top_y,window_width
+from global_vars import global_gravity,global_scalar,grass_top_y
+from menu_vars import window_width
 
 class Buff(pygame.sprite.Sprite):
     def __init__(self, type: str, x_pos: int, y_pos: int):

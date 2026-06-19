@@ -5,7 +5,6 @@ import pygame
 
 from global_vars import (
     global_scalar,
-    window_width,
     grass_top_y,
     OBSTACLE_MOVE_VOLUME,
     wizard_height,
@@ -13,6 +12,8 @@ from global_vars import (
     OBSTACLE_MOVE_CHANNEL)
 from graphics.enemies.bird.bird_animation_holder import get_bird_fly_arr
 from graphics.enemies.skeleton.skeleton_animation_holder import get_skeleton_walk_arr
+from menu_vars import window_width
+
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, obstacle_type: str, time_at_spawn: int):

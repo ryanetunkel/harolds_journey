@@ -2,7 +2,12 @@
 
 import pygame
 
-from global_vars import global_scalar,global_gravity,window_width,grass_top_y,window_height
+from global_vars import (
+  global_scalar,
+  global_gravity,
+  grass_top_y,
+)
+from menu_vars import window_width, window_height
 
 # Intro
 wizard_walk_in_animation_complete = False

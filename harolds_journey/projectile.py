@@ -4,7 +4,8 @@ import math
 
 import pygame
 
-from global_vars import global_scalar,wizard_width,pixel_size,window_width,grass_top_y
+from global_vars import global_scalar,wizard_width,grass_top_y
+from menu_vars import pixel_size,window_width
 from graphics.fireball.fireball_animation_holder import get_fireball_transition_arr,get_fireball_movement_arr
 
 class Projectile(pygame.sprite.Sprite):

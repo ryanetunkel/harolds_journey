@@ -6,37 +6,30 @@ from sys import exit
 import pygame
 
 from buff import Buff
+from controls import (
+    get_control,
+    get_display_name,
+    unbound_constants_dict,
+    held_control_display_name,
+    get_edited_controls_file_dict,
+    get_edited_options_file_dict,
+    get_edited_stats_file_dict,
+    set_edited_stats_file_dict,
+)
 from global_vars import (
     wizard,
     harold,
-    test_font,
-    window_width,
-    window_height,
-    center_screen_width,
-    get_edited_controls_file_dict,
+    base_font,
     wizard_width,
-    get_edited_options_file_dict,
     obstacle_group,
     projectile_group,
     health_bar_ownership_group,
     outline_health_bar_ownership_group,
-    get_edited_stats_file_dict,
-    set_edited_stats_file_dict,
     dead_obstacle_group,
     OBSTACLE_DEATH_CHANNEL,
     obstacle_death_sound,
     pickup_group,buff_group,
-    get_control,
-    min_window_width,
-    max_window_width,
-    min_window_height,
-    max_window_height,
-    zoom_x_limit,
-    zoom_y_limit,
     window_size,
-    get_display_name,
-    unbound_constants_dict,
-    held_control_display_name,
     obstacle_timer,
     health_bar_group,
     outline_health_bar_group,
@@ -46,7 +39,7 @@ from global_vars import (
     bg_music,
     moving_sprites,
     clock,
-    fps)
+)
 from graphics.health_bar.health_bar import HealthBar
 from graphics.health_bar.outline_health_bar import OutlineHealthBar
 from intro import (
@@ -66,9 +59,25 @@ from menu import (
     update_main_menu,
     set_score,
     pre_stat_update_edited_stats_file_dict,
-    widget_y_offset,
     title_font_size,
-    main_menu_wizard_hat_size)
+    main_menu_wizard_hat_size,
+    update_jump_button,
+    update_left_button,
+    update_right_button,
+    update_shoot_button,
+    get_score,
+    main_menu_wizard_surf,
+    )
+from menu_vars import (
+    center_screen_width,
+    fps,
+    min_window_width,
+    min_window_height,
+    max_window_width,
+    max_window_height,
+    window_width,
+    window_height,
+)
 from player import Player
 from harold import Harold
 from obstacle import Obstacle

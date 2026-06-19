@@ -4,7 +4,6 @@ import pygame
 from controls import get_control
 from menu import jumps_made, distance_traveled
 from global_vars import (
-    window_width,
     grass_top_y,
     global_scalar,
     global_gravity,
@@ -26,6 +25,8 @@ from graphics.wizard.wizard_animation_holder import (
     get_wizard_jump_arr,
     get_wizard_fireball_arr,
     get_wizard_death_arr)
+from menu_vars import window_width
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
