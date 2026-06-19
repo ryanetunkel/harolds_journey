@@ -14,8 +14,8 @@ min_window_height = 240
 max_window_width = screenInfo.current_w
 max_window_height = screenInfo.current_h
 # Width, Height, and Size
-window_width = edited_options_file_dict.get("window_width") # 800 * 3/2 = 1200
-window_height = edited_options_file_dict.get("window_height")  # 400 * 3/2 = 600
+window_width = edited_options_file_dict.get("window_width")
+window_height = edited_options_file_dict.get("window_height")
 window_width = max(window_width,min_window_width)
 window_width = min(window_width,max_window_width)
 window_height = max(window_height,min_window_height)
@@ -32,8 +32,6 @@ center_screen_height = window_height / 2
 # Surface Sizing
 pixel_size = edited_options_file_dict.get("pixel_size") # can be 1
 zoom = edited_options_file_dict.get("zoom")
-zoom_x_limit = center_screen_width / 2
-zoom_y_limit = center_screen_height / 2
 # PIXEL_SIZE currently can only be even numbers else creates .5 addition and rects can only do integer-based moves
 # Will need to transition to using math.Vector2 to do all collision and stuff and then render it after as a rect to get subpixel movement
 

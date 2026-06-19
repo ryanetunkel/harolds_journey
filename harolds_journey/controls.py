@@ -133,10 +133,9 @@ def get_control(control_name: str) -> tuple[int,bool]:
     edited_controls_pygame_constant_name = edited_controls_pygame_constants_names_dict.get(control_name)
     edited_controls_are_mouse_buttons_dict = edited_controls_file_dict.get("edited_controls_are_mouse_buttons")
     edited_control_is_mouse = edited_controls_are_mouse_buttons_dict.get(control_name)
-    if not edited_control_is_mouse and edited_controls_pygame_constant_name in keyboard_strings_constants_dict.keys():
-        pygame_constant = keyboard_strings_constants_dict.get(edited_controls_pygame_constant_name)
-    elif edited_control_is_mouse and edited_controls_pygame_constant_name in mouse_strings_constants_dict.keys():
-        pygame_constant = mouse_strings_constants_dict.get(edited_controls_pygame_constant_name)
+    search_dict = keyboard_strings_constants_dict if not edited_control_is_mouse else mouse_strings_constants_dict
+    if edited_controls_pygame_constant_name in search_dict.keys():
+        pygame_constant = search_dict.get(edited_controls_pygame_constant_name)
     else:
         pygame_constant = list(unbound_constants_dict.values())[0]
     return (pygame_constant, edited_control_is_mouse)
@@ -156,16 +155,31 @@ def get_pygame_constant_name(event: pygame.event.Event, is_mouse) -> str:
     return pygame_constant_name
 
 
+def get_pygame_constant_name_from_constant(constant:int) -> str:
+    if constant in list(keyboard_strings_constants_dict.values()):
+        keyboard_strings_constants_dict_keys = list(keyboard_strings_constants_dict.keys())
+        keyboard_strings_constants_dict_value_index = list(keyboard_strings_constants_dict.values()).index(constant)
+        pygame_constant_name = keyboard_strings_constants_dict_keys[keyboard_strings_constants_dict_value_index]
+    elif constant in list(mouse_strings_constants_dict.values()):
+        mouse_strings_constants_dict_keys = list(mouse_strings_constants_dict.keys())
+        mouse_strings_constants_dict_value_index = list(mouse_strings_constants_dict.values()).index(constant)
+        pygame_constant_name = mouse_strings_constants_dict_keys[mouse_strings_constants_dict_value_index]
+    else:
+        pygame_constant_name = None
+    return pygame_constant_name
+
+
 # Controls Functions
 def interpret_input(control_name: str, event: pygame.event.Event) -> bool:
     is_mouse = event.type == pygame.MOUSEBUTTONDOWN
     key_or_mouse_event = event.type == pygame.KEYDOWN or is_mouse
+
     if not key_or_mouse_event:
         return False
-    pygame_constant_name = get_pygame_constant_name(event, is_mouse)
 
-    if key_or_mouse_event:
-        set_control(control_name, pygame_constant_name, is_mouse)
+    pygame_constant_name = get_pygame_constant_name(event, is_mouse)
+    set_control(control_name, pygame_constant_name, is_mouse)
+
     return key_or_mouse_event
 
 

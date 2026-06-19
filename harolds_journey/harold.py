@@ -23,7 +23,11 @@ class Harold(pygame.sprite.Sprite):
         self.jump_button,self.jump_button_is_mouse = get_control("jump_button")
         self.left_button,self.left_button_is_mouse = get_control("left_button")
         self.right_button,self.right_button_is_mouse = get_control("right_button")
-        self.shoot_button,self.shoot_button_is_mouse = get_control("shoot_button")
+        self.controls = {
+            "jump_button":(self.jump_button,self.jump_button_is_mouse),
+            "left_button":(self.left_button,self.left_button_is_mouse),
+            "right_button":(self.right_button,self.right_button_is_mouse),
+        }
 
         # Temp Wizard Attribute
         self.player = player
@@ -119,13 +123,28 @@ class Harold(pygame.sprite.Sprite):
     def set_image(self,new_image):
         self.image = new_image
 
+    def update_harold_controls(self):
+        self.jump_button,self.jump_button_is_mouse = get_control("jump_button")
+        self.left_button,self.left_button_is_mouse = get_control("left_button")
+        self.right_button,self.right_button_is_mouse = get_control("right_button")
+        self.controls = {
+            "jump_button":(self.jump_button,self.jump_button_is_mouse),
+            "left_button":(self.left_button,self.left_button_is_mouse),
+            "right_button":(self.right_button,self.right_button_is_mouse),
+        }
+
     def harold_input(self):
+        if self.controls != {
+            "jump_button":(get_control("jump_button")),
+            "left_button":(get_control("left_button")),
+            "right_button":(get_control("right_button")),
+        }:
+            self.update_harold_controls()
         mouse_buttons_pressed = pygame.mouse.get_pressed(5)
         keys = pygame.key.get_pressed()
         jump_button_press = (not self.jump_button_is_mouse and keys[self.jump_button]) or (self.jump_button_is_mouse and mouse_buttons_pressed[self.jump_button])
         left_button_press = (not self.left_button_is_mouse and keys[self.left_button]) or (self.left_button_is_mouse and mouse_buttons_pressed[self.left_button])
         right_button_press = (not self.right_button_is_mouse and keys[self.right_button]) or (self.right_button_is_mouse and mouse_buttons_pressed[self.right_button])
-        shoot_button_press = (not self.shoot_button_is_mouse and keys[self.shoot_button]) or (self.shoot_button_is_mouse and mouse_buttons_pressed[self.shoot_button])
 
         # Refreshing Harold speed
         self.harold_speed = self.player.sprite.get_wizard_speed()
@@ -179,7 +198,11 @@ class Harold(pygame.sprite.Sprite):
         self.jump_button,self.jump_button_is_mouse = get_control("jump_button")
         self.left_button,self.left_button_is_mouse = get_control("left_button")
         self.right_button,self.right_button_is_mouse = get_control("right_button")
-        self.shoot_button,self.shoot_button_is_mouse = get_control("shoot_button")
+        self.controls = {
+            "jump_button":(get_control("jump_button")),
+            "left_button":(get_control("left_button")),
+            "right_button":(get_control("right_button")),
+        }
 
         # Temp Wizard Attribute
         temp_wizard_rect = self.player.sprite.get_wizard_rect()

@@ -6,5 +6,19 @@ display_in_game_stats: true
 fps: 60
 pixel_size: 2
 window_height: 720
+window_sizes:
+  - 2560x1440
+  - 1920x1080
+  - 1920x1200
+  - 1680x1050
+  - 1440x900
+  - 1366x768
+  - 1280x800
+  - 1280x720
+  - 1024x768
+  - 800x600
+  - 640x480
+  - 320x240
+  - Custom
 window_width: 1280
-zoom: 100
+zoom: 200

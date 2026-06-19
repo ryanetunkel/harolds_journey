@@ -140,11 +140,13 @@ keyboard_strings_constants_dict = {
 }
 
 mouse_strings_constants_dict = {
-    "M_1":1,
-    "M_2":2,
-    "M_3":3,
-    "M_4":4,
-    "M_5":5,
+    "M_LEFT":1,
+    "M_MIDDLE":2,
+    "M_RIGHT":3,
+    "M_SCROLL_UP":4,
+    "M_SCROLL_DOWN":5,
+    "M_OTHER_4_6":6,
+    "M_OTHER_5_7":7,
 }
 
 unbound_constants_dict = {

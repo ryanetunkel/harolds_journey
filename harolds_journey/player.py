@@ -35,7 +35,11 @@ class Player(pygame.sprite.Sprite):
         self.jump_button,self.jump_button_is_mouse = get_control("jump_button")
         self.left_button,self.left_button_is_mouse = get_control("left_button")
         self.right_button,self.right_button_is_mouse = get_control("right_button")
-        self.shoot_button,self.shoot_button_is_mouse = get_control("shoot_button")
+        self.controls = {
+            "jump_button":(self.jump_button,self.jump_button_is_mouse),
+            "left_button":(self.left_button,self.left_button_is_mouse),
+            "right_button":(self.right_button,self.right_button_is_mouse),
+        }
 
         # Stat Tracking
         self.jumps_made = jumps_made
@@ -521,6 +525,16 @@ class Player(pygame.sprite.Sprite):
     def play_fireball_sound(self):
         pygame.mixer.Channel(FIREBALL_SOUND_CHANNEL).play(self.fireball_sound)
 
+    def update_wizard_controls(self):
+        self.jump_button,self.jump_button_is_mouse = get_control("jump_button")
+        self.left_button,self.left_button_is_mouse = get_control("left_button")
+        self.right_button,self.right_button_is_mouse = get_control("right_button")
+        self.controls = {
+            "jump_button":(self.jump_button,self.jump_button_is_mouse),
+            "left_button":(self.left_button,self.left_button_is_mouse),
+            "right_button":(self.right_button,self.right_button_is_mouse),
+        }
+
     def calculate_wizard_stats(self):
         self.calculate_wizard_damage()
         self.calculate_wizard_piercing()
@@ -529,12 +543,17 @@ class Player(pygame.sprite.Sprite):
         return self.rect.bottom - self.rect.top
 
     def wizard_input(self):
+        if self.controls != {
+            "jump_button":(get_control("jump_button")),
+            "left_button":(get_control("left_button")),
+            "right_button":(get_control("right_button")),
+        }:
+            self.update_wizard_controls()
         mouse_buttons_pressed = pygame.mouse.get_pressed(5)
         keys = pygame.key.get_pressed()
         jump_button_press = (not self.jump_button_is_mouse and keys[self.jump_button]) or (self.jump_button_is_mouse and mouse_buttons_pressed[self.jump_button])
         left_button_press = (not self.left_button_is_mouse and keys[self.left_button]) or (self.left_button_is_mouse and mouse_buttons_pressed[self.left_button])
         right_button_press = (not self.right_button_is_mouse and keys[self.right_button]) or (self.right_button_is_mouse and mouse_buttons_pressed[self.right_button])
-        shoot_button_press = (not self.shoot_button_is_mouse and keys[self.shoot_button]) or (self.shoot_button_is_mouse and mouse_buttons_pressed[self.shoot_button])
         if not self.wizard_dead:
             (mouse_x,mouse_y) = pygame.mouse.get_pos()
             self.looking_right = mouse_x >= self.rect.centerx
@@ -733,7 +752,11 @@ class Player(pygame.sprite.Sprite):
         self.jump_button,self.jump_button_is_mouse = get_control("jump_button")
         self.left_button,self.left_button_is_mouse = get_control("left_button")
         self.right_button,self.right_button_is_mouse = get_control("right_button")
-        self.shoot_button,self.shoot_button_is_mouse = get_control("shoot_button")
+        self.controls = {
+            "jump_button":(get_control("jump_button")),
+            "left_button":(get_control("left_button")),
+            "right_button":(get_control("right_button")),
+        }
 
         # X Directions
         self.wizard_x_pos = self.WIZARD_START_X_POS

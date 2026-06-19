@@ -33,24 +33,19 @@ from menu_vars import (
     center_screen_width,
 )
 
-# Main Menu Screen
-MAIN_MENU = 1
-STATISTICS_MENU = 2
-SETTINGS_MENU = 3
-SOUNDS_MENU = 4
-CONTROLS_MENU = 5
-DISPLAY_MENU = 6
-menu_section = MAIN_MENU
 
 # Text Vars
 font_color = "#FCDC4D"
 font_name = pygame_menu.font.FONT_MUNRO
-# Title Vars
 title_font_size = int(window_height/16)
+default_font_size = int(title_font_size*3/4)
 stat_font_size = int(title_font_size/2)
 title_padding = int(window_height/64)
 title_y_pos_center_offset = -center_screen_height+title_font_size
-widget_y_offset = center_screen_height
+submenu_widget_y_offset = int(center_screen_height/2)
+no_padding = 0
+default_padding = 2
+default_margin_padding = int(window_height/16)
 
 # Stats Vars
 edited_stats_file_dict = get_edited_stats_file_dict()
@@ -68,10 +63,408 @@ pre_stat_update_edited_stats_file_dict = {}
 # Controls Vars
 controls_update = False
 
-# Display Vars
-# Resolution Vars
-# fps one
-# pixel_size = zoom
+CONSTANTS_LIST = [
+    "M_LEFT",
+    "M_MIDDLE",
+    "M_RIGHT",
+    "M_SCROLL_UP",
+    "M_SCROLL_DOWN",
+    "M_OTHER_4_6",
+    "M_OTHER_5_7",
+    "K_BACKSPACE",
+    "K_TAB",
+    "K_CLEAR",
+    "K_PAUSE",
+    "K_SPACE",
+    "K_EXCLAIM",
+    "K_QUOTEDBL",
+    "K_HASH",
+    "K_DOLLAR",
+    "K_AMPERSAND",
+    "K_QUOTE",
+    "K_LEFTPAREN",
+    "K_RIGHTPAREN",
+    "K_ASTERISK",
+    "K_PLUS",
+    "K_COMMA",
+    "K_MINUS",
+    "K_PERIOD",
+    "K_SLASH",
+    "K_0",
+    "K_1",
+    "K_2",
+    "K_3",
+    "K_4",
+    "K_5",
+    "K_6",
+    "K_7",
+    "K_8",
+    "K_9",
+    "K_COLON",
+    "K_SEMICOLON",
+    "K_LESS",
+    "K_EQUALS",
+    "K_GREATER",
+    "K_QUESTION",
+    "K_AT",
+    "K_LEFTBRACKET",
+    "K_BACKSLASH",
+    "K_RIGHTBRACKET",
+    "K_CARET",
+    "K_UNDERSCORE",
+    "K_a",
+    "K_b",
+    "K_c",
+    "K_d",
+    "K_e",
+    "K_f",
+    "K_g",
+    "K_h",
+    "K_i",
+    "K_j",
+    "K_k",
+    "K_l",
+    "K_m",
+    "K_n",
+    "K_o",
+    "K_p",
+    "K_q",
+    "K_r",
+    "K_s",
+    "K_t",
+    "K_u",
+    "K_v",
+    "K_w",
+    "K_x",
+    "K_y",
+    "K_z",
+    "K_DELETE",
+    "K_KP0",
+    "K_KP1",
+    "K_KP2",
+    "K_KP3",
+    "K_KP4",
+    "K_KP5",
+    "K_KP6",
+    "K_KP7",
+    "K_KP8",
+    "K_KP9",
+    "K_KP_PERIOD",
+    "K_KP_DIVIDE",
+    "K_KP_MULTIPLY",
+    "K_KP_MINUS",
+    "K_KP_PLUS",
+    "K_KP_ENTER",
+    "K_KP_EQUALS",
+    "K_UP",
+    "K_DOWN",
+    "K_RIGHT",
+    "K_LEFT",
+    "K_INSERT",
+    "K_HOME",
+    "K_END",
+    "K_PAGEUP",
+    "K_PAGEDOWN",
+    "K_F1",
+    "K_F2",
+    "K_F3",
+    "K_F4",
+    "K_F5",
+    "K_F6",
+    "K_F7",
+    "K_F8",
+    "K_F9",
+    "K_F10",
+    "K_F11",
+    "K_F12",
+    "K_F13",
+    "K_F14",
+    "K_F15",
+    "K_NUMLOCK",
+    "K_CAPSLOCK",
+    "K_SCROLLOCK",
+    "K_RSHIFT",
+    "K_LSHIFT",
+    "K_RCTRL",
+    "K_LCTRL",
+    "K_RALT",
+    "K_LALT",
+    "K_RMETA",
+    "K_LMETA",
+    "K_LSUPER",
+    "K_RSUPER",
+    "K_MODE",
+    "K_EURO",
+]
+
+DISPLAY_NAMES_LIST = [
+    "Left Mouse",
+    "Middle Mouse",
+    "Right Mouse",
+    "Mouse Scroll Up",
+    "Mouse Scroll Down",
+    "Mouse 4",
+    "Mouse 5",
+    "Backspace",
+    "Tab",
+    "clear",
+    "pause",
+    "Space",
+    "!",
+    '"',
+    "#",
+    "$",
+    "&",
+    "'",
+    "(",
+    ")",
+    "*",
+    "+",
+    ",",
+    "-",
+    ".",
+    "/",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    ":",
+    ";",
+    "<",
+    "= ",
+    ">",
+    "?",
+    "@",
+    "[",
+    "\\",
+    "]",
+    "^",
+    "_",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "Delete",
+    "Keypad 0",
+    "Keypad 1",
+    "Keypad 2",
+    "Keypad 3",
+    "Keypad 4",
+    "Keypad 5",
+    "Keypad 6",
+    "Keypad 7",
+    "Keypad 8",
+    "Keypad 9",
+    "Keypad .",
+    "Keypad /",
+    "Keypad *",
+    "Keypad -",
+    "Keypad +",
+    "Keypad Enter",
+    "Keypad =",
+    "Up Arrow",
+    "Down Arrow",
+    "Right Arrow",
+    "Left Arrow",
+    "Insert",
+    "Home",
+    "End",
+    "Page Up",
+    "Page Down",
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "F8",
+    "F9",
+    "F10",
+    "F11",
+    "F12",
+    "F13",
+    "F14",
+    "F15",
+    "Num Lock",
+    "Caps Lock",
+    "Scroll Lock",
+    "Right Shift",
+    "Left Shift",
+    "Right Control",
+    "Left Control",
+    "Right Alt",
+    "Left Alt",
+    "Right Meta",
+    "Left Meta",
+    "Left Windows",
+    "Right Windows",
+    "mode shift",
+    "Euro",
+]
+
+DISPLAY_NAMES_AND_CONSTANTS_TUPLE_LIST = [
+    ("Left Mouse","M_LEFT"),
+    ("Middle Mouse","M_MIDDLE"),
+    ("Right Mouse","M_RIGHT"),
+    ("Mouse Scroll Up","M_SCROLL_UP"),
+    ("Mouse Scroll Down","M_SCROLL_DOWN"),
+    ("Mouse 4","M_OTHER_4_6"),
+    ("Mouse 5","M_OTHER_5_7"),
+    ("Backspace","K_BACKSPACE"),
+    ("Tab","K_TAB"),
+    ("clear","K_CLEAR"),
+    ("pause","K_PAUSE"),
+    ("Space","K_SPACE"),
+    ("!","K_EXCLAIM"),
+    ('"',"K_QUOTEDBL"),
+    ("#","K_HASH"),
+    ("$","K_DOLLAR"),
+    ("&","K_AMPERSAND"),
+    ("'","K_QUOTE"),
+    ("(","K_LEFTPAREN"),
+    (")","K_RIGHTPAREN"),
+    ("*","K_ASTERISK"),
+    ("+","K_PLUS"),
+    (",","K_COMMA"),
+    ("-","K_MINUS"),
+    (".","K_PERIOD"),
+    ("/","K_SLASH"),
+    ("0","K_0"),
+    ("1","K_1"),
+    ("2","K_2"),
+    ("3","K_3"),
+    ("4","K_4"),
+    ("5","K_5"),
+    ("6","K_6"),
+    ("7","K_7"),
+    ("8","K_8"),
+    ("9","K_9"),
+    (":","K_COLON"),
+    (";","K_SEMICOLON"),
+    ("<","K_LESS"),
+    ("= ","K_EQUALS"),
+    (">","K_GREATER"),
+    ("?","K_QUESTION"),
+    ("@","K_AT"),
+    ("[","K_LEFTBRACKET"),
+    ("\\","K_BACKSLASH"),
+    ("]","K_RIGHTBRACKET"),
+    ("^","K_CARET"),
+    ("_","K_UNDERSCORE"),
+    ("A","K_a"),
+    ("B","K_b"),
+    ("C","K_c"),
+    ("D","K_d"),
+    ("E","K_e"),
+    ("F","K_f"),
+    ("G","K_g"),
+    ("H","K_h"),
+    ("I","K_i"),
+    ("J","K_j"),
+    ("K","K_k"),
+    ("L","K_l"),
+    ("M","K_m"),
+    ("N","K_n"),
+    ("O","K_o"),
+    ("P","K_p"),
+    ("Q","K_q"),
+    ("R","K_r"),
+    ("S","K_s"),
+    ("T","K_t"),
+    ("U","K_u"),
+    ("V","K_v"),
+    ("W","K_w"),
+    ("X","K_x"),
+    ("Y","K_y"),
+    ("Z","K_z"),
+    ("Delete","K_DELETE"),
+    ("Keypad 0","K_KP0"),
+    ("Keypad 1","K_KP1"),
+    ("Keypad 2","K_KP2"),
+    ("Keypad 3","K_KP3"),
+    ("Keypad 4","K_KP4"),
+    ("Keypad 5","K_KP5"),
+    ("Keypad 6","K_KP6"),
+    ("Keypad 7","K_KP7"),
+    ("Keypad 8","K_KP8"),
+    ("Keypad 9","K_KP9"),
+    ("Keypad .","K_KP_PERIOD"),
+    ("Keypad /","K_KP_DIVIDE"),
+    ("Keypad *","K_KP_MULTIPLY"),
+    ("Keypad -","K_KP_MINUS"),
+    ("Keypad +","K_KP_PLUS"),
+    ("Keypad Enter","K_KP_ENTER"),
+    ("Keypad =","K_KP_EQUALS"),
+    ("Up Arrow","K_UP"),
+    ("Down Arrow","K_DOWN"),
+    ("Right Arrow","K_RIGHT"),
+    ("Left Arrow","K_LEFT"),
+    ("Insert","K_INSERT"),
+    ("Home","K_HOME"),
+    ("End","K_END"),
+    ("Page Up","K_PAGEUP"),
+    ("Page Down","K_PAGEDOWN"),
+    ("F1","K_F1"),
+    ("F2","K_F2"),
+    ("F3","K_F3"),
+    ("F4","K_F4"),
+    ("F5","K_F5"),
+    ("F6","K_F6"),
+    ("F7","K_F7"),
+    ("F8","K_F8"),
+    ("F9","K_F9"),
+    ("F10","K_F10"),
+    ("F11","K_F11"),
+    ("F12","K_F12"),
+    ("F13","K_F13"),
+    ("F14","K_F14"),
+    ("F15","K_F15"),
+    ("Num Lock","K_NUMLOCK"),
+    ("Caps Lock","K_CAPSLOCK"),
+    ("Scroll Lock","K_SCROLLOCK"),
+    ("Right Shift","K_RSHIFT"),
+    ("Left Shift","K_LSHIFT"),
+    ("Right Control","K_RCTRL"),
+    ("Left Control","K_LCTRL"),
+    ("Right Alt","K_RALT"),
+    ("Left Alt","K_LALT"),
+    ("Right Meta","K_RMETA"),
+    ("Left Meta","K_LMETA"),
+    ("Left Windows","K_LSUPER"),
+    ("Right Windows","K_RSUPER"),
+    ("mode shift","K_MODE"),
+    ("Euro","K_EURO"),
+]
+
 
 # Gameplay Vars
 display_controls_bool = False
@@ -91,6 +484,11 @@ def set_score(new_score:int):
     score = new_score
 
 
+def get_score() -> int:
+    global score
+    return score
+
+
 # Display Vars Functions
 # Resolution Vars Functions
 def update_pixel_size(new_pixel_size:int):
@@ -106,7 +504,7 @@ def update_pixel_size(new_pixel_size:int):
     wizard_width = 32 * pixel_size
     wizard_height = 32 * pixel_size
     wizard_pixel_size = (wizard_height,wizard_width)
-    grass_top_y = int((379 / 400) * window_height)
+    grass_top_y = int((628/640) * window_height)
     edited_options_file_dict = get_edited_options_file_dict()
     edited_options_file_dict.update({"pixel_size":new_pixel_size})
     set_edited_options_file_dict(edited_options_file_dict)
@@ -119,12 +517,19 @@ def update_zoom(new_zoom:int):
     edited_options_file_dict.update({"zoom":new_zoom})
     set_edited_options_file_dict(edited_options_file_dict)
 
+
 def update_fps(new_fps:int):
     global fps
     fps = new_fps
     edited_options_file_dict = get_edited_options_file_dict()
     edited_options_file_dict.update({"fps":new_fps})
     set_edited_options_file_dict(edited_options_file_dict)
+
+
+def check_max_window(window_size:tuple[int,int])->tuple[int,int]:
+    global min_window_width, max_window_width
+    global min_window_height, max_window_height
+    return (max(min_window_width,min(window_size[0],max_window_width)), max(min_window_height,min(window_size[1],max_window_height)))
 
 
 def update_window_width(new_window_width:int):
@@ -143,41 +548,184 @@ def update_window_height(new_window_height:int):
     set_edited_options_file_dict(edited_options_file_dict)
 
 
+def update_window_size(value: tuple, window_size: bool,**kwargs):
+    new_window_size = check_max_window(window_size)
+    update_window_width(new_window_size[0])
+    update_window_height(new_window_size[1])
+
+
 # Gameplay Vars Functions
-def update_display_controls_bool():
+def update_display_controls_bool(value: tuple, enabled: bool,**kwargs):
     edited_options_file_dict = get_edited_options_file_dict()
     edited_display_controls = edited_options_file_dict.get("display_controls")
     edited_options_file_dict.update({"display_controls":(not edited_display_controls)})
     set_edited_options_file_dict(edited_options_file_dict)
 
 
-def update_display_in_game_stats_bool():
+def update_display_in_game_stats_bool(value: tuple, enabled: bool,**kwargs):
     edited_options_file_dict = get_edited_options_file_dict()
     edited_display_in_game_stats = edited_options_file_dict.get("display_in_game_stats")
     edited_options_file_dict.update({"display_in_game_stats":(not edited_display_in_game_stats)})
     set_edited_options_file_dict(edited_options_file_dict)
 
 
-def update_display_in_game_health_bool():
+def update_display_in_game_health_bool(value: tuple, enabled: bool,**kwargs):
     edited_options_file_dict = get_edited_options_file_dict()
     edited_display_in_game_health = edited_options_file_dict.get("display_in_game_health")
     edited_options_file_dict.update({"display_in_game_health":(not edited_display_in_game_health)})
     set_edited_options_file_dict(edited_options_file_dict)
 
 
-def update_display_in_game_buffs_bool():
+def update_display_in_game_buffs_bool(value: tuple, enabled: bool,**kwargs):
     edited_options_file_dict = get_edited_options_file_dict()
     edited_display_in_game_buffs = edited_options_file_dict.get("display_in_game_buffs")
     edited_options_file_dict.update({"display_in_game_buffs":(not edited_display_in_game_buffs)})
     set_edited_options_file_dict(edited_options_file_dict)
 
 
+def update_display_in_game_fps_bool(value: tuple, enabled: bool,**kwargs):
+    edited_options_file_dict = get_edited_options_file_dict()
+    edited_display_in_game_fps = edited_options_file_dict.get("display_in_game_fps")
+    edited_options_file_dict.update({"display_in_game_fps":(not edited_display_in_game_fps)})
+    set_edited_options_file_dict(edited_options_file_dict)
+
+
+# Controls Vars Functions
+def update_jump_button_via_menu(value: tuple, enabled: bool,**kwargs):
+    global controls_update
+    display_name = value[0][0]
+    pygame_constant_name = value[0][1]
+    is_mouse = "Mouse" in display_name
+
+    set_control("jump_button",pygame_constant_name,is_mouse)
+    controls_update = True
+
+
+def update_left_button_via_menu(value: tuple, enabled: bool,**kwargs):
+    global controls_update
+    display_name = value[0][0]
+    pygame_constant_name = value[0][1]
+    is_mouse = "Mouse" in display_name
+
+    set_control("left_button",pygame_constant_name,is_mouse)
+    controls_update = True
+
+
+def update_right_button_via_menu(value: tuple, enabled: bool,**kwargs):
+    global controls_update
+    display_name = value[0][0]
+    pygame_constant_name = value[0][1]
+    is_mouse = "Mouse" in display_name
+
+    set_control("right_button",pygame_constant_name,is_mouse)
+    controls_update = True
+
+
+def update_shoot_button_via_menu(value: tuple, enabled: bool,**kwargs):
+    global controls_update
+    display_name = value[0][0]
+    pygame_constant_name = value[0][1]
+    is_mouse = "Mouse" in display_name
+
+    set_control("shoot_button",pygame_constant_name,is_mouse)
+    controls_update = True
+
+
+def update_jump_button(new_jump_button: int):
+    global jump_button
+    jump_button = new_jump_button
+
+
+def update_left_button(new_left_button: int):
+    global left_button
+    left_button = new_left_button
+
+
+def update_right_button(new_right_button: int):
+    global right_button
+    right_button = new_right_button
+
+
+def update_shoot_button(new_shoot_button: int):
+    global shoot_button
+    shoot_button = new_shoot_button
+
+
+
+
+def reset_controls_to_default_via_menu(controls_menu_dropselects: list):
+    reset_controls_to_default(controls_menu_dropselects)
+
+def reset_controls_to_default(controls_menu_dropselects: list):
+    global controls_update
+
+    default_controls_display_names_dict = get_default_controls_file_dict().get("default_controls_display_names_dict")
+    default_controls_pygame_constants_names_dict = get_default_controls_file_dict().get("default_controls_pygame_constants_names_dict")
+
+    jump_control_idx = DISPLAY_NAMES_LIST.index(default_controls_display_names_dict["jump_button"])
+    jump_constant_name = default_controls_pygame_constants_names_dict["jump_button"]
+    update_jump_button_via_menu((("Space",jump_constant_name),()),True)
+    controls_menu_dropselects[0].set_value(jump_control_idx)
+
+    left_constant_name = default_controls_pygame_constants_names_dict["left_button"]
+    left_control_idx = DISPLAY_NAMES_LIST.index(default_controls_display_names_dict["left_button"])
+    update_left_button_via_menu((("A",left_constant_name),()),True)
+    controls_menu_dropselects[1].set_value(left_control_idx)
+
+    right_constant_name = default_controls_pygame_constants_names_dict["right_button"]
+    right_control_idx = DISPLAY_NAMES_LIST.index(default_controls_display_names_dict["right_button"])
+    update_right_button_via_menu((("D",right_constant_name),()),True)
+    controls_menu_dropselects[2].set_value(right_control_idx)
+
+    shoot_constant_name = default_controls_pygame_constants_names_dict["shoot_button"]
+    shoot_control_idx = DISPLAY_NAMES_LIST.index(default_controls_display_names_dict["shoot_button"])
+    update_shoot_button_via_menu((("Left Mouse",shoot_constant_name),()),True)
+    controls_menu_dropselects[3].set_value(shoot_control_idx)
+
+    controls_update = True
+
+
+def get_background() -> pygame_menu.BaseImage:
+    global main_menu
+    global pause_menu
+    pause_menu_background_image = pygame_menu.BaseImage(
+        image_path="screenshot.jpg",
+    )
+    return main_menu_bg if main_menu.is_enabled() else pause_menu_background_image
+
+
+def get_window_size_values() -> tuple:
+    edited_window_sizes = get_edited_options_file_dict().get("window_sizes")
+    default_window_width_value = get_edited_options_file_dict().get("window_width")
+    default_window_height_value = get_edited_options_file_dict().get("window_height")
+
+    default_window_sizes_list = []
+    window_sizes_int_list = []
+    default_window_size_idx = -1
+
+    for size in edited_window_sizes:
+        if size != "Custom":
+            values = size.split("x")
+            values_tuple = (int(values[0]),int(values[1]))
+            default_window_sizes_list.append((size,values_tuple))
+            window_sizes_int_list.append(values_tuple)
+        else:
+            values_tuple = (default_window_width_value,default_window_height_value)
+            default_window_sizes_list.append((
+                f"{size}: {values_tuple[0]}x{values_tuple[1]}",
+                values_tuple
+            ))
+            window_sizes_int_list.append(values_tuple)
+        default_window_size_idx = window_sizes_int_list.index(values_tuple)
+
+    return (default_window_sizes_list,default_window_size_idx)
+
 # Wizard on Menu Screen
 wizard_path = "harolds_journey/graphics/wizard/wizard_idle_animation/wizard_idle_00.png"
-main_menu_wizard_hat_size = 24 * (window_height/400) # Needs to stay in menu
 main_menu_wizard_surf = pygame.image.load(wizard_path).convert_alpha()
-main_menu_wizard_height_by_scale = 96 * (window_height/400)
-main_menu_wizard_width_by_scale = 96 * (window_width/800)
+main_menu_wizard_height_by_scale = window_height * (1/8)
+main_menu_wizard_width_by_scale = window_height * (1/8)
+main_menu_wizard_hat_size = main_menu_wizard_height_by_scale * (6/32) # Needs to stay in menu
 main_menu_wizard_size_by_scale = (main_menu_wizard_height_by_scale,main_menu_wizard_width_by_scale)
 main_menu_wizard_surf = pygame.transform.scale(main_menu_wizard_surf,main_menu_wizard_size_by_scale)
 
@@ -241,7 +789,7 @@ main_menu_bg = main_menu_bg.crop_rect((0,bg_surf.get_height()-window_height,wind
 base_menu_theme = pygame_menu.Theme(
     title_bar_style=pygame_menu.widgets.MENUBAR_STYLE_NONE,
     background_color=main_menu_bg,
-    widget_offset=(0,widget_y_offset),
+    widget_offset=(0,0),
     widget_selection_effect=base_menu_selection,
     title_font=font_name,
     title_font_color=font_color,
@@ -264,13 +812,13 @@ def update_main_menu() -> pygame_menu.Menu:
 
     # Main Menu Theme
     main_menu_theme = base_menu_theme.copy()
-    main_menu_theme.widget_offset = (0,0)
+    main_menu_theme.widget_offset = (0,0) # Already (0,0) but listed for ease of access
     # Main Statistics Menu Theme
     main_statistics_menu_theme = base_menu_theme.copy()
-    main_statistics_menu_theme.widget_offset = (0,int(widget_y_offset/2))
+    main_statistics_menu_theme.widget_offset = (0,submenu_widget_y_offset)
     # Main Settings Menu Theme
     main_settings_menu_theme = base_menu_theme.copy()
-    main_settings_menu_theme.widget_offset = (0,int(widget_y_offset/2))
+    main_settings_menu_theme.widget_offset = (0,submenu_widget_y_offset)
 
     # Menus
     # Main Menu
@@ -331,19 +879,23 @@ def update_main_menu() -> pygame_menu.Menu:
         font_color=font_color,
         font_name=font_name,
         font_size=title_font_size,
+        padding=no_padding,
         label_id="main_menu_high_score_label",
     )
 
     # Extra Draws
     # Extra Main Menu Draws
-    main_menu_wizard_y_offset = int(title_font_size/2)
+    half_wizard_width = main_menu_wizard_surf.get_rect().width/2
+    main_menu_wizard_y_offset = main_menu_harold_surf.get_rect().height/2
     main_menu_wizard_menu_surf = main_menu.add.surface(
         surface=main_menu_wizard_surf,
+        padding=no_padding,
         surface_id="main_menu_wizard_menu_surf",
     ).translate(0,main_menu_wizard_y_offset)
-    main_menu_harold_y_offset = main_menu_wizard_y_offset-main_menu_wizard_menu_surf.get_height()*11/8+(main_menu_wizard_hat_size)
+    main_menu_harold_y_offset = -main_menu_wizard_surf.get_rect().height
     main_menu_harold_menu_surf = main_menu.add.surface(
         surface=main_menu_harold_surf,
+        padding=no_padding,
         surface_id="main_menu_harold_menu_surf",
     ).translate(0,main_menu_harold_y_offset)
 
@@ -354,6 +906,8 @@ def update_main_menu() -> pygame_menu.Menu:
         action=main_menu.disable,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="main_menu_start_button",
     )
     main_menu_statistics_button = main_menu.add.button(
@@ -361,6 +915,8 @@ def update_main_menu() -> pygame_menu.Menu:
         action=main_statistics_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="main_menu_statistics_button",
     )
     main_menu_settings_button = main_menu.add.button(
@@ -368,6 +924,8 @@ def update_main_menu() -> pygame_menu.Menu:
         action=main_settings_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="main_menu_settings_button",
     )
     main_menu_exit_button = main_menu.add.button(
@@ -375,6 +933,8 @@ def update_main_menu() -> pygame_menu.Menu:
         action=pygame_menu.events.EXIT,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="main_menu_exit_button",
     )
 
@@ -382,7 +942,7 @@ def update_main_menu() -> pygame_menu.Menu:
 
 
 # Pause Menu
-def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
+def update_pause_menu() -> pygame_menu.Menu:
     global base_menu_theme
     global pause_menu_theme
     global pause_menu
@@ -391,14 +951,17 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
 
     # Pause Menu Theme
     pause_menu_theme = base_menu_theme.copy()
-    if new_background_color:
-        pause_menu_theme.background_color = new_background_color
+    pause_menu_theme.widget_offset = (0,submenu_widget_y_offset*2)
+    pause_menu_background_image = pygame_menu.BaseImage(
+        image_path="screenshot.jpg",
+    )
+    pause_menu_theme.background_color = pause_menu_background_image
     # Main Statistics Menu Theme
     pause_statistics_menu_theme = pause_menu_theme.copy()
-    pause_statistics_menu_theme.widget_offset = (0,int(widget_y_offset/2))
+    pause_statistics_menu_theme.widget_offset = (0,submenu_widget_y_offset)
     # Main Settings Menu Theme
     pause_settings_menu_theme = pause_menu_theme.copy()
-    pause_settings_menu_theme.widget_offset = (0,int(widget_y_offset/2))
+    pause_settings_menu_theme.widget_offset = (0,submenu_widget_y_offset)
 
     # Menus
     # Pause Menu
@@ -455,6 +1018,8 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         action=pause_menu.disable,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="pause_menu_back_button",
     ).translate(0,title_y_pos_center_offset/2)
     pause_menu_statistics_button = pause_menu.add.button(
@@ -462,6 +1027,8 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         action=pause_statistics_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="pause_menu_statistics_button",
     ).translate(0,title_y_pos_center_offset/2)
     pause_menu_settings_button = pause_menu.add.button(
@@ -469,21 +1036,25 @@ def update_pause_menu(new_background_color=(50,50,50,50)) -> pygame_menu.Menu:
         action=pause_settings_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="pause_menu_settings_button",
     ).translate(0,title_y_pos_center_offset/2)
-    pause_menu_padding = pause_menu.add.vertical_margin(window_height/16)
+    pause_menu_padding = pause_menu.add.vertical_margin(default_margin_padding)
     pause_menu_end_game_button = pause_menu.add.button(
         title="End Current Game",
         action=end_game,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="pause_menu_end_game_button",
     ).translate(0,title_y_pos_center_offset/2)
 
     return pause_menu
 
 
-# Other Menus
+# Sub Menus
 # Statistics Menu
 def update_statistics_menu(menu:pygame_menu.Menu):
     global fireballs_shot
@@ -540,7 +1111,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         jumps_made = 0
 
     # Statistics Menu Sublabels
-    statistics_menu_left_padding_1 = menu.add.vertical_margin(window_height/16)
+    statistics_menu_left_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Left Side
     left_side_x_offset = int(center_screen_width*5/12)
     # Kills
@@ -550,6 +1121,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_skeletons_killed_label",
     ).translate(left_side_x_offset,0)
     # Birds Killed
@@ -558,6 +1130,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_birds_killed_label",
     ).translate(left_side_x_offset,0)
     # Interactivity
@@ -576,6 +1149,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_time_played_label",
     ).translate(left_side_x_offset,0)
     # High Score
@@ -584,6 +1158,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_high_score_label",
     ).translate(left_side_x_offset,0)
     # Fireballs Shot
@@ -592,6 +1167,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_fireballs_shot_label",
     ).translate(left_side_x_offset,0)
     # Jumps
@@ -600,6 +1176,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_jumps_label",
     ).translate(left_side_x_offset,0)
     # Distance Traveled
@@ -608,10 +1185,11 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_distance_traveled_label",
     ).translate(left_side_x_offset,0)
-    statistics_menu_left_padding_2 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_left_padding_3 = menu.add.vertical_margin(window_height/16)
+    statistics_menu_left_padding_2 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_left_padding_3 = menu.add.vertical_margin(default_margin_padding)
 
     # Statistics Menu Label
     statistics_menu_label = menu.add.label(
@@ -622,25 +1200,29 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_size=title_font_size,
         label_id="statistics_menu_label",
     )#.translate(center_screen_width/2,-title_font_size)
-    statistics_menu_center_padding_1 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_2 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_3 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_4 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_5 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_6 = menu.add.vertical_margin(window_height/16)
-    statistics_menu_center_padding_7 = menu.add.vertical_margin(window_height/16)
+    statistics_menu_center_padding_1 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_2 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_3 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_4 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_5 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_6 = menu.add.vertical_margin(default_margin_padding)
+    statistics_menu_center_padding_7 = menu.add.vertical_margin(default_margin_padding)
     # Statistics Menu Buttons
+    statistics_menu_name = menu.get_id()
+    parent_menu_name = statistics_menu_name.split("_")[0].title() + " Menu"
     statistics_menu_back_button = menu.add.button(
-        title="Back to Main Menu",
+        title=f"Back to {parent_menu_name}",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="statistics_menu_back_button",
     ).translate(0,-int(title_font_size*3/2))
 
 
     # Right Side
-    statistics_menu_center_right_padding_1 = menu.add.vertical_margin(window_height/16)
+    statistics_menu_center_right_padding_1 = menu.add.vertical_margin(default_margin_padding)
     right_side_x_offset = -int(center_screen_width*5/12)
     # In-Game Stat Records
     # Highest Speed
@@ -649,6 +1231,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_highest_speed_label",
     ).translate(right_side_x_offset,0)
     # Highest Damage
@@ -657,6 +1240,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="main_statistics_menu_highest_damage_label",
     ).translate(right_side_x_offset,0)
     # Highest Piercing
@@ -665,6 +1249,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_highest_piercing_label",
     ).translate(right_side_x_offset,0)
     # Lowest Cooldown
@@ -673,6 +1258,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_lowest_cooldown_label",
     ).translate(right_side_x_offset,0)
     # Buffs
@@ -683,6 +1269,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_double_jump_buff_label",
     ).translate(right_side_x_offset,0)
     # Knockback Buff
@@ -692,6 +1279,7 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_knockback_buff_label",
     ).translate(right_side_x_offset,0)
     # Shield Buff
@@ -701,9 +1289,10 @@ def update_statistics_menu(menu:pygame_menu.Menu):
         font_color=font_color,
         font_name=font_name,
         font_size=stat_font_size,
+        padding=default_padding,
         label_id="statistics_menu_shield_buff_label",
     ).translate(right_side_x_offset,0)
-    statistics_menu_center_right_padding_2 = menu.add.vertical_margin(window_height/16)
+    statistics_menu_center_right_padding_2 = menu.add.vertical_margin(default_margin_padding)
 
     return menu
 
@@ -765,13 +1354,15 @@ def update_settings_menu(menu:pygame_menu.Menu):
         label_id="settings_menu_label",
     ).translate(0,-title_font_size)
 
-    settings_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    settings_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Settings Menu Buttons
     settings_menu_sounds_button = menu.add.button(
         title="Sounds",
         action=sounds_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="settings_menu_sounds_button",
     )
     settings_menu_controls_button = menu.add.button(
@@ -779,6 +1370,8 @@ def update_settings_menu(menu:pygame_menu.Menu):
         action=controls_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="settings_menu_controls_button",
     )
     settings_menu_display_button = menu.add.button(
@@ -786,14 +1379,20 @@ def update_settings_menu(menu:pygame_menu.Menu):
         action=display_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="settings_menu_display_button",
     )
-    settings_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    settings_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
+    settings_menu_name = menu.get_id()
+    parent_menu_name = settings_menu_name.split("_")[0].title() + " Menu"
     settings_menu_back_button = menu.add.button(
-        title="Back to Main Menu",
+        title=f"Back to {parent_menu_name}",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="settings_menu_back_button",
     )
 
@@ -813,21 +1412,25 @@ def update_sounds_menu(menu:pygame_menu.Menu):
         label_id="sounds_menu_label",
     ).translate(0,-title_font_size)
 
-    sounds_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    sounds_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Sounds Menu Buttons
     sounds_menu_placeholder_button = menu.add.button(
         title="Placeholder",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="sounds_menu_placeholder_button",
     )
-    sounds_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    sounds_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
     sounds_menu_back_button = menu.add.button(
         title="Back to Settings",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="sounds_menu_back_button",
     )
 
@@ -846,21 +1449,147 @@ def update_controls_menu(menu:pygame_menu.Menu):
         label_id="controls_menu_label",
     ).translate(0,-title_font_size)
 
-    controls_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    controls_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
+
+    edited_controls_display_names_dict = get_edited_controls_file_dict().get("edited_controls_display_names_dict")
+
     # Controls Menu Buttons
-    controls_menu_placeholder_button = menu.add.button(
-        title="Placeholder",
-        action=pygame_menu.events.BACK,
+    current_jump_control_idx = DISPLAY_NAMES_LIST.index(edited_controls_display_names_dict["jump_button"])
+    controls_menu_jump_dropselect = menu.add.dropselect(
+        title="Jump: ",
+        items=DISPLAY_NAMES_AND_CONSTANTS_TUPLE_LIST,
+        default=current_jump_control_idx,
+        onchange=update_jump_button_via_menu,
         font_color=font_color,
         font_name=font_name,
-        button_id="controls_menu_placeholder_button",
+        font_size=default_font_size,
+        placeholder_add_to_selection_box=False,
+        scrollbar_color="#22222277",
+        scrollbar_slider_color="#66666677",
+        scrollbar_slider_hover_color="#BBBBBB66",
+        scrollbar_thick=6,
+        selection_box_arrow_color="#55555599",
+        selection_effect=base_menu_selection,
+        selection_option_padding=4,
+        selection_box_height=8,
+        selection_box_bgcolor="#22222277",
+        selection_box_width=stat_font_size*10,
+        selection_option_border_color="#000000",
+        selection_option_font_color=font_color,
+        selection_option_font_size=stat_font_size,
+        selection_option_selected_font_color="#FFFFFF",
+        selection_option_selected_bgcolor="#99999966",
+        padding=default_padding,
+        textinput_id="controls_menu_jump_dropselect",
     )
-    controls_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    current_left_control_idx = DISPLAY_NAMES_LIST.index(edited_controls_display_names_dict["left_button"])
+    controls_menu_left_dropselect = menu.add.dropselect(
+        title="Left: ",
+        items=DISPLAY_NAMES_AND_CONSTANTS_TUPLE_LIST,
+        default=current_left_control_idx,
+        onchange=update_left_button_via_menu,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        placeholder_add_to_selection_box=False,
+        scrollbar_color="#22222277",
+        scrollbar_slider_color="#66666677",
+        scrollbar_slider_hover_color="#BBBBBB66",
+        scrollbar_thick=6,
+        selection_box_arrow_color="#55555599",
+        selection_effect=base_menu_selection,
+        selection_option_padding=4,
+        selection_box_height=8,
+        selection_box_bgcolor="#22222277",
+        selection_box_width=stat_font_size*10,
+        selection_option_border_color="#000000",
+        selection_option_font_color=font_color,
+        selection_option_font_size=stat_font_size,
+        selection_option_selected_font_color="#FFFFFF",
+        selection_option_selected_bgcolor="#99999966",
+        padding=default_padding,
+        textinput_id="controls_menu_left_dropselect",
+    )
+    current_right_control_idx = DISPLAY_NAMES_LIST.index(edited_controls_display_names_dict["right_button"])
+    controls_menu_right_dropselect = menu.add.dropselect(
+        title="Right: ",
+        items=DISPLAY_NAMES_AND_CONSTANTS_TUPLE_LIST,
+        default=current_right_control_idx,
+        onchange=update_right_button_via_menu,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        placeholder_add_to_selection_box=False,
+        scrollbar_color="#22222277",
+        scrollbar_slider_color="#66666677",
+        scrollbar_slider_hover_color="#BBBBBB66",
+        scrollbar_thick=6,
+        selection_box_arrow_color="#55555599",
+        selection_effect=base_menu_selection,
+        selection_option_padding=4,
+        selection_box_height=8,
+        selection_box_bgcolor="#22222277",
+        selection_box_width=stat_font_size*10,
+        selection_option_border_color="#000000",
+        selection_option_font_color=font_color,
+        selection_option_font_size=stat_font_size,
+        selection_option_selected_font_color="#FFFFFF",
+        selection_option_selected_bgcolor="#99999966",
+        padding=default_padding,
+        textinput_id="controls_menu_right_dropselect",
+    )
+    current_shoot_control_idx = DISPLAY_NAMES_LIST.index(edited_controls_display_names_dict["shoot_button"])
+    controls_menu_shoot_dropselect = menu.add.dropselect(
+        title="Shoot: ",
+        items=DISPLAY_NAMES_AND_CONSTANTS_TUPLE_LIST,
+        default=current_shoot_control_idx,
+        onchange=update_shoot_button_via_menu,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        placeholder_add_to_selection_box=False,
+        scrollbar_color="#22222277",
+        scrollbar_slider_color="#66666677",
+        scrollbar_slider_hover_color="#BBBBBB66",
+        scrollbar_thick=6,
+        selection_box_arrow_color="#55555599",
+        selection_effect=base_menu_selection,
+        selection_option_padding=4,
+        selection_box_height=8,
+        selection_box_bgcolor="#22222277",
+        selection_box_width=stat_font_size*10,
+        selection_option_border_color="#000000",
+        selection_option_font_color=font_color,
+        selection_option_font_size=stat_font_size,
+        selection_option_selected_font_color="#FFFFFF",
+        selection_option_selected_bgcolor="#99999966",
+        padding=default_padding,
+        textinput_id="controls_menu_shoot_dropselect",
+    )
+    controls_menu_dropselects = [
+        controls_menu_jump_dropselect,
+        controls_menu_left_dropselect,
+        controls_menu_right_dropselect,
+        controls_menu_shoot_dropselect,
+    ]
+    # Reset not working
+    controls_menu_reset_button = menu.add.button(
+        title="Reset Controls to Default",
+        action=reset_controls_to_default_via_menu(controls_menu_dropselects),
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
+        button_id="controls_menu_reset_button",
+    )
+    controls_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
     controls_menu_back_button = menu.add.button(
         title="Back to Settings",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="controls_menu_back_buttons",
     )
 
@@ -869,6 +1598,36 @@ def update_controls_menu(menu:pygame_menu.Menu):
 
 # Display Menu
 def update_display_menu(menu:pygame_menu.Menu):
+    # Themes
+    # Resolution Menu Theme
+    resolution_menu_theme = menu.get_theme().copy()
+    # Gameplay Menu Theme
+    gameplay_menu_theme = menu.get_theme().copy()
+
+    # Menus
+    # Resolution Menu
+    resolution_menu = pygame_menu.Menu(
+        title="",
+        width=window_width,
+        height=window_height,
+        surface=screen,
+        theme=resolution_menu_theme,
+        center_content=False,
+        menu_id="resolution_menu",
+    )
+    resolution_menu = update_resolution_menu(resolution_menu)
+    # Gameplay Menu
+    gameplay_menu = pygame_menu.Menu(
+        title="",
+        width=window_width,
+        height=window_height,
+        surface=screen,
+        theme=gameplay_menu_theme,
+        center_content=False,
+        menu_id="gameplay_menu",
+    )
+    gameplay_menu = update_gameplay_menu(gameplay_menu)
+
     # Display Menu Label
     display_menu_label = menu.add.label(
         title="Display",
@@ -879,7 +1638,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         label_id="display_menu_label",
     ).translate(0,-title_font_size)
 
-    display_menu_padding_1 = menu.add.vertical_margin(window_height/16)
+    display_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
     # Display Menu Sliders
     # Zoom Slider
     zoom_range_values = list(num for num in range(0,201))
@@ -893,6 +1652,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         value_format=lambda x: str(zoom_range_values[x]),
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         range_box_color=font_color,
         range_line_color=font_color,
         range_line_height=2,
@@ -903,8 +1663,10 @@ def update_display_menu(menu:pygame_menu.Menu):
         slider_color=font_color,
         slider_sel_highlight_color=pygame.Color("#FFFFFF"),
         slider_selected_color=pygame.Color("#FFFFFF"),
+        slider_thickness=4,
         slider_text_value_color=font_color,
         slider_text_value_enabled=True,
+        padding=default_padding,
         rangeslider_id="display_menu_zoom_slider",
     )
     update_zoom(display_menu_zoom_slider.get_value())
@@ -922,6 +1684,7 @@ def update_display_menu(menu:pygame_menu.Menu):
         value_format=lambda x: str(fps_range_values[x-1]),
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
         repeat_keys=True,
         repeat_keys_interval_ms=5,
         range_box_color=font_color,
@@ -933,8 +1696,10 @@ def update_display_menu(menu:pygame_menu.Menu):
         slider_color=font_color,
         slider_sel_highlight_color=pygame.Color("#FFFFFF"),
         slider_selected_color=pygame.Color("#FFFFFF"),
+        slider_thickness=4,
         slider_text_value_color=font_color,
         slider_text_value_enabled=True,
+        padding=default_padding,
         rangeslider_id="display_menu_framerate_slider",
     )
     update_fps(display_menu_framerate_slider.get_value())
@@ -943,25 +1708,193 @@ def update_display_menu(menu:pygame_menu.Menu):
     # Display Menu Buttons
     display_menu_resolution_button = menu.add.button(
         title="Resolution",
-        action=pygame_menu.events.BACK,
+        action=resolution_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="display_menu_resolution_button",
     )
     display_menu_gameplay_button = menu.add.button(
         title="Gameplay",
-        action=pygame_menu.events.BACK,
+        action=gameplay_menu,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="display_menu_gameplay_button",
     )
-    display_menu_padding_2 = menu.add.vertical_margin(window_height/16)
+    display_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
     display_menu_back_button = menu.add.button(
         title="Back to Settings",
         action=pygame_menu.events.BACK,
         font_color=font_color,
         font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
         button_id="display_menu_back_button",
+    )
+
+    return menu
+
+
+# Display Menus
+# Resolution Menu
+def update_resolution_menu(menu:pygame_menu.Menu):
+    # Resolution Menu Label
+    resolution_menu_label = menu.add.label(
+        title="Resolution",
+        float=True,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=title_font_size,
+        label_id="resolution_menu_label",
+    ).translate(0,-title_font_size)
+
+    resolution_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
+    # Resolution Menu Buttons
+    default_window_sizes_list,default_window_size_idx = get_window_size_values()
+    resolution_menu_window_size_dropselect = menu.add.dropselect(
+        title="Window Size",
+        items=default_window_sizes_list,
+        default=default_window_size_idx,
+        onchange=update_window_size,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        placeholder_add_to_selection_box=False,
+        scrollbar_color="#22222277",
+        scrollbar_slider_color="#66666677",
+        scrollbar_slider_hover_color="#BBBBBB66",
+        scrollbar_thick=6,
+        selection_box_arrow_color="#55555599", # For some reason this affects selection_box_bgcolor - bug in pygame-menu
+        selection_effect=base_menu_selection,
+        selection_option_padding=4,
+        selection_box_height=8,
+        selection_box_bgcolor="#22222277",
+        selection_box_width=stat_font_size*10,
+        selection_option_border_color="#000000",
+        selection_option_font_color=font_color,
+        selection_option_font_size=stat_font_size,
+        selection_option_selected_font_color="#FFFFFF",
+        selection_option_selected_bgcolor="#99999966",
+        padding=default_padding,
+        button_id="resolution_menu_window_size_dropselect",
+    )
+    resolution_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
+    resolution_menu_reload_label = menu.add.label(
+        title="[Reload required to apply changes]",
+        font_color=font_color,
+        font_name=font_name,
+        font_size=int(default_font_size*3/4),
+        padding=default_padding,
+        label_id="resolution_menu_reload_label",
+    ).translate(0,-title_font_size)
+    resolution_menu_padding_3 = menu.add.vertical_margin(default_margin_padding)
+    resolution_menu_back_button = menu.add.button(
+        title="Back to Settings",
+        action=pygame_menu.events.BACK,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
+        button_id="resolution_menu_back_button",
+    )
+
+    return menu
+
+
+# Gameplay Menu
+def update_gameplay_menu(menu:pygame_menu.Menu):
+    edited_options_file_dict = get_edited_options_file_dict()
+    display_controls = edited_options_file_dict.get("display_controls")
+    display_in_game_buffs = edited_options_file_dict.get("display_in_game_buffs")
+    display_in_game_fps = edited_options_file_dict.get("display_in_game_fps")
+    display_in_game_health = edited_options_file_dict.get("display_in_game_health")
+    display_in_game_stats = edited_options_file_dict.get("display_in_game_stats")
+    # Gameplay Menu Label
+    gameplay_menu_label = menu.add.label(
+        title="Gameplay",
+        float=True,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=title_font_size,
+        padding=default_padding,
+        label_id="gameplay_menu_label",
+    ).translate(0,-title_font_size)
+
+    gameplay_menu_padding_1 = menu.add.vertical_margin(default_margin_padding)
+    # Gameplay Menu Buttons
+    gameplay_menu_items = [("True",True),("False",False)]
+    default_display_in_game_health = gameplay_menu_items.index((f"{display_in_game_health}",display_in_game_health))
+    gameplay_menu_display_health_button = menu.add.selector(
+        title="Display Health: ",
+        items=gameplay_menu_items,
+        default=default_display_in_game_health,
+        onchange=update_display_in_game_health_bool,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
+        button_id="gameplay_menu_display_health_button",
+    )
+    default_display_in_game_buffs = gameplay_menu_items.index((f"{display_in_game_buffs}",display_in_game_buffs))
+    gameplay_menu_display_buffs_button = menu.add.selector(
+        title="Display Buffs: ",
+        items=gameplay_menu_items,
+        default=default_display_in_game_buffs,
+        onchange=update_display_in_game_buffs_bool,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
+        button_id="gameplay_menu_display_buffs_button",
+    )
+    default_display_in_game_stats = gameplay_menu_items.index((f"{display_in_game_stats}",display_in_game_stats))
+    gameplay_menu_display_stats_button = menu.add.selector(
+        title="Display Stats: ",
+        items=gameplay_menu_items,
+        default=default_display_in_game_stats,
+        onchange=update_display_in_game_stats_bool,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
+        button_id="gameplay_menu_display_stats_button",
+    )
+    default_display_controls = gameplay_menu_items.index((f"{display_controls}",display_controls))
+    gameplay_menu_display_controls_button = menu.add.selector(
+        title="Display Controls: ",
+        items=gameplay_menu_items,
+        default=default_display_controls,
+        onchange=update_display_controls_bool,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
+        button_id="gameplay_menu_display_controls_button",
+    )
+    default_display_in_game_fps = gameplay_menu_items.index((f"{display_in_game_fps}",display_in_game_fps))
+    gameplay_menu_display_fps_button = menu.add.selector(
+        title="Display FPS: ",
+        items=gameplay_menu_items,
+        default=default_display_in_game_fps,
+        onchange=update_display_in_game_fps_bool,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
+        button_id="gameplay_menu_display_fps_button",
+    )
+    gameplay_menu_padding_2 = menu.add.vertical_margin(default_margin_padding)
+    gameplay_menu_back_button = menu.add.button(
+        title="Back to Settings",
+        action=pygame_menu.events.BACK,
+        font_color=font_color,
+        font_name=font_name,
+        font_size=default_font_size,
+        padding=default_padding,
+        button_id="gameplay_menu_back_button",
     )
 
     return menu
@@ -977,7 +1910,7 @@ def end_game():
 def wizard_death_calls():
     global main_menu
     global objects_to_be_removed
-    global score
+    global pause_time
     global wizard
     # Updating Stats
     wizard_jumps = wizard.sprite.get_jumps_made()
@@ -1023,8 +1956,7 @@ def wizard_death_calls():
     if current_wizard_shield_buff and not shield_buff_found:
         edited_stats_buffs_file_dict.update({"shield_buff":current_wizard_shield_buff})
     set_edited_stats_file_dict(edited_stats_file_dict)
-    set_score(score)
-    main_menu = update_main_menu()
+    pause_time = 0
     # Other Death Stuff
     wizard.sprite.set_wizard_current_health(0)
     temp_wizard_max_fireball_cooldown_time = wizard.sprite.get_max_fireball_cooldown_time()
@@ -1044,15 +1976,83 @@ def wizard_death_calls():
     wizard.sprite.set_wizard_dead(True)
 
 
+def check_for_menu_updates(current_menu:pygame_menu.Menu,other_menu:pygame_menu.Menu):
+    current_menu_submenus = current_menu.get_submenus()
+    other_menu_submenus = other_menu.get_submenus()
+    current_menu_statistics_menu = current_menu_submenus[0]
+    other_menu_statistics_menu = other_menu_submenus[0]
+    if current_menu_statistics_menu != other_menu_statistics_menu:
+        ...
+
+    current_menu_settings_menu = current_menu_submenus[1]
+    other_menu_settings_menu = other_menu_submenus[1]
+    if current_menu_settings_menu != other_menu_settings_menu:
+        current_menu_settings_submenus = current_menu_settings_menu.get_submenus()
+        other_menu_settings_submenus = other_menu_settings_menu.get_submenus()
+
+        current_menu_sounds_menu = current_menu_settings_submenus[0]
+        other_menu_sounds_menu = other_menu_settings_submenus[0]
+        if current_menu_sounds_menu!= other_menu_sounds_menu:
+            ...  # Update when sounds menu is made
+
+        current_menu_controls_menu = current_menu_settings_submenus[1]
+        other_menu_controls_menu = other_menu_settings_submenus[1]
+        if current_menu_controls_menu != other_menu_controls_menu:
+            control_widget_names_list = ["controls_menu_jump_dropselect","controls_menu_left_dropselect","controls_menu_right_dropselect","controls_menu_shoot_dropselect"]
+            update_controls_menu_widgets_with_other_widgets(current_menu_controls_menu,other_menu_controls_menu,control_widget_names_list)
+
+        current_menu_display_menu = current_menu_settings_submenus[2]
+        other_menu_display_menu = other_menu_settings_submenus[2]
+        if current_menu_display_menu != other_menu_display_menu:
+            update_menu_widget_with_other_menu_widget(current_menu_display_menu,other_menu_display_menu,"display_menu_zoom_slider")
+            update_menu_widget_with_other_menu_widget(current_menu_display_menu,other_menu_display_menu,"display_menu_framerate_slider")
+
+            current_menu_display_submenus = current_menu_display_menu.get_submenus()
+            other_menu_display_submenus = other_menu_display_menu.get_submenus()
+
+            current_menu_resolution_menu = current_menu_display_submenus[0]
+            other_menu_resolution_menu = other_menu_display_submenus[0]
+
+            if current_menu_resolution_menu != other_menu_resolution_menu:
+                update_menu_widget_with_other_menu_widget(current_menu_resolution_menu,other_menu_resolution_menu,"resolution_menu_window_size_dropselect",get_window_size_values()[1])
+
+            current_menu_gameplay_menu = current_menu_display_submenus[1]
+            other_menu_gameplay_menu = other_menu_display_submenus[1]
+            if current_menu_gameplay_menu != other_menu_gameplay_menu:
+                gameplay_widget_names_list = ["gameplay_menu_display_health_button","gameplay_menu_display_buffs_button","gameplay_menu_display_stats_button","gameplay_menu_display_controls_button","gameplay_menu_display_fps_button"]
+                update_menu_widgets_with_other_widgets(current_menu_gameplay_menu,other_menu_gameplay_menu,gameplay_widget_names_list)
+
+
+def update_menu_widgets_with_other_widgets(current_menu,other_menu,widget_names):
+    for widget_name in widget_names:
+        update_menu_widget_with_other_menu_widget(current_menu,other_menu,widget_name)
+
+
+def update_menu_widget_with_other_menu_widget(current_menu:pygame_menu.Menu,other_menu:pygame_menu.Menu,current_widget_name:str,new_value=None):
+    if (current_widget:=current_menu.get_widget(current_widget_name)) != (other_widget:=other_menu.get_widget(current_widget_name)):
+        value = new_value or other_widget.get_value()
+        current_widget.set_default_value(value)
+        current_menu.force_surface_update()
+        pygame.display.update(current_widget.get_rect())
+
+
+def update_controls_menu_widgets_with_other_widgets(current_controls_menu:pygame_menu.Menu,other_controls_menu:pygame_menu.Menu,widget_names):
+    for widget_name in widget_names:
+        other_widget = other_controls_menu.get_widget(widget_name)
+        # For some reason these menus can't get their widgets - maybe need to be active? It isn't the recursive kwarg
+        # Maybe instead just directly get it again from the edited yamls? may be easier just need to format it right to update the values
+        # Won't even work, need to be able to get the widget to update its value
+        # Technically all this can be contained in an "update_main_menu()" but we want to break it into its parts
+        if other_widget:
+            new_value = DISPLAY_NAMES_AND_CONSTANTS_TUPLE_LIST.index(other_widget)
+            update_menu_widget_with_other_menu_widget(current_controls_menu,other_controls_menu,widget_name,new_value)
+
+
 # Creating Full Main and Pause Menus via Functions
 main_menu = update_main_menu()
 pause_menu = update_pause_menu()
 
-# Enabling Menus
-main_menu.enable()
-pause_menu.enable()
-
-# Initial Resizing
+# Initial Resizing - unsure if needed
 on_resize(main_menu)
 on_resize(pause_menu)
 
@@ -1061,58 +2061,12 @@ on_resize(pause_menu)
 # Old Code
 # Main Menu
 button_scale = 3/2
-# Sounds Menu
-# Back Button
-sounds_back_button_start_x_pos = center_screen_width
-sounds_back_button_start_y_pos = 0  # main_menu_settings_button_rect_big.bottom + ((32/400) * window_height)
-sounds_back_button_start_pos = (sounds_back_button_start_x_pos,sounds_back_button_start_y_pos)
-sounds_back_button_surf = test_font.render("Back to Settings",False,font_color)
-sounds_back_button_scale = button_scale
-sounds_back_button_surf = pygame.transform.scale_by(sounds_back_button_surf,sounds_back_button_scale)
-sounds_back_button_rect = sounds_back_button_surf.get_rect(center = (sounds_back_button_start_pos))
-mouse_on_sounds_back_button = False
-sounds_back_button_big_scale = button_when_big_scale
-sounds_back_button_surf_big = pygame.transform.scale_by(sounds_back_button_surf,sounds_back_button_big_scale)
-sounds_back_button_rect_big = sounds_back_button_surf_big.get_rect(center = (sounds_back_button_start_pos))
-
-# Controls Buttons
-controls_first_button_start_x_pos = center_screen_width
-controls_first_button_start_y_pos = 0  # main_menu_wizard_rect.bottom + ((32/400) * window_height)
-controls_first_button_start_pos = (controls_first_button_start_x_pos,controls_first_button_start_y_pos)
-controls_buttons_y_pos_offset = window_height * 1/18
-mouse_on_controls_button_dict = {}
-controls_button_surf_dict = {}
-controls_button_rect_dict = {}
-controls_button_surf_big_dict = {}
-controls_button_rect_big_dict = {}
-controls_button_index = 0
 controls_button_scalar = 0.5
-edited_controls_display_names_dict = get_edited_controls_file_dict().get("edited_controls_display_names_dict")
-default_controls_pygame_constants_names_dict = get_default_controls_file_dict().get("default_controls_pygame_constants_names_dict")
-for control_name, control in default_controls_pygame_constants_names_dict.items():
-    controls_button_start_x_pos = 0  # main_menu_wizard_rect.centerx
-    controls_button_start_y_pos = 0  # main_menu_wizard_rect.bottom + ((32/400) * window_height) + controls_buttons_y_pos_offset * controls_button_index
-    controls_button_start_pos = (controls_button_start_x_pos,controls_button_start_y_pos)
-    control_name_underscore_removed = control_name.replace("_", " ")
-    control_name_capitalized = control_name_underscore_removed.title()
-    controls_button_surf = test_font.render(f"{control_name_capitalized}: {edited_controls_display_names_dict[control_name]}",False,font_color)
-    controls_button_scale = button_scale * controls_button_scalar
-    controls_button_surf = pygame.transform.scale_by(controls_button_surf,controls_button_scale)
-    controls_button_surf_dict.update({control_name: controls_button_surf})
-    controls_button_rect = controls_button_surf.get_rect(center = (controls_button_start_pos))
-    controls_button_rect_dict.update({control_name: controls_button_rect})
-    mouse_on_controls_button_dict.update({control_name: False})
-    controls_button_big_scale = button_when_big_scale
-    controls_button_surf_big = pygame.transform.scale_by(controls_button_surf,controls_button_big_scale)
-    controls_button_surf_big_dict.update({control_name: controls_button_surf_big})
-    controls_button_rect_big = controls_button_surf_big.get_rect(center = (controls_button_start_pos))
-    controls_button_rect_big_dict.update({control_name: controls_button_rect_big})
-    controls_button_index += 1
 # Reset Button
 controls_reset_button_start_x_pos = center_screen_width
 controls_reset_button_start_y_pos = 0  # main_menu_wizard_rect.bottom + ((32/400) * window_height) + (controls_buttons_y_pos_offset * (len(default_controls_pygame_constants_names_dict)))
 controls_reset_button_start_pos = (controls_reset_button_start_x_pos,controls_reset_button_start_y_pos)
-controls_reset_button_surf = test_font.render("Reset Controls to Default",False,font_color)
+controls_reset_button_surf = base_font.render("Reset Controls to Default",False,font_color)
 controls_reset_button_scale = button_scale * controls_button_scalar
 controls_reset_button_surf = pygame.transform.scale_by(controls_reset_button_surf,controls_reset_button_scale)
 controls_reset_button_rect = controls_reset_button_surf.get_rect(center = (controls_reset_button_start_pos))
@@ -1124,7 +2078,7 @@ controls_reset_button_rect_big = controls_reset_button_surf_big.get_rect(center 
 controls_back_button_start_x_pos = center_screen_width
 controls_back_button_start_y_pos = 0  # main_menu_settings_button_rect_big.bottom + ((32/400) * window_height)
 controls_back_button_start_pos = (controls_back_button_start_x_pos,controls_back_button_start_y_pos)
-controls_back_button_surf = test_font.render("Back to Settings",False,font_color)
+controls_back_button_surf = base_font.render("Back to Settings",False,font_color)
 controls_back_button_scale = button_scale
 controls_back_button_surf = pygame.transform.scale_by(controls_back_button_surf,controls_back_button_scale)
 controls_back_button_rect = controls_back_button_surf.get_rect(center = (controls_back_button_start_pos))
@@ -1132,83 +2086,3 @@ mouse_on_controls_back_button = False
 controls_back_button_big_scale = button_when_big_scale
 controls_back_button_surf_big = pygame.transform.scale_by(controls_back_button_surf,controls_back_button_big_scale)
 controls_back_button_rect_big = controls_back_button_surf_big.get_rect(center = (controls_back_button_start_pos))
-
-# Display Menu
-display_button_scalar = 0.5
-display_buttons_y_pos_offset = window_height * 1/36
-# Show Controls Button
-controls_displayed = get_edited_options_file_dict()["display_controls"]
-display_show_controls_button_start_x_pos = center_screen_width
-display_show_controls_button_start_y_pos = 0  # main_menu_wizard_rect.bottom + ((32/400) * window_height)
-display_show_controls_button_start_pos = (display_show_controls_button_start_x_pos,display_show_controls_button_start_y_pos)
-display_show_controls_button_surf = test_font.render(f"Display Controls: {controls_displayed}",False,font_color)
-display_show_controls_button_scale = button_scale * display_button_scalar
-display_show_controls_button_surf = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_scale)
-display_show_controls_button_rect = display_show_controls_button_surf.get_rect(center = (display_show_controls_button_start_pos))
-mouse_on_display_show_controls_button = False
-display_show_controls_button_big_scale = button_when_big_scale
-display_show_controls_button_surf_big = pygame.transform.scale_by(display_show_controls_button_surf,display_show_controls_button_big_scale)
-display_show_controls_button_rect_big = display_show_controls_button_surf_big.get_rect(center = (display_show_controls_button_start_pos))
-# Show In Game Stats Button
-in_game_stats_displayed = get_edited_options_file_dict()["display_in_game_stats"]
-display_show_in_game_stats_button_start_x_pos = center_screen_width
-display_show_in_game_stats_button_start_y_pos = display_show_controls_button_rect_big.bottom + display_buttons_y_pos_offset
-display_show_in_game_stats_button_start_pos = (display_show_in_game_stats_button_start_x_pos,display_show_in_game_stats_button_start_y_pos)
-display_show_in_game_stats_button_surf = test_font.render(f"Display Stats: {in_game_stats_displayed}",False,font_color)
-display_show_in_game_stats_button_scale = button_scale * display_button_scalar
-display_show_in_game_stats_button_surf = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_scale)
-display_show_in_game_stats_button_rect = display_show_in_game_stats_button_surf.get_rect(center = (display_show_in_game_stats_button_start_pos))
-mouse_on_display_show_in_game_stats_button = False
-display_show_in_game_stats_button_big_scale = button_when_big_scale
-display_show_in_game_stats_button_surf_big = pygame.transform.scale_by(display_show_in_game_stats_button_surf,display_show_in_game_stats_button_big_scale)
-display_show_in_game_stats_button_rect_big = display_show_in_game_stats_button_surf_big.get_rect(center = (display_show_in_game_stats_button_start_pos))
-# Show In Game Health Button
-in_game_health_displayed = get_edited_options_file_dict()["display_in_game_health"]
-display_show_in_game_health_button_start_x_pos = center_screen_width
-display_show_in_game_health_button_start_y_pos = display_show_in_game_stats_button_rect_big.bottom + display_buttons_y_pos_offset
-display_show_in_game_health_button_start_pos = (display_show_in_game_health_button_start_x_pos,display_show_in_game_health_button_start_y_pos)
-display_show_in_game_health_button_surf = test_font.render(f"Display Health: {in_game_health_displayed}",False,font_color)
-display_show_in_game_health_button_scale = button_scale * display_button_scalar
-display_show_in_game_health_button_surf = pygame.transform.scale_by(display_show_in_game_health_button_surf,display_show_in_game_health_button_scale)
-display_show_in_game_health_button_rect = display_show_in_game_health_button_surf.get_rect(center = (display_show_in_game_health_button_start_pos))
-mouse_on_display_show_in_game_health_button = False
-display_show_in_game_health_button_big_scale = button_when_big_scale
-display_show_in_game_health_button_surf_big = pygame.transform.scale_by(display_show_in_game_health_button_surf,display_show_in_game_health_button_big_scale)
-display_show_in_game_health_button_rect_big = display_show_in_game_health_button_surf_big.get_rect(center = (display_show_in_game_health_button_start_pos))
-# Show In Game Buffs Button
-in_game_buffs_displayed = get_edited_options_file_dict()["display_in_game_buffs"]
-display_show_in_game_buffs_button_start_x_pos = center_screen_width
-display_show_in_game_buffs_button_start_y_pos = display_show_in_game_health_button_rect_big.bottom + display_buttons_y_pos_offset
-display_show_in_game_buffs_button_start_pos = (display_show_in_game_buffs_button_start_x_pos,display_show_in_game_buffs_button_start_y_pos)
-display_show_in_game_buffs_button_surf = test_font.render(f"Display Buffs: {in_game_buffs_displayed}",False,font_color)
-display_show_in_game_buffs_button_scale = button_scale * display_button_scalar
-display_show_in_game_buffs_button_surf = pygame.transform.scale_by(display_show_in_game_buffs_button_surf,display_show_in_game_buffs_button_scale)
-display_show_in_game_buffs_button_rect = display_show_in_game_buffs_button_surf.get_rect(center = (display_show_in_game_buffs_button_start_pos))
-mouse_on_display_show_in_game_buffs_button = False
-display_show_in_game_buffs_button_big_scale = button_when_big_scale
-display_show_in_game_buffs_button_surf_big = pygame.transform.scale_by(display_show_in_game_buffs_button_surf,display_show_in_game_buffs_button_big_scale)
-display_show_in_game_buffs_button_rect_big = display_show_in_game_buffs_button_surf_big.get_rect(center = (display_show_in_game_buffs_button_start_pos))
-# Reset Button
-display_reset_button_start_x_pos = center_screen_width
-display_reset_button_start_y_pos = display_show_in_game_buffs_button_rect_big.bottom + display_buttons_y_pos_offset
-display_reset_button_start_pos = (display_reset_button_start_x_pos,display_reset_button_start_y_pos)
-display_reset_button_surf = test_font.render("Reset Display Options to Default",False,font_color)
-display_reset_button_scale = button_scale * display_button_scalar
-display_reset_button_surf = pygame.transform.scale_by(display_reset_button_surf,display_reset_button_scale)
-display_reset_button_rect = display_reset_button_surf.get_rect(center = (display_reset_button_start_pos))
-mouse_on_display_reset_button = False
-display_reset_button_big_scale = button_when_big_scale
-display_reset_button_surf_big = pygame.transform.scale_by(display_reset_button_surf,display_reset_button_big_scale)
-display_reset_button_rect_big = display_reset_button_surf_big.get_rect(center = (display_reset_button_start_pos))
-# Back Button
-display_back_button_start_x_pos = center_screen_width
-display_back_button_start_y_pos = 0  # main_menu_settings_button_rect_big.bottom + ((32/400) * window_height)
-display_back_button_start_pos = (display_back_button_start_x_pos,display_back_button_start_y_pos)
-display_back_button_surf = test_font.render("Back to Settings",False,font_color)
-display_back_button_scale = button_scale
-display_back_button_surf = pygame.transform.scale_by(display_back_button_surf,display_back_button_scale)
-display_back_button_rect = display_back_button_surf.get_rect(center = (display_back_button_start_pos))
-mouse_on_display_back_button = False
-display_back_button_big_scale = button_when_big_scale
-display_back_button_surf_big = pygame.transform.scale_by(display_back_button_surf,display_back_button_big_scale)
-display_back_button_rect_big = display_back_button_surf_big.get_rect(center = (display_back_button_start_pos))
