@@ -1,7 +1,7 @@
 import pygame
 
-from global_vars import *
-from graphics.health_bar.health_bar_animation_holder import *
+from global_vars import pixel_size,wizard_height
+from graphics.health_bar.health_bar_animation_holder import get_green_health_bar,get_yellow_health_bar,get_red_health_bar
 class HealthBar(pygame.sprite.Sprite):
     def __init__(self, source: pygame.sprite.Sprite, current_health: int, max_health: int):
         super().__init__()

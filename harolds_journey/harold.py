@@ -2,10 +2,18 @@
 from random import randint, choice
 import math
 
-from controls import *
-from global_vars import *
-from player import *
-from graphics.harold.harold_animation_holder import *
+import pygame
+
+from global_vars import (
+    get_control,
+    pixel_size,
+    global_scalar,
+    global_gravity,
+    wizard_height,
+    wizard_width,
+    window_width,
+    grass_top_y)
+from graphics.harold.harold_animation_holder import get_harold_idle_arr
 
 class Harold(pygame.sprite.Sprite):
     def __init__(self, player: pygame.sprite.GroupSingle):

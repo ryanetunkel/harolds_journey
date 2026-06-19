@@ -2,8 +2,10 @@
 from random import randint, choice
 import math
 
-from global_vars import *
-from graphics.fireball.fireball_animation_holder import *
+import pygame
+
+from global_vars import global_scalar,wizard_width,pixel_size,window_width,grass_top_y
+from graphics.fireball.fireball_animation_holder import get_fireball_transition_arr,get_fireball_movement_arr
 
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, type: str, source: pygame.sprite.Sprite):

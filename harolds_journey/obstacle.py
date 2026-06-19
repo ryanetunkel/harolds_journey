@@ -1,9 +1,18 @@
 """Obstacle Class"""
-from random import randint, choice
+from random import randint
 
-from global_vars import *
-from graphics.enemies.bird.bird_animation_holder import *
-from graphics.enemies.skeleton.skeleton_animation_holder import *
+import pygame
+
+from global_vars import (
+    global_scalar,
+    window_width,
+    grass_top_y,
+    OBSTACLE_MOVE_VOLUME,
+    wizard_height,
+    wizard_pixel_size,
+    OBSTACLE_MOVE_CHANNEL)
+from graphics.enemies.bird.bird_animation_holder import get_bird_fly_arr
+from graphics.enemies.skeleton.skeleton_animation_holder import get_skeleton_walk_arr
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, obstacle_type: str, time_at_spawn: int):

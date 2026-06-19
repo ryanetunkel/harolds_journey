@@ -1,6 +1,6 @@
 import pygame
 
-from controls import *
+from controls import get_edited_options_file_dict,set_edited_options_file_dict
 
 pygame.init()
 

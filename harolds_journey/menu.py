@@ -1,13 +1,37 @@
 """Contains all menu-related items"""
+import pygame
 import pygame_menu
 import pygame_menu.locals
 import pygame_menu.widgets
 import pygame_menu.widgets.widget
 
-from controls import *
-from harold import *
-from player import *
-from menu_vars import *
+from controls import (
+    get_edited_stats_file_dict,
+    set_edited_stats_file_dict,
+    get_edited_controls_file_dict,
+    get_default_controls_file_dict)
+from global_vars import (
+    bg_image_path,
+    bg_scalar,
+    bg_surf,
+    start_time,
+    outline_health_bar_group,
+    outline_health_bar_ownership_group,
+    health_bar_ownership_group,
+    health_bar_group,
+    test_font
+)
+from menu_vars import (
+    center_screen_height,
+    get_edited_options_file_dict,
+    set_edited_options_file_dict,
+    screen,
+    min_window_width,
+    max_window_width,
+    min_window_height,
+    max_window_height,
+    center_screen_width,
+)
 
 # Main Menu Screen
 MAIN_MENU = 1

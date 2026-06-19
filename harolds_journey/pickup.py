@@ -1,7 +1,9 @@
 """Pickup Class"""
+import pygame
+
+from global_vars import global_gravity,global_scalar,grass_top_y
 from random import randint, choice
 
-from global_vars import *
 
 class Pickup(pygame.sprite.Sprite):
     def __init__(self, type: str, x_pos: int, y_pos: int):

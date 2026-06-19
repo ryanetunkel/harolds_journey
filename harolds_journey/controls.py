@@ -4,7 +4,7 @@ import csv
 import pygame
 import yaml
 
-from strings_constants_dict import *
+from strings_constants_dict import keyboard_strings_constants_dict,mouse_strings_constants_dict,unbound_constants_dict
 
 
 default_controls_path = "harolds_journey/saved_files/controls/default_controls.yaml"

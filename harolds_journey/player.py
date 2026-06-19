@@ -1,8 +1,31 @@
 """Player Class"""
-from controls import *
+import pygame
+
+from controls import get_control
 from menu import jumps_made, distance_traveled
-from global_vars import *
-from graphics.wizard.wizard_animation_holder import *
+from global_vars import (
+    window_width,
+    grass_top_y,
+    global_scalar,
+    global_gravity,
+    wizard_pixel_size,
+    JUMP_SOUND_VOLUME,
+    FIREBALL_SOUND_VOLUME,
+    WALK_SOUND_VOLUME,
+    SECRET_SOUND_VOLUME,
+    FIREBALL_SOUND_CHANNEL,
+    JUMP_SOUND_CHANNEL,
+    WALK_SOUND_CHANNEL,
+    SECRET_SOUND_CHANNEL,
+    wizard_width,
+)
+from graphics.wizard.wizard_animation_holder import (
+    get_wizard_idle_arr,
+    get_wizard_secret_idle_arr,
+    get_wizard_walk_arr,
+    get_wizard_jump_arr,
+    get_wizard_fireball_arr,
+    get_wizard_death_arr)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):

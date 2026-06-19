@@ -2,8 +2,8 @@
 
 import pygame
 
-from controls import *
-from menu_vars import *
+from controls import get_control
+from menu_vars import window_width,window_height,pixel_size
 
 # Sounds
 BG_MUSIC_VOLUME = 0.4
